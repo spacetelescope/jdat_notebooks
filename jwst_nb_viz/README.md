@@ -47,3 +47,8 @@ The below are areas where STScI might develop tools that might make notebook int
 * Ramp viewer : A tool to make it easier to look at ramp files in parallel with the image viewer
 * Mosaic viewer: "Google maps for astronomical images"  - i.e., only show subsets of very large images that don't fit in the image viewer
 * Glupyter: Additional features for the "linked data" element of Glue-jupyter
+
+
+### Tips for development
+
+* When building interactive tools in the notebook, start by writing the code for the tool *in the notebook*.  Then move it to a stand-alone `<whatever>.py` file when it's working.  That way when first experimenting you don't need to struggle with making sure you always `importlib.reload`.
