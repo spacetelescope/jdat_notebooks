@@ -32,6 +32,8 @@ These tools may be useful for the hack day to develop experimental UIs for noteb
 * Ginga in "notebook mode": https://gist.github.com/ejeschke/6067409 - ginga is not just in the notebook, but it can be used as a "ds9 in the notebook".  Astrowidgets uses this as a backend so it might be easier to use that, depending on your needs.
 * JupyterLab: https://github.com/jupyterlab/jupyterlab - a way to access notebooks that provides a multi-window interface.  E.g., you can "pop out" a view of one of the above tools and have it appear on the sidebar as a separate window.
 
+Additionally, http://pyviz.org/ provides a useful list of Python visualization tools, many of which work well in notebooks.
+
 ### Potential tools needing development
 
 The below are areas where STScI might develop tools that might make notebook interactions easier for JWST data.  Knowing which would help with your use cases would be extremely valuable! 
