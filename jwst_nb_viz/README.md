@@ -16,6 +16,8 @@ Feb 18, RW333 9a-5p:
 
 To produce Jupyter notebooks for JWST-relevant science use cases, to clarify which (if any) visualization tools are needed.
 
+Pre-defined JWST Use Cases: https://outerspace.stsci.edu/pages/viewpage.action?spaceKey=JWSTDATF&title=Data+Analysis+Tools+Use+Cases
+
 ### Building notebooks
 
 For the hack day, feel free to to fast development of notebooks on Box or similar if that's easier to share with team members.  But by the end of the day the notebooks should be at least in Pull Request form into this repo, inside a sub directory inside this directory (see the example).
