@@ -62,7 +62,7 @@ class SpectrumLineFinder:
         specplot = self.app.scatter2d('wl', 'flux')
         self.plot_to_jump = specplot
 
-       specplot.widget_button_interact.value = specplot.interact_brush_x
+        specplot.widget_button_interact.value = specplot.interact_brush_x
         specplot.state.x_min = 7050
         specplot.state.x_max = 7250
 
