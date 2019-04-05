@@ -62,6 +62,9 @@ class SpectrumLineFinder:
         specplot = self.app.scatter2d('wl', 'flux')
         self.plot_to_jump = specplot
 
+        # note that the line below *might* not work on some versions of
+        # glupyter. If so, either manually do the brushing, or use this:
+        # specplot.button_action.value = 'brush x'
         specplot.widget_button_interact.value = specplot.interact_brush_x
         specplot.state.x_min = 7050
         specplot.state.x_max = 7250
