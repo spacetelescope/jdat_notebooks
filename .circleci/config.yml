@@ -15,7 +15,7 @@ jobs:
 
       - restore_cache:
           keys:
-            - v1-env-{{ checksum "environment.yml" }}
+            - v1-env-{{ checksum "jdat_notebooks/environment.yml" }}
 
       - run:
           name: Setup Environment
@@ -23,7 +23,7 @@ jobs:
             ./.circleci/setup_env.sh
 
       - save_cache:
-          key: v1-env-{{ checksum "environment.yml" }}
+          key: v1-env-{{ checksum "jdat_notebooks/environment.yml" }}
           paths:
             - /opt/conda
 
@@ -35,11 +35,8 @@ jobs:
             source activate notebooks_env
             conda info --envs
             mkdir test-results
-            python ./convert.py --report test-results/results.xml
+            python ./convert.py
           no_output_timeout: 20m
-
-      - store_test_results:
-          path: jdat_notebooks/test-results
 
       - run:
           name: Check notebooks
