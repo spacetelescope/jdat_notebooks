@@ -2,7 +2,7 @@
 
 This document is a description of the JWST Data Analysis Tools Approach to
 "Notebook-Driven Development".  The procedures here outline the process for
-getting a notebook through sucessive development stages to become something
+getting a notebook through successive development stages to become something
 that can be "live" on the spacetelescope notebooks repository.
 
 These notebooks can have many varied science cases, but follow a relatively
@@ -15,20 +15,20 @@ standard workflow:
 5. Revised based on Community feedback
 6. (Repeat 5 into infinity)
 
-These stages and the process for moving from one to the other are described below.  
+These stages and the process for moving from one to the other are described below.
 
-Note that there is much more information on writing Jupyter notebooks at the [STScI notebook style guide](https://github.com/spacetelescope/style-guides/blob/master/guides/jupyter-notebooks.md), and similar guideance for Python code at the [STScI Python style guide](https://github.com/spacetelescope/style-guides/blob/master/guides/python.md).  These guidelines are in place to make review steps easier 
+Note that there is much more information on writing Jupyter notebooks at the [STScI notebook style guide](https://github.com/spacetelescope/style-guides/blob/master/guides/jupyter-notebooks.md), and similar guidance for Python code at the [STScI Python style guide](https://github.com/spacetelescope/style-guides/blob/master/guides/python.md).  These guidelines are in place to make review steps easier.
 
 ## Notebook Concept
 
-The primary purpose of this stage is to record a scientific workflow, but without in actual code. This stage is generally done primarily by a scientist. Reasonably often, notebooks can skip this stage if they are simpler or if the underlying tools are already well-enough developed to be immediately implemented.
+The primary purpose of this stage is to record a scientific workflow, but without actual code. This stage is generally done primarily by a scientist. Reasonably often, notebooks can skip this stage if they are simpler or if the underlying tools are already well-enough developed to be immediately implemented.
 
-To begin a notebook at this stage, the notebook author should start with either the notebook template from the [notebook style guide](https://github.com/spacetelescope/style-guides/blob/master/guides/jupyter-notebooks.md) or a blank Jupyter notebook.  They then write out their workflow in words.  Where possible, they put  *example* code of the sort they would *like* to see, even if it's not implemented yet.  For example,  an author might write this in such a notebook:
+To begin a notebook at this stage, the notebook author should start with either the notebook template from the [notebook style guide](https://github.com/spacetelescope/style-guides/blob/master/guides/jupyter-notebooks.md) or a blank Jupyter notebook.  They then write out their workflow in words.  Where possible, they put *example* code of the sort they would *like* to see, even if it's not implemented yet.  For example, an author might write this in such a notebook:
 ```
 In [ ]: spectral_line = find_line(jwst_miri_spectrum)
 
-`spectral_line` should be a list of line centers and names of lines indexed by spaxel, found using a derivative-based line-finder.  
-``` 
+`spectral_line` should be a list of line centers and names of lines indexed by spaxel, found using a derivative-based line-finder.
+```
 even if the ``find_line`` function doesn't yet exist anywhere.
 
 The top-level header of the notebook (i.e., the title) should have "Concept: " at the start to make it clear this is a concept notebook.  The filename should *not* have `concept` in it, however, as the filename will generally remain the same throughout the later stages.
@@ -38,9 +38,9 @@ Once they have the concept ready, the author should create a pull request with t
 
 ### New Notebook Pull Request
 
-Submission of a new notebook follows the git Pull Request workflow.  This is not described in detail here because more details are in the [STScI git workflow style guide](https://github.com/spacetelescope/style-guides/blob/master/guides/git-workflow.md).  But don't hesitate to reach out for help from other members of the team if you are stuck or aren't sure how it's supposed to work! 
+Submission of a new notebook follows the git Pull Request workflow.  This is not described in detail here because more details are in the [STScI git workflow style guide](https://github.com/spacetelescope/style-guides/blob/master/guides/git-workflow.md).  But don't hesitate to reach out for help from other members of the team if you are stuck or aren't sure how it's supposed to work!
 
-To submit a concept notebook, the author should first fork and clone the notebooks working space repository: https://github.com/spacetelescope/dat_pyinthesky . Then for a add the new notebook in a sub-directory of the ``jdat_notebooks`` directory with the name of the notebook (see the repo itself for examples).  IMPORTANT: for a concept notebook, also be sure to add the name of the notebook to the ``exclude_notebooks`` file, to prevent the tests from running on the notebook (since it isn't intended to be functional yet anyway).  Once you've added the notebook to git, push it up to your fork and create a Pull Request (see the procedures document linked above for more detail).
+To submit a concept notebook, the author should first fork and clone the notebooks working space repository: https://github.com/spacetelescope/dat_pyinthesky . Then add the new notebook in a sub-directory of the ``jdat_notebooks`` directory with the name of the notebook (see the repo itself for examples).  IMPORTANT: for a concept notebook, also be sure to add the name of the notebook to the ``exclude_notebooks`` file, to prevent the tests from running on the notebook (since it isn't intended to be functional yet anyway).  Once you've added the notebook to git, push it up to your fork and create a Pull Request (see the procedures document linked above for more detail).
 
 One of the team members can then merge your Pull Request.  For concept notebook, nothing more than a cursory review (ensuring just that the notebook is readable and perhaps asking for clarification in a few areas) is necessary for merging.
 
@@ -58,7 +58,7 @@ Creating the spectrum above is a bit complicated, and it would improve the workf
 ```
 thereby providing guidance for where specific development would simplify the workflow.
 
-If a notebook is freshly created in this form, the author can follow the "New Notebook Pull Request" procedure above in the "Content Notebook" section. The only difference is that they should *not* add the notebook to ``exclude_notebooks``, as the notebook should be run once it's in draft stage.  
+If a notebook is freshly created in this form, the author can follow the "New Notebook Pull Request" procedure above in the "Content Notebook" section. The only difference is that they should *not* add the notebook to ``exclude_notebooks``, as the notebook should be run once it's in draft stage.
 
 If the notebook was already created in the Concept Notebook stage, for this step, the author should follow the [standard git/github forking workflow](https://github.com/spacetelescope/style-guides/blob/master/guides/git-workflow.md) for modifying existing code. I.e., create a branch on their github fork, and then create a Pull Request with the changes once they are ready.
 
@@ -79,7 +79,7 @@ Between the concept and draft, or draft and polished stages, there is potential 
 
 ## Integrated Notebook
 
-Once a draft notebook has been completed, the next stage is to build the draft into a notebook that uses the DAT's or associated community-developed software as consistently as possible.  This is typically done via a developer reviewing a draft notebook and working with the scientist to use DAT software where relevant, or developing additional DAT code when necessary (see the above section).  It is at the discretion of the notebook author and developer together which of them actually modifies the notebook and sources the Pull Request, but it is likely both will be involved to some degree. The default approach is for the developer to take the draft notebook, mark it up with comments like (using the example from above):
+Once a draft notebook has been completed, the next stage is to build the draft into a notebook that uses the DAT's or associated community-developed software as consistently as possible.  This is typically done via a developer reviewing a draft notebook and working with the scientist to use DAT software where relevant, or developing additional DAT code when necessary (see the above section).  It is at the discretion of the notebook author and developer together which of them actually modifies the notebook and submits the Pull Request, but it is likely both will be involved to some degree. The default approach is for the developer to take the draft notebook, mark it up with comments like (using the example from above):
 ```
 
 ...
@@ -91,7 +91,7 @@ EJT: This has now been implemented as JWSTSimulator.make_spectrum(a, b, anotherp
 ```
 and then create a git commit with these comments.  The original author would then address the comments in a follow-on commit, with implementation of all comments then being the step that allows both to declare the notebook ready to be called "Integrated".
 
-Once the notebook authors (original author and developer/reviewer) have agreed it is ready, one of them follows the Pull Request workflow as described above, but with the notebook title now changed to be just the title itself (no "Concept:" or Draft:"). The Pull Request is then reviewed by one of the project scientists, and merged when there everyone is satisfied with the notebook.
+Once the notebook authors (original author and developer/reviewer) have agreed it is ready, one of them follows the Pull Request workflow as described above, but with the notebook title now changed to be just the title itself (no "Concept:" or "Draft:"). The Pull Request is then reviewed by one of the project scientists, and merged when everyone is satisfied with the notebook.
 
 ## Final/Public Notebook
 
