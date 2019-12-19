@@ -10,15 +10,15 @@ standard workflow:
 
 1. Notebook Concept
 2. Notebook Draft
-3. Concept/Draft notebook-driven development
+3. Notebook-driven development
 4. Integrated Notebook
 5. Final/Public Notebook
 6. Revision based on Community feedback
 
 These stages and the process for moving from one to the other are described below.  
 
-**At the end, the procedure to submit the notebook via a Pull Request is described.
-This is done at any of the 5 stages.**
+**The procedure to submit the notebook via a Pull Request is described at the end of this document.
+This is repeated for each of the 5 stages.**
 
 Note that there is much more information on writing Jupyter notebooks at the 
 [STScI notebook style guide](https://github.com/spacetelescope/style-guides/blob/master/guides/jupyter-notebooks.md), 
@@ -166,11 +166,13 @@ authors may be called in from time to time to provide opinions or perspectives o
 
 # Procedure to submit a notebook as a Pull Request
 
-Submission of a new notebook follows the git Pull Request workflow.  All details are in the 
+Submission of a new notebook follows the Github Pull Request workflow.  All details are in the 
 [STScI git workflow style guide](https://github.com/spacetelescope/style-guides/blob/master/guides/git-workflow.md).
 Here we give a "cookbook" procedure,  
 but do not hesitate to reach out for help from other members of the team if you are stuck or are not sure how 
 it is supposed to work! 
+
+Note also that these steps are slightly different for if you update a notebook after you've created the first pull request - you can skip steps 1-3 and 5.
 
 1. Go to the github working space https://github.com/spacetelescope/dat_pyinthesky and fork the repository to your user account 
 (button "Fork" in the top right corner).
@@ -179,7 +181,7 @@ it is supposed to work!
 
 ``git clone git@github.com:username/dat_pyinthesky.git``
 
-3. Make sure that your personal fork is pointing to the right upstream repository
+3. While this sets up ``origin`` to point to your fork, there is currently no connection to the main ``spacetelescope`` "upstream" repository.  So you can point your local clone to the right repository by doing:
 
 ``git remote add upstream https://github.com/spacetelescope/dat_pyinthesky.git``
 
@@ -197,7 +199,7 @@ it is supposed to work!
 
 6. Now start building your notebook (new_notebook_name.ipynb)!
 
-7. At any point in the development, save your work and push it up to your forked repository
+7. At any point in the development, save your work and push it up to your forked repository. (Important: you must clear the outputs on your notebook using the Jupyter interface before doing an ``add/commit`` like this.)
 
 ``git add new_notebook_name.ipynb``
 
@@ -217,7 +219,6 @@ the branch on your personal fork, so repository ``username/dat_pyinthesky`` and 
 set a title and you click on ``Create pull request``.
 
 One of the team members can then merge your Pull Request. 
-
 
 
 
