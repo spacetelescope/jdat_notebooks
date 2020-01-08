@@ -7,7 +7,7 @@ model1 = \
              amplitude = 6.586200E-14,
              x_0 = 1000.0,
              alpha = 0.4819233,
-             bounds = {'amp':   (0., 1.00E-11),
+             bounds = {'amplitude':   (0., 1.00E-11),
                        'x_0':   (0., 1.00E-11),
                        'alpha': (-5., 5.)},
              fixed = {'x_0': True}
