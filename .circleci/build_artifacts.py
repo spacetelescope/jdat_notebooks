@@ -16,6 +16,8 @@ from datetime import datetime
 
 from junitparser import TestCase, TestSuite, JUnitXml, Skipped, Error
 
+from select import select
+
 root = logging.getLogger()
 root.setLevel(logging.INFO)
 handler = logging.StreamHandler(sys.stdout)
@@ -29,7 +31,6 @@ ENCODING: str = 'utf-8'
 ARTIFACT_DEST_DIR: str = '/tmp/artifacts'
 ARTIFACT_HTML_DIR: str = '/tmp/artifacts-html'
 TEST_OUTPUT_DIR: str = '/tmp/test-results'
-BUILD_STATE: typing.Dict[str, typing.Any] = {}
 if not os.path.exists(TEST_OUTPUT_DIR):
     os.makedirs(TEST_OUTPUT_DIR)
 TEST_CASES: typing.List[TestCase] = []
@@ -38,23 +39,20 @@ if os.path.exists(ARTIFACT_HTML_DIR):
     shutil.rmtree(ARTIFACT_HTML_DIR)
 
 os.makedirs(ARTIFACT_HTML_DIR)
+class BuildError(Exception):
+    pass
 
-def run_command(cmd: typing.List[str]) -> types.GeneratorType:
-    proc = subprocess.Popen(' '.join(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+def run_command(cmd: typing.Union[str, typing.List[str]]) -> None:
+    if isinstance(cmd, str):
+        cmd = [cmd]
+
+    buffer_size: int = 1024
+    proc = subprocess.Popen(cmd, shell=True)
     while proc.poll() is None:
         time.sleep(.1)
 
     if proc.poll() > 0:
-        yield proc.poll(), proc.stderr.read().decode(ENCODING)
-
-    elif proc.poll() != None:
-        yield proc.poll(), proc.stdout.read().decode(ENCODING)
-
-    else:
-        # if proc.poll() is None, its still running the subprocess.
-        # block until done
-        pass
-
+        raise BuildError(f'Process Exit Code[{proc.poll()}]')
 
 def find_artifacts(start_dir: str) -> types.GeneratorType:
     for root, dirnames, filenames in os.walk(start_dir):
@@ -90,26 +88,14 @@ def main():
         build_dir: str = os.path.dirname(build_script_path)
         logger.info(f'Changing to build_dir[{build_dir}]')
         os.chdir(build_dir)
-        BUILD_STATE[notebook_name] = {'stdout': [], 'stderr': []}
         start = datetime.utcnow()
-        for return_code, comm, in run_command([f'bash build.sh {ARTIFACT_HTML_DIR}']):
-            if return_code > 0:
-                logger.error(comm)
-                BUILD_STATE[notebook_name]['exit-code'] = return_code
-                BUILD_STATE[notebook_name]['stderr'].append(comm)
-    
-            else:
-                BUILD_STATE[notebook_name]['exit-code'] = return_code
-                BUILD_STATE[notebook_name]['stdout'].append(comm)
-                logger.info(comm)
-    
+        logger.info(f'Running Build for Notebook[{notebook_name}]')
+        run_command([f'bash build.sh {ARTIFACT_HTML_DIR}'])
+
         delta = datetime.utcnow() - start
         logger.info(f'Changing back to old working dir[{owd}]')
         os.chdir(owd)
         test_case = TestCase(f'{notebook_name} Test')
-        if BUILD_STATE[notebook_name]['exit-code'] > 0:
-            test_case.result = Error('\n'.join(BUILD_STATE[notebook_name]['stderr']), BUILD_STATE[notebook_name]['exit-code'])
-            TEST_CASES.append(test_case)
     
         TEST_CASES.append(test_case)
     
