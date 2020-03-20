@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
+set -x
 # Only runs on master
 if [ -z "${CIRCLE_PULL_REQUEST}" ]; then
     git config --global user.email devnull@circleci.com
