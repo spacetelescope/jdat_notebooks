@@ -3,13 +3,15 @@
 <head>
 <meta charset=utf-8>
   <title>
-    JDAT Notebooks
+    JWST Data Analysis Tools Notebooks
   </title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/css/bootstrap.min.css" integrity="sha384-PDle/QlgIONtM1aqA2Qemk5gPOE7wFq8+Em+G/hmo5Iq0CCmYZLv3fVRDJ4MMwEA" crossorigin="anonymous">
 </head>
 <body>
   <h2 style="margin: 1em; border-bottom: 1px solid #eaecef;
-    padding-bottom: .3em; font-size: 1.5em"> JDAT Notebooks </h2>
+    padding-bottom: .3em; font-size: 1.5em">
+    JWST Data Analysis Tools Notebooks
+    </h2>
 
 <ul class="list-group list-group-flush" style="width: fit-content; margin: .5em">
 {% for group in page_groups %}
