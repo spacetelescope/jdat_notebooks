@@ -14,7 +14,7 @@ if [ -z "${CIRCLE_PULL_REQUEST}" ]; then
     cd /tmp/out
     rm -rf pages
     mv /tmp/artifacts-html pages
-    rm index.html
+    rm index.html || true
     mv pages/index.html .
     git add index.html -f
     git add pages -f
