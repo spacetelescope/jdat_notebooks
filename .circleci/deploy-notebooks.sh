@@ -18,6 +18,7 @@ if [ -z "${CIRCLE_PULL_REQUEST}" ]; then
     mv pages/index.html .
     git add index.html -f
     git add pages -f
+    rm -rf .circleci
     git commit -m 'Automated deployment to Github Pages: ${BUILD_TAG}' -a || true
     git push origin gh-pages
     git clean -dfx

@@ -90,7 +90,10 @@ def main():
         os.chdir(build_dir)
         start = datetime.utcnow()
         logger.info(f'Running Build for Notebook[{notebook_name}]')
-        run_command([f'bash build.sh {ARTIFACT_HTML_DIR}'])
+        try:
+            run_command([f'bash build.sh {ARTIFACT_HTML_DIR}'])
+        except BuildError:
+            raise BuildError(f'Unable to execute notebook[{notebook_name}]')
 
         delta = datetime.utcnow() - start
         logger.info(f'Changing back to old working dir[{owd}]')
