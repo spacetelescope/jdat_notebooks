@@ -81,7 +81,7 @@ fi
 pip install jupyter
 mkdir -p $1/{notebook_groups}
 python extract_metadata_from_notebook.py --input "{notebook_filepath}" --output "$1/{notebook_groups}/{notebook_name_plain}.metadata.json"
-jupyter nbconvert --stdout --to html "{notebook_filepath}" > "$1/{notebook_groups}/{notebook_name_plain}.html"
+jupyter nbconvert --debug --to html --execute "{notebook_filepath}" --output "$1/{notebook_groups}/{notebook_name_plain}.html" --ExecutePreprocessor.timeout=600
 cd -
 """
         with open(build_script_path, 'w') as stream:
