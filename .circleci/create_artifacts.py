@@ -72,6 +72,9 @@ source activate notebooks_env
 virtualenv -p $(which python3) env
 conda deactivate
 source env/bin/activate
+if [ -f "pre-install.sh" ]; then
+   bash pre-install.sh
+fi
 if [ -f "pre_requirements.txt" ]; then
     pip install -r pre_requirements.txt
 fi
@@ -80,6 +83,10 @@ if [ -f "requirements.txt" ]; then
 fi
 pip install jupyter
 mkdir -p $1/{notebook_groups}
+
+if [ -f "environment.sh" ]; then
+    source environment.sh
+fi
 python extract_metadata_from_notebook.py --input "{notebook_filepath}" --output "$1/{notebook_groups}/{notebook_name_plain}.metadata.json"
 jupyter nbconvert --debug --to html --execute "{notebook_filepath}" --output "$1/{notebook_groups}/{notebook_name_plain}.html" --ExecutePreprocessor.timeout=600
 cd -
