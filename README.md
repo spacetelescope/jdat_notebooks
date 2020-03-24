@@ -1,4 +1,17 @@
-# Development Procedure for JDAT Notebooks
+# James Webb Space Telescope Data Analysis Tool Notebooks
+
+## Introduction 
+This repository contains Jupyter notebooks intended to illustrate workflows useful for analyzing JWST data. The notebooks are likely to be useful for analyzing data from other observatories as well.
+
+You can view rendered versions of the notebooks at https://spacetelescope.github.io/jdat_notebooks/. 
+
+Do download and execute the notebooks, clone this repository to your local computer. Most of the notebooks
+rely on packages that are available in [astroconda](https://astroconda.readthedocs.io/en/latest/), although
+a few rely on packages that should be installed using [pip](https://pip.pypa.io/en/stable/). The version
+dependencies are listed in the `environment.yaml` and in the `requirements` file in each notebook folder.
+
+
+## Development Procedure for JDAT Notebooks
 
 This document is a description of the JWST Data Analysis Tools Approach to
 "Notebook-Driven Development".  The procedures here outline the process for
@@ -26,7 +39,7 @@ and similar guidance for Python code at the
 [STScI Python style guide](https://github.com/spacetelescope/style-guides/blob/master/guides/python.md).
 These guidelines are in place to make review steps easier.
 
-## Notebook Concept
+### Notebook Concept
 
 The primary purpose of this stage is to record a scientific workflow, but without including actual code.
 This stage is generally done primarily by a scientist. Reasonably often, notebooks can skip this stage
@@ -53,7 +66,7 @@ Once they have the concept ready, the author should create a pull request with t
 instructions at the end of this document).
 
 
-## Notebook Draft
+### Notebook Draft
 
 The primary purpose of this stage is to get a functioning notebook to record a workflow.
 This stage is also typically done by a scientist (although with developers available to ask questions).
@@ -106,7 +119,7 @@ is in the``example_notebook`` folder.
 That will ensure reviewers/testers can be sure that if they encounter problems, it is not due to software version mis-matches.
 
 
-## Concept/Draft notebook-driven development
+### Concept/Draft notebook-driven development
 
 Between the concept and draft, or draft and polished stages, there is potential for considerable development
 to be necessary.  A draft notebook may contain a large number of areas where more development is desired in data
@@ -117,7 +130,7 @@ author for guidance to ensure the implementation actually meets the notebook's n
 process for this step, but it is intended that the JDAT planning process (currently on JIRA) keeps track of specific
 steps needed before a given notebook can proceed on to the next stage.
 
-## Integrated Notebook
+### Integrated Notebook
 
 Once a draft notebook has been completed, the next stage is to build the draft into a notebook that uses the DAT's
 or associated community-developed software as consistently as possible.  This is typically done via a developer
@@ -144,7 +157,7 @@ the Pull Request workflow as described above, but with the notebook title now ch
 (no "Concept:" or "Draft:"). The Pull Request is then reviewed by one of the project scientists, and merged when
 everyone is satisfied with the notebook.
 
-## Final/Public Notebook
+### Final/Public Notebook
 
 The final stage for the notebook is release on the
 [official STScI notebook repository](https://github.com/spacetelescope/notebooks).
@@ -157,14 +170,14 @@ a good opportunity to fill in the scientific context of a given notebook - e.g. 
 plot at the bottom that shows the final science result.  Once this is done, and the Pull Request merged, the Notebook
 can be declared complete.
 
-## Revision based on Community feedback
+### Revision based on Community feedback
 
 Of course, science does not stand still!  As time passes some of the completed notebooks may have enhancements
 or changes necessary.  In general these follow the standard Pull Request workflow and can be submitted by anyone
 once the notebook is public (both in and out of STScI).  While the repo maintainers manage this process, the notebook
 authors may be called in from time to time to provide opinions or perspectives on any proposed changes.
 
-# Procedure to submit a notebook as a Pull Request
+## Procedure to submit a notebook as a Pull Request
 
 Submission of a new notebook follows the Github Pull Request workflow.  All details are in the
 [STScI git workflow style guide](https://github.com/spacetelescope/style-guides/blob/master/guides/git-workflow.md).
