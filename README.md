@@ -1,7 +1,7 @@
 # James Webb Space Telescope Data Analysis Tool Notebooks
 
 ## Introduction 
-This repository contains Jupyter notebooks intended to illustrate workflows useful for analyzing JWST data. The notebooks are likely to be useful for analyzing data from other observatories as well.
+This repository contains Jupyter notebooks intended to illustrate workflows for analyzing JWST data. The notebooks are likely to be useful for analyzing data from other observatories as well.
 
 You can view rendered versions of the notebooks at https://spacetelescope.github.io/jdat_notebooks/. 
 
@@ -232,7 +232,6 @@ the branch on your personal fork, so repository ``username/dat_pyinthesky`` and 
 set a title and you click on ``Create pull request``.
 
 One of the team members can then merge your Pull Request.
-
 
 
 
