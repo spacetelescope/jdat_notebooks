@@ -25,6 +25,8 @@ if os.path.exists(ARTIFACT_DEST_DIR):
     shutil.rmtree(ARTIFACT_DEST_DIR)
 
 os.makedirs(ARTIFACT_DEST_DIR)
+with open(os.path.join(os.getcwd(), 'excluded_notebooks'), 'r') as stream:
+    EXCLUDED_NOTEBOOKS = [nb for nb in stream.read().split('\n') if nb]
 
 def find_ipynb_files(start_path: str) -> types.GeneratorType:
     for root, dirnames, filenames in os.walk(start_path):
@@ -48,6 +50,9 @@ def main():
     for notebook_path in find_ipynb_files(os.getcwd()):
         logger.info(f'Found notebook in path[{os.path.relpath(notebook_path)}]. Building Artifact')
         notebook_name: str = os.path.basename(notebook_path)
+        if notebook_name in EXCLUDED_NOTEBOOKS:
+            continue
+
         notebook_name_plain: str = notebook_name.rsplit('.', 1)[0]
         build_path = tempfile.mkdtemp(prefix=notebook_name)
         shutil.rmtree(build_path)
