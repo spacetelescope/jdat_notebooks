@@ -93,7 +93,7 @@ if [ -f "environment.sh" ]; then
     source environment.sh
 fi
 python extract_metadata_from_notebook.py --input "{notebook_filepath}" --output "$1/{notebook_groups}/{notebook_name_plain}.metadata.json"
-jupyter nbconvert --debug --to html --execute "{notebook_filepath}" --output "$1/{notebook_groups}/{notebook_name_plain}.html" --ExecutePreprocessor.timeout=600
+jupyter nbconvert --debug --to html --execute "{notebook_filepath}" --output "$1/{notebook_groups}/{notebook_name_plain}.html" --ExecutePreprocessor.timeout=3600
 cd -
 """
             with open(build_script_path, 'w') as stream:
