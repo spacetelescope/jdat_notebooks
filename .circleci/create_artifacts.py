@@ -53,14 +53,14 @@ def main():
         shutil.rmtree(build_path)
         build_script_path = os.path.join(build_path, 'build.sh')
         shutil.copytree(notebook_path, build_path)
-        paths: typing.List[str] = glob.glob(f'{build_path}/*.ipynb')
-        if len(paths) > 1:
-            raise NotImplementedError('Support for building more than one .ipynb file at a time is not yet supported')
+        paths: typing.List[str] = [nb for nb in sorted(glob.glob(f'{build_path}/*.ipynb'))]
+        # if len(paths) > 1:
+        #     raise NotImplementedError('Support for building more than one .ipynb file at a time is not yet supported')
 
-        notebook_filepath: str = paths[0]
-        notebook_groups: str = os.path.relpath(notebook_path).split('notebooks')[1].strip('/')
-        shutil.copyfile('.circleci/extract_metadata_from_notebook.py', f'{build_path}/extract_metadata_from_notebook.py')
-        setup_script: str = f"""#!/usr/bin/env bash
+        for notebook_filepath in paths:
+            notebook_groups: str = os.path.relpath(notebook_path).split('notebooks')[1].strip('/')
+            shutil.copyfile('.circleci/extract_metadata_from_notebook.py', f'{build_path}/extract_metadata_from_notebook.py')
+            setup_script: str = f"""#!/usr/bin/env bash
 set -e
 
 if [ -z "$1" ]; then
@@ -91,22 +91,22 @@ python extract_metadata_from_notebook.py --input "{notebook_filepath}" --output 
 jupyter nbconvert --debug --to html --execute "{notebook_filepath}" --output "$1/{notebook_groups}/{notebook_name_plain}.html" --ExecutePreprocessor.timeout=600
 cd -
 """
-        with open(build_script_path, 'w') as stream:
-            stream.write(setup_script)
+            with open(build_script_path, 'w') as stream:
+                stream.write(setup_script)
     
-        logger.info(f'Taring Notebook[{notebook_name}]')
-        artifact_name: str = f'{notebook_name_plain}.tar.gz'
-        artifact_dir_path: str = os.path.dirname(tempfile.NamedTemporaryFile().name)
-        artifact_path: str = os.path.join(artifact_dir_path, artifact_name)
-        with tarfile.open(artifact_path, "w:gz") as tar:
-            tar.add(build_path, arcname=os.path.basename(build_path))
+            logger.info(f'Taring Notebook[{notebook_name}]')
+            artifact_name: str = f'{notebook_name_plain}.tar.gz'
+            artifact_dir_path: str = os.path.dirname(tempfile.NamedTemporaryFile().name)
+            artifact_path: str = os.path.join(artifact_dir_path, artifact_name)
+            with tarfile.open(artifact_path, "w:gz") as tar:
+                tar.add(build_path, arcname=os.path.basename(build_path))
     
-        if not os.path.exists(ARTIFACT_DEST_DIR):
-            os.makedirs(ARTIFACT_DEST_DIR)
+            if not os.path.exists(ARTIFACT_DEST_DIR):
+                os.makedirs(ARTIFACT_DEST_DIR)
     
-        artifact_dest: str = os.path.join(ARTIFACT_DEST_DIR, artifact_name)
-        logger.info(f'Moving Notebook[{notebook_name_plain}]')
-        shutil.move(artifact_path, artifact_dest)
+            artifact_dest: str = os.path.join(ARTIFACT_DEST_DIR, artifact_name)
+            logger.info(f'Moving Notebook[{notebook_name_plain}]')
+            shutil.move(artifact_path, artifact_dest)
 
 if __name__ in ['__main__']:
     main()
