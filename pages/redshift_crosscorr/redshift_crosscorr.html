@@ -13077,7 +13077,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Measuring-galaxy-redshift-with-cross-correlation-algorithm">Measuring galaxy redshift with cross-correlation algorithm<a class="anchor-link" href="#Measuring-galaxy-redshift-with-cross-correlation-algorithm">&#182;</a></h1><p>This notebook attempts to follow the workflow that uses IRAF tasks, described here <a href="http://tdc-www.harvard.edu/iraf/rvsao/xcsao/xcsao.proc.html">http://tdc-www.harvard.edu/iraf/rvsao/xcsao/xcsao.proc.html</a></p>
+<h1 id="Measuring-Galaxy-Redshifts-with-Cross-correlation">Measuring Galaxy Redshifts with Cross-correlation<a class="anchor-link" href="#Measuring-Galaxy-Redshifts-with-Cross-correlation">&#182;</a></h1><p>This notebook attempts to follow the workflow that uses IRAF tasks, described here <a href="http://tdc-www.harvard.edu/iraf/rvsao/xcsao/xcsao.proc.html">http://tdc-www.harvard.edu/iraf/rvsao/xcsao/xcsao.proc.html</a></p>
 <p>Observed spectrum from LEGA-C: LEGA-C is a galaxy survey of about 3000 galaxies at z~0.8 and M* &gt; 10^10 M_sun in the COSMOS field. The spectra sample the rest-frame optical between ~3000A and 5000A at high resolution and very high signal-to-noise ratio. More information about the survey can be found here: <a href="http://www.mpia.de/home/legac/">http://www.mpia.de/home/legac/</a></p>
 <p>Template from Pacifici et al. 2012.</p>
 <p><strong>Developer Notes:</strong></p>
@@ -13107,18 +13107,18 @@ div#notebook {
 <span class="kn">from</span> <span class="nn">astropy.modeling.polynomial</span> <span class="kn">import</span> <span class="n">Chebyshev1D</span>
 <span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">const</span>
 <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span><span class="p">,</span> <span class="n">ascii</span>
+<span class="kn">from</span> <span class="nn">astropy.wcs</span> <span class="kn">import</span> <span class="n">WCS</span>
 
 <span class="kn">import</span> <span class="nn">specutils</span>
 <span class="kn">from</span> <span class="nn">specutils.fitting</span> <span class="kn">import</span> <span class="n">continuum</span><span class="p">,</span> <span class="n">find_lines_threshold</span><span class="p">,</span> <span class="n">find_lines_derivative</span>
-<span class="kn">from</span> <span class="nn">specutils.spectra.spectrum1d</span> <span class="kn">import</span> <span class="n">Spectrum1D</span>
-<span class="kn">from</span> <span class="nn">specutils.manipulation.resample</span> <span class="kn">import</span> <span class="n">FluxConservingResampler</span><span class="p">,</span> \
-    <span class="n">SplineInterpolatedResampler</span><span class="p">,</span> <span class="n">LinearInterpolatedResampler</span>
+<span class="kn">from</span> <span class="nn">specutils</span> <span class="kn">import</span> <span class="n">Spectrum1D</span>
+<span class="kn">from</span> <span class="nn">specutils.manipulation</span> <span class="kn">import</span> <span class="n">FluxConservingResampler</span><span class="p">,</span> <span class="n">SplineInterpolatedResampler</span><span class="p">,</span> <span class="n">LinearInterpolatedResampler</span>
 <span class="kn">from</span> <span class="nn">specutils.analysis</span> <span class="kn">import</span> <span class="n">correlation</span>
-<span class="kn">from</span> <span class="nn">specutils.spectra.spectral_region</span> <span class="kn">import</span> <span class="n">SpectralRegion</span>
-<span class="kn">from</span> <span class="nn">specutils.manipulation.extract_spectral_region</span> <span class="kn">import</span> <span class="n">extract_region</span>
-<span class="kn">from</span> <span class="nn">specutils.manipulation.utils</span> <span class="kn">import</span> <span class="n">linear_exciser</span>
+<span class="kn">from</span> <span class="nn">specutils</span> <span class="kn">import</span> <span class="n">SpectralRegion</span>
+<span class="kn">from</span> <span class="nn">specutils.manipulation</span> <span class="kn">import</span> <span class="n">extract_region</span>
+<span class="kn">from</span> <span class="nn">specutils.manipulation</span> <span class="kn">import</span> <span class="n">linear_exciser</span>
 <span class="kn">from</span> <span class="nn">specutils.manipulation</span> <span class="kn">import</span> <span class="n">noise_region_uncertainty</span>
-<span class="kn">from</span> <span class="nn">specutils.manipulation</span> <span class="kn">import</span> <span class="n">gaussian_smooth</span>
+<span class="kn">from</span> <span class="nn">specutils.manipulation</span> <span class="kn">import</span> <span class="n">gaussian_smooth</span><span class="p">,</span> <span class="n">convolution_smooth</span>
 
 <span class="c1"># Check versions</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Numpy: &quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
@@ -13178,8 +13178,7 @@ Specutils:  1.0
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">pl</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="c1"># Use this version for non-interactive plots (easier scrolling of the notebook)</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
@@ -13191,8 +13190,8 @@ Specutils:  1.0
 <span class="c1"># be the same in both the inline and notebook versions</span>
 <span class="o">%</span><span class="k">config</span> InlineBackend.print_figure_kwargs = {&#39;bbox_inches&#39;: None}
 
-<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;savefig.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
-<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;savefig.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
 </pre></div>
 
     </div>
@@ -13248,7 +13247,7 @@ Specutils:  1.0
 <span class="n">flux</span> <span class="o">=</span> <span class="n">hdu1d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="n">wht</span> <span class="o">=</span> <span class="n">hdu1dwht</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="n">unc</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">wht</span><span class="p">)</span>
-<span class="n">wave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">flux</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">hdu1d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CD1_1&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">hdu1d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CRVAL1&#39;</span><span class="p">]</span>
+<span class="n">wave</span> <span class="o">=</span> <span class="n">WCS</span><span class="p">(</span><span class="n">hdu1d</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">pixel_to_world</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hdu1d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)),</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="n">spec_unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="s1">&#39;10^-19 erg s^-1 cm^-2 angstrom^-1&#39;</span><span class="p">)</span>
 <span class="n">dataspec</span> <span class="o">=</span> <span class="n">QTable</span><span class="p">([</span><span class="n">wave</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">angstrom</span><span class="p">,</span> <span class="n">flux</span><span class="o">*</span><span class="n">spec_unit</span><span class="p">,</span> <span class="n">wht</span><span class="p">,</span> <span class="n">unc</span><span class="o">*</span><span class="n">spec_unit</span><span class="p">],</span> 
@@ -13271,8 +13270,14 @@ Specutils:  1.0
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>/tmp/redshift_crosscorr6bjrwce9/env/lib/python3.7/site-packages/ipykernel_launcher.py:7: RuntimeWarning: divide by zero encountered in true_divide
+<pre>/tmp/redshift_crosscorrnistl872/env/lib/python3.7/site-packages/ipykernel_launcher.py:7: RuntimeWarning: divide by zero encountered in true_divide
   import sys
+WARNING: FITSFixedWarning: RADECSYS= &#39;FK5 &#39; / Coordinate reference frame 
+the RADECSYS keyword is deprecated, use RADESYSa. [astropy.wcs.wcs]
+WARNING:astropy:FITSFixedWarning: RADECSYS= &#39;FK5 &#39; / Coordinate reference frame 
+the RADECSYS keyword is deprecated, use RADESYSa.
+WARNING: FITSFixedWarning: The WCS transformation has more axes (2) than the image it is associated with (1) [astropy.wcs.wcs]
+WARNING:astropy:FITSFixedWarning: The WCS transformation has more axes (2) than the image it is associated with (1)
 </pre>
 </div>
 </div>
@@ -13285,7 +13290,7 @@ Specutils:  1.0
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <i>QTable length=4059</i>
-<table id="table140304190388432" class="table-striped table-bordered table-condensed">
+<table id="table140580015003984" class="table-striped table-bordered table-condensed">
 <thead><tr><th>wavelength</th><th>flux</th><th>weight</th><th>uncertainty</th></tr></thead>
 <thead><tr><th>Angstrom</th><th>1e-19 erg / (Angstrom cm2 s)</th><th></th><th>1e-19 erg / (Angstrom cm2 s)</th></tr></thead>
 <thead><tr><th>float64</th><th>float32</th><th>float32</th><th>float32</th></tr></thead>
@@ -13358,13 +13363,13 @@ Specutils:  1.0
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Note that in this and in subsequent plots, we are showing just the wavelength range of</span>
 <span class="c1"># interest. The template covers a significantly wider range.</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Input data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Input data&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13463,13 +13468,13 @@ WARNING:astropy:Model is linear in parameters; consider using linear fitting met
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;After continuum subtraction&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;After continuum subtraction&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13515,7 +13520,7 @@ WARNING:astropy:Model is linear in parameters; consider using linear fitting met
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Smooth-observation">Smooth observation<a class="anchor-link" href="#Smooth-observation">&#182;</a></h3>
+<h3 id="Smooth-observed-spectrum">Smooth observed spectrum<a class="anchor-link" href="#Smooth-observed-spectrum">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13523,6 +13528,20 @@ WARNING:astropy:Model is linear in parameters; consider using linear fitting met
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The IRAF task XCORR works in Fourier space. In there, it applies a cosine bell filter (raised-cosine filter) to the observed spectrum, before multiplying together the two Fourier transforms. Here, we are working in data space, thus we emulate the filter operation by convolving the observed spectrum with a windowed sinc smoothing function.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Developer Notes:</strong></p>
+<ul>
+<li>We should implement this window function in specutils so the user doe
+sn't have to: <a href="https://github.com/astropy/specutils/issues/636">https://github.com/astropy/specutils/issues/636</a></li>
+<li>We should implement a fourier-space version of the xcorr as well as t
+he current freq/wave-space version</li>
+</ul>
 
 </div>
 </div>
@@ -13555,14 +13574,29 @@ WARNING:astropy:Model is linear in parameters; consider using linear fitting met
 <span class="n">filt</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">filt</span><span class="p">)</span>
 
 <span class="c1"># Smooth</span>
-<span class="n">sflux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
-
-<span class="n">p_obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">p_obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span>
-                   <span class="n">flux</span><span class="o">=</span><span class="n">sflux</span><span class="p">,</span>
-                   <span class="n">uncertainty</span><span class="o">=</span><span class="n">p_obs</span><span class="o">.</span><span class="n">uncertainty</span><span class="p">)</span>
+<span class="n">p_obs_smoothed</span> <span class="o">=</span> <span class="n">convolution_smooth</span><span class="p">(</span><span class="n">p_obs</span><span class="p">,</span> <span class="n">filt</span><span class="p">)</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>WARNING: UnitsWarning: The unit &#39;Angstrom&#39; has been deprecated in the VOUnit standard. Suggested: 0.1nm. [astropy.units.format.utils]
+WARNING:astropy:UnitsWarning: The unit &#39;Angstrom&#39; has been deprecated in the VOUnit standard. Suggested: 0.1nm.
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -13572,13 +13606,13 @@ WARNING:astropy:Model is linear in parameters; consider using linear fitting met
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;After smoothing&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs_smoothed</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_obs_smoothed</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;After smoothing&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13640,7 +13674,7 @@ WARNING:astropy:Model is linear in parameters; consider using linear fitting met
 <span class="c1"># a significant increase in execution time. It is advised that the template is cut</span>
 <span class="c1"># to work only on the useful region.</span>
 
-<span class="n">corr</span><span class="p">,</span> <span class="n">lag</span> <span class="o">=</span> <span class="n">correlation</span><span class="o">.</span><span class="n">template_correlate</span><span class="p">(</span><span class="n">p_obs</span><span class="p">,</span> <span class="n">p_template</span><span class="p">)</span>
+<span class="n">corr</span><span class="p">,</span> <span class="n">lag</span> <span class="o">=</span> <span class="n">correlation</span><span class="o">.</span><span class="n">template_correlate</span><span class="p">(</span><span class="n">p_obs_smoothed</span><span class="p">,</span> <span class="n">p_template</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13653,11 +13687,11 @@ WARNING:astropy:Model is linear in parameters; consider using linear fitting met
 <div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">corr</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">300000</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">lag</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">corr</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">300000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">lag</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13801,14 +13835,14 @@ Redshift from parabolic fit:  0.7582972872896717
 <div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
-<span class="c1"># pl.xlim(sp_xlim)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">peak_lags</span><span class="p">,</span> <span class="n">peak_vals</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">peak_lags</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">polyval</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">peak_lags</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;fit&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">lag</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Fit to correlation peak&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="c1"># plt.xlim(sp_xlim)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">peak_lags</span><span class="p">,</span> <span class="n">peak_vals</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">peak_lags</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">polyval</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">peak_lags</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;fit&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">lag</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Fit to correlation peak&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13871,13 +13905,13 @@ Redshift from parabolic fit:  0.7582972872896717
 <div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template_z</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">template_z</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Redshifted original template and original observed spectrum&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template_z</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">template_z</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Redshifted original template and original observed spectrum&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14001,7 +14035,7 @@ Redshift from parabolic fit:  0.7582972872896717
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>/tmp/redshift_crosscorr6bjrwce9/env/lib/python3.7/site-packages/ipykernel_launcher.py:7: RuntimeWarning: divide by zero encountered in true_divide
+<pre>/tmp/redshift_crosscorrnistl872/env/lib/python3.7/site-packages/ipykernel_launcher.py:7: RuntimeWarning: divide by zero encountered in true_divide
   import sys
 </pre>
 </div>
@@ -14015,7 +14049,7 @@ Redshift from parabolic fit:  0.7582972872896717
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <i>QTable length=4059</i>
-<table id="table140304194222672" class="table-striped table-bordered table-condensed">
+<table id="table140580094665488" class="table-striped table-bordered table-condensed">
 <thead><tr><th>wavelength</th><th>flux</th><th>weight</th><th>uncertainty</th></tr></thead>
 <thead><tr><th>Angstrom</th><th>1e-19 erg / (Angstrom cm2 s)</th><th></th><th>1e-19 erg / (Angstrom cm2 s)</th></tr></thead>
 <thead><tr><th>float64</th><th>float32</th><th>float32</th><th>float32</th></tr></thead>
@@ -14121,13 +14155,13 @@ WARNING:astropy:UnitsWarning: The unit &#39;Angstrom&#39; has been deprecated in
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Note that in this and in subsequent plots, we are showing just the wavelength range of</span>
 <span class="c1"># interest. The template covers a significantly wider range.</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Input data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Input data&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14194,13 +14228,13 @@ WARNING:astropy:UnitsWarning: The unit &#39;Angstrom&#39; has been deprecated in
 <span class="n">continuum_model</span> <span class="o">=</span> <span class="n">continuum</span><span class="o">.</span><span class="n">fit_generic_continuum</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Chebyshev1D</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span> 
 <span class="n">p_template</span> <span class="o">=</span> <span class="n">template</span> <span class="o">-</span> <span class="n">continuum_model</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
 
-<span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;After continuum subtraction&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;After continuum subtraction&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14260,7 +14294,7 @@ WARNING:astropy:Model is linear in parameters; consider using linear fitting met
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Smooth-observation">Smooth observation<a class="anchor-link" href="#Smooth-observation">&#182;</a></h3>
+<h3 id="Smooth-observed-spectrum">Smooth observed spectrum<a class="anchor-link" href="#Smooth-observed-spectrum">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -14292,19 +14326,15 @@ WARNING:astropy:Model is linear in parameters; consider using linear fitting met
 <span class="n">filt</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">filt</span><span class="p">)</span>
 
 <span class="c1"># Smooth</span>
-<span class="n">sflux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
+<span class="n">p_obs_smoothed</span> <span class="o">=</span> <span class="n">convolution_smooth</span><span class="p">(</span><span class="n">p_obs</span><span class="p">,</span> <span class="n">filt</span><span class="p">)</span>
 
-<span class="n">p_obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">p_obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span>
-                   <span class="n">flux</span><span class="o">=</span><span class="n">sflux</span><span class="p">,</span>
-                   <span class="n">uncertainty</span><span class="o">=</span><span class="n">p_obs</span><span class="o">.</span><span class="n">uncertainty</span><span class="p">)</span>
-
-<span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;After smoothing&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs_smoothed</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_obs_smoothed</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;After smoothing&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14314,6 +14344,18 @@ WARNING:astropy:Model is linear in parameters; consider using linear fitting met
 <div class="output_wrapper">
 <div class="output">
 
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>WARNING: UnitsWarning: The unit &#39;Angstrom&#39; has been deprecated in the VOUnit standard. Suggested: 0.1nm. [astropy.units.format.utils]
+WARNING:astropy:UnitsWarning: The unit &#39;Angstrom&#39; has been deprecated in the VOUnit standard. Suggested: 0.1nm.
+</pre>
+</div>
+</div>
 
 <div class="output_area">
 
@@ -14359,13 +14401,13 @@ WARNING:astropy:Model is linear in parameters; consider using linear fitting met
 <div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">corr</span><span class="p">,</span> <span class="n">lag</span> <span class="o">=</span> <span class="n">correlation</span><span class="o">.</span><span class="n">template_correlate</span><span class="p">(</span><span class="n">p_obs</span><span class="p">,</span> <span class="n">p_template</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">corr</span><span class="p">,</span> <span class="n">lag</span> <span class="o">=</span> <span class="n">correlation</span><span class="o">.</span><span class="n">template_correlate</span><span class="p">(</span><span class="n">p_obs_smoothed</span><span class="p">,</span> <span class="n">p_template</span><span class="p">)</span>
 
-<span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">corr</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">300000</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">lag</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">corr</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">300000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">lag</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14473,13 +14515,13 @@ Redshift from parabolic fit:  0.7584207740282183
 
 <span class="n">template_z</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="n">z</span><span class="p">),</span> <span class="n">flux</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">flux</span><span class="p">)</span>
 
-<span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template_z</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">template_z</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Redshifted original template and original observed spectrum&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template_z</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">template_z</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Redshifted original template and original observed spectrum&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
