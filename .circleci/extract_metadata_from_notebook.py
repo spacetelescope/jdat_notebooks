@@ -20,7 +20,7 @@ def extract_metadata(options: argparse.Namespace) -> typing.Dict[str, typing.Any
         for idx, cell in enumerate(notebook['cells']):
             if idx == 0:
                 if not cell['cell_type'] in ['markdown']:
-                    raise NotImplementedError(f'First cell must be a Markdown Cell')
+                    raise NotImplementedError('First cell must be a Markdown Cell')
 
                 for line_item in cell['source']:
                     if line_item.strip().startswith('#'):
