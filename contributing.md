@@ -6,7 +6,7 @@
 
    .. note::
 
-   ``jdat_notebooks`` are intended for the broader science community.  If you wish to contribute notebooks or technical expertise, we refer you to `dat_pyinthesky <https://github.com/spacetelescope/dat_pyinthesky/tree/master/jdat_notebooks>`_.
+   The `jdat_notebooks repository <https://github.com/spacetelescope/jdat_notebooks>`_ is for already-reviewed notebooks that are ready for consumption by the science community.  If you wish to contribute notebooks or technical expertise, we refer you to `dat_pyinthesky <https://github.com/spacetelescope/dat_pyinthesky/tree/master/jdat_notebooks>`_ as the place to submit a first draft.  The description below outlines the whole process, which begins in `dat_pyinthesky` but finishes in `jdat_notebooks`.
 
 
 # Development Procedure for JDAT Notebooks
