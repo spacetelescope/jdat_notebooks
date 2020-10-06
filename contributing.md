@@ -1,12 +1,8 @@
 # James Webb Space Telescope Data Analysis Tool Notebooks
 
-.. note::
+   ``jdat_notebooks`` are one component of STScI's larger [Data Analysis Tools Ecosystem](https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis).
 
-   ``jdat_notebooks`` are one component of STScI's larger `Data Analysis Tools Ecosystem <https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis>`_.
-
-   .. note::
-
-   The `jdat_notebooks repository <https://github.com/spacetelescope/jdat_notebooks>`_ is for already-reviewed notebooks that are ready for consumption by the science community.  If you wish to contribute notebooks or technical expertise, we refer you to `dat_pyinthesky <https://github.com/spacetelescope/dat_pyinthesky/tree/master/jdat_notebooks>`_ as the place to submit a first draft.  The description below outlines the whole process, which begins in `dat_pyinthesky` but finishes in `jdat_notebooks`.
+   The [jdat_notebooks repository](https://github.com/spacetelescope/jdat_notebooks) is for already-reviewed notebooks that are ready for consumption by the science community.  If you wish to contribute notebooks or technical expertise, we refer you to [dat_pyinthesky](https://github.com/spacetelescope/dat_pyinthesky/tree/master/jdat_notebooks) as the place to submit a first draft.  The description below outlines the whole process, which begins in `dat_pyinthesky` but finishes in `jdat_notebooks`.
 
 
 # Development Procedure for JDAT Notebooks
