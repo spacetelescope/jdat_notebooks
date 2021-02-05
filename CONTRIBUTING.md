@@ -2,7 +2,7 @@
 
    ``jdat_notebooks`` are one component of STScI's larger [Data Analysis Tools Ecosystem](https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis).
 
-   The [jdat_notebooks repository](https://github.com/spacetelescope/jdat_notebooks) is for already-reviewed notebooks that are ready for consumption by the science community.  If you wish to contribute notebooks or technical expertise, we refer you to [dat_pyinthesky](https://github.com/spacetelescope/dat_pyinthesky/tree/master/jdat_notebooks) as the place to submit a first draft.  The description below outlines the whole process, which begins in `dat_pyinthesky` but finishes in `jdat_notebooks`.
+   The [jdat_notebooks repository](https://github.com/spacetelescope/jdat_notebooks) is for already-reviewed notebooks that are ready for consumption by the science community.  If you wish to contribute notebooks or technical expertise, we refer you to [dat_pyinthesky](https://github.com/spacetelescope/dat_pyinthesky/tree/main/jdat_notebooks) as the place to submit a first draft.  The description below outlines the whole process, which begins in `dat_pyinthesky` but finishes in `jdat_notebooks`.
 
 
 # Development Procedure for JDAT Notebooks
@@ -234,7 +234,7 @@ of your notebook (see above).
 
 9. Now you can create a Pull Request from the ``spacetelescope/dat_pyinthesky`` repository. You do that
 by clicking on ``New pull request`` on the webpage, then the link ``compare across forks``. Then set the base repository
-to ``spacetelescope/dat_pyinthesky`` and branch ``master`` and the head fork to
+to ``spacetelescope/dat_pyinthesky`` and branch ``main`` and the head fork to
 the branch on your personal fork, so repository ``username/dat_pyinthesky`` and branch ``new_notebook_branch_name``. You
 set a title and you click on ``Create pull request``.
 

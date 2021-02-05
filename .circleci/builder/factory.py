@@ -31,7 +31,7 @@ def obtain_options() -> argparse.Namespace:
     # Build Notebooks
     parser.add_argument('-c', '--notebook-collection-paths', type=str, default='')
     parser.add_argument('-n', '--notebook-category', type=str, default=None)
-    parser.add_argument('-r', '--remote-names', type=str, default='master')
+    parser.add_argument('-r', '--remote-names', type=str, default='main,master')
     # Build Website
 
     # Sync Notebooks
