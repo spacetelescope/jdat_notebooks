@@ -5,15 +5,15 @@ set -e
 export LANG=C.UTF-8
 export LC_ALL=C.UTF-8
 
-sudo apt-get update --fix-missing
-sudo apt-get install vim python-virtualenv -y
-sudo apt-get install -y --no-install-recommends \
-        git \
-        make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
-        libncurses5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
-        libfreetype6-dev
-
-sudo apt-get clean
+# sudo apt-get update --fix-missing
+# sudo apt-get install vim python-virtualenv -y
+# sudo apt-get install -y --no-install-recommends \
+#         git \
+#         make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
+#         libncurses5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
+#         libfreetype6-dev
+# 
+# sudo apt-get clean
 
 git clone https://github.com/spacetelescope/nbcollection nbcollection
 cd nbcollection
