@@ -14,7 +14,6 @@ apt-get install -y --no-install-recommends \
         libfreetype6-dev
 
 apt-get clean
-rm -rf /var/lib/apt/lists/*
 
 git clone https://github.com/spacetelescope/nbcollection nbcollection
 cd nbcollection
