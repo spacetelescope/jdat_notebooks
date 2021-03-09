@@ -15,7 +15,8 @@ export LC_ALL=C.UTF-8
 # 
 # sudo apt-get clean
 
-pip install -U git+https://github.com/spacetelescope/nbcollection.git
+# sudo apt-get install git
+pip install -U https://github.com/spacetelescope/nbcollection.git
 # git clone https://github.com/spacetelescope/nbcollection nbcollection
 # cd nbcollection
 # git checkout 5b8f443af1509aa3c0d50115e5efae80d30841ff
