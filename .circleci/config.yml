@@ -1,7 +1,7 @@
 executors:
   nbcollection-builder:
     docker:
-    - image: jupyter/scipy-notebook:703d8b2dcb88
+    - image: continuumio/miniconda3:latest
     resource_class: medium
     working_directory: ~/repo
 jobs:
@@ -47,20 +47,6 @@ jobs:
         no_output_timeout: 60m
     - store_artifacts:
         path: /tmp/nbcollection-ci-artifacts
-  Notebooks-Composite Model Fitting:
-    executor: nbcollection-builder
-    steps:
-    - checkout
-    - run:
-        command: bash ./.circleci/setup-env.sh
-        name: Setup Environment
-    - run:
-        command: nbcollection-ci build-notebooks --collection-names notebooks --category-names
-          composite_model_fitting
-        name: Build Notebooks-Composite Model Fitting notebooks
-        no_output_timeout: 60m
-    - store_artifacts:
-        path: /tmp/nbcollection-ci-artifacts
   Notebooks-Cube Fitting:
     executor: nbcollection-builder
     steps:
@@ -72,34 +58,6 @@ jobs:
         command: nbcollection-ci build-notebooks --collection-names notebooks --category-names
           cube_fitting
         name: Build Notebooks-Cube Fitting notebooks
-        no_output_timeout: 60m
-    - store_artifacts:
-        path: /tmp/nbcollection-ci-artifacts
-  Notebooks-Example Notebook:
-    executor: nbcollection-builder
-    steps:
-    - checkout
-    - run:
-        command: bash ./.circleci/setup-env.sh
-        name: Setup Environment
-    - run:
-        command: nbcollection-ci build-notebooks --collection-names notebooks --category-names
-          example_notebook
-        name: Build Notebooks-Example Notebook notebooks
-        no_output_timeout: 60m
-    - store_artifacts:
-        path: /tmp/nbcollection-ci-artifacts
-  Notebooks-Ifu Cube Continuum Fit:
-    executor: nbcollection-builder
-    steps:
-    - checkout
-    - run:
-        command: bash ./.circleci/setup-env.sh
-        name: Setup Environment
-    - run:
-        command: nbcollection-ci build-notebooks --collection-names notebooks --category-names
-          IFU_cube_continuum_fit
-        name: Build Notebooks-Ifu Cube Continuum Fit notebooks
         no_output_timeout: 60m
     - store_artifacts:
         path: /tmp/nbcollection-ci-artifacts
@@ -215,20 +173,6 @@ jobs:
         no_output_timeout: 60m
     - store_artifacts:
         path: /tmp/nbcollection-ci-artifacts
-  Notebooks-Preimaging:
-    executor: nbcollection-builder
-    steps:
-    - checkout
-    - run:
-        command: bash ./.circleci/setup-env.sh
-        name: Setup Environment
-    - run:
-        command: nbcollection-ci build-notebooks --collection-names notebooks --category-names
-          preimaging
-        name: Build Notebooks-Preimaging notebooks
-        no_output_timeout: 60m
-    - store_artifacts:
-        path: /tmp/nbcollection-ci-artifacts
   Notebooks-Psf Photometry:
     executor: nbcollection-builder
     steps:
@@ -254,20 +198,6 @@ jobs:
         command: nbcollection-ci build-notebooks --collection-names notebooks --category-names
           redshift_crosscorr
         name: Build Notebooks-Redshift Crosscorr notebooks
-        no_output_timeout: 60m
-    - store_artifacts:
-        path: /tmp/nbcollection-ci-artifacts
-  Notebooks-Soss-Transit-Spectroscopy:
-    executor: nbcollection-builder
-    steps:
-    - checkout
-    - run:
-        command: bash ./.circleci/setup-env.sh
-        name: Setup Environment
-    - run:
-        command: nbcollection-ci build-notebooks --collection-names notebooks --category-names
-          soss-transit-spectroscopy
-        name: Build Notebooks-Soss-Transit-Spectroscopy notebooks
         no_output_timeout: 60m
     - store_artifacts:
         path: /tmp/nbcollection-ci-artifacts
@@ -302,22 +232,17 @@ workflows:
     - Notebooks-Niriss Wfss Postpipeline
     - Notebooks-Mos-Spectroscopy
     - Notebooks-Mrs Mstar Analysis
-    - Notebooks-Example Notebook
     - Notebooks-Cube Fitting
-    - Notebooks-Ifu Cube Continuum Fit
     - Notebooks-Miri Ifu Ysos In The Lmc
     - Notebooks-Optimal Extraction
     - Notebooks-Redshift Crosscorr
     - Notebooks-Background Estimation Imaging
-    - Notebooks-Soss-Transit-Spectroscopy
     - Notebooks-Psf Photometry
     - Notebooks-Asdf Example
-    - Notebooks-Composite Model Fitting
     - Notebooks-Niriss Ami Binary
     - Notebooks-Aperture Photometry
     - Notebooks-Miri Lrs Spectral Extraction
     - Notebooks-Transit Spectroscopy Notebook
     - Notebooks-Nircam Photometry
-    - Notebooks-Preimaging
     - Pull Request
   version: '2.1'
