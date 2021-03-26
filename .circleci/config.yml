@@ -229,6 +229,20 @@ jobs:
         no_output_timeout: 120m
     - store_artifacts:
         path: /tmp/nbcollection-ci-artifacts
+  Notebooks-Redshift Crosscorr:
+    executor: nbcollection-builder
+    steps:
+    - checkout
+    - run:
+        command: bash ./.circleci/setup-env.sh
+        name: Setup Environment
+    - run:
+        command: nbcollection-ci build-notebooks --collection-names notebooks --category-names
+          redshift_crosscorr
+        name: Build Notebooks-Redshift Crosscorr notebooks
+        no_output_timeout: 120m
+    - store_artifacts:
+        path: /tmp/nbcollection-ci-artifacts
   Notebooks-Specviz Notebookgui Interaction:
     executor: nbcollection-builder
     steps:
@@ -257,24 +271,6 @@ jobs:
         no_output_timeout: 120m
     - store_artifacts:
         path: /tmp/nbcollection-ci-artifacts
-  Publish Website:
-    executor: nbcollection-builder
-    steps:
-    - checkout
-    - run:
-        command: bash ./.circleci/setup-env.sh
-        name: Setup Environment
-        no_output_timeout: 120m
-    - run:
-        command: nbcollection-ci merge-artifacts -c notebooks -o $CIRCLE_PROJECT_USERNAME
-          -r $CIRCLE_PROJECT_REPONAME
-        name: Publish Website
-        no_output_timeout: 120m
-    - add_ssh_keys
-    - run:
-        command: nbcollection-ci site-deployment -r origin -b gh-pages
-        name: Deploy Website
-        no_output_timeout: 120m
   Pull Request:
     executor: nbcollection-builder
     steps:
@@ -301,6 +297,7 @@ workflows:
     - Notebooks-Miri Ifu Ysos In The Lmc
     - Notebooks-Optimal Extraction
     - Notebooks-Ifu Optimal
+    - Notebooks-Redshift Crosscorr
     - Notebooks-Background Estimation Imaging
     - Notebooks-Psf Photometry
     - Notebooks-Specviz Notebookgui Interaction
@@ -311,24 +308,4 @@ workflows:
     - Notebooks-Transit Spectroscopy Notebook
     - Notebooks-Nircam Photometry
     - Pull Request
-    - Publish Website:
-        requires:
-        - Notebooks-Niriss Wfss Postpipeline
-        - Notebooks-Mos-Spectroscopy
-        - Notebooks-Mrs Mstar Analysis
-        - Notebooks-Cube Fitting
-        - Notebooks-Ifu Cube Continuum Fit
-        - Notebooks-Nircam Psf-Matched Photometry
-        - Notebooks-Miri Ifu Ysos In The Lmc
-        - Notebooks-Optimal Extraction
-        - Notebooks-Ifu Optimal
-        - Notebooks-Background Estimation Imaging
-        - Notebooks-Psf Photometry
-        - Notebooks-Specviz Notebookgui Interaction
-        - Notebooks-Asdf Example
-        - Notebooks-Aperture Photometry
-        - Notebooks-Nirspec Mast Query
-        - Notebooks-Miri Lrs Spectral Extraction
-        - Notebooks-Transit Spectroscopy Notebook
-        - Notebooks-Nircam Photometry
   version: '2.1'
