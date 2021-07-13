@@ -5,131 +5,133 @@ The ``jdat_notebooks`` repository contains notebooks illustrating workflows for 
 
 The following table summarizes the notebooks currently available.
 
-+-----------+-------------------------------------------------------------------------------------+
-| JWST Science Analysis Notebooks                                                                 |
-+-----------+-------------------------------------------------------------------------------------+
-| Notebook  | Description                                                                         |
-+-----------+-------------------------------------------------------------------------------------+
-| Cross-Instrument                                                                                |
-+===========+=====================================================================================+
-| asdf      | * Use case: create ASDF (Advanced Scientific Data Format) file from FITS file.      |
-|           | * Data: CANDELS image of the COSMOS field.                                          |
-|           | * Tools: asdf, gwcs, astrocut.                                                      |
-|           | * Cross-instrument: all instruments.                                                |
-+-----------+-------------------------------------------------------------------------------------+
-| Background| * Use case: estimate the sky background in complex scenes.                          |
-| Estimation| * Data: images with pathological background pattern created in the notebook.        |
-|           | * Tools: photutils                                                                  |
-|           | * Cross-instrument: all instruments.                                                |
-+-----------+-------------------------------------------------------------------------------------+
-| Redshift  | * Use case: reproduce the workflow of the IRAF task XCORFIT to measure redshift.    |
-| Cross-Corr| * Data: LEGA-C spectra and galaxy template spectra; optical rest-frame.             |
-|           | * Tools: specutils.                                                                 |
-|           | * Cross-instrument: all instruments.                                                |
-+-----------+-------------------------------------------------------------------------------------+
-| Querying  | * Use case: How to submit a NIRSpec MAST Query using python.                        |
-| MAST      | * Data:                                                                             |
-|           | * Tools: mast, astroquery.                                                          |
-|           | * Cross-instrument: all instruments.                                                |
-+-----------+-------------------------------------------------------------------------------------+
-| Specviz   | * Use case: How to inspect and export spectra in Specviz GUI.                       |
-| GUI       | * Data: NIRISS simulation  generated with the code MIRAGE.                          |
-|           | * Tools: specutils, jdaviz.                                                         |
-|           | * Cross-instrument: all instruments.                                                |
-+-----------+-------------------------------------------------------------------------------------+
-| IFU       | * Use case: continuum and emission-line modeling of galaxy IFU spectra.             |
-| Cube      | * Data: Spitzer IRS on Messier 58.                                                  |
-| Fitting   | * Tools: specutils, custom functions.                                               |
-|           | * Cross-instrument: MIRI, NIRSpec.                                                  |
-+-----------+-------------------------------------------------------------------------------------+
-| NIRCam                                                                                          |
-+-----------+-------------------------------------------------------------------------------------+
-| Multiband | * Use case: measure extended galaxy photometry in a field.                          |
-| Extended  | * Data: Simulated NIRCam images from JADES GTO extragalactic blank field.           |
-| Aperture  | * Tools: photutils.                                                                 |
-| Photometry| * Cross-instrument:                                                                 |
-+-----------+-------------------------------------------------------------------------------------+
-| Crowded   | * Use case: Crowded field imaging with Aperture-fitting photometry.                 |
-| Field     | * Data: Simulated NIRCam images of LMC astrometric calibration field.               |
-| Aperture  | * Tools: jwst pipeline, photutils.                                                  |
-| Photometry| * Cross-instrument:                                                                 |
-+-----------+-------------------------------------------------------------------------------------+
-| PSF       | * Use case: Crowded field imaging with PSF-fitting photometry.                      |
-| Photometry| * Data: Simulated NIRCam images of LMC astrometric calibration field.               |
-|           | * Tools: webbpsf, photutils.                                                        |
-|           | * Cross-instrument:                                                                 |
-+-----------+-------------------------------------------------------------------------------------+
-| PSF       | * Use case: Crowded field imaging with PSF-fitting photometry.                      |
-| Matching  | * Data: Simulated NIRCam images of LMC astrometric calibration field.               |
-| Photometry| * Tools: webbpsf, photutils.                                                        |
-|           | * Cross-instrument:                                                                 |
-+-----------+-------------------------------------------------------------------------------------+
-| NIRISS                                                                                          |
-+-----------+-------------------------------------------------------------------------------------+
-| WFSS      | * Use case: Optimal extraction and analysis of grism spectra.                       |
-| Spectra   | * Data: Simulated NIRISS spectra of a galaxy cluster                                |
-|           | * Tools: specutils         .                                                        |
-|           | * Cross-instrument: NIRSpec.                                                        |
-+-----------+-------------------------------------------------------------------------------------+
-| MOS       | * Use case: Emission-line measurements and template matching on 1D spectra.         |
-| Spectra   | * Data: LEGA-C spectra and galaxy template spectra; optical rest-frame.             |
-|           | * Tools: specutils.                                                                 |
-|           | * Cross-instrument: NIRSpec.                                                        |
-+-----------+-------------------------------------------------------------------------------------+
-| SOSS      | * Use case: Primary transit of an exoplanet.                                        |
-| Transiting| * Data: Simulated transit using awesomesoss.                                        |
-| Exoplanet | * Tools: jwst pipeline, juliet.                                                     |
-|           | * Cross-instrument:                                                                 |
-+-----------+-------------------------------------------------------------------------------------+
-| AMI       | * Use case: Find the binary parameters of AB Dor.                                   |
-| Binary    | * Data: Simulated MIRAGE data for a binary point source.                            |
-| Star      | * Tools: jwst pipeline, nrm_analysis.                                               |
-|           | * Cross-instrument:                                                                 |
-+-----------+-------------------------------------------------------------------------------------+
-| NIRSpec                                                                                         |
-+-----------+-------------------------------------------------------------------------------------+
-| IFU       | * Use case: Continuum and emission-line modeling of AGN; 1.47-1.87um.               |
-| Analysis  | * Data: NIFS on Gemini; NGC 4151.                                                   |
-|           | * Tools: specutils, cubeviz.                                                        |
-|           | * Cross-instrument:                                                                 |
-+-----------+-------------------------------------------------------------------------------------+
-| MOS       | * Use case: Optimal spectral extraction.                                            |
-| Optimal   | * Data: Simulated NIRSpec MOS data; point sources.                                  |
-| Extraction| * Tools: jwst pipeline                                                              |
-|           | * Cross-instrument:                                                                 |
-+-----------+-------------------------------------------------------------------------------------+
-| MOS       | * Use case: Simulation of NIRCam pre-imaging for NIRSpec.                           |
-| Pre-      | * Data: Simulated NIRCam images of LMC astrometric calibration field.               |
-| Imaging   | * Tools: jwst pipeline.                                                             |
-|           | * Cross-instrument: NIRCam.                                                         |
-+-----------+-------------------------------------------------------------------------------------+
-| BOTS      | * Use case: Primary transit of an exoplanet.                                        |
-| Transiting| * Data: Simulated NIRSpec data from ground-based campaign.                          |
-| Exoplanet | * Tools:                                                                            |
-|           | * Cross-instrument:                                                                 |
-+-----------+-------------------------------------------------------------------------------------+
-| IFU       | * Use case: Optimal spectral extraction.                                            |
-| Optimal   | * Data: Simulated data of faint (quasar) point source.                              |
-| Extraction| * Tools:  jwst, scipy, specutils, jdaviz, photutils, astropy.io, astropy.wcs        |
-|           | * Cross-instrument:                                                                 |
-+-----------+-------------------------------------------------------------------------------------+
-| MIRI                                                                                            |
-+-----------+-------------------------------------------------------------------------------------+
-| LRS       | * Use case: Optimal spectral extraction.                                            |
-| Optimal   | * Data: MIRISim simulated spectra.                                                  |
-| Extraction| * Tools: jwst pipeline, gwcs.                                                       |
-|           | * Cross-instrument:                                                                 |
-+-----------+-------------------------------------------------------------------------------------+
-| IFU       | * Use case: Extract spatial-spectral features from IFU cube.                        |
-| Cube      | * Data: KMOS datacube of point sources in the LMC.                                  |
-| Analysis  | * Tools: specutils, spectral_cube, photutils.                                       |
-| 1         | * Cross-instrument:                                                                 |
-+-----------+-------------------------------------------------------------------------------------+
-| IFU       | * Use case: Photutils to automatically detect point sources and extract photometry  |
-| Cube      | * Data: ALMA 13CO data cubes.                                                       |
-| Analysis  | * Tools: specutils, spectral_cube, photutils.                                       |
-| 2         | * Cross-instrument:                                                                 |
-+-----------+-------------------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| JWST Science Analysis Notebooks                                                                                                                                                                                                                           |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| Notebook                                                                                                                                                            | Description                                                                         |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| Cross-Instrument                                                                                                                                                                                                                                          |
++=====================================================================================================================================================================+=====================================================================================+
+| `asdf <https://spacetelescope.github.io/jdat_notebooks/notebooks/asdf_example/asdf_example.html>`_                                                                  | * Use case: create ASDF (Advanced Scientific Data Format) file from FITS file.      |
+|                                                                                                                                                                     | * Data: CANDELS image of the COSMOS field.                                          |
+|                                                                                                                                                                     | * Tools: asdf, gwcs, astrocut.                                                      |
+|                                                                                                                                                                     | * Cross-instrument: all instruments.                                                |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `Background Estimation <https://spacetelescope.github.io/jdat_notebooks/notebooks/background_estimation_imaging/Imaging%20Sky%20Background%20Estimation.html>`_     | * Use case: estimate the sky background in complex scenes.                          |
+|                                                                                                                                                                     | * Data: images with pathological background pattern created in the notebook.        |
+|                                                                                                                                                                     | * Tools: photutils                                                                  |
+|                                                                                                                                                                     | * Cross-instrument: all instruments.                                                |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| Redshift                                                                                                                                                            | * Use case: reproduce the workflow of the IRAF task XCORFIT to measure redshift.    |
+| Cross-Corr                                                                                                                                                          | * Data: LEGA-C spectra and galaxy template spectra; optical rest-frame.             |
+|                                                                                                                                                                     | * Tools: specutils.                                                                 |
+|                                                                                                                                                                     | * Cross-instrument: all instruments.                                                |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `Querying MAST <https://spacetelescope.github.io/jdat_notebooks/notebooks/NIRSpec_MAST_Query/NIRSpec_MAST_Query.html>`_                                             | * Use case: How to submit a NIRSpec MAST Query using python.                        |
+|                                                                                                                                                                     | * Data:                                                                             |
+|                                                                                                                                                                     | * Tools: mast, astroquery.                                                          |
+|                                                                                                                                                                     | * Cross-instrument: all instruments.                                                |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `Specviz GUI <https://spacetelescope.github.io/jdat_notebooks/notebooks/specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html>`_           | * Use case: How to inspect and export spectra in Specviz GUI.                       |
+|                                                                                                                                                                     | * Data: NIRISS simulation  generated with the code MIRAGE.                          |
+|                                                                                                                                                                     | * Tools: specutils, jdaviz.                                                         |
+|                                                                                                                                                                     | * Cross-instrument: all instruments.                                                |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `IFU Cube Fitting <https://spacetelescope.github.io/jdat_notebooks/notebooks/IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html>`_                               | * Use case: continuum and emission-line modeling of galaxy IFU spectra.             |
+|                                                                                                                                                                     | * Data: Spitzer IRS on Messier 58.                                                  |
+|                                                                                                                                                                     | * Tools: specutils, custom functions.                                               |
+|                                                                                                                                                                     | * Cross-instrument: MIRI, NIRSpec.                                                  |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| NIRCam                                                                                                                                                                                                                                                    |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `Multiband Extended Aperture Photometry <https://spacetelescope.github.io/jdat_notebooks/notebooks/NIRCam_photometry/NIRCam%20multiband%20photometry.html>`_        | * Use case: measure extended galaxy photometry in a field.                          |
+|                                                                                                                                                                     | * Data: Simulated NIRCam images from JADES GTO extragalactic blank field.           |
+|                                                                                                                                                                     | * Tools: photutils.                                                                 |
+|                                                                                                                                                                     | * Cross-instrument:                                                                 |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `Crowded Field Aperture Photometry <https://spacetelescope.github.io/jdat_notebooks/notebooks/aperture_photometry/NIRCam_Aperture_Photometry_Example.html>`_        | * Use case: Crowded field imaging with Aperture-fitting photometry.                 |
+|                                                                                                                                                                     | * Data: Simulated NIRCam images of LMC astrometric calibration field.               |
+|                                                                                                                                                                     | * Tools: jwst pipeline, photutils.                                                  |
+|                                                                                                                                                                     | * Cross-instrument:                                                                 |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `PSF Photometry <https://spacetelescope.github.io/jdat_notebooks/notebooks/psf_photometry/NIRCam_PSF_Photometry_Example.html>`_                                     | * Use case: Crowded field imaging with PSF-fitting photometry.                      |
+|                                                                                                                                                                     | * Data: Simulated NIRCam images of LMC astrometric calibration field.               |
+|                                                                                                                                                                     | * Tools: webbpsf, photutils.                                                        |
+|                                                                                                                                                                     | * Cross-instrument:                                                                 |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `PSF Matching Photometry <https://spacetelescope.github.io/jdat_notebooks/notebooks/NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html>`_   | * Use case: Crowded field imaging with PSF-fitting photometry.                      |
+|                                                                                                                                                                     | * Data: Simulated NIRCam images of LMC astrometric calibration field.               |
+|                                                                                                                                                                     | * Tools: webbpsf, photutils.                                                        |
+|                                                                                                                                                                     | * Cross-instrument:                                                                 |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| NIRISS                                                                                                                                                                                                                                                    |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| WFSS                                                                                                                                                                | * Use case: Optimal extraction and analysis of grism spectra.                       |
+| Spectra                                                                                                                                                             | * Data: Simulated NIRISS spectra of a galaxy cluster                                |
+| `Notebook 0 <https://spacetelescope.github.io/jdat_notebooks/notebooks/NIRISS_WFSS_postpipeline/00.%20Optimal%20extraction.html>`_                                  | * Tools: specutils         .                                                        |
+| `Notebook 1 <https://spacetelescope.github.io/jdat_notebooks/notebooks/NIRISS_WFSS_postpipeline/01.%20Combine%20and%20normalize%201D%20spectra.html>`_              | * Cross-instrument: NIRSpec.                                                        |
+| `Notebook 2 <https://spacetelescope.github.io/jdat_notebooks/notebooks/NIRISS_WFSS_postpipeline/02.%20Cross%20correlation%20template.html>`_                        |                                                                                     |
+| `Notebook 3 <https://spacetelescope.github.io/jdat_notebooks/notebooks/NIRISS_WFSS_postpipeline/03.%20Spatially%20resolved%20emission%20line%20map.html>`_          |                                                                                     |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `MOS spctra <https://spacetelescope.github.io/jdat_notebooks/notebooks/mos-spectroscopy/MOSspec_sv06_revised.html>`_                                                | * Use case: Emission-line measurements and template matching on 1D spectra.         |
+|                                                                                                                                                                     | * Data: LEGA-C spectra and galaxy template spectra; optical rest-frame.             |
+|                                                                                                                                                                     | * Tools: specutils.                                                                 |
+|                                                                                                                                                                     | * Cross-instrument: NIRSpec.                                                        |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `SOSS Transiting Exoplanet <https://github.com/spacetelescope/jdat_notebooks/tree/main/notebooks/soss-transit-spectroscopy>`_                                       | * Use case: Primary transit of an exoplanet.                                        |
+|                                                                                                                                                                     | * Data: Simulated transit using awesomesoss.                                        |
+|                                                                                                                                                                     | * Tools: jwst pipeline, juliet.                                                     |
+|                                                                                                                                                                     | * Cross-instrument:                                                                 |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| AMI                                                                                                                                                                 | * Use case: Find the binary parameters of AB Dor.                                   |
+| Binary                                                                                                                                                              | * Data: Simulated MIRAGE data for a binary point source.                            |
+| Star                                                                                                                                                                | * Tools: jwst pipeline, nrm_analysis.                                               |
+|                                                                                                                                                                     | * Cross-instrument:                                                                 |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| NIRSpec                                                                                                                                                                                                                                                   |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `IFU Analysis <https://spacetelescope.github.io/jdat_notebooks/notebooks/IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html>`_                                   | * Use case: Continuum and emission-line modeling of AGN; 1.47-1.87um.               |
+|                                                                                                                                                                     | * Data: NIFS on Gemini; NGC 4151.                                                   |
+|                                                                                                                                                                     | * Tools: specutils, cubeviz.                                                        |
+|                                                                                                                                                                     | * Cross-instrument:                                                                 |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `MOS Optimal Extraction <https://spacetelescope.github.io/jdat_notebooks/notebooks/optimal_extraction/Spectral%20Extraction-static.html>`_                          | * Use case: Optimal spectral extraction.                                            |
+|                                                                                                                                                                     | * Data: Simulated NIRSpec MOS data; point sources.                                  |
+|                                                                                                                                                                     | * Tools: jwst pipeline                                                              |
+|                                                                                                                                                                     | * Cross-instrument:                                                                 |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `MOS Pre-Imaging <https://github.com/spacetelescope/jdat_notebooks/tree/main/notebooks/preimaging>`_                                                                | * Use case: Simulation of NIRCam pre-imaging for NIRSpec.                           |
+|                                                                                                                                                                     | * Data: Simulated NIRCam images of LMC astrometric calibration field.               |
+|                                                                                                                                                                     | * Tools: jwst pipeline.                                                             |
+|                                                                                                                                                                     | * Cross-instrument: NIRCam.                                                         |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `BOTS Transiting Exoplanet <https://spacetelescope.github.io/jdat_notebooks/notebooks/transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html>`_     | * Use case: Primary transit of an exoplanet.                                        |
+|                                                                                                                                                                     | * Data: Simulated NIRSpec data from ground-based campaign.                          |
+|                                                                                                                                                                     | * Tools:                                                                            |
+|                                                                                                                                                                     | * Cross-instrument:                                                                 |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `IFU Optimal Extraction <https://spacetelescope.github.io/jdat_notebooks/notebooks/ifu_optimal/ifu_optimal.html>`_                                                  | * Use case: Optimal spectral extraction.                                            |
+|                                                                                                                                                                     | * Data: Simulated data of faint (quasar) point source.                              |
+|                                                                                                                                                                     | * Tools:  jwst, scipy, specutils, jdaviz, photutils, astropy.io, astropy.wcs        |
+|                                                                                                                                                                     | * Cross-instrument:                                                                 |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| MIRI                                                                                                                                                                                                                                                      |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `LRS Optimal Extraction <https://github.com/spacetelescope/jdat_notebooks/tree/main/notebooks/MIRI_LRS_spectral_extraction>`_                                       | * Use case: Optimal spectral extraction.                                            |
+|                                                                                                                                                                     | * Data: MIRISim simulated spectra.                                                  |
+|                                                                                                                                                                     | * Tools: jwst pipeline, gwcs.                                                       |
+|                                                                                                                                                                     | * Cross-instrument:                                                                 |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `IFU Cube 1 <https://spacetelescope.github.io/jdat_notebooks/notebooks/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_usecase.html>`_                                   | * Use case: Extract spatial-spectral features from IFU cube.                        |
+|                                                                                                                                                                     | * Data: KMOS datacube of point sources in the LMC.                                  |
+|                                                                                                                                                                     | * Tools: specutils, spectral_cube, photutils.                                       |
+|                                                                                                                                                                     | * Cross-instrument:                                                                 |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
+| `IFU Cube 2 <https://spacetelescope.github.io/jdat_notebooks/notebooks/MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html>`_                                  | * Use case: Photutils to automatically detect point sources and extract photometry  |
+|                                                                                                                                                                     | * Data: ALMA 13CO data cubes.                                                       |
+|                                                                                                                                                                     | * Tools: specutils, spectral_cube, photutils.                                       |
+|                                                                                                                                                                     | * Cross-instrument:                                                                 |
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
 
 Installation
 --------------
