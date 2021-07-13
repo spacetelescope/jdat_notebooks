@@ -3,7 +3,10 @@ James Webb Space Telescope Data Analysis Tool Notebooks
 
 The ``jdat_notebooks`` repository contains notebooks illustrating workflows for post-pipeline analysis of JWST data. Some of the notebooks also illustrate generic analysis workflows that are applicable to data from other observatories as well. This repository and the notebooks are one component of STScI's larger `Data Analysis Tools Ecosystem <https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis>`_.
 
-The following table summarizes the notebooks currently available.
+The following table summarizes the notebooks currently available.  Most links will take you to rendered versions of the notebooks, which require no special tools beyond your web browser.  To download and execute the notebooks, `clone <https://github.com/git-guides/git-clone>`_ this `repository <https://github.com/spacetelescope/jdat_notebooks>`_ to your local computer. Most of the notebooks
+rely on packages that can be installed using `pip <https://pip.pypa.io/en/stable/>`_. The version
+dependencies are listed in the `environment.yaml` and in the `requirements` file in each notebook folder.
+
 
 +---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
 | JWST Science Analysis Notebooks                                                                                                                                                                                                                           |
@@ -132,30 +135,6 @@ The following table summarizes the notebooks currently available.
 |                                                                                                                                                                     | * Tools: specutils, spectral_cube, photutils.                                       |
 |                                                                                                                                                                     | * Cross-instrument:                                                                 |
 +---------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------+
-
-Installation
---------------
-
-You can view rendered versions of the notebooks at https://spacetelescope.github.io/jdat_notebooks/, which require no special tools beyond your web browser.
-
-To download and execute the notebooks, `clone <https://github.com/git-guides/git-clone>`_ this repository to your local computer. Most of the notebooks
-rely on packages that are available in `astroconda <https://astroconda.readthedocs.io/en/latest/>`_, although
-a few rely on packages that should be installed using `pip <https://pip.pypa.io/en/stable/>`_. The version
-dependencies are listed in the `environment.yaml` and in the `requirements` file in each notebook folder.
-
-If you locally cloned this repo before 5 Feb 2021
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The primary branch for this repo has been transitioned from ``master`` to ``main``.  If you have a local clone of this repository and want to keep your local branch in sync with this repo, you'll need to do the following in your local clone from your terminal:
-
-.. code-block::
-
-   git branch -m master main
-   git fetch origin
-   git branch -u origin/main main
-
-If you are using a GUI to manage your repos you'll have to find the equivalent commands as it's different for different programs. Alternatively, you can just delete your local clone and re-clone!
-
 
 Help
 ----------
