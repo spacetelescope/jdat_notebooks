@@ -131,6 +131,20 @@ jobs:
         no_output_timeout: 120m
     - store_artifacts:
         path: /tmp/nbcollection-ci-artifacts
+  Notebooks-Mrs Mstar Analysis:
+    executor: nbcollection-builder
+    steps:
+    - checkout
+    - run:
+        command: bash ./.circleci/setup-env.sh
+        name: Setup Environment
+    - run:
+        command: nbcollection-ci build-notebooks --collection-names notebooks --category-names
+          MRS_Mstar_analysis
+        name: Build Notebooks-Mrs Mstar Analysis notebooks
+        no_output_timeout: 120m
+    - store_artifacts:
+        path: /tmp/nbcollection-ci-artifacts
   Notebooks-Nircam Photometry:
     executor: nbcollection-builder
     steps:
@@ -280,6 +294,7 @@ workflows:
     jobs:
     - Notebooks-Niriss Wfss Postpipeline
     - Notebooks-Mos-Spectroscopy
+    - Notebooks-Mrs Mstar Analysis
     - Notebooks-Cube Fitting
     - Notebooks-Ifu Cube Continuum Fit
     - Notebooks-Nircam Psf-Matched Photometry
@@ -300,6 +315,7 @@ workflows:
         requires:
         - Notebooks-Niriss Wfss Postpipeline
         - Notebooks-Mos-Spectroscopy
+        - Notebooks-Mrs Mstar Analysis
         - Notebooks-Cube Fitting
         - Notebooks-Ifu Cube Continuum Fit
         - Notebooks-Nircam Psf-Matched Photometry
