@@ -4,8 +4,7 @@ The ``jdat_notebooks`` repository contains notebooks illustrating workflows for 
 
 The following [table](https://spacetelescope.github.io/jdat_notebooks/) summarizes the notebooks currently available.
 
-Installation
---------------
+# Installation
 
 You can view [rendered versions of the notebooks](https://spacetelescope.github.io/jdat_notebooks/), which require no special tools beyond your web browser.
 
