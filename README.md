@@ -28,8 +28,7 @@ The primary branch for this repo has been transitioned from ``master`` to ``main
 If you are using a GUI to manage your repos you'll have to find the equivalent commands as it's different for different programs. Alternatively, you can just delete your local clone and re-clone!
 
 
-Help
-----------
+# Help
 
 If you uncover any issues or bugs, you can open a GitHub ticket.  For faster responses, however, we encourage you to submit a JWST Help Desk Ticket: jwsthelp.stsci.edu
 
