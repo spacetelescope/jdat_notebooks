@@ -21,6 +21,7 @@ You will need **python version 3.8.10**.  We recommend the following command seq
 % cd jdat_notebooks/notebooks/<whatever-notebook>
 % conda create -n jdat-nb python=3.8.10
 % conda activate jdat-nb
+% pip install -r pre-requirements.txt (if necessary)
 % pip install -r requirements.txt
 % pip install jupyter
 % jupyter notebook
