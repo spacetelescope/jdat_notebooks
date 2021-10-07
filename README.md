@@ -43,7 +43,7 @@ If you are using a GUI to manage your repos you'll have to find the equivalent c
 
 ## Help
 
-If you uncover any issues or bugs, you can open a GitHub ticket.  For faster responses, however, we encourage you to submit a JWST Help Desk Ticket: jwsthelp.stsci.edu
+If you uncover any issues or bugs, you can [open an issue on GitHub](https://github.com/spacetelescope/jdat_notebooks/issues/new).  For faster responses, however, we encourage you to submit a JWST Help Desk Ticket: jwsthelp.stsci.edu
 
 ## Contributing
 
