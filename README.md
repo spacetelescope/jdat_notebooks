@@ -13,7 +13,20 @@ To download and execute the notebooks, we recommend you [clone](https://github.c
 
 You can also download individual notebooks, but it is not as straight forward.  This is because Git doesn't directly support downloading parts of the repository. However, in some web browsers, you should be able to navigate to your desired notebook, right click on the "RAW" formatting button, and download.  There are also options to use wget or curl for advanced users. 
 
-Note, however, most notebooks have additional associated files in their folder, including a `requirements` document that lists packages necessary to run the notebooks.  These packages can be installed using [pip](https://pip.pypa.io/en/stable/). The version dependencies are listed in the `environment.yaml` and in the `requirements` file in each notebook folder.
+Note, however, most notebooks have additional associated files in their folder, including a `requirements` document that lists packages necessary to run the notebooks.  These packages can be installed using [pip](https://pip.pypa.io/en/stable/). The version dependencies are listed in the `environment.yaml` and in the `requirements` file in each notebook folder. 
+You will need **python version 3.8.10**.  We recommend the following command sequence:
+
+```   
+% git clone https://github.com/spacetelescope/jdat_notebooks.git
+% cd jdat_notebooks/notebooks/<whatever-notebook>
+% conda create -n jdat-nb python=3.8.10
+% conda activate jdat-nb
+% pip install -r pre-requirements.txt (if necessary)
+% pip install -r requirements.txt
+% pip install jupyter
+% jupyter notebook
+```
+
 
 ### If you locally cloned this repo before 5 Feb 2021
 
@@ -30,7 +43,7 @@ If you are using a GUI to manage your repos you'll have to find the equivalent c
 
 ## Help
 
-If you uncover any issues or bugs, you can open a GitHub ticket.  For faster responses, however, we encourage you to submit a JWST Help Desk Ticket: jwsthelp.stsci.edu
+If you uncover any issues or bugs, you can [open an issue on GitHub](https://github.com/spacetelescope/jdat_notebooks/issues/new).  For faster responses, however, we encourage you to submit a JWST Help Desk Ticket: jwsthelp.stsci.edu
 
 ## Contributing
 
