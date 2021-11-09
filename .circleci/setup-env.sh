@@ -4,6 +4,8 @@ set -e
 
 export LANG=C.UTF-8
 export LC_ALL=C.UTF-8
+export CRDS_SERVER_URL=https://jwst-crds.stsci.edu
+export CRDS_PATH=$HOME/crds_cache  
 #conda install python=3.7.11
 conda install python=3.8.10
 apt-get update
@@ -14,6 +16,4 @@ cd nbcollection
 pip install -U pip setuptools
 pip install -r ci_requirements.txt
 python setup.py install
-export CRDS_SERVER_URL=https://jwst-crds.stsci.edu
-export CRDS_PATH=$HOME/crds_cache  
 cd -
