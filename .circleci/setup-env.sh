@@ -5,7 +5,7 @@ set -e
 export LANG=C.UTF-8
 export LC_ALL=C.UTF-8
 export CRDS_SERVER_URL=https://jwst-crds.stsci.edu
-export CRDS_PATH=/tmp/nbcollection-ci  
+export CRDS_PATH=/tmp/nbcollection-ci/scanner-build-dir/jdat_notebooks/MRS_Mstar_analysis/crds_cache/references  
 #conda install python=3.7.11
 conda install python=3.8.10
 apt-get update
