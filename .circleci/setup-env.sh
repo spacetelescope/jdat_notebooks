@@ -14,4 +14,6 @@ cd nbcollection
 pip install -U pip setuptools
 pip install -r ci_requirements.txt
 python setup.py install
+export CRDS_SERVER_URL=https://jwst-crds.stsci.edu
+export CRDS_PATH=$HOME/crds_cache  
 cd -
