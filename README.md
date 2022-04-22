@@ -1,6 +1,7 @@
-[![ci_validation](https://github.com/spacetelescope/jdat_notebooks/workflows/ci_validation/badge.svg)](https://github.com/spacetelescope/jdat_notebooks/actions?query=workflow%3Aci_validation)
+[![Notebooks Validated](https://github.com/spacetelescope/jdat_notebooks/workflows/ci_validation/badge.svg)](https://github.com/spacetelescope/jdat_notebooks/actions?query=workflow%3Aci_validation)
 
-[![Build and deploy notebooks](https://github.com/spacetelescope/jdat_notebooks/workflows/ci_builder/badge.svg)](https://github.com/spacetelescope/jdat_notebooks/actions?query=workflow%3ci_builder)
+[![Build and deploy notebooks](https://github.com/github/docs/actions/workflows/ci_builder.yml/badge.svg)
+
 
 # James Webb Space Telescope Data Analysis Tool Notebooks
 
