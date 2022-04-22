@@ -1,5 +1,5 @@
 [![ci_validation](https://github.com/spacetelescope/jdat_notebooks/workflows/ci_validation/badge.svg)](https://github.com/spacetelescope/jdat_notebooks/actions?query=workflow%3Aci_validation)
-https://img.shields.io/github/workflow/status/spacetelescope/jdat_notebooks/Build%20and%20deploy%20notebooks?label=HTML%20Deployment&style=plastic
+[![ci_deployment](https://img.shields.io/github/workflow/status/spacetelescope/jdat_notebooks/Build%20and%20deploy%20notebooks?label=HTML%20Deployment&style=plastic)]
 
 
 # James Webb Space Telescope Data Analysis Tool Notebooks
