@@ -1,0 +1,55 @@
+name: Deploy Nightly
+on:
+  schedule:
+    - cron: '0 3 * * *' # run at 2 AM UTC
+      
+  pull_request:
+    # We also want this workflow triggered if the 'Extra CI' label is added
+    # or present when PR is updated
+    types:
+      - synchronize
+      - labeled
+  push:
+    # We want this workflow to always run on release branches as well as
+    # all tags since we want to be really sure we don't introduce
+    # regressions on the release branches, and it's also important to run
+    # this on pre-release and release tags.
+    branches:
+      - main
+    paths:
+      - 'notebooks/**.ipynb'
+
+env:
+  ARCH_ON_CI: "normal"
+  IS_CRON: "true"
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 5
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8.12
+      uses: actions/setup-python@v2 ## needed for caching
+      with:
+        python-version: 3.8.12
+        cache: 'pip'
+    - name: Add conda to system path
+      run: |
+        # $CONDA is an environment variable pointing to the root of the miniconda directory
+        echo $CONDA/bin >> $GITHUB_PATH
+    - name: Install dependencies
+      run: |
+        #conda env update --file CIenvironment.yml --name base
+        pip install -r CIenvironment.yml
+        pip install pytest
+        pip install nbval
+        pip install nbconvert
+    - name: Execute notebooks
+      run: |
+        find . -name '*.ipynb' -type f -execdir jupyter nbconvert --template classic --to html --execute {} \; 
+    - name: Test with pytest
+      run: |
+        pytest --nbval
