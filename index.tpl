@@ -12,7 +12,6 @@
     padding-bottom: .3em; font-size: 1.5em">
     JWST Data Analysis Tools Notebooks
     </h2>
-
 <ul class="list-group list-group-flush" style="width: fit-content; margin: .5em">
 {% for group in page_groups %}
   <li>
