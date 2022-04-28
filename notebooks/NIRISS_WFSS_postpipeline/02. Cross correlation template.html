@@ -1,562 +1,614 @@
-
 <!DOCTYPE html>
-
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Part 2: Cross Correlation to Determine Redshift of NIRISS WFSS Spectra &#8212; STScI JDAT Notebooks</title>
-    
-  <link href="../../_static/css/theme.css" rel="stylesheet">
-  <link href="../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
-
-    
-  <link rel="stylesheet"
-    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
-
-    
-      
-
-    
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
-    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/main.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    
-  <link rel="preload" as="script" href="../../_static/js/index.be7d3bbb2ef33a8344ce.js">
-
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Part 2: Cross Correlation to Determine Redshift of NIRISS WFSS Spectra — STScI JDAT Notebooks
+  </title>
+  <link href="../../_static/css/theme.css" rel="stylesheet"/>
+  <link href="../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet"/>
+  <link href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css" rel="stylesheet"/>
+  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+  <link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/togglebutton.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/copybutton.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/mystnb.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/sphinx-thebe.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/main.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+  <link as="script" href="../../_static/js/index.be7d3bbb2ef33a8344ce.js" rel="preload"/>
+  <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js">
+  </script>
+  <script src="../../_static/jquery.js">
+  </script>
+  <script src="../../_static/underscore.js">
+  </script>
+  <script src="../../_static/doctools.js">
+  </script>
+  <script src="../../_static/clipboard.min.js">
+  </script>
+  <script src="../../_static/copybutton.js">
+  </script>
+  <script>
+   let toggleHintShow = 'Click to show';
+  </script>
+  <script>
+   let toggleHintHide = 'Click to hide';
+  </script>
+  <script>
+   let toggleOpenOnPrint = 'true';
+  </script>
+  <script src="../../_static/togglebutton.js">
+  </script>
+  <script>
+   var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';
+  </script>
+  <script src="../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js">
+  </script>
+  <script>
+   const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.1/dist/embed-amd.js"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Part 3: Spatially Resolved Emission Line Map of NIRISS WFSS Spectra" href="03.%20Spatially%20resolved%20emission%20line%20map.html" />
-    <link rel="prev" title="Part 1: Combine One-Dimensional NIRISS WFSS Spectra" href="01.%20Combine%20and%20normalize%201D%20spectra.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
-<script>
-                    window.dataLayer = window.dataLayer || [];
+  </script>
+  <script async="async" src="../../_static/sphinx-thebe.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js">
+  </script>
+  <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.1/dist/embed-amd.js">
+  </script>
+  <link href="../../genindex.html" rel="index" title="Index"/>
+  <link href="../../search.html" rel="search" title="Search"/>
+  <link href="03.%20Spatially%20resolved%20emission%20line%20map.html" rel="next" title="Part 3: Spatially Resolved Emission Line Map of NIRISS WFSS Spectra"/>
+  <link href="01.%20Combine%20and%20normalize%201D%20spectra.html" rel="prev" title="Part 1: Combine One-Dimensional NIRISS WFSS Spectra"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="None" name="docsearch:language"/>
+  <!-- Google Analytics -->
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3">
+  </script>
+  <script>
+   window.dataLayer = window.dataLayer || [];
                     function gtag(){ dataLayer.push(arguments); }
                     gtag('js', new Date());
                     gtag('config', 'G-D46G4HKJY3');
-                </script>
-
-  </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
-    <div class="container-fluid" id="banner"></div>
-
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../../index.html">
-      
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
-        
-      
-      
-      <img src="../../_static/stsci_logo2.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">STScI JDAT Notebooks</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../intro.html">
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Cross-Instrument
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../asdf_example/asdf_example.html">
-   Example of Converting a FITS File to ASDF
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../background_estimation_imaging/Imaging%20Sky%20Background%20Estimation.html">
-   Complex 2D Background
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">
-   Draft: Advanced Composite spectral model fitting
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">
-   MAST Query
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">
-   Specviz Simple Demo
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  MIRI
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">
-   MIRI MRS Spectroscopy of a Late M Star 1 - Running the Pipeline
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">
-   Data Analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">
-   JWST Data Analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../MIRI_LRS_spectral_extraction/miri_lrs_spectral_extraction.html">
-   LRS Extraction
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  NIRCam
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">
-   Point Source Aperture Photometry
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../NIRCam_photometry/NIRCam%20multiband%20photometry.html">
-   NIRCam Multiband Photometry
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">
-   PSF Photometry
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">
-   NIRCam PSF-matched multiband photometry
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preimaging/preimaging_02_calwebb.html">
-   Preimaging - Calwebb
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preimaging/preimaging_03_association.html">
-   Creating simulated images of the JWST astrometric calibration field in the LMC
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  NIRISS
- </span>
-</p>
-<ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="00.%20Optimal%20extraction.html">
-   Part 0: Optimal Extraction of NIRISS WFSS Spectrum
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="01.%20Combine%20and%20normalize%201D%20spectra.html">
-   Part 1: Combine One-Dimensional NIRISS WFSS Spectra
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Part 2: Cross Correlation to Determine Redshift of NIRISS WFSS Spectra
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="03.%20Spatially%20resolved%20emission%20line%20map.html">
-   Part 3: Spatially Resolved Emission Line Map of NIRISS WFSS Spectra
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../niriss_ami_binary/1_niriss_ami_binary.html">
-   NIRISS AMI simulation of binary point source AB Dor and calibrator HD37093
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../niriss_ami_binary/2_niriss_ami_binary.html">
-   AMI Binary Star Notebook 2
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../soss-transit-spectroscopy/HAT-P-1b-PART3-data-analysis.html">
-   SOSS Transient Spectroscopy
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  NIRSpec
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../ifu_optimal/ifu_optimal.html">
-   IFU Optimal Extraction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../optimal_extraction_dynamic/Spectral%20Extraction.html">
-   NIRSpec MOS Optimal Spectral Extraction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../mos-spectroscopy/MOSspec_sv06_revised.html">
-   MOS Spectroscopy of Extragalactic Field
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">
-   Extracting an Exoplanet Transmission Spectrum from NIRSpec BOTS Time Series Observations
-  </a>
- </li>
-</ul>
-
+  </script>
+ </head>
+ <body data-offset="80" data-spy="scroll" data-target="#bd-toc-nav">
+  <div class="container-fluid" id="banner">
+  </div>
+  <div class="container-xl">
+   <div class="row">
+    <div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+     <div class="navbar-brand-box">
+      <a class="navbar-brand text-wrap" href="../../index.html">
+       <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+       <img alt="logo" class="logo" src="../../_static/stsci_logo2.png"/>
+       <h1 class="site-logo" id="site-title">
+        STScI JDAT Notebooks
+       </h1>
+      </a>
+     </div>
+     <form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
+      <i class="icon fas fa-search">
+      </i>
+      <input aria-label="Search this book..." autocomplete="off" class="form-control" id="search-input" name="q" placeholder="Search this book..." type="search"/>
+     </form>
+     <nav aria-label="Main" class="bd-links" id="bd-docs-nav">
+      <div class="bd-toc-item active">
+       <ul class="nav bd-sidenav">
+        <li class="toctree-l1">
+         <a class="reference internal" href="../../intro.html">
+         </a>
+        </li>
+       </ul>
+       <p aria-level="2" class="caption" role="heading">
+        <span class="caption-text">
+         Cross-Instrument
+        </span>
+       </p>
+       <ul class="nav bd-sidenav">
+        <li class="toctree-l1">
+         <a class="reference internal" href="../asdf_example/asdf_example.html">
+          Example of Converting a FITS File to ASDF
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../background_estimation_imaging/Imaging%20Sky%20Background%20Estimation.html">
+          Complex 2D Background
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">
+          Draft: Advanced Composite spectral model fitting
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">
+          MAST Query
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">
+          Specviz Simple Demo
+         </a>
+        </li>
+       </ul>
+       <p aria-level="2" class="caption" role="heading">
+        <span class="caption-text">
+         MIRI
+        </span>
+       </p>
+       <ul class="nav bd-sidenav">
+        <li class="toctree-l1">
+         <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">
+          MIRI MRS Spectroscopy of a Late M Star 1 - Running the Pipeline
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">
+          Data Analysis
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">
+          JWST Data Analysis
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../MIRI_LRS_spectral_extraction/miri_lrs_spectral_extraction.html">
+          LRS Extraction
+         </a>
+        </li>
+       </ul>
+       <p aria-level="2" class="caption" role="heading">
+        <span class="caption-text">
+         NIRCam
+        </span>
+       </p>
+       <ul class="nav bd-sidenav">
+        <li class="toctree-l1">
+         <a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">
+          Point Source Aperture Photometry
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../NIRCam_photometry/NIRCam%20multiband%20photometry.html">
+          NIRCam Multiband Photometry
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">
+          PSF Photometry
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">
+          NIRCam PSF-matched multiband photometry
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../preimaging/preimaging_02_calwebb.html">
+          Preimaging - Calwebb
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../preimaging/preimaging_03_association.html">
+          Creating simulated images of the JWST astrometric calibration field in the LMC
+         </a>
+        </li>
+       </ul>
+       <p aria-level="2" class="caption" role="heading">
+        <span class="caption-text">
+         NIRISS
+        </span>
+       </p>
+       <ul class="current nav bd-sidenav">
+        <li class="toctree-l1">
+         <a class="reference internal" href="00.%20Optimal%20extraction.html">
+          Part 0: Optimal Extraction of NIRISS WFSS Spectrum
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="01.%20Combine%20and%20normalize%201D%20spectra.html">
+          Part 1: Combine One-Dimensional NIRISS WFSS Spectra
+         </a>
+        </li>
+        <li class="toctree-l1 current active">
+         <a class="current reference internal" href="#">
+          Part 2: Cross Correlation to Determine Redshift of NIRISS WFSS Spectra
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="03.%20Spatially%20resolved%20emission%20line%20map.html">
+          Part 3: Spatially Resolved Emission Line Map of NIRISS WFSS Spectra
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../niriss_ami_binary/1_niriss_ami_binary.html">
+          NIRISS AMI simulation of binary point source AB Dor and calibrator HD37093
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../niriss_ami_binary/2_niriss_ami_binary.html">
+          AMI Binary Star Notebook 2
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../soss-transit-spectroscopy/HAT-P-1b-PART3-data-analysis.html">
+          SOSS Transient Spectroscopy
+         </a>
+        </li>
+       </ul>
+       <p aria-level="2" class="caption" role="heading">
+        <span class="caption-text">
+         NIRSpec
+        </span>
+       </p>
+       <ul class="nav bd-sidenav">
+        <li class="toctree-l1">
+         <a class="reference internal" href="../ifu_optimal/ifu_optimal.html">
+          MOS Optimal Extraction
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../mos-spectroscopy/MOSspec_sv06_revised.html">
+          MOS Spectroscopy of Extragalactic Field
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">
+          Extracting an Exoplanet Transmission Spectrum from NIRSpec BOTS Time Series Observations
+         </a>
+        </li>
+       </ul>
+      </div>
+     </nav>
+     <!-- To handle the deprecated key -->
+     <div class="navbar_extra_footer">
+      Powered by
+      <a href="https://jupyterbook.org">
+       Jupyter Book
+      </a>
+     </div>
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../../_sources/notebooks/NIRISS_WFSS_postpipeline/02. Cross correlation template.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/spacetelescope/jdat_notebooks/"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/spacetelescope/jdat_notebooks//issues/new?title=Issue%20on%20page%20%2Fnotebooks/NIRISS_WFSS_postpipeline/02. Cross correlation template.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        
-        
-        <button type="button" class="btn btn-secondary topbarbtn"
-            onclick="initThebeSBT()" title="Launch Thebe" data-toggle="tooltip" data-placement="left"><i
-                class="fas fa-play"></i><span style="margin-left: .4em;">Live Code</span></button>
-        
-    </div>
-</div>
-
+    <main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+     <div class="topbar container-xl fixed-top">
+      <div class="topbar-contents row">
+       <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+       </div>
+       <div class="col pl-md-4 topbar-main">
+        <button aria-controls="navbar-menu" aria-expanded="true" aria-label="Toggle navigation" class="navbar-toggler ml-0" data-placement="bottom" data-target=".site-navigation" data-toggle="collapse" id="navbar-toggler" title="Toggle navigation" type="button">
+         <i class="fas fa-bars">
+         </i>
+         <i class="fas fa-arrow-left">
+         </i>
+         <i class="fas fa-arrow-up">
+         </i>
+        </button>
+        <div class="dropdown-buttons-trigger">
+         <button aria-label="Download this page" class="btn btn-secondary topbarbtn" id="dropdown-buttons-trigger">
+          <i class="fas fa-download">
+          </i>
+         </button>
+         <div class="dropdown-buttons">
+          <!-- ipynb file if we had a myst markdown file -->
+          <!-- Download raw file -->
+          <a class="dropdown-buttons" href="../../_sources/notebooks/NIRISS_WFSS_postpipeline/02. Cross correlation template.ipynb">
+           <button class="btn btn-secondary topbarbtn" data-placement="left" data-toggle="tooltip" title="Download source file" type="button">
+            .ipynb
+           </button>
+          </a>
+          <!-- Download PDF via print -->
+          <button class="btn btn-secondary topbarbtn" data-placement="left" data-toggle="tooltip" id="download-print" onclick="printPdf(this)" title="Print to PDF" type="button">
+           .pdf
+          </button>
+         </div>
         </div>
-
+        <!-- Source interaction buttons -->
+        <div class="dropdown-buttons-trigger">
+         <button aria-label="Connect with source repository" class="btn btn-secondary topbarbtn" id="dropdown-buttons-trigger">
+          <i class="fab fa-github">
+          </i>
+         </button>
+         <div class="dropdown-buttons sourcebuttons">
+          <a class="repository-button" href="https://github.com/spacetelescope/jdat_notebooks/">
+           <button class="btn btn-secondary topbarbtn" data-placement="left" data-toggle="tooltip" title="Source repository" type="button">
+            <i class="fab fa-github">
+            </i>
+            repository
+           </button>
+          </a>
+          <a class="issues-button" href="https://github.com/spacetelescope/jdat_notebooks//issues/new?title=Issue%20on%20page%20%2Fnotebooks/NIRISS_WFSS_postpipeline/02. Cross correlation template.html&amp;body=Your%20issue%20content%20here.">
+           <button class="btn btn-secondary topbarbtn" data-placement="left" data-toggle="tooltip" title="Open an issue" type="button">
+            <i class="fas fa-lightbulb">
+            </i>
+            open issue
+           </button>
+          </a>
+         </div>
+        </div>
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button">
+         <button aria-label="Fullscreen mode" class="btn btn-secondary topbarbtn" data-placement="bottom" data-toggle="tooltip" onclick="toggleFullScreen()" title="Fullscreen mode" type="button">
+          <i class="fas fa-expand">
+          </i>
+         </button>
+        </a>
+        <!-- Launch buttons -->
+        <div class="dropdown-buttons-trigger">
+         <button aria-label="Launch interactive content" class="btn btn-secondary topbarbtn" id="dropdown-buttons-trigger">
+          <i class="fas fa-rocket">
+          </i>
+         </button>
+         <div class="dropdown-buttons">
+          <button class="btn btn-secondary topbarbtn" data-placement="left" data-toggle="tooltip" onclick="initThebeSBT()" title="Launch Thebe" type="button">
+           <i class="fas fa-play">
+           </i>
+           <span style="margin-left: .4em;">
+            Live Code
+           </span>
+          </button>
+         </div>
+        </div>
+       </div>
+       <!-- Table of contents -->
+       <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+        <div class="tocsection onthispage pt-5 pb-3">
+         <i class="fas fa-list">
+         </i>
+         Contents
+        </div>
+        <nav aria-label="Page" id="bd-toc-nav">
+         <ul class="visible nav section-nav flex-column">
+          <li class="toc-h1 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#">
+            Part 2: Cross Correlation to Determine Redshift of NIRISS WFSS Spectra
+           </a>
+          </li>
+          <li class="toc-h1 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#introduction">
+            Introduction
+           </a>
+           <ul class="visible nav section-nav flex-column">
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#download-notebook-01-products">
+              0. Download notebook 01 products
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#open-optimally-extracted-1d-spectrum-text-file">
+              1.Open optimally extracted 1D spectrum text file;
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#continuum-is-visible-we-need-to-subtract-it-before-template-correlation">
+              Continuum is visible. We need to subtract it before template correlation.
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#do-cross-correlation-with-an-input-template">
+              Do cross-correlation with an input template;
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#load-synthetic-template">
+              Load synthetic template;
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#binning-the-template-into-a-course-array-if-you-have-too-many-elements-and-cause-an-issue-below">
+              Binning the template into a course array, if you have too many elements and cause an issue below;
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#in-this-example-this-is-not-necessary">
+              -&gt; In this example this is not necessary.
+             </a>
+             <ul class="nav section-nav flex-column">
+              <li class="toc-h3 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#caution-two-inputs-spectra-above-have-to-overlap-if-only-a-small-part-to-make-specutils-works-properly">
+                CAUTION: Two inputs spectra above have to overlap, if only a small part, to make Specutils works properly.
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#cross-correlation-using-specutils-functionarity">
+              Cross Correlation using specutils functionarity;
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#how-does-it-look">
+              How does it look?
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </nav>
+       </div>
+      </div>
+     </div>
+     <div class="row" id="main-content">
+      <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+       <!-- Table of contents that is only displayed when printing the page -->
+       <div class="onlyprint" id="jb-print-docs-body">
+        <h1>
+         Part 2: Cross Correlation to Determine Redshift of NIRISS WFSS Spectra
+        </h1>
         <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
-            </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   Part 2: Cross Correlation to Determine Redshift of NIRISS WFSS Spectra
-  </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#introduction">
-   Introduction
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#download-notebook-01-products">
-     0. Download notebook 01 products
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#open-optimally-extracted-1d-spectrum-text-file">
-     1.Open optimally extracted 1D spectrum text file;
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#continuum-is-visible-we-need-to-subtract-it-before-template-correlation">
-     Continuum is visible. We need to subtract it before template correlation.
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#do-cross-correlation-with-an-input-template">
-     Do cross-correlation with an input template;
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#load-synthetic-template">
-     Load synthetic template;
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#binning-the-template-into-a-course-array-if-you-have-too-many-elements-and-cause-an-issue-below">
-     Binning the template into a course array, if you have too many elements and cause an issue below;
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#in-this-example-this-is-not-necessary">
-     -&gt; In this example this is not necessary.
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#caution-two-inputs-spectra-above-have-to-overlap-if-only-a-small-part-to-make-specutils-works-properly">
-       CAUTION: Two inputs spectra above have to overlap, if only a small part, to make Specutils works properly.
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#cross-correlation-using-specutils-functionarity">
-     Cross Correlation using specutils functionarity;
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#how-does-it-look">
-     How does it look?
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
-
-            </nav>
+        <div id="print-main-content">
+         <div id="jb-print-toc">
+          <div>
+           <h2>
+            Contents
+           </h2>
+          </div>
+          <nav aria-label="Page">
+           <ul class="visible nav section-nav flex-column">
+            <li class="toc-h1 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#">
+              Part 2: Cross Correlation to Determine Redshift of NIRISS WFSS Spectra
+             </a>
+            </li>
+            <li class="toc-h1 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#introduction">
+              Introduction
+             </a>
+             <ul class="visible nav section-nav flex-column">
+              <li class="toc-h2 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#download-notebook-01-products">
+                0. Download notebook 01 products
+               </a>
+              </li>
+              <li class="toc-h2 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#open-optimally-extracted-1d-spectrum-text-file">
+                1.Open optimally extracted 1D spectrum text file;
+               </a>
+              </li>
+              <li class="toc-h2 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#continuum-is-visible-we-need-to-subtract-it-before-template-correlation">
+                Continuum is visible. We need to subtract it before template correlation.
+               </a>
+              </li>
+              <li class="toc-h2 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#do-cross-correlation-with-an-input-template">
+                Do cross-correlation with an input template;
+               </a>
+              </li>
+              <li class="toc-h2 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#load-synthetic-template">
+                Load synthetic template;
+               </a>
+              </li>
+              <li class="toc-h2 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#binning-the-template-into-a-course-array-if-you-have-too-many-elements-and-cause-an-issue-below">
+                Binning the template into a course array, if you have too many elements and cause an issue below;
+               </a>
+              </li>
+              <li class="toc-h2 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#in-this-example-this-is-not-necessary">
+                -&gt; In this example this is not necessary.
+               </a>
+               <ul class="nav section-nav flex-column">
+                <li class="toc-h3 nav-item toc-entry">
+                 <a class="reference internal nav-link" href="#caution-two-inputs-spectra-above-have-to-overlap-if-only-a-small-part-to-make-specutils-works-properly">
+                  CAUTION: Two inputs spectra above have to overlap, if only a small part, to make Specutils works properly.
+                 </a>
+                </li>
+               </ul>
+              </li>
+              <li class="toc-h2 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#cross-correlation-using-specutils-functionarity">
+                Cross Correlation using specutils functionarity;
+               </a>
+              </li>
+              <li class="toc-h2 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#how-does-it-look">
+                How does it look?
+               </a>
+              </li>
+             </ul>
+            </li>
+           </ul>
+          </nav>
+         </div>
         </div>
-    </div>
-</div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Part 2: Cross Correlation to Determine Redshift of NIRISS WFSS Spectra</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   Part 2: Cross Correlation to Determine Redshift of NIRISS WFSS Spectra
-  </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#introduction">
-   Introduction
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#download-notebook-01-products">
-     0. Download notebook 01 products
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#open-optimally-extracted-1d-spectrum-text-file">
-     1.Open optimally extracted 1D spectrum text file;
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#continuum-is-visible-we-need-to-subtract-it-before-template-correlation">
-     Continuum is visible. We need to subtract it before template correlation.
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#do-cross-correlation-with-an-input-template">
-     Do cross-correlation with an input template;
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#load-synthetic-template">
-     Load synthetic template;
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#binning-the-template-into-a-course-array-if-you-have-too-many-elements-and-cause-an-issue-below">
-     Binning the template into a course array, if you have too many elements and cause an issue below;
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#in-this-example-this-is-not-necessary">
-     -&gt; In this example this is not necessary.
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#caution-two-inputs-spectra-above-have-to-overlap-if-only-a-small-part-to-make-specutils-works-properly">
-       CAUTION: Two inputs spectra above have to overlap, if only a small part, to make Specutils works properly.
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#cross-correlation-using-specutils-functionarity">
-     Cross Correlation using specutils functionarity;
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#how-does-it-look">
-     How does it look?
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
-
-                        </nav>
-                    </div>
-                </div>
-            </div>
-            
-              <div>
-                
-  <div class="section" id="part-2-cross-correlation-to-determine-redshift-of-niriss-wfss-spectra">
-<h1>Part 2: Cross Correlation to Determine Redshift of NIRISS WFSS Spectra<a class="headerlink" href="#part-2-cross-correlation-to-determine-redshift-of-niriss-wfss-spectra" title="Permalink to this headline">¶</a></h1>
-<p><strong>Use case:</strong> optimal extraction of grism spectra; redshift measurement; emission-line maps.  Simplified version of <a class="reference external" href="https://jwst-docs.stsci.edu/near-infrared-imager-and-slitless-spectrograph/niriss-example-science-programs/niriss-wfss-with-nircam-parallel-imaging-of-galaxies-in-lensing-clusters">JDox Science Use Case # 33</a>.<br>
-<strong>Data:</strong> JWST simulated NIRISS images from <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-other-tools/mirage-data-simulator">MIRAGE</a>, run through the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/">JWST calibration pipeline</a>; galaxy cluster.<br>
-<strong>Tools:</strong>  specutils, astropy, pandas, emcee, lmfit, corner, h5py.<br>
-<strong>Cross-intrument:</strong> NIRSpec <br>
-<strong>Documentation:</strong> This notebook is part of a STScI’s larger <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis">post-pipeline Data Analysis Tools Ecosystem</a>.<br></p>
-</div>
-<div class="section" id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
-<p>This notebook is 3 of 4 in a set focusing on NIRISS WFSS data:
+       </div>
+       <div>
+        <div class="section" id="part-2-cross-correlation-to-determine-redshift-of-niriss-wfss-spectra">
+         <h1>
+          Part 2: Cross Correlation to Determine Redshift of NIRISS WFSS Spectra
+          <a class="headerlink" href="#part-2-cross-correlation-to-determine-redshift-of-niriss-wfss-spectra" title="Permalink to this headline">
+           ¶
+          </a>
+         </h1>
+         <p>
+          <strong>
+           Use case:
+          </strong>
+          optimal extraction of grism spectra; redshift measurement; emission-line maps.  Simplified version of
+          <a class="reference external" href="https://jwst-docs.stsci.edu/near-infrared-imager-and-slitless-spectrograph/niriss-example-science-programs/niriss-wfss-with-nircam-parallel-imaging-of-galaxies-in-lensing-clusters">
+           JDox Science Use Case # 33
+          </a>
+          .
+          <br/>
+          <strong>
+           Data:
+          </strong>
+          JWST simulated NIRISS images from
+          <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-other-tools/mirage-data-simulator">
+           MIRAGE
+          </a>
+          , run through the
+          <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/">
+           JWST calibration pipeline
+          </a>
+          ; galaxy cluster.
+          <br/>
+          <strong>
+           Tools:
+          </strong>
+          specutils, astropy, pandas, emcee, lmfit, corner, h5py.
+          <br/>
+          <strong>
+           Cross-intrument:
+          </strong>
+          NIRSpec
+          <br/>
+          <strong>
+           Documentation:
+          </strong>
+          This notebook is part of a STScI’s larger
+          <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis">
+           post-pipeline Data Analysis Tools Ecosystem
+          </a>
+          .
+          <br/>
+         </p>
+        </div>
+        <div class="section" id="introduction">
+         <h1>
+          Introduction
+          <a class="headerlink" href="#introduction" title="Permalink to this headline">
+           ¶
+          </a>
+         </h1>
+         <p>
+          This notebook is 3 of 4 in a set focusing on NIRISS WFSS data:
 1. 1D optimal extraction since the JWST pipeline only provides a box extraction.  Optimal extraction improves S/N of spectra for faint sources.
 2. Combine and normalize 1D spectra.
 3. Cross correlate galaxy with template to get redshift.
-4. Spatially resolved emission line map.</p>
-<p>This notebook derives the redshift of a galaxy with multiple emission lines by using specutils template correlation.  The notebook begins with optimally extracted 1D spectra from notebook #2.</p>
-<p><strong>Note:</strong> Spectra without emission lines (e.g., ID 00003 in the previous notebook) may fail with the function here.  For those spectra, Notebook #4 derives the redshift from absorption lines and direct images instead.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+4. Spatially resolved emission line map.
+         </p>
+         <p>
+          This notebook derives the redshift of a galaxy with multiple emission lines by using specutils template correlation.  The notebook begins with optimally extracted 1D spectra from notebook #2.
+         </p>
+         <p>
+          <strong>
+           Note:
+          </strong>
+          Spectra without emission lines (e.g., ID 00003 in the previous notebook) may fail with the function here.  For those spectra, Notebook #4 derives the redshift from absorption lines and direct images instead.
+         </p>
+         <div class="cell docutils container">
+          <div class="cell_input docutils container">
+           <div class="highlight-ipython3 notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+</pre>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="cell docutils container">
+          <div class="cell_input docutils container">
+           <div class="highlight-ipython3 notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">h5py</span>
 
@@ -575,92 +627,130 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="kn">from</span> <span class="nn">astropy.io.misc</span> <span class="kn">import</span> <span class="n">hdf5</span>
 
 <span class="kn">import</span> <span class="nn">astropy</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;astropy&#39;</span><span class="p">,</span> <span class="n">astropy</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>astropy 5.0.4
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'astropy'</span><span class="p">,</span> <span class="n">astropy</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+</pre>
+            </div>
+           </div>
+          </div>
+          <div class="cell_output docutils container">
+           <div class="output stream highlight-myst-ansi notranslate">
+            <div class="highlight">
+             <pre><span></span>astropy 5.0.4
+</pre>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="cell docutils container">
+          <div class="cell_input docutils container">
+           <div class="highlight-ipython3 notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
 
-<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;savefig.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
-<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">specutils</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'savefig.dpi'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'figure.dpi'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
+</pre>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="cell docutils container">
+          <div class="cell_input docutils container">
+           <div class="highlight-ipython3 notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="kn">import</span> <span class="nn">specutils</span>
 <span class="kn">from</span> <span class="nn">specutils.fitting</span> <span class="kn">import</span> <span class="n">continuum</span> 
 <span class="kn">from</span> <span class="nn">specutils.spectra.spectrum1d</span> <span class="kn">import</span> <span class="n">Spectrum1D</span>
 <span class="kn">from</span> <span class="nn">specutils.analysis</span> <span class="kn">import</span> <span class="n">correlation</span>
 <span class="kn">from</span> <span class="nn">specutils.spectra.spectral_region</span> <span class="kn">import</span> <span class="n">SpectralRegion</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Specutils: &quot;</span><span class="p">,</span> <span class="n">specutils</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Specutils:  1.7.0
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="download-notebook-01-products">
-<h2>0. Download notebook 01 products<a class="headerlink" href="#download-notebook-01-products" title="Permalink to this headline">¶</a></h2>
-<p>These can be also obtained by running the notebooks.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;./output&#39;</span><span class="p">):</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Specutils: "</span><span class="p">,</span> <span class="n">specutils</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+</pre>
+            </div>
+           </div>
+          </div>
+          <div class="cell_output docutils container">
+           <div class="output stream highlight-myst-ansi notranslate">
+            <div class="highlight">
+             <pre><span></span>Specutils:  1.7.0
+</pre>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="section" id="download-notebook-01-products">
+          <h2>
+           0. Download notebook 01 products
+           <a class="headerlink" href="#download-notebook-01-products" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <p>
+           These can be also obtained by running the notebooks.
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">'./output'</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">zipfile</span>
     <span class="kn">import</span> <span class="nn">urllib.request</span>
-    <span class="n">boxlink</span> <span class="o">=</span> <span class="s1">&#39;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/NIRISS_lensing_cluster/output.zip&#39;</span>
-    <span class="n">boxfile</span> <span class="o">=</span> <span class="s1">&#39;./output.zip&#39;</span>
+    <span class="n">boxlink</span> <span class="o">=</span> <span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/NIRISS_lensing_cluster/output.zip'</span>
+    <span class="n">boxfile</span> <span class="o">=</span> <span class="s1">'./output.zip'</span>
     <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
-    <span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
     <span class="n">zf</span><span class="o">.</span><span class="n">extractall</span><span class="p">()</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Already exists&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Already exists
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="section" id="open-optimally-extracted-1d-spectrum-text-file">
-<h2>1.Open optimally extracted 1D spectrum text file;<a class="headerlink" href="#open-optimally-extracted-1d-spectrum-text-file" title="Permalink to this headline">¶</a></h2>
-<p>These are optimally extracted, normalized spectra from notebooks 01a &amp; 01b.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DIR_OUT</span> <span class="o">=</span> <span class="s1">&#39;./output/&#39;</span>
-<span class="n">filt</span> <span class="o">=</span> <span class="s1">&#39;f200w&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Already exists'</span><span class="p">)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output stream highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>Already exists
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="section" id="open-optimally-extracted-1d-spectrum-text-file">
+          <h2>
+           1.Open optimally extracted 1D spectrum text file;
+           <a class="headerlink" href="#open-optimally-extracted-1d-spectrum-text-file" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <p>
+           These are optimally extracted, normalized spectra from notebooks 01a &amp; 01b.
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="n">DIR_OUT</span> <span class="o">=</span> <span class="s1">'./output/'</span>
+<span class="n">filt</span> <span class="o">=</span> <span class="s1">'f200w'</span>
 
-<span class="n">grism</span> <span class="o">=</span> <span class="s1">&#39;G150C&#39;</span>
-<span class="c1">#grism = &#39;G150R&#39;</span>
+<span class="n">grism</span> <span class="o">=</span> <span class="s1">'G150C'</span>
+<span class="c1">#grism = 'G150R'</span>
 
-<span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;00004&#39;</span>
+<span class="nb">id</span> <span class="o">=</span> <span class="s1">'00004'</span>
 
-<span class="n">file_1d</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_combine_1d_opt.fits&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+<span class="n">file_1d</span> <span class="o">=</span> <span class="s1">'</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_combine_1d_opt.fits'</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
 <span class="n">fd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="n">hd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
 <span class="n">fd</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FITS_rec([(1.71986127, 42.38365482, 1.51015508),
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output text_plain highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>FITS_rec([(1.71986127, 42.38365482, 1.51015508),
           (1.72453201, 38.56917716, 0.97178267),
           (1.72920275, 35.93947653, 0.62354777),
           (1.73387337, 23.77350774, 0.31776521),
@@ -776,86 +866,117 @@ const thebe_selector_output = ".output, .cell_output"
           (2.2476511 , 39.62514071, 0.76141747),
           (2.25232172, 51.17825988, 1.22953228),
           (2.25699258, 63.41328878, 2.06786936)],
-         dtype=(numpy.record, [(&#39;wavelength&#39;, &#39;&gt;f8&#39;), (&#39;flux&#39;, &#39;&gt;f8&#39;), (&#39;uncertainty&#39;, &#39;&gt;f8&#39;)]))
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Normalization of observed spectra; Just for visual purpose;</span>
+         dtype=(numpy.record, [('wavelength', '&gt;f8'), ('flux', '&gt;f8'), ('uncertainty', '&gt;f8')]))
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Normalization of observed spectra; Just for visual purpose;</span>
 <span class="n">flux_normalize</span> <span class="o">=</span> <span class="mf">500.</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wave_200</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span>
-<span class="n">flux_200</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">flux_normalize</span>
-<span class="n">flux_err_200</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">flux_normalize</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Open files for other filters.</span>
-<span class="n">filt</span> <span class="o">=</span> <span class="s1">&#39;f150w&#39;</span>
-<span class="n">file_1d</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_combine_1d_opt.fits&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="n">wave_200</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'wavelength'</span><span class="p">]</span>
+<span class="n">flux_200</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'flux'</span><span class="p">]</span> <span class="o">/</span> <span class="n">flux_normalize</span>
+<span class="n">flux_err_200</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'uncertainty'</span><span class="p">]</span> <span class="o">/</span> <span class="n">flux_normalize</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Open files for other filters.</span>
+<span class="n">filt</span> <span class="o">=</span> <span class="s1">'f150w'</span>
+<span class="n">file_1d</span> <span class="o">=</span> <span class="s1">'</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_combine_1d_opt.fits'</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
 <span class="n">fd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 
-<span class="n">wave_150</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span>
-<span class="n">flux_150</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">flux_normalize</span>
-<span class="n">flux_err_150</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">flux_normalize</span>
+<span class="n">wave_150</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'wavelength'</span><span class="p">]</span>
+<span class="n">flux_150</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'flux'</span><span class="p">]</span> <span class="o">/</span> <span class="n">flux_normalize</span>
+<span class="n">flux_err_150</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'uncertainty'</span><span class="p">]</span> <span class="o">/</span> <span class="n">flux_normalize</span>
 
 <span class="c1"># </span>
-<span class="n">filt</span> <span class="o">=</span> <span class="s1">&#39;f115w&#39;</span>
-<span class="n">file_1d</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_combine_1d_opt.fits&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+<span class="n">filt</span> <span class="o">=</span> <span class="s1">'f115w'</span>
+<span class="n">file_1d</span> <span class="o">=</span> <span class="s1">'</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_combine_1d_opt.fits'</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
 <span class="n">fd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 
-<span class="n">wave_115</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span>
-<span class="n">flux_115</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">flux_normalize</span>
-<span class="n">flux_err_115</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">flux_normalize</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot all</span>
+<span class="n">wave_115</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'wavelength'</span><span class="p">]</span>
+<span class="n">flux_115</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'flux'</span><span class="p">]</span> <span class="o">/</span> <span class="n">flux_normalize</span>
+<span class="n">flux_err_115</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'uncertainty'</span><span class="p">]</span> <span class="o">/</span> <span class="n">flux_normalize</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># plot all</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_115</span><span class="p">,</span> <span class="n">flux_115</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightblue&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;F115W&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_150</span><span class="p">,</span> <span class="n">flux_150</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;F150W&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_200</span><span class="p">,</span> <span class="n">flux_200</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;F200W&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_115</span><span class="p">,</span> <span class="n">flux_115</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'lightblue'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'F115W'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_150</span><span class="p">,</span> <span class="n">flux_150</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'F150W'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_200</span><span class="p">,</span> <span class="n">flux_200</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'purple'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'F200W'</span><span class="p">)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_115</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_115</span><span class="p">,</span> <span class="n">flux_err_115</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_150</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_150</span><span class="p">,</span> <span class="n">flux_err_150</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_200</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_200</span><span class="p">,</span> <span class="n">flux_err_200</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_115</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_115</span><span class="p">,</span> <span class="n">flux_err_115</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_150</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_150</span><span class="p">,</span> <span class="n">flux_err_150</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_200</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_200</span><span class="p">,</span> <span class="n">flux_err_200</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength / um&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Wavelength / um'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fb99f5c6760&gt;
-</pre></div>
-</div>
-<img alt="../../_images/02. Cross correlation template_12_1.png" src="../../_images/02. Cross correlation template_12_1.png" />
-</div>
-</div>
-</div>
-<div class="section" id="continuum-is-visible-we-need-to-subtract-it-before-template-correlation">
-<h2>Continuum is visible. We need to subtract it before template correlation.<a class="headerlink" href="#continuum-is-visible-we-need-to-subtract-it-before-template-correlation" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>Strong emission lines are seen. (Hb+Oiii doublet at ~1.55um, and blended Ha+Nii at ~2.1um)</p></li>
-<li><p>Note that flux excess at the edges of each filter are not real, and should be masked out.</p></li>
-</ul>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># F200W</span>
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output text_plain highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>&lt;matplotlib.legend.Legend at 0x7fee717df220&gt;
+</pre>
+             </div>
+            </div>
+            <img alt="../../_images/02. Cross correlation template_12_1.png" src="../../_images/02. Cross correlation template_12_1.png"/>
+           </div>
+          </div>
+         </div>
+         <div class="section" id="continuum-is-visible-we-need-to-subtract-it-before-template-correlation">
+          <h2>
+           Continuum is visible. We need to subtract it before template correlation.
+           <a class="headerlink" href="#continuum-is-visible-we-need-to-subtract-it-before-template-correlation" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <ul class="simple">
+           <li>
+            <p>
+             Strong emission lines are seen. (Hb+Oiii doublet at ~1.55um, and blended Ha+Nii at ~2.1um)
+            </p>
+           </li>
+           <li>
+            <p>
+             Note that flux excess at the edges of each filter are not real, and should be masked out.
+            </p>
+           </li>
+          </ul>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># F200W</span>
 
 <span class="n">spec_unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">MJy</span>
 
@@ -865,26 +986,32 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="n">continuum_200</span> <span class="o">=</span> <span class="n">continuum</span><span class="o">.</span><span class="n">fit_generic_continuum</span><span class="p">(</span><span class="n">obs_200</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Chebyshev1D</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_200</span><span class="p">,</span> <span class="n">flux_200</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;F200W&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave_200</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">continuum_200</span><span class="p">(</span><span class="n">obs_200</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">),</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Fitted continuum&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_200</span><span class="p">,</span> <span class="n">flux_200</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'purple'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'F200W'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave_200</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">continuum_200</span><span class="p">(</span><span class="n">obs_200</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">),</span><span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'Fitted continuum'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">flux_200_sub</span> <span class="o">=</span> <span class="n">flux_200</span> <span class="o">*</span> <span class="n">spec_unit</span> <span class="o">-</span> <span class="n">continuum_200</span><span class="p">(</span><span class="n">wave_200</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
 
 <span class="n">mask_200</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave_200</span> <span class="o">&gt;</span> <span class="mf">1.75</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave_200</span> <span class="o">&lt;</span> <span class="mf">2.23</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Model is linear in parameters; consider using linear fitting methods. [astropy.modeling.fitting]
-</pre></div>
-</div>
-<img alt="../../_images/02. Cross correlation template_14_1.png" src="../../_images/02. Cross correlation template_14_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># F150W</span>
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output stderr highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>WARNING: Model is linear in parameters; consider using linear fitting methods. [astropy.modeling.fitting]
+</pre>
+             </div>
+            </div>
+            <img alt="../../_images/02. Cross correlation template_14_1.png" src="../../_images/02. Cross correlation template_14_1.png"/>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># F150W</span>
 
 <span class="n">spec_unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">MJy</span>
 
@@ -896,24 +1023,30 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="n">flux_150_sub</span> <span class="o">=</span> <span class="n">flux_150</span> <span class="o">*</span> <span class="n">spec_unit</span> <span class="o">-</span> <span class="n">continuum_150</span><span class="p">(</span><span class="n">wave_150</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_150</span><span class="p">,</span> <span class="n">flux_150</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;F150W&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave_150</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">continuum_150</span><span class="p">(</span><span class="n">obs_150</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Fitted continuum&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_150</span><span class="p">,</span> <span class="n">flux_150</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'F150W'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave_150</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">continuum_150</span><span class="p">(</span><span class="n">obs_150</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Fitted continuum'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">mask_150</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave_150</span> <span class="o">&gt;</span> <span class="mf">1.35</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave_150</span> <span class="o">&lt;</span> <span class="mf">1.65</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Model is linear in parameters; consider using linear fitting methods. [astropy.modeling.fitting]
-</pre></div>
-</div>
-<img alt="../../_images/02. Cross correlation template_15_1.png" src="../../_images/02. Cross correlation template_15_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># F150W</span>
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output stderr highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>WARNING: Model is linear in parameters; consider using linear fitting methods. [astropy.modeling.fitting]
+</pre>
+             </div>
+            </div>
+            <img alt="../../_images/02. Cross correlation template_15_1.png" src="../../_images/02. Cross correlation template_15_1.png"/>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># F150W</span>
 
 <span class="n">spec_unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">MJy</span>
 
@@ -923,244 +1056,319 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="n">continuum_115</span> <span class="o">=</span> <span class="n">continuum</span><span class="o">.</span><span class="n">fit_generic_continuum</span><span class="p">(</span><span class="n">obs_115</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Chebyshev1D</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_115</span><span class="p">,</span> <span class="n">flux_115</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightblue&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;F115W&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave_115</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">continuum_115</span><span class="p">(</span><span class="n">obs_115</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Fitted continuum&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_115</span><span class="p">,</span> <span class="n">flux_115</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'lightblue'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'F115W'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave_115</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">continuum_115</span><span class="p">(</span><span class="n">obs_115</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Fitted continuum'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">flux_115_sub</span> <span class="o">=</span> <span class="n">flux_115</span> <span class="o">*</span> <span class="n">spec_unit</span> <span class="o">-</span> <span class="n">continuum_115</span><span class="p">(</span><span class="n">wave_115</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
 <span class="n">mask_115</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave_115</span> <span class="o">&gt;</span> <span class="mf">1.02</span><span class="p">)</span>  <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave_115</span> <span class="o">&lt;</span> <span class="mf">1.25</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Model is linear in parameters; consider using linear fitting methods. [astropy.modeling.fitting]
-</pre></div>
-</div>
-<img alt="../../_images/02. Cross correlation template_16_1.png" src="../../_images/02. Cross correlation template_16_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot all</span>
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output stderr highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>WARNING: Model is linear in parameters; consider using linear fitting methods. [astropy.modeling.fitting]
+</pre>
+             </div>
+            </div>
+            <img alt="../../_images/02. Cross correlation template_16_1.png" src="../../_images/02. Cross correlation template_16_1.png"/>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># plot all</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_115</span><span class="p">[</span><span class="n">mask_115</span><span class="p">],</span> <span class="n">flux_115_sub</span><span class="p">[</span><span class="n">mask_115</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightblue&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;F115W&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_150</span><span class="p">[</span><span class="n">mask_150</span><span class="p">],</span> <span class="n">flux_150_sub</span><span class="p">[</span><span class="n">mask_150</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;F150W&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_200</span><span class="p">[</span><span class="n">mask_200</span><span class="p">],</span> <span class="n">flux_200_sub</span><span class="p">[</span><span class="n">mask_200</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;F200W&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_115</span><span class="p">[</span><span class="n">mask_115</span><span class="p">],</span> <span class="n">flux_115_sub</span><span class="p">[</span><span class="n">mask_115</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'lightblue'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'F115W'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_150</span><span class="p">[</span><span class="n">mask_150</span><span class="p">],</span> <span class="n">flux_150_sub</span><span class="p">[</span><span class="n">mask_150</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'F150W'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_200</span><span class="p">[</span><span class="n">mask_200</span><span class="p">],</span> <span class="n">flux_200_sub</span><span class="p">[</span><span class="n">mask_200</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'purple'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'F200W'</span><span class="p">)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_115</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_115</span><span class="p">,</span> <span class="n">flux_err_115</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_150</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_150</span><span class="p">,</span> <span class="n">flux_err_150</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_200</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_200</span><span class="p">,</span> <span class="n">flux_err_200</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_115</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_115</span><span class="p">,</span> <span class="n">flux_err_115</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_150</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_150</span><span class="p">,</span> <span class="n">flux_err_150</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_200</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_200</span><span class="p">,</span> <span class="n">flux_err_200</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength / um&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Wavelength / um'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fb99b2e5ac0&gt;
-</pre></div>
-</div>
-<img alt="../../_images/02. Cross correlation template_17_1.png" src="../../_images/02. Cross correlation template_17_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Concatenate arrays</span>
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output text_plain highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>&lt;matplotlib.legend.Legend at 0x7fee6f581e50&gt;
+</pre>
+             </div>
+            </div>
+            <img alt="../../_images/02. Cross correlation template_17_1.png" src="../../_images/02. Cross correlation template_17_1.png"/>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Concatenate arrays</span>
 <span class="n">wave_obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">wave_115</span><span class="p">[</span><span class="n">mask_115</span><span class="p">],</span> <span class="n">wave_150</span><span class="p">[</span><span class="n">mask_150</span><span class="p">],</span> <span class="n">wave_200</span><span class="p">[</span><span class="n">mask_200</span><span class="p">]])</span>
 <span class="n">flux_obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">flux_115_sub</span><span class="p">[</span><span class="n">mask_115</span><span class="p">],</span> <span class="n">flux_150_sub</span><span class="p">[</span><span class="n">mask_150</span><span class="p">],</span> <span class="n">flux_200_sub</span><span class="p">[</span><span class="n">mask_200</span><span class="p">]])</span>
 <span class="n">flux_err_obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">flux_err_115</span><span class="p">[</span><span class="n">mask_115</span><span class="p">],</span> <span class="n">flux_err_150</span><span class="p">[</span><span class="n">mask_150</span><span class="p">],</span> <span class="n">flux_err_200</span><span class="p">[</span><span class="n">mask_200</span><span class="p">]])</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave_obs</span><span class="p">,</span> <span class="n">flux_obs</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_obs</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_obs</span><span class="p">,</span> <span class="n">flux_err_obs</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.PolyCollection at 0x7fb99b3108b0&gt;
-</pre></div>
-</div>
-<img alt="../../_images/02. Cross correlation template_18_1.png" src="../../_images/02. Cross correlation template_18_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wht_obs</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">flux_err_obs</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_obs</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_obs</span><span class="p">,</span> <span class="n">flux_err_obs</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output text_plain highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>&lt;matplotlib.collections.PolyCollection at 0x7fee6f597640&gt;
+</pre>
+             </div>
+            </div>
+            <img alt="../../_images/02. Cross correlation template_18_1.png" src="../../_images/02. Cross correlation template_18_1.png"/>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="n">wht_obs</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">flux_err_obs</span><span class="o">**</span><span class="mi">2</span>
 <span class="n">spec_unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">MJy</span>
 
 <span class="n">dataspec</span> <span class="o">=</span> <span class="n">QTable</span><span class="p">([</span><span class="n">wave_obs</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span> <span class="n">flux_obs</span><span class="o">*</span><span class="n">spec_unit</span><span class="p">,</span> <span class="n">wht_obs</span><span class="p">,</span> <span class="n">flux_err_obs</span><span class="p">],</span>
-                   <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">,</span><span class="s1">&#39;flux&#39;</span><span class="p">,</span><span class="s1">&#39;weight&#39;</span><span class="p">,</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">))</span>
-<span class="n">dataspec_sub</span> <span class="o">=</span> <span class="n">dataspec</span><span class="p">[</span><span class="n">dataspec</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">]</span>
+                   <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">'wavelength'</span><span class="p">,</span><span class="s1">'flux'</span><span class="p">,</span><span class="s1">'weight'</span><span class="p">,</span><span class="s1">'uncertainty'</span><span class="p">))</span>
+<span class="n">dataspec_sub</span> <span class="o">=</span> <span class="n">dataspec</span><span class="p">[</span><span class="n">dataspec</span><span class="p">[</span><span class="s1">'weight'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">]</span>
 
 <span class="c1"># Now make it into a Spectrum1D instance.</span>
-<span class="n">p_obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">],</span>
-                 <span class="n">flux</span><span class="o">=</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">],</span>
-                 <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;MJy&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="section" id="do-cross-correlation-with-an-input-template">
-<h2>Do cross-correlation with an input template;<a class="headerlink" href="#do-cross-correlation-with-an-input-template" title="Permalink to this headline">¶</a></h2>
-<p>(*Another notebook on Specutils cross correlation by Ivo Busko: <a class="reference external" href="https://spacetelescope.github.io/jdat_notebooks/pages/redshift_crosscorr/redshift_crosscorr.html">https://spacetelescope.github.io/jdat_notebooks/pages/redshift_crosscorr/redshift_crosscorr.html</a>)</p>
-</div>
-<div class="section" id="load-synthetic-template">
-<h2>Load synthetic template;<a class="headerlink" href="#load-synthetic-template" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>Just to test the functionality, for now we are using the input spectral template used for simulation.</p></li>
-</ul>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">read_hdf5</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<span class="n">p_obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">'wavelength'</span><span class="p">],</span>
+                 <span class="n">flux</span><span class="o">=</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">'flux'</span><span class="p">],</span>
+                 <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">'uncertainty'</span><span class="p">]),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">'MJy'</span><span class="p">)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="section" id="do-cross-correlation-with-an-input-template">
+          <h2>
+           Do cross-correlation with an input template;
+           <a class="headerlink" href="#do-cross-correlation-with-an-input-template" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <p>
+           (*Another notebook on Specutils cross correlation by Ivo Busko:
+           <a class="reference external" href="https://spacetelescope.github.io/jdat_notebooks/pages/redshift_crosscorr/redshift_crosscorr.html">
+            https://spacetelescope.github.io/jdat_notebooks/pages/redshift_crosscorr/redshift_crosscorr.html
+           </a>
+           )
+          </p>
+         </div>
+         <div class="section" id="load-synthetic-template">
+          <h2>
+           Load synthetic template;
+           <a class="headerlink" href="#load-synthetic-template" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <ul class="simple">
+           <li>
+            <p>
+             Just to test the functionality, for now we are using the input spectral template used for simulation.
+            </p>
+           </li>
+          </ul>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="k">def</span> <span class="nf">read_hdf5</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
 
     <span class="n">contents</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_obj</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_obj</span><span class="p">:</span>
         <span class="n">no_wave_units</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">no_flux_units</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">file_obj</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">dataset</span> <span class="o">=</span> <span class="n">file_obj</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">wave_units_string</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;wavelength_units&#39;</span><span class="p">]</span>
+                <span class="n">wave_units_string</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'wavelength_units'</span><span class="p">]</span>
             <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                <span class="n">wave_units_string</span> <span class="o">=</span> <span class="s1">&#39;micron&#39;</span>
+                <span class="n">wave_units_string</span> <span class="o">=</span> <span class="s1">'micron'</span>
                 <span class="n">no_wave_units</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">flux_units_string</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flux_units&#39;</span><span class="p">]</span>
+                <span class="n">flux_units_string</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'flux_units'</span><span class="p">]</span>
             <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                <span class="n">flux_units_string</span> <span class="o">=</span> <span class="s1">&#39;flam_cgs&#39;</span>
+                <span class="n">flux_units_string</span> <span class="o">=</span> <span class="s1">'flam_cgs'</span>
                 <span class="n">no_flux_units</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="c1"># Catch common errors</span>
-            <span class="k">if</span> <span class="n">wave_units_string</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;microns&#39;</span><span class="p">,</span> <span class="s1">&#39;angstroms&#39;</span><span class="p">,</span> <span class="s1">&#39;nanometers&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">wave_units_string</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'microns'</span><span class="p">,</span> <span class="s1">'angstroms'</span><span class="p">,</span> <span class="s1">'nanometers'</span><span class="p">]:</span>
                 <span class="n">wave_units_string</span> <span class="o">=</span> <span class="n">wave_units_string</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
             <span class="c1"># Get the data</span>
             <span class="n">waves</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">fluxes</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-            <span class="n">contents</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;wavelengths&#39;</span><span class="p">:</span> <span class="n">waves</span><span class="p">,</span> <span class="s1">&#39;fluxes&#39;</span><span class="p">:</span> <span class="n">fluxes</span><span class="p">}</span>
+            <span class="n">contents</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'wavelengths'</span><span class="p">:</span> <span class="n">waves</span><span class="p">,</span> <span class="s1">'fluxes'</span><span class="p">:</span> <span class="n">fluxes</span><span class="p">}</span>
 
     <span class="k">return</span> <span class="n">contents</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download files, if not exists yet.</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;./pipeline_products&#39;</span><span class="p">):</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Download files, if not exists yet.</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">'./pipeline_products'</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">zipfile</span>
     <span class="kn">import</span> <span class="nn">urllib.request</span>
-    <span class="n">boxlink</span> <span class="o">=</span> <span class="s1">&#39;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/NIRISS_lensing_cluster/pipeline_products.zip&#39;</span>
-    <span class="n">boxfile</span> <span class="o">=</span> <span class="s1">&#39;./pipeline_products.zip&#39;</span>
+    <span class="n">boxlink</span> <span class="o">=</span> <span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/NIRISS_lensing_cluster/pipeline_products.zip'</span>
+    <span class="n">boxfile</span> <span class="o">=</span> <span class="s1">'./pipeline_products.zip'</span>
     <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
-    <span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
     <span class="n">zf</span><span class="o">.</span><span class="n">extractall</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Template file;</span>
-<span class="n">file_temp</span> <span class="o">=</span> <span class="s1">&#39;./pipeline_products/source_sed_file_from_sources_extend_01_and_sed_file.hdf5&#39;</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Template file;</span>
+<span class="n">file_temp</span> <span class="o">=</span> <span class="s1">'./pipeline_products/source_sed_file_from_sources_extend_01_and_sed_file.hdf5'</span>
 
 <span class="n">content</span> <span class="o">=</span> <span class="n">read_hdf5</span><span class="p">(</span><span class="n">file_temp</span><span class="p">)</span>
 <span class="n">content</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{10177: {&#39;wavelengths&#39;: array([3.0999999e-02, 3.1072199e-02, 3.1144397e-02, ..., 3.4099831e+01,
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output text_plain highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>{10177: {'wavelengths': array([3.0999999e-02, 3.1072199e-02, 3.1144397e-02, ..., 3.4099831e+01,
          3.4099903e+01, 3.4099976e+01], dtype=float32),
-  &#39;fluxes&#39;: array([0.0000000e+00, 0.0000000e+00, 0.0000000e+00, ..., 1.4608030e-25,
+  'fluxes': array([0.0000000e+00, 0.0000000e+00, 0.0000000e+00, ..., 1.4608030e-25,
          8.3700207e-26, 2.1320117e-26], dtype=float32)},
- 10265: {&#39;wavelengths&#39;: array([3.0999999e-02, 3.1072199e-02, 3.1144397e-02, ..., 3.4099831e+01,
+ 10265: {'wavelengths': array([3.0999999e-02, 3.1072199e-02, 3.1144397e-02, ..., 3.4099831e+01,
          3.4099903e+01, 3.4099976e+01], dtype=float32),
-  &#39;fluxes&#39;: array([0.0000000e+00, 0.0000000e+00, 0.0000000e+00, ..., 1.7282180e-25,
+  'fluxes': array([0.0000000e+00, 0.0000000e+00, 0.0000000e+00, ..., 1.7282180e-25,
          9.9022388e-26, 2.5222983e-26], dtype=float32)},
- 10455: {&#39;wavelengths&#39;: array([3.0999999e-02, 3.1072199e-02, 3.1144397e-02, ..., 3.4099831e+01,
+ 10455: {'wavelengths': array([3.0999999e-02, 3.1072199e-02, 3.1144397e-02, ..., 3.4099831e+01,
          3.4099903e+01, 3.4099976e+01], dtype=float32),
-  &#39;fluxes&#39;: array([0.0000000e+00, 0.0000000e+00, 0.0000000e+00, ..., 1.4816426e-26,
+  'fluxes': array([0.0000000e+00, 0.0000000e+00, 0.0000000e+00, ..., 1.4816426e-26,
          8.4894260e-27, 2.1624266e-27], dtype=float32)},
- 10709: {&#39;wavelengths&#39;: array([3.0999999e-02, 3.1072199e-02, 3.1144397e-02, ..., 3.4099831e+01,
+ 10709: {'wavelengths': array([3.0999999e-02, 3.1072199e-02, 3.1144397e-02, ..., 3.4099831e+01,
          3.4099903e+01, 3.4099976e+01], dtype=float32),
-  &#39;fluxes&#39;: array([0.0000000e+00, 0.0000000e+00, 0.0000000e+00, ..., 3.6238049e-24,
+  'fluxes': array([0.0000000e+00, 0.0000000e+00, 0.0000000e+00, ..., 3.6238049e-24,
          2.0763458e-24, 5.2888681e-25], dtype=float32)},
- 11151: {&#39;wavelengths&#39;: array([3.5000000e-02, 3.5081513e-02, 3.5163030e-02, ..., 3.8499809e+01,
+ 11151: {'wavelengths': array([3.5000000e-02, 3.5081513e-02, 3.5163030e-02, ..., 3.8499809e+01,
          3.8499889e+01, 3.8499973e+01], dtype=float32),
-  &#39;fluxes&#39;: array([0.0000000e+00, 0.0000000e+00, 0.0000000e+00, ..., 1.0507161e-24,
+  'fluxes': array([0.0000000e+00, 0.0000000e+00, 0.0000000e+00, ..., 1.0507161e-24,
          6.0203300e-25, 1.5334984e-25], dtype=float32)},
- 11420: {&#39;wavelengths&#39;: array([3.5000000e-02, 3.5081513e-02, 3.5163030e-02, ..., 3.8499809e+01,
+ 11420: {'wavelengths': array([3.5000000e-02, 3.5081513e-02, 3.5163030e-02, ..., 3.8499809e+01,
          3.8499889e+01, 3.8499973e+01], dtype=float32),
-  &#39;fluxes&#39;: array([0.0000000e+00, 0.0000000e+00, 0.0000000e+00, ..., 1.0168714e-24,
+  'fluxes': array([0.0000000e+00, 0.0000000e+00, 0.0000000e+00, ..., 1.0168714e-24,
          5.8264083e-25, 1.4841028e-25], dtype=float32)},
- 11423: {&#39;wavelengths&#39;: array([3.5000000e-02, 3.5081513e-02, 3.5163030e-02, ..., 3.8499809e+01,
+ 11423: {'wavelengths': array([3.5000000e-02, 3.5081513e-02, 3.5163030e-02, ..., 3.8499809e+01,
          3.8499889e+01, 3.8499973e+01], dtype=float32),
-  &#39;fluxes&#39;: array([0.0000000e+00, 0.0000000e+00, 0.0000000e+00, ..., 1.0033151e-24,
+  'fluxes': array([0.0000000e+00, 0.0000000e+00, 0.0000000e+00, ..., 1.0033151e-24,
          5.7487341e-25, 1.4643175e-25], dtype=float32)}}
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The template is already redshifted for simulation. </span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># The template is already redshifted for simulation. </span>
 <span class="c1"># Now, blueshift it to z=0;</span>
 <span class="n">z_input</span>  <span class="o">=</span> <span class="mf">2.1</span> 
 <span class="n">iix</span> <span class="o">=</span> <span class="mi">10709</span> <span class="c1"># Index for the particular template.</span>
 
-<span class="n">flux_all</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="n">iix</span><span class="p">][</span><span class="s1">&#39;fluxes&#39;</span><span class="p">]</span>
-<span class="n">wave_all</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="n">iix</span><span class="p">][</span><span class="s1">&#39;wavelengths&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">z_input</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e4</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave_all</span><span class="p">,</span> <span class="n">flux_all</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
+<span class="n">flux_all</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="n">iix</span><span class="p">][</span><span class="s1">'fluxes'</span><span class="p">]</span>
+<span class="n">wave_all</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="n">iix</span><span class="p">][</span><span class="s1">'wavelengths'</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">z_input</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e4</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave_all</span><span class="p">,</span> <span class="n">flux_all</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span><span class="mi">8000</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(2000.0, 8000.0)
-</pre></div>
-</div>
-<img alt="../../_images/02. Cross correlation template_25_1.png" src="../../_images/02. Cross correlation template_25_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cut templates for better fit.</span>
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output text_plain highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>(2000.0, 8000.0)
+</pre>
+             </div>
+            </div>
+            <img alt="../../_images/02. Cross correlation template_25_1.png" src="../../_images/02. Cross correlation template_25_1.png"/>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Cut templates for better fit.</span>
 <span class="n">con_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave_all</span> <span class="o">&gt;</span> <span class="mi">3600</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave_all</span> <span class="o">&lt;</span> <span class="mi">13000</span><span class="p">)</span>
 <span class="n">flux</span> <span class="o">=</span> <span class="n">flux_all</span><span class="p">[</span><span class="n">con_tmp</span><span class="p">]</span>
 <span class="n">wave</span> <span class="o">=</span> <span class="n">wave_all</span><span class="p">[</span><span class="n">con_tmp</span><span class="p">]</span>
 <span class="n">flux</span> <span class="o">/=</span> <span class="n">flux</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
-<span class="n">wave</span> <span class="o">*=</span> <span class="mf">1.e-4</span> <span class="c1"># force wavelengths in um. (with_spectral_unit doesn&#39;t convert)</span>
+<span class="n">wave</span> <span class="o">*=</span> <span class="mf">1.e-4</span> <span class="c1"># force wavelengths in um. (with_spectral_unit doesn't convert)</span>
 
 <span class="n">factor</span> <span class="o">=</span> <span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">unit</span> <span class="c1"># normalize template to a sensible range</span>
 <span class="n">template</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span> <span class="n">flux</span><span class="o">=</span><span class="n">flux</span><span class="o">*</span><span class="n">factor</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;um&#39;)
-</pre></div>
-</div>
-<img alt="../../_images/02. Cross correlation template_26_1.png" src="../../_images/02. Cross correlation template_26_1.png" />
-</div>
-</div>
-</div>
-<div class="section" id="binning-the-template-into-a-course-array-if-you-have-too-many-elements-and-cause-an-issue-below">
-<h2>Binning the template into a course array, if you have too many elements and cause an issue below;<a class="headerlink" href="#binning-the-template-into-a-course-array-if-you-have-too-many-elements-and-cause-an-issue-below" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="in-this-example-this-is-not-necessary">
-<h2>-&gt; In this example this is not necessary.<a class="headerlink" href="#in-this-example-this-is-not-necessary" title="Permalink to this headline">¶</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make this true, if you want to bin;</span>
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output text_plain highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>Text(0.5, 0, 'um')
+</pre>
+             </div>
+            </div>
+            <img alt="../../_images/02. Cross correlation template_26_1.png" src="../../_images/02. Cross correlation template_26_1.png"/>
+           </div>
+          </div>
+         </div>
+         <div class="section" id="binning-the-template-into-a-course-array-if-you-have-too-many-elements-and-cause-an-issue-below">
+          <h2>
+           Binning the template into a course array, if you have too many elements and cause an issue below;
+           <a class="headerlink" href="#binning-the-template-into-a-course-array-if-you-have-too-many-elements-and-cause-an-issue-below" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+         </div>
+         <div class="section" id="in-this-example-this-is-not-necessary">
+          <h2>
+           -&gt; In this example this is not necessary.
+           <a class="headerlink" href="#in-this-example-this-is-not-necessary" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Make this true, if you want to bin;</span>
 <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
     <span class="n">wave_bin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">wave</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">wave</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mf">20.0</span><span class="p">)</span>
     <span class="n">flux_bin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">wave_bin</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">flux</span><span class="p">)</span>
@@ -1172,21 +1380,27 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="n">template</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave_bin</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span> <span class="n">flux</span><span class="o">=</span><span class="n">flux_bin</span><span class="o">*</span><span class="n">factor</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>    
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;um&#39;)
-</pre></div>
-</div>
-<img alt="../../_images/02. Cross correlation template_28_1.png" src="../../_images/02. Cross correlation template_28_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Continuum fit to the fitting temp;</span>
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output text_plain highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>Text(0.5, 0, 'um')
+</pre>
+             </div>
+            </div>
+            <img alt="../../_images/02. Cross correlation template_28_1.png" src="../../_images/02. Cross correlation template_28_1.png"/>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Continuum fit to the fitting temp;</span>
 <span class="n">regions</span> <span class="o">=</span> <span class="p">[</span><span class="n">SpectralRegion</span><span class="p">(</span><span class="mf">0.37</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span> <span class="mf">0.452</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">),</span> 
            <span class="n">SpectralRegion</span><span class="p">(</span><span class="mf">0.476</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span> <span class="mf">0.53</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">),</span>
            <span class="n">SpectralRegion</span><span class="p">(</span><span class="mf">0.645</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span> <span class="mf">0.67</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)]</span>
@@ -1196,112 +1410,158 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="n">p_template</span> <span class="o">=</span> <span class="n">template</span> <span class="o">-</span> <span class="n">continuum_model</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Continuum subtracted template&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Model is linear in parameters; consider using linear fitting methods. [astropy.modeling.fitting]
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Continuum subtracted template&#39;)
-</pre></div>
-</div>
-<img alt="../../_images/02. Cross correlation template_29_2.png" src="../../_images/02. Cross correlation template_29_2.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Put data array into Specutils format;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Continuum subtracted template'</span><span class="p">)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output stderr highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>WARNING: Model is linear in parameters; consider using linear fitting methods. [astropy.modeling.fitting]
+</pre>
+             </div>
+            </div>
+            <div class="output text_plain highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>Text(0.5, 1.0, 'Continuum subtracted template')
+</pre>
+             </div>
+            </div>
+            <img alt="../../_images/02. Cross correlation template_29_2.png" src="../../_images/02. Cross correlation template_29_2.png"/>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Put data array into Specutils format;</span>
 <span class="n">sflux</span> <span class="o">=</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span> 
 <span class="n">p_smooth_template</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">p_template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span>
                                <span class="n">flux</span><span class="o">=</span><span class="n">sflux</span><span class="o">/</span><span class="n">sflux</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_smooth_template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">p_smooth_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Smoothed template&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Spectrum&#39;</span><span class="p">)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_smooth_template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">p_smooth_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'b'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Smoothed template'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'red'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Spectrum'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">p_smooth_template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fb99b4291c0&gt;
-</pre></div>
-</div>
-<img alt="../../_images/02. Cross correlation template_31_1.png" src="../../_images/02. Cross correlation template_31_1.png" />
-</div>
-</div>
-<div class="section" id="caution-two-inputs-spectra-above-have-to-overlap-if-only-a-small-part-to-make-specutils-works-properly">
-<h3>CAUTION: Two inputs spectra above have to overlap, if only a small part, to make Specutils works properly.<a class="headerlink" href="#caution-two-inputs-spectra-above-have-to-overlap-if-only-a-small-part-to-make-specutils-works-properly" title="Permalink to this headline">¶</a></h3>
-</div>
-</div>
-<div class="section" id="cross-correlation-using-specutils-functionarity">
-<h2>Cross Correlation using specutils functionarity;<a class="headerlink" href="#cross-correlation-using-specutils-functionarity" title="Permalink to this headline">¶</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### With no additional specifications, both the entire template and entire spectrum </span>
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output text_plain highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>&lt;matplotlib.legend.Legend at 0x7fee6f4fee80&gt;
+</pre>
+             </div>
+            </div>
+            <img alt="../../_images/02. Cross correlation template_31_1.png" src="../../_images/02. Cross correlation template_31_1.png"/>
+           </div>
+          </div>
+          <div class="section" id="caution-two-inputs-spectra-above-have-to-overlap-if-only-a-small-part-to-make-specutils-works-properly">
+           <h3>
+            CAUTION: Two inputs spectra above have to overlap, if only a small part, to make Specutils works properly.
+            <a class="headerlink" href="#caution-two-inputs-spectra-above-have-to-overlap-if-only-a-small-part-to-make-specutils-works-properly" title="Permalink to this headline">
+             ¶
+            </a>
+           </h3>
+          </div>
+         </div>
+         <div class="section" id="cross-correlation-using-specutils-functionarity">
+          <h2>
+           Cross Correlation using specutils functionarity;
+           <a class="headerlink" href="#cross-correlation-using-specutils-functionarity" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1">### With no additional specifications, both the entire template and entire spectrum </span>
 <span class="c1">### will be included in the correlation computation. This in general will incur in </span>
 <span class="c1">### a significant increase in execution time. It is advised that the template is cut</span>
 <span class="c1">### to work only on the useful region.</span>
 
 <span class="n">corr</span><span class="p">,</span> <span class="n">lag</span> <span class="o">=</span> <span class="n">correlation</span><span class="o">.</span><span class="n">template_correlate</span><span class="p">(</span><span class="n">p_obs</span><span class="p">,</span> <span class="n">p_smooth_template</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/quantity.py:613: RuntimeWarning: invalid value encountered in true_divide
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output stderr highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/quantity.py:613: RuntimeWarning: invalid value encountered in true_divide
   result = super().__array_ufunc__(function, method, *arrays, **kwargs)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">corr</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">lag</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;km / s&#39;)
-</pre></div>
-</div>
-<img alt="../../_images/02. Cross correlation template_35_1.png" src="../../_images/02. Cross correlation template_35_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Redshift based on maximum</span>
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output text_plain highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>Text(0.5, 0, 'km / s')
+</pre>
+             </div>
+            </div>
+            <img alt="../../_images/02. Cross correlation template_35_1.png" src="../../_images/02. Cross correlation template_35_1.png"/>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Redshift based on maximum</span>
 <span class="n">index_peak</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">corr</span><span class="p">)</span>
 
 <span class="n">v</span> <span class="o">=</span> <span class="n">lag</span><span class="p">[</span><span class="n">index_peak</span><span class="p">]</span>
 
-<span class="n">z</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">const</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;km/s&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Peak maximum at: &quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Redshift from peak maximum: &quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Peak maximum at:  628833.1938062641 km / s
+<span class="n">z</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">const</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">'km/s'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Peak maximum at: "</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Redshift from peak maximum: "</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output stream highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>Peak maximum at:  628833.1938062641 km / s
 Redshift from peak maximum:  2.0975617532255066
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Redshift based on parabolic fit to mazimum</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Redshift based on parabolic fit to mazimum</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">8</span> <span class="c1"># points to the left or right of correlation maximum</span>
 <span class="n">peak_lags</span> <span class="o">=</span> <span class="n">lag</span><span class="p">[</span><span class="n">index_peak</span><span class="o">-</span><span class="n">n</span> <span class="p">:</span> <span class="n">index_peak</span><span class="o">+</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
 <span class="n">peak_vals</span> <span class="o">=</span> <span class="n">corr</span><span class="p">[</span><span class="n">index_peak</span><span class="o">-</span><span class="n">n</span> <span class="p">:</span> <span class="n">index_peak</span><span class="o">+</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
@@ -1309,56 +1569,73 @@ Redshift from peak maximum:  2.0975617532255066
 <span class="n">roots</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roots</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
 <span class="n">v_fit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">roots</span><span class="p">)</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">km</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span> <span class="c1"># maximum lies at mid point between roots</span>
-<span class="n">z</span> <span class="o">=</span> <span class="n">v_fit</span> <span class="o">/</span> <span class="n">const</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;km/s&#39;</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">v_fit</span> <span class="o">/</span> <span class="n">const</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">'km/s'</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parabolic fit with maximum at: &quot;</span><span class="p">,</span> <span class="n">v_fit</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Redshift from parabolic fit: &quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parabolic fit with maximum at:  629196.3184175582 km / s
-Redshift from parabolic fit:  2.098773006549612
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="section" id="how-does-it-look">
-<h2>How does it look?<a class="headerlink" href="#how-does-it-look" title="Permalink to this headline">¶</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;z =&#39;</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Parabolic fit with maximum at: "</span><span class="p">,</span> <span class="n">v_fit</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Redshift from parabolic fit: "</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output stream highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>Parabolic fit with maximum at:  629196.3184175581 km / s
+Redshift from parabolic fit:  2.0987730065496115
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="section" id="how-does-it-look">
+          <h2>
+           How does it look?
+           <a class="headerlink" href="#how-does-it-look" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'z ='</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
     <span class="n">template</span><span class="o">.</span><span class="n">spectral_axis</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">z</span><span class="p">),</span> 
     <span class="n">p_smooth_template</span><span class="o">.</span><span class="n">flux</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">p_smooth_template</span><span class="o">.</span><span class="n">flux</span><span class="p">),</span> 
-    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Template&#39;</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">'b'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Template'</span>
 <span class="p">)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Observed&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Observed'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>z = 2.098773006549612
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;um&#39;)
-</pre></div>
-</div>
-<img alt="../../_images/02. Cross correlation template_39_2.png" src="../../_images/02. Cross correlation template_39_2.png" />
-</div>
-</div>
-</div>
-</div>
-
-    <script type="text/x-thebe-config">
-    {
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output stream highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>z = 2.0987730065496115
+</pre>
+             </div>
+            </div>
+            <div class="output text_plain highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>Text(0.5, 0, 'um')
+</pre>
+             </div>
+            </div>
+            <img alt="../../_images/02. Cross correlation template_39_2.png" src="../../_images/02. Cross correlation template_39_2.png"/>
+           </div>
+          </div>
+         </div>
+        </div>
+        <script type="text/x-thebe-config">
+         {
         requestKernel: true,
         binderOptions: {
             repo: "spacetelescope/jdat_notebooks",
@@ -1374,47 +1651,52 @@ Redshift from parabolic fit:  2.098773006549612
         },
         predefinedOutput: true
     }
-    </script>
-    <script>kernelName = 'python3'</script>
-
-              </div>
-              
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="01.%20Combine%20and%20normalize%201D%20spectra.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Part 1: Combine One-Dimensional NIRISS WFSS Spectra</p>
-        </div>
-    </a>
-    <a class='right-next' id="next-link" href="03.%20Spatially%20resolved%20emission%20line%20map.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Part 3: Spatially Resolved Emission Line Map of NIRISS WFSS Spectra</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
-</div>
-            
-        </div>
-    </div>
-    <footer class="footer">
-  <p>
-    
-      By STScI<br/>
-    
-        &copy; Copyright 2022.<br/>
-  </p>
-</footer>
-</main>
-
-
+        </script>
+        <script>
+         kernelName = 'python3'
+        </script>
+       </div>
+       <!-- Previous / next buttons -->
+       <div class="prev-next-area">
+        <a class="left-prev" href="01.%20Combine%20and%20normalize%201D%20spectra.html" id="prev-link" title="previous page">
+         <i class="fas fa-angle-left">
+         </i>
+         <div class="prev-next-info">
+          <p class="prev-next-subtitle">
+           previous
+          </p>
+          <p class="prev-next-title">
+           Part 1: Combine One-Dimensional NIRISS WFSS Spectra
+          </p>
+         </div>
+        </a>
+        <a class="right-next" href="03.%20Spatially%20resolved%20emission%20line%20map.html" id="next-link" title="next page">
+         <div class="prev-next-info">
+          <p class="prev-next-subtitle">
+           next
+          </p>
+          <p class="prev-next-title">
+           Part 3: Spatially Resolved Emission Line Map of NIRISS WFSS Spectra
+          </p>
+         </div>
+         <i class="fas fa-angle-right">
+         </i>
+        </a>
+       </div>
       </div>
-    </div>
-  
-  <script src="../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
-
-  </body>
+     </div>
+     <footer class="footer">
+      <p>
+       By STScI
+       <br/>
+       © Copyright 2022.
+       <br/>
+      </p>
+     </footer>
+    </main>
+   </div>
+  </div>
+  <script src="../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+  </script>
+ </body>
 </html>

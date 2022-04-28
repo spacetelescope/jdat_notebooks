@@ -1,592 +1,680 @@
-
 <!DOCTYPE html>
-
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Baseline: NIRSpec IFU Optimal Point Source Extraction &#8212; STScI JDAT Notebooks</title>
-    
-  <link href="../../_static/css/theme.css" rel="stylesheet">
-  <link href="../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
-
-    
-  <link rel="stylesheet"
-    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
-
-    
-      
-
-    
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
-    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/main.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    
-  <link rel="preload" as="script" href="../../_static/js/index.be7d3bbb2ef33a8344ce.js">
-
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Baseline: NIRSpec IFU Optimal Point Source Extraction — STScI JDAT Notebooks
+  </title>
+  <link href="../../_static/css/theme.css" rel="stylesheet"/>
+  <link href="../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet"/>
+  <link href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css" rel="stylesheet"/>
+  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+  <link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/togglebutton.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/copybutton.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/mystnb.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/sphinx-thebe.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/main.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+  <link as="script" href="../../_static/js/index.be7d3bbb2ef33a8344ce.js" rel="preload"/>
+  <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js">
+  </script>
+  <script src="../../_static/jquery.js">
+  </script>
+  <script src="../../_static/underscore.js">
+  </script>
+  <script src="../../_static/doctools.js">
+  </script>
+  <script src="../../_static/clipboard.min.js">
+  </script>
+  <script src="../../_static/copybutton.js">
+  </script>
+  <script>
+   let toggleHintShow = 'Click to show';
+  </script>
+  <script>
+   let toggleHintHide = 'Click to hide';
+  </script>
+  <script>
+   let toggleOpenOnPrint = 'true';
+  </script>
+  <script src="../../_static/togglebutton.js">
+  </script>
+  <script>
+   var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';
+  </script>
+  <script src="../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js">
+  </script>
+  <script>
+   const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.1/dist/embed-amd.js"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="NIRSpec MOS Optimal Spectral Extraction" href="../optimal_extraction_dynamic/Spectral%20Extraction.html" />
-    <link rel="prev" title="Analyzing the JWST Pipeline products of HAT-P-1b observations with NIRISS/SOSS" href="../soss-transit-spectroscopy/HAT-P-1b-PART3-data-analysis.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
-<script>
-                    window.dataLayer = window.dataLayer || [];
+  </script>
+  <script async="async" src="../../_static/sphinx-thebe.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js">
+  </script>
+  <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.1/dist/embed-amd.js">
+  </script>
+  <link href="../../genindex.html" rel="index" title="Index"/>
+  <link href="../../search.html" rel="search" title="Search"/>
+  <link href="../mos-spectroscopy/MOSspec_sv06_revised.html" rel="next" title="MOS Spectroscopy of Typical Extragalactic Field"/>
+  <link href="../soss-transit-spectroscopy/HAT-P-1b-PART3-data-analysis.html" rel="prev" title="Analyzing the JWST Pipeline products of HAT-P-1b observations with NIRISS/SOSS"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="None" name="docsearch:language"/>
+  <!-- Google Analytics -->
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3">
+  </script>
+  <script>
+   window.dataLayer = window.dataLayer || [];
                     function gtag(){ dataLayer.push(arguments); }
                     gtag('js', new Date());
                     gtag('config', 'G-D46G4HKJY3');
-                </script>
-
-  </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
-    <div class="container-fluid" id="banner"></div>
-
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../../index.html">
-      
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
-        
-      
-      
-      <img src="../../_static/stsci_logo2.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">STScI JDAT Notebooks</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../intro.html">
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Cross-Instrument
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../asdf_example/asdf_example.html">
-   Example of Converting a FITS File to ASDF
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../background_estimation_imaging/Imaging%20Sky%20Background%20Estimation.html">
-   Complex 2D Background
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">
-   Draft: Advanced Composite spectral model fitting
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">
-   MAST Query
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">
-   Specviz Simple Demo
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  MIRI
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">
-   MIRI MRS Spectroscopy of a Late M Star 1 - Running the Pipeline
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">
-   Data Analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">
-   JWST Data Analysis
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../MIRI_LRS_spectral_extraction/miri_lrs_spectral_extraction.html">
-   LRS Extraction
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  NIRCam
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">
-   Point Source Aperture Photometry
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../NIRCam_photometry/NIRCam%20multiband%20photometry.html">
-   NIRCam Multiband Photometry
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">
-   PSF Photometry
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">
-   NIRCam PSF-matched multiband photometry
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preimaging/preimaging_02_calwebb.html">
-   Preimaging - Calwebb
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../preimaging/preimaging_03_association.html">
-   Creating simulated images of the JWST astrometric calibration field in the LMC
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  NIRISS
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../NIRISS_WFSS_postpipeline/00.%20Optimal%20extraction.html">
-   Part 0: Optimal Extraction of NIRISS WFSS Spectrum
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../NIRISS_WFSS_postpipeline/01.%20Combine%20and%20normalize%201D%20spectra.html">
-   Part 1: Combine One-Dimensional NIRISS WFSS Spectra
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../NIRISS_WFSS_postpipeline/02.%20Cross%20correlation%20template.html">
-   Part 2: Cross Correlation to Determine Redshift of NIRISS WFSS Spectra
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../NIRISS_WFSS_postpipeline/03.%20Spatially%20resolved%20emission%20line%20map.html">
-   Part 3: Spatially Resolved Emission Line Map of NIRISS WFSS Spectra
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../niriss_ami_binary/1_niriss_ami_binary.html">
-   NIRISS AMI simulation of binary point source AB Dor and calibrator HD37093
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../niriss_ami_binary/2_niriss_ami_binary.html">
-   AMI Binary Star Notebook 2
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../soss-transit-spectroscopy/HAT-P-1b-PART3-data-analysis.html">
-   SOSS Transient Spectroscopy
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  NIRSpec
- </span>
-</p>
-<ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   IFU Optimal Extraction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../optimal_extraction_dynamic/Spectral%20Extraction.html">
-   NIRSpec MOS Optimal Spectral Extraction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../mos-spectroscopy/MOSspec_sv06_revised.html">
-   MOS Spectroscopy of Extragalactic Field
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">
-   Extracting an Exoplanet Transmission Spectrum from NIRSpec BOTS Time Series Observations
-  </a>
- </li>
-</ul>
-
+  </script>
+ </head>
+ <body data-offset="80" data-spy="scroll" data-target="#bd-toc-nav">
+  <div class="container-fluid" id="banner">
+  </div>
+  <div class="container-xl">
+   <div class="row">
+    <div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+     <div class="navbar-brand-box">
+      <a class="navbar-brand text-wrap" href="../../index.html">
+       <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+       <img alt="logo" class="logo" src="../../_static/stsci_logo2.png"/>
+       <h1 class="site-logo" id="site-title">
+        STScI JDAT Notebooks
+       </h1>
+      </a>
+     </div>
+     <form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
+      <i class="icon fas fa-search">
+      </i>
+      <input aria-label="Search this book..." autocomplete="off" class="form-control" id="search-input" name="q" placeholder="Search this book..." type="search"/>
+     </form>
+     <nav aria-label="Main" class="bd-links" id="bd-docs-nav">
+      <div class="bd-toc-item active">
+       <ul class="nav bd-sidenav">
+        <li class="toctree-l1">
+         <a class="reference internal" href="../../intro.html">
+         </a>
+        </li>
+       </ul>
+       <p aria-level="2" class="caption" role="heading">
+        <span class="caption-text">
+         Cross-Instrument
+        </span>
+       </p>
+       <ul class="nav bd-sidenav">
+        <li class="toctree-l1">
+         <a class="reference internal" href="../asdf_example/asdf_example.html">
+          Example of Converting a FITS File to ASDF
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../background_estimation_imaging/Imaging%20Sky%20Background%20Estimation.html">
+          Complex 2D Background
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">
+          Draft: Advanced Composite spectral model fitting
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">
+          MAST Query
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">
+          Specviz Simple Demo
+         </a>
+        </li>
+       </ul>
+       <p aria-level="2" class="caption" role="heading">
+        <span class="caption-text">
+         MIRI
+        </span>
+       </p>
+       <ul class="nav bd-sidenav">
+        <li class="toctree-l1">
+         <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">
+          MIRI MRS Spectroscopy of a Late M Star 1 - Running the Pipeline
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">
+          Data Analysis
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">
+          JWST Data Analysis
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../MIRI_LRS_spectral_extraction/miri_lrs_spectral_extraction.html">
+          LRS Extraction
+         </a>
+        </li>
+       </ul>
+       <p aria-level="2" class="caption" role="heading">
+        <span class="caption-text">
+         NIRCam
+        </span>
+       </p>
+       <ul class="nav bd-sidenav">
+        <li class="toctree-l1">
+         <a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">
+          Point Source Aperture Photometry
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../NIRCam_photometry/NIRCam%20multiband%20photometry.html">
+          NIRCam Multiband Photometry
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">
+          PSF Photometry
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">
+          NIRCam PSF-matched multiband photometry
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../preimaging/preimaging_02_calwebb.html">
+          Preimaging - Calwebb
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../preimaging/preimaging_03_association.html">
+          Creating simulated images of the JWST astrometric calibration field in the LMC
+         </a>
+        </li>
+       </ul>
+       <p aria-level="2" class="caption" role="heading">
+        <span class="caption-text">
+         NIRISS
+        </span>
+       </p>
+       <ul class="nav bd-sidenav">
+        <li class="toctree-l1">
+         <a class="reference internal" href="../NIRISS_WFSS_postpipeline/00.%20Optimal%20extraction.html">
+          Part 0: Optimal Extraction of NIRISS WFSS Spectrum
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../NIRISS_WFSS_postpipeline/01.%20Combine%20and%20normalize%201D%20spectra.html">
+          Part 1: Combine One-Dimensional NIRISS WFSS Spectra
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../NIRISS_WFSS_postpipeline/02.%20Cross%20correlation%20template.html">
+          Part 2: Cross Correlation to Determine Redshift of NIRISS WFSS Spectra
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../NIRISS_WFSS_postpipeline/03.%20Spatially%20resolved%20emission%20line%20map.html">
+          Part 3: Spatially Resolved Emission Line Map of NIRISS WFSS Spectra
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../niriss_ami_binary/1_niriss_ami_binary.html">
+          NIRISS AMI simulation of binary point source AB Dor and calibrator HD37093
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../niriss_ami_binary/2_niriss_ami_binary.html">
+          AMI Binary Star Notebook 2
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../soss-transit-spectroscopy/HAT-P-1b-PART3-data-analysis.html">
+          SOSS Transient Spectroscopy
+         </a>
+        </li>
+       </ul>
+       <p aria-level="2" class="caption" role="heading">
+        <span class="caption-text">
+         NIRSpec
+        </span>
+       </p>
+       <ul class="current nav bd-sidenav">
+        <li class="toctree-l1 current active">
+         <a class="current reference internal" href="#">
+          MOS Optimal Extraction
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../mos-spectroscopy/MOSspec_sv06_revised.html">
+          MOS Spectroscopy of Extragalactic Field
+         </a>
+        </li>
+        <li class="toctree-l1">
+         <a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">
+          Extracting an Exoplanet Transmission Spectrum from NIRSpec BOTS Time Series Observations
+         </a>
+        </li>
+       </ul>
+      </div>
+     </nav>
+     <!-- To handle the deprecated key -->
+     <div class="navbar_extra_footer">
+      Powered by
+      <a href="https://jupyterbook.org">
+       Jupyter Book
+      </a>
+     </div>
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../../_sources/notebooks/ifu_optimal/ifu_optimal.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/spacetelescope/jdat_notebooks/"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/spacetelescope/jdat_notebooks//issues/new?title=Issue%20on%20page%20%2Fnotebooks/ifu_optimal/ifu_optimal.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        
-        
-        <button type="button" class="btn btn-secondary topbarbtn"
-            onclick="initThebeSBT()" title="Launch Thebe" data-toggle="tooltip" data-placement="left"><i
-                class="fas fa-play"></i><span style="margin-left: .4em;">Live Code</span></button>
-        
-    </div>
-</div>
-
+    <main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+     <div class="topbar container-xl fixed-top">
+      <div class="topbar-contents row">
+       <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+       </div>
+       <div class="col pl-md-4 topbar-main">
+        <button aria-controls="navbar-menu" aria-expanded="true" aria-label="Toggle navigation" class="navbar-toggler ml-0" data-placement="bottom" data-target=".site-navigation" data-toggle="collapse" id="navbar-toggler" title="Toggle navigation" type="button">
+         <i class="fas fa-bars">
+         </i>
+         <i class="fas fa-arrow-left">
+         </i>
+         <i class="fas fa-arrow-up">
+         </i>
+        </button>
+        <div class="dropdown-buttons-trigger">
+         <button aria-label="Download this page" class="btn btn-secondary topbarbtn" id="dropdown-buttons-trigger">
+          <i class="fas fa-download">
+          </i>
+         </button>
+         <div class="dropdown-buttons">
+          <!-- ipynb file if we had a myst markdown file -->
+          <!-- Download raw file -->
+          <a class="dropdown-buttons" href="../../_sources/notebooks/ifu_optimal/ifu_optimal.ipynb">
+           <button class="btn btn-secondary topbarbtn" data-placement="left" data-toggle="tooltip" title="Download source file" type="button">
+            .ipynb
+           </button>
+          </a>
+          <!-- Download PDF via print -->
+          <button class="btn btn-secondary topbarbtn" data-placement="left" data-toggle="tooltip" id="download-print" onclick="printPdf(this)" title="Print to PDF" type="button">
+           .pdf
+          </button>
+         </div>
         </div>
-
+        <!-- Source interaction buttons -->
+        <div class="dropdown-buttons-trigger">
+         <button aria-label="Connect with source repository" class="btn btn-secondary topbarbtn" id="dropdown-buttons-trigger">
+          <i class="fab fa-github">
+          </i>
+         </button>
+         <div class="dropdown-buttons sourcebuttons">
+          <a class="repository-button" href="https://github.com/spacetelescope/jdat_notebooks/">
+           <button class="btn btn-secondary topbarbtn" data-placement="left" data-toggle="tooltip" title="Source repository" type="button">
+            <i class="fab fa-github">
+            </i>
+            repository
+           </button>
+          </a>
+          <a class="issues-button" href="https://github.com/spacetelescope/jdat_notebooks//issues/new?title=Issue%20on%20page%20%2Fnotebooks/ifu_optimal/ifu_optimal.html&amp;body=Your%20issue%20content%20here.">
+           <button class="btn btn-secondary topbarbtn" data-placement="left" data-toggle="tooltip" title="Open an issue" type="button">
+            <i class="fas fa-lightbulb">
+            </i>
+            open issue
+           </button>
+          </a>
+         </div>
+        </div>
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button">
+         <button aria-label="Fullscreen mode" class="btn btn-secondary topbarbtn" data-placement="bottom" data-toggle="tooltip" onclick="toggleFullScreen()" title="Fullscreen mode" type="button">
+          <i class="fas fa-expand">
+          </i>
+         </button>
+        </a>
+        <!-- Launch buttons -->
+        <div class="dropdown-buttons-trigger">
+         <button aria-label="Launch interactive content" class="btn btn-secondary topbarbtn" id="dropdown-buttons-trigger">
+          <i class="fas fa-rocket">
+          </i>
+         </button>
+         <div class="dropdown-buttons">
+          <button class="btn btn-secondary topbarbtn" data-placement="left" data-toggle="tooltip" onclick="initThebeSBT()" title="Launch Thebe" type="button">
+           <i class="fas fa-play">
+           </i>
+           <span style="margin-left: .4em;">
+            Live Code
+           </span>
+          </button>
+         </div>
+        </div>
+       </div>
+       <!-- Table of contents -->
+       <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+        <div class="tocsection onthispage pt-5 pb-3">
+         <i class="fas fa-list">
+         </i>
+         Contents
+        </div>
+        <nav aria-label="Page" id="bd-toc-nav">
+         <ul class="visible nav section-nav flex-column">
+          <li class="toc-h2 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#imports">
+            Imports
+           </a>
+          </li>
+          <li class="toc-h2 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#introduction">
+            Introduction
+           </a>
+          </li>
+          <li class="toc-h2 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#read-in-simulated-nirspec-ifu-cube">
+            Read in Simulated NIRSpec IFU Cube
+           </a>
+          </li>
+          <li class="toc-h2 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#visualize-science-data-with-cubeviz">
+            Visualize Science Data with Cubeviz
+           </a>
+           <ul class="nav section-nav flex-column">
+            <li class="toc-h3 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#ui-instructions">
+              UI Instructions:
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toc-h2 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#load-cube-into-cubeviz">
+            Load Cube into Cubeviz
+           </a>
+          </li>
+          <li class="toc-h2 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#export-region-from-cubeviz">
+            Export Region from Cubeviz
+           </a>
+          </li>
+          <li class="toc-h2 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#extract-subset-spectrum-in-cubeviz-spectrum-viewer">
+            Extract Subset Spectrum in Cubeviz Spectrum Viewer
+           </a>
+          </li>
+          <li class="toc-h2 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#extract-spectrum-by-sum-over-spaxels">
+            Extract Spectrum by Sum Over Spaxels
+           </a>
+          </li>
+          <li class="toc-h2 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#extract-spectrum-in-constant-radius-circular-aperture-cylinder">
+            Extract Spectrum in Constant Radius Circular Aperture (Cylinder)
+           </a>
+          </li>
+          <li class="toc-h2 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#extract-spectrum-in-linearly-expanding-circular-aperture-cone">
+            Extract Spectrum in Linearly Expanding Circular Aperture (Cone)
+           </a>
+          </li>
+          <li class="toc-h2 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#plot-and-compare-non-optimal-spectral-extractions">
+            Plot and Compare Non-optimal Spectral Extractions
+           </a>
+          </li>
+          <li class="toc-h2 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#webbpsf-model-psf-for-optimal-extraction">
+            WebbPSF  Model PSF for Optimal Extraction
+           </a>
+          </li>
+          <li class="toc-h2 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#align-model-psf-cube-with-science-data">
+            Align Model PSF Cube with Science Data
+           </a>
+          </li>
+          <li class="toc-h2 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#optimal-extraction-using-webbpsf-model">
+            Optimal Extraction using WebbPSF Model
+           </a>
+          </li>
+          <li class="toc-h2 nav-item toc-entry">
+           <a class="reference internal nav-link" href="#optimal-extraction-with-simulated-reference-star-psf">
+            Optimal Extraction with (Simulated) Reference Star PSF
+           </a>
+          </li>
+         </ul>
+        </nav>
+       </div>
+      </div>
+     </div>
+     <div class="row" id="main-content">
+      <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+       <!-- Table of contents that is only displayed when printing the page -->
+       <div class="onlyprint" id="jb-print-docs-body">
+        <h1>
+         Baseline: NIRSpec IFU Optimal Point Source Extraction
+        </h1>
         <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
-            </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#imports">
-   Imports
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#introduction">
-   Introduction
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#read-in-simulated-nirspec-ifu-cube">
-   Read in Simulated NIRSpec IFU Cube
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#visualize-science-data-with-cubeviz">
-   Visualize Science Data with Cubeviz
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#ui-instructions">
-     UI Instructions:
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#load-cube-into-cubeviz">
-   Load Cube into Cubeviz
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#export-region-from-cubeviz">
-   Export Region from Cubeviz
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#extract-subset-spectrum-in-cubeviz-spectrum-viewer">
-   Extract Subset Spectrum in Cubeviz Spectrum Viewer
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#extract-spectrum-by-sum-over-spaxels">
-   Extract Spectrum by Sum Over Spaxels
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#extract-spectrum-in-constant-radius-circular-aperture-cylinder">
-   Extract Spectrum in Constant Radius Circular Aperture (Cylinder)
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#extract-spectrum-in-linearly-expanding-circular-aperture-cone">
-   Extract Spectrum in Linearly Expanding Circular Aperture (Cone)
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#plot-and-compare-non-optimal-spectral-extractions">
-   Plot and Compare Non-optimal Spectral Extractions
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#webbpsf-model-psf-for-optimal-extraction">
-   WebbPSF  Model PSF for Optimal Extraction
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#align-model-psf-cube-with-science-data">
-   Align Model PSF Cube with Science Data
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#optimal-extraction-using-webbpsf-model">
-   Optimal Extraction using WebbPSF Model
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#optimal-extraction-with-simulated-reference-star-psf">
-   Optimal Extraction with (Simulated) Reference Star PSF
-  </a>
- </li>
-</ul>
-
-            </nav>
+        <div id="print-main-content">
+         <div id="jb-print-toc">
+          <div>
+           <h2>
+            Contents
+           </h2>
+          </div>
+          <nav aria-label="Page">
+           <ul class="visible nav section-nav flex-column">
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#imports">
+              Imports
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#introduction">
+              Introduction
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#read-in-simulated-nirspec-ifu-cube">
+              Read in Simulated NIRSpec IFU Cube
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#visualize-science-data-with-cubeviz">
+              Visualize Science Data with Cubeviz
+             </a>
+             <ul class="nav section-nav flex-column">
+              <li class="toc-h3 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#ui-instructions">
+                UI Instructions:
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#load-cube-into-cubeviz">
+              Load Cube into Cubeviz
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#export-region-from-cubeviz">
+              Export Region from Cubeviz
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#extract-subset-spectrum-in-cubeviz-spectrum-viewer">
+              Extract Subset Spectrum in Cubeviz Spectrum Viewer
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#extract-spectrum-by-sum-over-spaxels">
+              Extract Spectrum by Sum Over Spaxels
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#extract-spectrum-in-constant-radius-circular-aperture-cylinder">
+              Extract Spectrum in Constant Radius Circular Aperture (Cylinder)
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#extract-spectrum-in-linearly-expanding-circular-aperture-cone">
+              Extract Spectrum in Linearly Expanding Circular Aperture (Cone)
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#plot-and-compare-non-optimal-spectral-extractions">
+              Plot and Compare Non-optimal Spectral Extractions
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#webbpsf-model-psf-for-optimal-extraction">
+              WebbPSF  Model PSF for Optimal Extraction
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#align-model-psf-cube-with-science-data">
+              Align Model PSF Cube with Science Data
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#optimal-extraction-using-webbpsf-model">
+              Optimal Extraction using WebbPSF Model
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#optimal-extraction-with-simulated-reference-star-psf">
+              Optimal Extraction with (Simulated) Reference Star PSF
+             </a>
+            </li>
+           </ul>
+          </nav>
+         </div>
         </div>
-    </div>
-</div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Baseline: NIRSpec IFU Optimal Point Source Extraction</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#imports">
-   Imports
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#introduction">
-   Introduction
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#read-in-simulated-nirspec-ifu-cube">
-   Read in Simulated NIRSpec IFU Cube
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#visualize-science-data-with-cubeviz">
-   Visualize Science Data with Cubeviz
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#ui-instructions">
-     UI Instructions:
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#load-cube-into-cubeviz">
-   Load Cube into Cubeviz
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#export-region-from-cubeviz">
-   Export Region from Cubeviz
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#extract-subset-spectrum-in-cubeviz-spectrum-viewer">
-   Extract Subset Spectrum in Cubeviz Spectrum Viewer
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#extract-spectrum-by-sum-over-spaxels">
-   Extract Spectrum by Sum Over Spaxels
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#extract-spectrum-in-constant-radius-circular-aperture-cylinder">
-   Extract Spectrum in Constant Radius Circular Aperture (Cylinder)
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#extract-spectrum-in-linearly-expanding-circular-aperture-cone">
-   Extract Spectrum in Linearly Expanding Circular Aperture (Cone)
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#plot-and-compare-non-optimal-spectral-extractions">
-   Plot and Compare Non-optimal Spectral Extractions
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#webbpsf-model-psf-for-optimal-extraction">
-   WebbPSF  Model PSF for Optimal Extraction
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#align-model-psf-cube-with-science-data">
-   Align Model PSF Cube with Science Data
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#optimal-extraction-using-webbpsf-model">
-   Optimal Extraction using WebbPSF Model
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#optimal-extraction-with-simulated-reference-star-psf">
-   Optimal Extraction with (Simulated) Reference Star PSF
-  </a>
- </li>
-</ul>
-
-                        </nav>
-                    </div>
-                </div>
-            </div>
-            
-              <div>
-                
-  <div class="tex2jax_ignore mathjax_ignore section" id="baseline-nirspec-ifu-optimal-point-source-extraction">
-<h1>Baseline: NIRSpec IFU Optimal Point Source Extraction<a class="headerlink" href="#baseline-nirspec-ifu-optimal-point-source-extraction" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="imports">
-<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p><em>time</em> for adding a delay in Cubeviz file upload</p></li>
-<li><p><em>numpy</em> for array math</p></li>
-<li><p><em>scipy</em> for gaussian smoothing</p></li>
-<li><p><em>specutils</em> for Spectrum1D data model</p></li>
-<li><p><em>jdaviz</em> : Cubeviz data visualization tool</p></li>
-<li><p><em>regions</em> to read DS9 regions</p></li>
-<li><p><em>photutils</em> to define circular apertures</p></li>
-<li><p><em><a class="reference external" href="http://astropy.io">astropy.io</a></em> for reading and writing FITS cubes and images</p></li>
-<li><p><em>astropy.wcs, units, coordinates</em> for defining and reading WCS</p></li>
-<li><p><em>astropy.stats</em> for sigma_clipping</p></li>
-<li><p><em>astropy.utils</em> for downloading files from URLs</p></li>
-<li><p><em>matplotlib</em> for plotting spectra and images</p></li>
-</ul>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+       </div>
+       <div>
+        <div class="tex2jax_ignore mathjax_ignore section" id="baseline-nirspec-ifu-optimal-point-source-extraction">
+         <h1>
+          Baseline: NIRSpec IFU Optimal Point Source Extraction
+          <a class="headerlink" href="#baseline-nirspec-ifu-optimal-point-source-extraction" title="Permalink to this headline">
+           ¶
+          </a>
+         </h1>
+         <div class="section" id="imports">
+          <h2>
+           Imports
+           <a class="headerlink" href="#imports" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <ul class="simple">
+           <li>
+            <p>
+             <em>
+              time
+             </em>
+             for adding a delay in Cubeviz file upload
+            </p>
+           </li>
+           <li>
+            <p>
+             <em>
+              numpy
+             </em>
+             for array math
+            </p>
+           </li>
+           <li>
+            <p>
+             <em>
+              scipy
+             </em>
+             for gaussian smoothing
+            </p>
+           </li>
+           <li>
+            <p>
+             <em>
+              specutils
+             </em>
+             for Spectrum1D data model
+            </p>
+           </li>
+           <li>
+            <p>
+             <em>
+              jdaviz
+             </em>
+             : Cubeviz data visualization tool
+            </p>
+           </li>
+           <li>
+            <p>
+             <em>
+              regions
+             </em>
+             to read DS9 regions
+            </p>
+           </li>
+           <li>
+            <p>
+             <em>
+              photutils
+             </em>
+             to define circular apertures
+            </p>
+           </li>
+           <li>
+            <p>
+             <em>
+              <a class="reference external" href="http://astropy.io">
+               astropy.io
+              </a>
+             </em>
+             for reading and writing FITS cubes and images
+            </p>
+           </li>
+           <li>
+            <p>
+             <em>
+              astropy.wcs, units, coordinates
+             </em>
+             for defining and reading WCS
+            </p>
+           </li>
+           <li>
+            <p>
+             <em>
+              astropy.stats
+             </em>
+             for sigma_clipping
+            </p>
+           </li>
+           <li>
+            <p>
+             <em>
+              astropy.utils
+             </em>
+             for downloading files from URLs
+            </p>
+           </li>
+           <li>
+            <p>
+             <em>
+              matplotlib
+             </em>
+             for plotting spectra and images
+            </p>
+           </li>
+          </ul>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -606,40 +694,62 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
 <span class="kn">from</span> <span class="nn">astropy.stats</span> <span class="kn">import</span> <span class="n">sigma_clip</span>
 <span class="kn">from</span> <span class="nn">astropy.utils.data</span> <span class="kn">import</span> <span class="n">download_file</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="section" id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>This notebook illustrates various extraction methods for a point source in JWST NIRSpec IFU data. First we
-demonstrate a number of regular extraction techniques, including subset extraction with Cubeviz, simple sum over spaxels, cylindrical aperture, and conical aperture photometry. Then we compare optimal extraction using a WebbPSF model PSF to optimal extraction using a reference star PSF.</p>
-</div>
-<div class="section" id="read-in-simulated-nirspec-ifu-cube">
-<h2>Read in Simulated NIRSpec IFU Cube<a class="headerlink" href="#read-in-simulated-nirspec-ifu-cube" title="Permalink to this headline">¶</a></h2>
-<p>A faint (quasar) point source was simulated using the NIRSpec Instrument Performance Simulator (IPS), then run through the JWST Spec2 pipeline. We will use this for our science dataset.</p>
-<p>We read in the data both with fits.open and Spectrum1D.read, since the cube handling (slicing) we need to do is not implemented in specutils yet.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># NIRSpec IFU science data cube</span>
-<span class="n">BoxPath</span> <span class="o">=</span> <span class="s2">&quot;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_optimal_extraction/&quot;</span>
-<span class="n">filename</span> <span class="o">=</span> <span class="n">BoxPath</span> <span class="o">+</span> <span class="s2">&quot;NRS00001-faintQSO-F100LP-G140H-01_1_491_SE_2020-08-25T12h15m00_s3d.fits&quot;</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="section" id="introduction">
+          <h2>
+           Introduction
+           <a class="headerlink" href="#introduction" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <p>
+           This notebook illustrates various extraction methods for a point source in JWST NIRSpec IFU data. First we
+demonstrate a number of regular extraction techniques, including subset extraction with Cubeviz, simple sum over spaxels, cylindrical aperture, and conical aperture photometry. Then we compare optimal extraction using a WebbPSF model PSF to optimal extraction using a reference star PSF.
+          </p>
+         </div>
+         <div class="section" id="read-in-simulated-nirspec-ifu-cube">
+          <h2>
+           Read in Simulated NIRSpec IFU Cube
+           <a class="headerlink" href="#read-in-simulated-nirspec-ifu-cube" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <p>
+           A faint (quasar) point source was simulated using the NIRSpec Instrument Performance Simulator (IPS), then run through the JWST Spec2 pipeline. We will use this for our science dataset.
+          </p>
+          <p>
+           We read in the data both with fits.open and Spectrum1D.read, since the cube handling (slicing) we need to do is not implemented in specutils yet.
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># NIRSpec IFU science data cube</span>
+<span class="n">BoxPath</span> <span class="o">=</span> <span class="s2">"https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_optimal_extraction/"</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">BoxPath</span> <span class="o">+</span> <span class="s2">"NRS00001-faintQSO-F100LP-G140H-01_1_491_SE_2020-08-25T12h15m00_s3d.fits"</span>
 
 <span class="c1"># Open and inspect the file and WCS</span>
 <span class="c1"># Load with astropy.fits.open</span>
 <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdulist</span><span class="p">:</span>
-    <span class="n">sci</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">err</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">&#39;ERR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">sci</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">'SCI'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">'ERR'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
     <span class="n">w</span> <span class="o">=</span> <span class="n">wcs</span><span class="o">.</span><span class="n">WCS</span><span class="p">(</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
     <span class="n">hdr</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
     <span class="n">hdulist</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -667,11 +777,14 @@ demonstrate a number of regular extraction techniques, including subset extracti
 <span class="c1"># The existing JWST pipeline window is overgenerous (39x33 instead of the nominal 30x30 pixels)</span>
 <span class="n">data_win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)[:,</span> <span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">:])</span>
 <span class="n">data_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">var</span><span class="p">)[:,</span> <span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">:])</span> 
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Filename: /home/runner/.astropy/cache/download/url/edf217f740cafc32b47d3470859a08cd/contents
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output stream highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>Filename: /home/runner/.astropy/cache/download/url/edf217f740cafc32b47d3470859a08cd/contents
 No.    Name      Ver    Type      Cards   Dimensions   Format
   0  PRIMARY       1 PrimaryHDU     295   ()      
   1  SCI           1 ImageHDU        64   (33, 39, 2059)   float32   
@@ -679,12 +792,15 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
   3  DQ            1 ImageHDU        12   (33, 39, 2059)   int32 (rescales to uint32)   
   4  WMAP          1 ImageHDU        10   (33, 39, 2059)   float32   
   5  ASDF          1 BinTableHDU     11   1R x 1C   [10315B]   
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WCS Keywords
+</pre>
+             </div>
+            </div>
+            <div class="output stream highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>WCS Keywords
 
 Number of WCS axes: 3
-CTYPE : &#39;RA---TAN&#39;  &#39;DEC--TAN&#39;  &#39;WAVE&#39;  
+CTYPE : 'RA---TAN'  'DEC--TAN'  'WAVE'  
 CRVAL : 156.1778928912249  -45.68697658856264  9.665214562483711e-07  
 CRPIX : 17.0  20.0  1.0  
 PC1_1 PC1_2 PC1_3  : -0.8098302221786426  -0.586664308822422  0.0  
@@ -692,61 +808,70 @@ PC2_1 PC2_2 PC2_3  : -0.586664308822422  0.8098302221786426  0.0
 PC3_1 PC3_2 PC3_3  : 0.0  0.0  1.0  
 CDELT : 2.77777781916989e-05  2.77777781916989e-05  2.3499999952036797e-10  
 NAXIS : 33  39  2059
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.extensions plugin from package asdf-astropy==0.2.1 failed to load:
+</pre>
+             </div>
+            </div>
+            <div class="output stderr highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.extensions plugin from package asdf-astropy==0.2.1 failed to load:
 
-ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse(&#39;jsonschema&gt;=4.0.1&#39;), {&#39;asdf&#39;})
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
   warnings.warn(
 /usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.extensions plugin from package gwcs==0.18.1 failed to load:
 
-ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse(&#39;jsonschema&gt;=4.0.1&#39;), {&#39;asdf&#39;})
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
   warnings.warn(
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.extensions plugin from package jwst==1.4.6 failed to load:
+</pre>
+             </div>
+            </div>
+            <div class="output stderr highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.extensions plugin from package jwst==1.4.6 failed to load:
 
-ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse(&#39;jsonschema&gt;=4.0.1&#39;), {&#39;asdf&#39;})
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
   warnings.warn(
 /usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf_extensions plugin from package jwst==1.4.6 failed to load:
 
-ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse(&#39;jsonschema&gt;=4.0.1&#39;), {&#39;asdf&#39;})
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
   warnings.warn(
 /usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf_extensions plugin from package specutils==1.7.0 failed to load:
 
-ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse(&#39;jsonschema&gt;=4.0.1&#39;), {&#39;asdf&#39;})
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
   warnings.warn(
 /usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf_extensions plugin from package stpipe==0.3.3 failed to load:
 
-ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse(&#39;jsonschema&gt;=4.0.1&#39;), {&#39;asdf&#39;})
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
   warnings.warn(
 /usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf_extensions plugin from package asdf==2.11.1 failed to load:
 
-VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse(&#39;jsonschema&gt;=4.0.1&#39;))
+VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'))
   warnings.warn(
 /usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.resource_mappings plugin from package asdf-astropy==0.2.1 failed to load:
 
-ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse(&#39;jsonschema&gt;=4.0.1&#39;), {&#39;asdf&#39;})
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
   warnings.warn(
 /usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.resource_mappings plugin from package asdf-coordinates-schemas==0.1.0 failed to load:
 
-ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse(&#39;jsonschema&gt;=4.0.1&#39;), {&#39;asdf&#39;})
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
   warnings.warn(
 /usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.resource_mappings plugin from package asdf-wcs-schemas==0.1.1 failed to load:
 
-ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse(&#39;jsonschema&gt;=4.0.1&#39;), {&#39;asdf&#39;})
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
   warnings.warn(
 /usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.resource_mappings plugin from package jwst==1.4.6 failed to load:
 
-ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse(&#39;jsonschema&gt;=4.0.1&#39;), {&#39;asdf&#39;})
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
   warnings.warn(
 /usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.resource_mappings plugin from package asdf==2.11.1 failed to load:
 
-VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse(&#39;jsonschema&gt;=4.0.1&#39;))
+VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'))
   warnings.warn(
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+</pre>
+             </div>
+            </div>
+            <div class="output traceback highlight-ipythontb notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
 <span class="nn">Input In [3],</span> in <span class="ni">&lt;cell line: 16&gt;</span><span class="nt">()</span>
 <span class="g g-Whitespace">     </span><span class="mi">13</span>     <span class="nb">print</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
@@ -761,7 +886,7 @@ VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-pack
 
 <span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/astropy/io/registry/core.py:199,</span> in <span class="ni">UnifiedInputRegistry.read</span><span class="nt">(self, cls, format, cache, *args, **kwargs)</span>
 <span class="g g-Whitespace">    </span><span class="mi">195</span>     <span class="nb">format</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_valid_format</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">196</span>         <span class="s1">&#39;read&#39;</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">fileobj</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">196</span>         <span class="s1">'read'</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">fileobj</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
 <span class="g g-Whitespace">    </span><span class="mi">198</span> <span class="n">reader</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_reader</span><span class="p">(</span><span class="nb">format</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span>
 <span class="ne">--&gt; </span><span class="mi">199</span> <span class="n">data</span> <span class="o">=</span> <span class="n">reader</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="g g-Whitespace">    </span><span class="mi">201</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
@@ -772,16 +897,16 @@ VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-pack
 
 <span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/specutils/io/default_loaders/jwst_reader.py:531,</span> in <span class="ni">jwst_s3d_single_loader</span><span class="nt">(filename, **kwargs)</span>
 <span class="g g-Whitespace">    </span><span class="mi">513</span> <span class="nd">@data_loader</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">514</span>     <span class="s2">&quot;JWST s3d&quot;</span><span class="p">,</span> <span class="n">identifier</span><span class="o">=</span><span class="n">identify_jwst_s3d_fits</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">Spectrum1D</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">515</span>     <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fits&#39;</span><span class="p">],</span> <span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">514</span>     <span class="s2">"JWST s3d"</span><span class="p">,</span> <span class="n">identifier</span><span class="o">=</span><span class="n">identify_jwst_s3d_fits</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">Spectrum1D</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">515</span>     <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="s1">'fits'</span><span class="p">],</span> <span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
 <span class="g g-Whitespace">    </span><span class="mi">516</span> <span class="p">)</span>
 <span class="g g-Whitespace">    </span><span class="mi">517</span> <span class="k">def</span> <span class="nf">jwst_s3d_single_loader</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">518</span>     <span class="sd">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">518</span>     <span class="sd">"""</span>
 <span class="g g-Whitespace">    </span><span class="mi">519</span><span class="sd">     Loader for JWST s3d 3D rectified spectral data in FITS format.</span>
 <span class="g g-Whitespace">    </span><span class="mi">520</span><span class="sd"> </span>
 <span class="sd">   (...)</span>
 <span class="g g-Whitespace">    </span><span class="mi">529</span><span class="sd">         The spectrum contained in the file.</span>
-<span class="g g-Whitespace">    </span><span class="mi">530</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">530</span><span class="sd">     """</span>
 <span class="ne">--&gt; </span><span class="mi">531</span>     <span class="n">spectrum_list</span> <span class="o">=</span> <span class="n">_jwst_s3d_loader</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="g g-Whitespace">    </span><span class="mi">532</span>     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">spectrum_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
 <span class="g g-Whitespace">    </span><span class="mi">533</span>         <span class="k">return</span> <span class="n">spectrum_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -790,11 +915,11 @@ VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-pack
 <span class="g g-Whitespace">    </span><span class="mi">555</span> <span class="n">spectra</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="g g-Whitespace">    </span><span class="mi">557</span> <span class="c1"># Get a list of GWCS objects from the slits</span>
 <span class="ne">--&gt; </span><span class="mi">558</span> <span class="k">with</span> <span class="n">asdf</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">af</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">559</span>     <span class="n">wcslist</span> <span class="o">=</span> <span class="p">[</span><span class="n">af</span><span class="o">.</span><span class="n">tree</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">][</span><span class="s2">&quot;wcs&quot;</span><span class="p">]]</span>
+<span class="g g-Whitespace">    </span><span class="mi">559</span>     <span class="n">wcslist</span> <span class="o">=</span> <span class="p">[</span><span class="n">af</span><span class="o">.</span><span class="n">tree</span><span class="p">[</span><span class="s2">"meta"</span><span class="p">][</span><span class="s2">"wcs"</span><span class="p">]]</span>
 <span class="g g-Whitespace">    </span><span class="mi">561</span> <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdulist</span><span class="p">:</span>
 
 <span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/asdf/asdf.py:1762,</span> in <span class="ni">open_asdf</span><span class="nt">(fd, uri, mode, validate_checksums, extensions, ignore_version_mismatch, ignore_unrecognized_tag, _force_raw_types, copy_arrays, lazy_load, custom_schema, strict_extension_check, ignore_missing_extensions, _compat, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1751</span>     <span class="n">readonly</span> <span class="o">=</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;r&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">copy_arrays</span>
+<span class="g g-Whitespace">   </span><span class="mi">1751</span>     <span class="n">readonly</span> <span class="o">=</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"r"</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">copy_arrays</span>
 <span class="g g-Whitespace">   </span><span class="mi">1753</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">AsdfFile</span><span class="p">(</span>
 <span class="g g-Whitespace">   </span><span class="mi">1754</span>     <span class="n">ignore_version_mismatch</span><span class="o">=</span><span class="n">ignore_version_mismatch</span><span class="p">,</span>
 <span class="g g-Whitespace">   </span><span class="mi">1755</span>     <span class="n">ignore_unrecognized_tag</span><span class="o">=</span><span class="n">ignore_unrecognized_tag</span><span class="p">,</span>
@@ -833,11 +958,11 @@ VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-pack
 <span class="g g-Whitespace">    </span><span class="mi">930</span>     <span class="p">)</span>
 <span class="g g-Whitespace">    </span><span class="mi">931</span> <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
 <span class="g g-Whitespace">    </span><span class="mi">932</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">933</span>         <span class="s2">&quot;Input object does not appear to be an ASDF file or a FITS with &quot;</span> <span class="o">+</span> <span class="s2">&quot;ASDF extension&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">933</span>         <span class="s2">"Input object does not appear to be an ASDF file or a FITS with "</span> <span class="o">+</span> <span class="s2">"ASDF extension"</span>
 <span class="g g-Whitespace">    </span><span class="mi">934</span>     <span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
 
 <span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/asdf/fits_embed.py:283,</span> in <span class="ni">AsdfInFits._open_impl</span><span class="nt">(cls, fd, uri, validate_checksums, extensions, ignore_version_mismatch, ignore_unrecognized_tag, strict_extension_check, ignore_missing_extensions, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">280</span> <span class="n">generic_file</span> <span class="o">=</span> <span class="n">generic_io</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">asdf_extension</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">280</span> <span class="n">generic_file</span> <span class="o">=</span> <span class="n">generic_io</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">asdf_extension</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"r"</span><span class="p">,</span> <span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
 <span class="g g-Whitespace">    </span><span class="mi">282</span> <span class="k">try</span><span class="p">:</span>
 <span class="ne">--&gt; </span><span class="mi">283</span>     <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_open_asdf</span><span class="p">(</span>
 <span class="g g-Whitespace">    </span><span class="mi">284</span>         <span class="bp">self</span><span class="p">,</span>
@@ -860,12 +985,12 @@ VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-pack
 
 <span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/asdf/schema.py:691,</span> in <span class="ni">fill_defaults</span><span class="nt">(instance, ctx, reading)</span>
 <span class="g g-Whitespace">    </span><span class="mi">675</span> <span class="k">def</span> <span class="nf">fill_defaults</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">reading</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">676</span>     <span class="sd">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">676</span>     <span class="sd">"""</span>
 <span class="g g-Whitespace">    </span><span class="mi">677</span><span class="sd">     For any default values in the schema, add them to the tree if they</span>
-<span class="g g-Whitespace">    </span><span class="mi">678</span><span class="sd">     don&#39;t exist.</span>
+<span class="g g-Whitespace">    </span><span class="mi">678</span><span class="sd">     don't exist.</span>
 <span class="sd">   (...)</span>
 <span class="g g-Whitespace">    </span><span class="mi">689</span><span class="sd">         written).</span>
-<span class="g g-Whitespace">    </span><span class="mi">690</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">690</span><span class="sd">     """</span>
 <span class="ne">--&gt; </span><span class="mi">691</span>     <span class="n">validate</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="n">FILL_DEFAULTS</span><span class="p">,</span> <span class="n">reading</span><span class="o">=</span><span class="n">reading</span><span class="p">)</span>
 
 <span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/asdf/schema.py:661,</span> in <span class="ni">validate</span><span class="nt">(instance, ctx, schema, validators, reading, *args, **kwargs)</span>
@@ -876,7 +1001,7 @@ VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-pack
 <span class="g g-Whitespace">    </span><span class="mi">664</span> <span class="n">additional_validators</span> <span class="o">=</span> <span class="p">[</span><span class="n">_validate_large_literals</span><span class="p">]</span>
 
 <span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/asdf/schema.py:575,</span> in <span class="ni">get_validator</span><span class="nt">(schema, ctx, validators, url_mapping, _visit_repeat_nodes, _serialization_context, *args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">569</span> <span class="c1"># We don&#39;t just call validators.validate() directly here, because</span>
+<span class="g g-Whitespace">    </span><span class="mi">569</span> <span class="c1"># We don't just call validators.validate() directly here, because</span>
 <span class="g g-Whitespace">    </span><span class="mi">570</span> <span class="c1"># that validates the schema itself, wasting a lot of time (at the</span>
 <span class="g g-Whitespace">    </span><span class="mi">571</span> <span class="c1"># time of this writing, it was half of the runtime of the unit</span>
 <span class="g g-Whitespace">    </span><span class="mi">572</span> <span class="c1"># test suite!!!).  Instead, we assume that the schemas are valid</span>
@@ -884,50 +1009,135 @@ VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-pack
 <span class="g g-Whitespace">    </span><span class="mi">574</span> <span class="bp">cls</span> <span class="o">=</span> <span class="n">_create_validator</span><span class="p">(</span><span class="n">validators</span><span class="o">=</span><span class="n">validators</span><span class="p">,</span> <span class="n">visit_repeat_nodes</span><span class="o">=</span><span class="n">_visit_repeat_nodes</span><span class="p">)</span>
 <span class="ne">--&gt; </span><span class="mi">575</span> <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">,</span> <span class="n">serialization_context</span><span class="o">=</span><span class="n">_serialization_context</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<span class="ne">TypeError</span>: __init__() got an unexpected keyword argument &#39;resolver&#39;
-</pre></div>
-</div>
-</div>
-</div>
-<p><em>Developer Note:</em> Can we fix or suppress this AsdfWarning?</p>
-<p><em>Developer Note:</em>  Is there a way to read in with only Spectrum1D to perform all of our cube operations, not using fits.open()?</p>
-</div>
-<div class="section" id="visualize-science-data-with-cubeviz">
-<h2>Visualize Science Data with Cubeviz<a class="headerlink" href="#visualize-science-data-with-cubeviz" title="Permalink to this headline">¶</a></h2>
-<p><em>Developer Note:</em> Cubeviz incompatible with jupyter_client 6.1.6.  Use jupyter_client 5.3.5 instead.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cubeviz</span> <span class="o">=</span> <span class="n">CubeViz</span><span class="p">()</span>
+<span class="ne">TypeError</span>: __init__() got an unexpected keyword argument 'resolver'
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <p>
+           <em>
+            Developer Note:
+           </em>
+           Can we fix or suppress this AsdfWarning?
+          </p>
+          <p>
+           <em>
+            Developer Note:
+           </em>
+           Is there a way to read in with only Spectrum1D to perform all of our cube operations, not using fits.open()?
+          </p>
+         </div>
+         <div class="section" id="visualize-science-data-with-cubeviz">
+          <h2>
+           Visualize Science Data with Cubeviz
+           <a class="headerlink" href="#visualize-science-data-with-cubeviz" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <p>
+           <em>
+            Developer Note:
+           </em>
+           Cubeviz incompatible with jupyter_client 6.1.6.  Use jupyter_client 5.3.5 instead.
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="n">cubeviz</span> <span class="o">=</span> <span class="n">CubeViz</span><span class="p">()</span>
 <span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="ui-instructions">
-<h3>UI Instructions:<a class="headerlink" href="#ui-instructions" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>Load science datacube into Cubeviz using the next code cell below</p></li>
-<li><p>Go to the Hammer-and-Screwdriver icon: Gear icon: Layer in the leftmost image viewer</p></li>
-<li><p>In that tab, change the Linear stretch to 90 percentile to see the faint QSO target at (x,y) ~ (17, 21)</p></li>
-<li><p>Scrubbing through the cube also helps to locate the source</p></li>
-<li><p>Select a circular subset region centered on the source.</p></li>
-<li><p>Note that the region is pixelated and doesn’t include fractional pixels</p></li>
-<li><p>Change the collapse method to “Sum” in spectrum viewer: Gear icon : Viewer</p></li>
-<li><p>–This “Sum” method yields our subset extraction</p></li>
-<li><p>Change the vertical zoom to see the spectral features in the Subset spectrum</p></li>
-</ul>
-<p><em>Developer Notes</em>:</p>
-<p>(1) Image viewer contrast settings change when you click on the side bar to expand/contract jupyter scroll window</p>
-<p>(2) Spectrum viewer: Viewer cube collapse method should default to Sum (not Maximum)</p>
-<p>(3) Spectrum viewer y scale returns to autoscale when the region is moved, and y-zoom has to be adjusted again</p>
-<p>(4) Region selection appears away from cursor after opening hammer-and-screwdriver to change cube viewer contrast</p>
-</div>
-</div>
-<div class="section" id="load-cube-into-cubeviz">
-<h2>Load Cube into Cubeviz<a class="headerlink" href="#load-cube-into-cubeviz" title="Permalink to this headline">¶</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Data from local directory</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="section" id="ui-instructions">
+           <h3>
+            UI Instructions:
+            <a class="headerlink" href="#ui-instructions" title="Permalink to this headline">
+             ¶
+            </a>
+           </h3>
+           <ul class="simple">
+            <li>
+             <p>
+              Load science datacube into Cubeviz using the next code cell below
+             </p>
+            </li>
+            <li>
+             <p>
+              Go to the Hammer-and-Screwdriver icon: Gear icon: Layer in the leftmost image viewer
+             </p>
+            </li>
+            <li>
+             <p>
+              In that tab, change the Linear stretch to 90 percentile to see the faint QSO target at (x,y) ~ (17, 21)
+             </p>
+            </li>
+            <li>
+             <p>
+              Scrubbing through the cube also helps to locate the source
+             </p>
+            </li>
+            <li>
+             <p>
+              Select a circular subset region centered on the source.
+             </p>
+            </li>
+            <li>
+             <p>
+              Note that the region is pixelated and doesn’t include fractional pixels
+             </p>
+            </li>
+            <li>
+             <p>
+              Change the collapse method to “Sum” in spectrum viewer: Gear icon : Viewer
+             </p>
+            </li>
+            <li>
+             <p>
+              –This “Sum” method yields our subset extraction
+             </p>
+            </li>
+            <li>
+             <p>
+              Change the vertical zoom to see the spectral features in the Subset spectrum
+             </p>
+            </li>
+           </ul>
+           <p>
+            <em>
+             Developer Notes
+            </em>
+            :
+           </p>
+           <p>
+            (1) Image viewer contrast settings change when you click on the side bar to expand/contract jupyter scroll window
+           </p>
+           <p>
+            (2) Spectrum viewer: Viewer cube collapse method should default to Sum (not Maximum)
+           </p>
+           <p>
+            (3) Spectrum viewer y scale returns to autoscale when the region is moved, and y-zoom has to be adjusted again
+           </p>
+           <p>
+            (4) Region selection appears away from cursor after opening hammer-and-screwdriver to change cube viewer contrast
+           </p>
+          </div>
+         </div>
+         <div class="section" id="load-cube-into-cubeviz">
+          <h2>
+           Load Cube into Cubeviz
+           <a class="headerlink" href="#load-cube-into-cubeviz" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Data from local directory</span>
 <span class="c1"># cubeviz.app.load_data(filename)</span>
 
 <span class="c1"># Data from url:</span>
@@ -935,81 +1145,140 @@ VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-pack
 <span class="n">df</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># Sleep to avoid glue-jupyter timing issue</span>
 <span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p><em>Developer Note:</em> Spectral cube does not yet recognize JWST NIRSpec IFU datacubes, giving the above warning
-for each FITS extension.</p>
-</div>
-<div class="section" id="export-region-from-cubeviz">
-<h2>Export Region from Cubeviz<a class="headerlink" href="#export-region-from-cubeviz" title="Permalink to this headline">¶</a></h2>
-<p>Export the region defined by the user in Cubeviz as an astropy CirclePixel Region, which has units of pixels.</p>
-<p><em>Developer Note:</em> cubeviz.app.get_subsets_from_viewer method doesn’t work if there are more than 2 datasets selected in the spectrum viewer:</p>
-<p>#region1 = cubeviz.app.get_subsets_from_viewer(‘spectrum-viewer’)</p>
-<p>#print(region1[‘Subset1’])</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cubeviz_data</span> <span class="o">=</span> <span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">data_collection</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <p>
+           <em>
+            Developer Note:
+           </em>
+           Spectral cube does not yet recognize JWST NIRSpec IFU datacubes, giving the above warning
+for each FITS extension.
+          </p>
+         </div>
+         <div class="section" id="export-region-from-cubeviz">
+          <h2>
+           Export Region from Cubeviz
+           <a class="headerlink" href="#export-region-from-cubeviz" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <p>
+           Export the region defined by the user in Cubeviz as an astropy CirclePixel Region, which has units of pixels.
+          </p>
+          <p>
+           <em>
+            Developer Note:
+           </em>
+           cubeviz.app.get_subsets_from_viewer method doesn’t work if there are more than 2 datasets selected in the spectrum viewer:
+          </p>
+          <p>
+           #region1 = cubeviz.app.get_subsets_from_viewer(‘spectrum-viewer’)
+          </p>
+          <p>
+           #print(region1[‘Subset1’])
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="n">cubeviz_data</span> <span class="o">=</span> <span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">data_collection</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">region1</span> <span class="o">=</span> <span class="n">cubeviz_data</span><span class="o">.</span><span class="n">get_selection_definition</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;astropy-regions&#39;</span><span class="p">)</span>
+    <span class="n">region1</span> <span class="o">=</span> <span class="n">cubeviz_data</span><span class="o">.</span><span class="n">get_selection_definition</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">'astropy-regions'</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">region1</span><span class="p">)</span>
     <span class="n">region1_exists</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;There are no regions selected in the cube viewer.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"There are no regions selected in the cube viewer."</span><span class="p">)</span>
     <span class="n">region1_exists</span> <span class="o">=</span> <span class="kc">False</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="section" id="extract-subset-spectrum-in-cubeviz-spectrum-viewer">
-<h2>Extract Subset Spectrum in Cubeviz Spectrum Viewer<a class="headerlink" href="#extract-subset-spectrum-in-cubeviz-spectrum-viewer" title="Permalink to this headline">¶</a></h2>
-<p>Retrieve the collapsed spectrum (Subset1) of the user-defined region from the Spectrum Viewer as a Spectrum1D object.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
-    <span class="n">spectrum_subset1</span> <span class="o">=</span> <span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get_data_from_viewer</span><span class="p">(</span><span class="s1">&#39;spectrum-viewer&#39;</span><span class="p">)[</span><span class="s1">&#39;Subset 1&#39;</span><span class="p">]</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="section" id="extract-subset-spectrum-in-cubeviz-spectrum-viewer">
+          <h2>
+           Extract Subset Spectrum in Cubeviz Spectrum Viewer
+           <a class="headerlink" href="#extract-subset-spectrum-in-cubeviz-spectrum-viewer" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <p>
+           Retrieve the collapsed spectrum (Subset1) of the user-defined region from the Spectrum Viewer as a Spectrum1D object.
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">spectrum_subset1</span> <span class="o">=</span> <span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get_data_from_viewer</span><span class="p">(</span><span class="s1">'spectrum-viewer'</span><span class="p">)[</span><span class="s1">'Subset 1'</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">spectrum_subset1</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;There are no subsets selected in the spectrum viewer.&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p><em>Developer Note:</em> Can we suppress or fix this glue/core warning?</p>
-</div>
-<div class="section" id="extract-spectrum-by-sum-over-spaxels">
-<h2>Extract Spectrum by Sum Over Spaxels<a class="headerlink" href="#extract-spectrum-by-sum-over-spaxels" title="Permalink to this headline">¶</a></h2>
-<p>Perform a simple numpy sum over all spaxels in the cube as a rudimentary extraction method. Also sum over wavelength to collapse the cube.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sum over wavelength</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"There are no subsets selected in the spectrum viewer."</span><span class="p">)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <p>
+           <em>
+            Developer Note:
+           </em>
+           Can we suppress or fix this glue/core warning?
+          </p>
+         </div>
+         <div class="section" id="extract-spectrum-by-sum-over-spaxels">
+          <h2>
+           Extract Spectrum by Sum Over Spaxels
+           <a class="headerlink" href="#extract-spectrum-by-sum-over-spaxels" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <p>
+           Perform a simple numpy sum over all spaxels in the cube as a rudimentary extraction method. Also sum over wavelength to collapse the cube.
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Sum over wavelength</span>
 <span class="n">cube_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data_win</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># Plots</span>
 <span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span> 
 <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">fnu_sum</span><span class="p">)</span> 
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Spaxel sums&quot;</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength (um)&quot;</span><span class="p">)</span>  
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;SCA491 Flux Density&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Spaxel sums"</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Wavelength (um)"</span><span class="p">)</span>  
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"SCA491 Flux Density"</span><span class="p">)</span>
 
 <span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube_sum</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Slice sums&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Slice sums"</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="section" id="extract-spectrum-in-constant-radius-circular-aperture-cylinder">
-<h2>Extract Spectrum in Constant Radius Circular Aperture (Cylinder)<a class="headerlink" href="#extract-spectrum-in-constant-radius-circular-aperture-cylinder" title="Permalink to this headline">¶</a></h2>
-<p>This method is appropriate for an extended source.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># IFU pixel scale</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="section" id="extract-spectrum-in-constant-radius-circular-aperture-cylinder">
+          <h2>
+           Extract Spectrum in Constant Radius Circular Aperture (Cylinder)
+           <a class="headerlink" href="#extract-spectrum-in-constant-radius-circular-aperture-cylinder" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <p>
+           This method is appropriate for an extended source.
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># IFU pixel scale</span>
 <span class="n">pixelscale</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># arcsec/pixel</span>
 
 <span class="c1"># CircularAperture uses xy pixels</span>
@@ -1024,23 +1293,38 @@ for each FITS extension.</p>
 
 <span class="n">cylinder_sum</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">slice2d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-    <span class="n">phot_table</span> <span class="o">=</span> <span class="n">aperture_photometry</span><span class="p">(</span><span class="n">slice2d</span><span class="p">,</span> <span class="n">aperture</span><span class="p">,</span> <span class="n">wcs</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">celestial</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;exact&#39;</span><span class="p">)</span>
+    <span class="n">phot_table</span> <span class="o">=</span> <span class="n">aperture_photometry</span><span class="p">(</span><span class="n">slice2d</span><span class="p">,</span> <span class="n">aperture</span><span class="p">,</span> <span class="n">wcs</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">celestial</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'exact'</span><span class="p">)</span>
     <span class="n">phot_table</span> <span class="o">=</span> <span class="n">aperture_photometry</span><span class="p">(</span><span class="n">slice2d</span><span class="p">,</span> <span class="n">aperture</span><span class="p">)</span>
-    <span class="n">cylinder_sum</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phot_table</span><span class="p">[</span><span class="s1">&#39;aperture_sum&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p><em>Developer Note:</em>  Is there a way to retrieve the coordinates (RA, Dec) of the Subset1 region, for use in a SkyCircularAperture?</p>
-</div>
-<div class="section" id="extract-spectrum-in-linearly-expanding-circular-aperture-cone">
-<h2>Extract Spectrum in Linearly Expanding Circular Aperture (Cone)<a class="headerlink" href="#extract-spectrum-in-linearly-expanding-circular-aperture-cone" title="Permalink to this headline">¶</a></h2>
-<p>This method is appropriate for a point source PSF with width proportional to wavelength</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reference wavelength for expanding aperture</span>
+    <span class="n">cylinder_sum</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phot_table</span><span class="p">[</span><span class="s1">'aperture_sum'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <p>
+           <em>
+            Developer Note:
+           </em>
+           Is there a way to retrieve the coordinates (RA, Dec) of the Subset1 region, for use in a SkyCircularAperture?
+          </p>
+         </div>
+         <div class="section" id="extract-spectrum-in-linearly-expanding-circular-aperture-cone">
+          <h2>
+           Extract Spectrum in Linearly Expanding Circular Aperture (Cone)
+           <a class="headerlink" href="#extract-spectrum-in-linearly-expanding-circular-aperture-cone" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <p>
+           This method is appropriate for a point source PSF with width proportional to wavelength
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Reference wavelength for expanding aperture</span>
 <span class="n">lambda0</span> <span class="o">=</span> <span class="n">wavelength</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reference wavelength:&#39;</span><span class="p">,</span> <span class="n">lambda0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Reference wavelength:'</span><span class="p">,</span> <span class="n">lambda0</span><span class="p">)</span>
 
 <span class="n">cone_sum</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -1048,73 +1332,100 @@ for each FITS extension.</p>
     <span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span>
     <span class="n">r_cone</span> <span class="o">=</span> <span class="n">r_pix</span> <span class="o">*</span> <span class="n">wave</span> <span class="o">/</span> <span class="n">lambda0</span>
     <span class="n">aperture_cone</span> <span class="o">=</span> <span class="n">CircularAperture</span><span class="p">(</span><span class="n">center_xy</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">r_cone</span><span class="p">)</span>
-    <span class="n">phot_table</span> <span class="o">=</span> <span class="n">aperture_photometry</span><span class="p">(</span><span class="n">slice2d</span><span class="p">,</span> <span class="n">aperture_cone</span><span class="p">,</span> <span class="n">wcs</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">celestial</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;exact&#39;</span><span class="p">)</span>
-    <span class="n">cone_sum</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phot_table</span><span class="p">[</span><span class="s1">&#39;aperture_sum&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="section" id="plot-and-compare-non-optimal-spectral-extractions">
-<h2>Plot and Compare Non-optimal Spectral Extractions<a class="headerlink" href="#plot-and-compare-non-optimal-spectral-extractions" title="Permalink to this headline">¶</a></h2>
-<p>Compare spectra extracted in cylinder, cone, Cubeviz subset.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span> 
+    <span class="n">phot_table</span> <span class="o">=</span> <span class="n">aperture_photometry</span><span class="p">(</span><span class="n">slice2d</span><span class="p">,</span> <span class="n">aperture_cone</span><span class="p">,</span> <span class="n">wcs</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">celestial</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'exact'</span><span class="p">)</span>
+    <span class="n">cone_sum</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phot_table</span><span class="p">[</span><span class="s1">'aperture_sum'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="section" id="plot-and-compare-non-optimal-spectral-extractions">
+          <h2>
+           Plot and Compare Non-optimal Spectral Extractions
+           <a class="headerlink" href="#plot-and-compare-non-optimal-spectral-extractions" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <p>
+           Compare spectra extracted in cylinder, cone, Cubeviz subset.
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span> 
 
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Non-optimal spectral extractions&quot;</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Observed Wavelength (microns)&quot;</span><span class="p">)</span>  
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux Density&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Non-optimal spectral extractions"</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Observed Wavelength (microns)"</span><span class="p">)</span>  
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Flux Density"</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cylinder_sum</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Cylinder&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cone_sum</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Cone&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;darkorange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cylinder_sum</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Cylinder"</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'b'</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cone_sum</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Cone"</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'darkorange'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum_subset1</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Subset1&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum_subset1</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Subset1"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;There is no Cubeviz Subset1 spectrum to plot.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"There is no Cubeviz Subset1 spectrum to plot."</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Comparison of the (non-optimal) cylindrical, conical, and CubeViz subset spectral extractions.
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <p>
+           Comparison of the (non-optimal) cylindrical, conical, and CubeViz subset spectral extractions.
 The conical extraction captures slightly more flux but is noisier than the other spectra at long wavelengths.
-Red-shifted Broad H-beta and narrow [O III] lines  are visible in the quasar spectra.</p>
-</div>
-<div class="section" id="webbpsf-model-psf-for-optimal-extraction">
-<h2>WebbPSF  Model PSF for Optimal Extraction<a class="headerlink" href="#webbpsf-model-psf-for-optimal-extraction" title="Permalink to this headline">¶</a></h2>
-<p>Generate PSF model cube using WebbPSF for NIRSpec IFU, or read in precomputed PSF model cube.</p>
-<p>Caution! The WebbPSF model takes about 10 hr to run.  Uncomment the following cell to do so. Otherwise, read in the precomputed WebbPSF model, which covers the full F100LP/G140H wavelength range (blue and red). For other filter/grating combinations, uncomment and run the cell below using the wavelengths from the science data set.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
+Red-shifted Broad H-beta and narrow [O III] lines  are visible in the quasar spectra.
+          </p>
+         </div>
+         <div class="section" id="webbpsf-model-psf-for-optimal-extraction">
+          <h2>
+           WebbPSF  Model PSF for Optimal Extraction
+           <a class="headerlink" href="#webbpsf-model-psf-for-optimal-extraction" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <p>
+           Generate PSF model cube using WebbPSF for NIRSpec IFU, or read in precomputed PSF model cube.
+          </p>
+          <p>
+           Caution! The WebbPSF model takes about 10 hr to run.  Uncomment the following cell to do so. Otherwise, read in the precomputed WebbPSF model, which covers the full F100LP/G140H wavelength range (blue and red). For other filter/grating combinations, uncomment and run the cell below using the wavelengths from the science data set.
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="sd">'''</span>
 <span class="sd">#WebbPSF imports</span>
 <span class="sd">%pylab inline</span>
 <span class="sd">import webbpsf</span>
 
 <span class="sd">#WebbPSF commands used to create PSF model cube</span>
-<span class="sd">ns.image_mask = &quot;IFU&quot;  # Sets to 3x3 arcsec square mask</span>
+<span class="sd">ns.image_mask = "IFU"  # Sets to 3x3 arcsec square mask</span>
 <span class="sd">ns = webbpsf.NIRSpec()</span>
 <span class="sd">wavelengths = wavelength*1.0E-6</span>
 <span class="sd">psfcube = ns.calc_datacube(wavelengths, fov_pixels=30, oversample=4,  add_distortion=True)</span>
-<span class="sd">psfcube.writeto(&quot;Webbpsf_ifucube.fits&quot;)</span>
-<span class="sd">&#39;&#39;&#39;</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">BoxPath</span> <span class="o">=</span> <span class="s2">&quot;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_optimal_extraction/&quot;</span>
-<span class="n">psf_filename</span> <span class="o">=</span> <span class="n">BoxPath</span><span class="o">+</span><span class="s2">&quot;Webbpsf_ifucube.fits&quot;</span>
+<span class="sd">psfcube.writeto("Webbpsf_ifucube.fits")</span>
+<span class="sd">'''</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="n">BoxPath</span> <span class="o">=</span> <span class="s2">"https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_optimal_extraction/"</span>
+<span class="n">psf_filename</span> <span class="o">=</span> <span class="n">BoxPath</span><span class="o">+</span><span class="s2">"Webbpsf_ifucube.fits"</span>
 
 <span class="c1"># Load with astropy.fits.open</span>
 <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">psf_filename</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdulist</span><span class="p">:</span>
-    <span class="n">psf_model</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">&#39;DET_SAMP&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">psf_hdr</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">&#39;DET_SAMP&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+    <span class="n">psf_model</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">'DET_SAMP'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">psf_hdr</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">'DET_SAMP'</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
     <span class="n">hdulist</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>    
 <span class="nb">print</span><span class="p">(</span><span class="n">psf_model</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
@@ -1123,20 +1434,40 @@ Red-shifted Broad H-beta and narrow [O III] lines  are visible in the quasar spe
 
 <span class="c1"># Sum over spaxels</span>
 <span class="n">psf_model_fnusum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psf_model</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p><em>Developer Note:</em>  The file Webbpsf_ifucube.fits is large (946.3 MB) and takes some time to load from Box.
-It might behoove the user to download it to a local directory and retrieve it from there.</p>
-</div>
-<div class="section" id="align-model-psf-cube-with-science-data">
-<h2>Align Model PSF Cube with Science Data<a class="headerlink" href="#align-model-psf-cube-with-science-data" title="Permalink to this headline">¶</a></h2>
-<p>Flip, smooth, and shift the model PSF cube to align with the simulated data. Trim the simulated data.</p>
-<p><em>Developer Note:</em>  Automate this by finding the (x,y) offset between the Model and simulated PSF peaks.  Currently the shift is determined empirically by eye.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Flip model PSF left-right.  For some unknown reason, WebbPSF is flipped with respect to the IPS simulation.</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <p>
+           <em>
+            Developer Note:
+           </em>
+           The file Webbpsf_ifucube.fits is large (946.3 MB) and takes some time to load from Box.
+It might behoove the user to download it to a local directory and retrieve it from there.
+          </p>
+         </div>
+         <div class="section" id="align-model-psf-cube-with-science-data">
+          <h2>
+           Align Model PSF Cube with Science Data
+           <a class="headerlink" href="#align-model-psf-cube-with-science-data" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <p>
+           Flip, smooth, and shift the model PSF cube to align with the simulated data. Trim the simulated data.
+          </p>
+          <p>
+           <em>
+            Developer Note:
+           </em>
+           Automate this by finding the (x,y) offset between the Model and simulated PSF peaks.  Currently the shift is determined empirically by eye.
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Flip model PSF left-right.  For some unknown reason, WebbPSF is flipped with respect to the IPS simulation.</span>
 <span class="n">psf_model_fliplr</span> <span class="o">=</span> <span class="n">psf_model</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
 
 <span class="c1"># Smooth model</span>
@@ -1146,7 +1477,7 @@ It might behoove the user to download it to a local directory and retrieve it fr
 <span class="n">scalerad_pix</span> <span class="o">=</span> <span class="n">scalerad</span> <span class="o">/</span> <span class="n">pixelscale</span>
 <span class="n">psf_model_smoothed</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">ndimage</span><span class="o">.</span><span class="n">filters</span><span class="o">.</span><span class="n">gaussian_filter</span><span class="p">(</span><span class="n">psf_model_fliplr</span><span class="p">,</span> 
                                                            <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scalerad_pix</span><span class="p">,</span> <span class="n">scalerad_pix</span><span class="p">),</span> 
-                                                           <span class="n">order</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;reflect&#39;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>  
+                                                           <span class="n">order</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'reflect'</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>  
                                                            <span class="n">truncate</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
 
 <span class="c1"># Empirically (chi-by-eye) determined shift</span>
@@ -1155,7 +1486,7 @@ It might behoove the user to download it to a local directory and retrieve it fr
 
 <span class="c1"># Shift model PSF using linear interpolation</span>
 <span class="n">psf_model_aligned</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">ndimage</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">psf_model_smoothed</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">shiftx</span><span class="p">,</span> <span class="n">shifty</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> 
-                                        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">prefilter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                                        <span class="n">mode</span><span class="o">=</span><span class="s1">'constant'</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">prefilter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Sum over wavelength</span>
 <span class="n">psf_model_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psf_model_aligned</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -1168,41 +1499,63 @@ It might behoove the user to download it to a local directory and retrieve it fr
 <span class="c1"># Plots</span>
 <span class="n">f</span><span class="p">,</span> <span class="p">([</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">],</span> <span class="p">[</span><span class="n">ax4</span><span class="p">,</span> <span class="n">ax5</span><span class="p">,</span> <span class="n">ax6</span><span class="p">])</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> 
 
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;PSF slice sum&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"PSF slice sum"</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf_model_sum</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
 
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Science Data slice sum&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Science Data slice sum"</span><span class="p">)</span>
 <span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube_sum</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span> 
 
-<span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Data / PSF Ratio&quot;</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Data / PSF Ratio"</span><span class="p">)</span>
 <span class="n">ax3</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube_sum</span> <span class="o">/</span> <span class="n">psf_model_sum</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
 
-<span class="n">ax4</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;PSF Model integrated flux&quot;</span><span class="p">)</span>
+<span class="n">ax4</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"PSF Model integrated flux"</span><span class="p">)</span>
 <span class="n">ax4</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">psf_model_fnusum</span><span class="p">)</span>
 
-<span class="n">ax5</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Data - PSF&quot;</span><span class="p">)</span>
+<span class="n">ax5</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Data - PSF"</span><span class="p">)</span>
 <span class="n">ax5</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube_sum</span> <span class="o">-</span> <span class="n">scalefactor</span> <span class="o">*</span> <span class="n">psf_model_sum</span><span class="p">)</span>
 
 <span class="n">im6</span> <span class="o">=</span> <span class="n">ax6</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">cube_sum</span> <span class="o">-</span> <span class="n">scalefactor</span> <span class="o">*</span> <span class="n">psf_model_sum</span><span class="p">)))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im6</span><span class="p">)</span>
-<span class="n">ax6</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;log abs(Data - PSF)&quot;</span><span class="p">)</span>
+<span class="n">ax6</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"log abs(Data - PSF)"</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p><em>Figure top row</em>: Comparison of smoothed, aligned WebbPSF PSF (left) to IPS simulation (center).</p>
-<p><em>Figure bottom row</em>: Integrated WebbPSF model flux (left) decreases with wavelength as PSF expands outside of the FOV.
-Differences (center, right) between the model PSF and IPS-simulated PSF will translate to inaccuracy in the optimally-extracted spectrum.</p>
-</div>
-<div class="section" id="optimal-extraction-using-webbpsf-model">
-<h2>Optimal Extraction using WebbPSF Model<a class="headerlink" href="#optimal-extraction-using-webbpsf-model" title="Permalink to this headline">¶</a></h2>
-<p>Optimal extraction (Horne 1986, PASP, 98, 609) weights the flux contributions to a spectrum by their signal-to-noise ratio (SNR). Dividing the simulated data by the model PSF gives an estimate of the total flux density spectrum in each spaxel. A weighted average of these estimates over all spaxels yields the optimally extracted spectrum over the cube. In the faint source limit, where the noise is background-dominated, optimal extraction inside a 3-sigma radius can increase the effective exposure time by a factor of 1.69 (Horne et al. 1986). In the bright source limit, where the noise is dominated by the Poisson statistics of the source, optimal extraction is formally identical to a straight sum over spaxels for a perfect PSF model.</p>
-<p>We use the WebbPSF PSF model for this first attempt at optimal extraction.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Window PSF model (and replace NaNs)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <p>
+           <em>
+            Figure top row
+           </em>
+           : Comparison of smoothed, aligned WebbPSF PSF (left) to IPS simulation (center).
+          </p>
+          <p>
+           <em>
+            Figure bottom row
+           </em>
+           : Integrated WebbPSF model flux (left) decreases with wavelength as PSF expands outside of the FOV.
+Differences (center, right) between the model PSF and IPS-simulated PSF will translate to inaccuracy in the optimally-extracted spectrum.
+          </p>
+         </div>
+         <div class="section" id="optimal-extraction-using-webbpsf-model">
+          <h2>
+           Optimal Extraction using WebbPSF Model
+           <a class="headerlink" href="#optimal-extraction-using-webbpsf-model" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <p>
+           Optimal extraction (Horne 1986, PASP, 98, 609) weights the flux contributions to a spectrum by their signal-to-noise ratio (SNR). Dividing the simulated data by the model PSF gives an estimate of the total flux density spectrum in each spaxel. A weighted average of these estimates over all spaxels yields the optimally extracted spectrum over the cube. In the faint source limit, where the noise is background-dominated, optimal extraction inside a 3-sigma radius can increase the effective exposure time by a factor of 1.69 (Horne et al. 1986). In the bright source limit, where the noise is dominated by the Poisson statistics of the source, optimal extraction is formally identical to a straight sum over spaxels for a perfect PSF model.
+          </p>
+          <p>
+           We use the WebbPSF PSF model for this first attempt at optimal extraction.
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Window PSF model (and replace NaNs)</span>
 <span class="n">profile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">psf_model_aligned</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2059</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span> 
 
 <span class="c1"># Divide data by PSF model</span>
@@ -1221,37 +1574,49 @@ Differences (center, right) between the model PSF and IPS-simulated PSF will tra
 <span class="n">optimal_weight_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">optimal_weight</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 <span class="n">spectrum_optimal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">profile</span> <span class="o">*</span> <span class="n">data_clean</span> <span class="o">/</span> <span class="n">data_var</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="n">optimal_weight_norm</span>
 
-<span class="n">opt_scalefactor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">cone_sum</span> <span class="o">/</span> <span class="n">spectrum_optimal</span><span class="p">))</span>  <span class="c1"># = 1.33, not ~1.0 because PSF model isn&#39;t perfect</span>
+<span class="n">opt_scalefactor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">cone_sum</span> <span class="o">/</span> <span class="n">spectrum_optimal</span><span class="p">))</span>  <span class="c1"># = 1.33, not ~1.0 because PSF model isn't perfect</span>
 
 <span class="c1"># Plots</span>
 <span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span> 
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Optimal Extraction Comparison&quot;</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Observed Wavelength (microns)&quot;</span><span class="p">)</span> 
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux Density&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Optimal Extraction Comparison"</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Observed Wavelength (microns)"</span><span class="p">)</span> 
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Flux Density"</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">cone_sum</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Conical Extraction&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum_optimal</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Optimal&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">cone_sum</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Conical Extraction"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum_optimal</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Optimal"</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>The optimally extracted spectrum is less noisy than the aperture extraction, but the flux density is low by a factor of ~1.33 because the PSF model doesn’t match the science data perfectly.</p>
-</div>
-<div class="section" id="optimal-extraction-with-simulated-reference-star-psf">
-<h2>Optimal Extraction with (Simulated) Reference Star PSF<a class="headerlink" href="#optimal-extraction-with-simulated-reference-star-psf" title="Permalink to this headline">¶</a></h2>
-<p>A real (or simulated in this case) IFU observation of a star may be used for the PSF model rather than WebbPSF.  We employ a NIRSpec IPS simulated PSF, which matches our data better than the WebbPSF model.  We don’t have to shift or smooth the PSF model because it was simulated at the same dither/detector position as the data. When using a real observation of a star for the PSF model, make sure it was observed at the same dither positions. It is also beneficial to reduce and extract both simulated datasets in the ‘ifualign’ detector coordinate system, so that we don’t have to rotate the PSF star to match the science data.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">BoxPath</span> <span class="o">=</span> <span class="s2">&quot;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_optimal_extraction/&quot;</span>
-<span class="n">filename_star</span> <span class="o">=</span> <span class="n">BoxPath</span> <span class="o">+</span> <span class="s2">&quot;NRS00001-brightQSO-F100LP-G140H-01_1_491_SE_2020-08-26T12h15m00_s3d.fits&quot;</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <p>
+           The optimally extracted spectrum is less noisy than the aperture extraction, but the flux density is low by a factor of ~1.33 because the PSF model doesn’t match the science data perfectly.
+          </p>
+         </div>
+         <div class="section" id="optimal-extraction-with-simulated-reference-star-psf">
+          <h2>
+           Optimal Extraction with (Simulated) Reference Star PSF
+           <a class="headerlink" href="#optimal-extraction-with-simulated-reference-star-psf" title="Permalink to this headline">
+            ¶
+           </a>
+          </h2>
+          <p>
+           A real (or simulated in this case) IFU observation of a star may be used for the PSF model rather than WebbPSF.  We employ a NIRSpec IPS simulated PSF, which matches our data better than the WebbPSF model.  We don’t have to shift or smooth the PSF model because it was simulated at the same dither/detector position as the data. When using a real observation of a star for the PSF model, make sure it was observed at the same dither positions. It is also beneficial to reduce and extract both simulated datasets in the ‘ifualign’ detector coordinate system, so that we don’t have to rotate the PSF star to match the science data.
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="n">BoxPath</span> <span class="o">=</span> <span class="s2">"https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_optimal_extraction/"</span>
+<span class="n">filename_star</span> <span class="o">=</span> <span class="n">BoxPath</span> <span class="o">+</span> <span class="s2">"NRS00001-brightQSO-F100LP-G140H-01_1_491_SE_2020-08-26T12h15m00_s3d.fits"</span>
 
 <span class="c1"># Open and inspect the file and WCS</span>
 <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename_star</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdulist</span><span class="p">:</span>
-    <span class="n">sci_star</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">err_star</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">&#39;ERR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">sci_star</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">'SCI'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">err_star</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">'ERR'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
     <span class="n">w_star</span> <span class="o">=</span> <span class="n">wcs</span><span class="o">.</span><span class="n">WCS</span><span class="p">(</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
     <span class="n">hdr_star</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
     <span class="n">hdulist</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -1269,7 +1634,7 @@ Differences (center, right) between the model PSF and IPS-simulated PSF will tra
 <span class="c1"># Sum over spaxels</span>
 <span class="n">ref_star_fnusum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ref_star</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 
-<span class="c1"># Normalize PSF star profile to unity. (The flux will still be slightly off. Please see Developer&#39;s Note below.)</span>
+<span class="c1"># Normalize PSF star profile to unity. (The flux will still be slightly off. Please see Developer's Note below.)</span>
 <span class="n">ref_star_norm</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">norm</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wavelength_star</span><span class="p">)),</span> <span class="n">ref_star_fnusum</span><span class="p">):</span>
     <span class="n">ref_star_norm</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ref_star</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">norm</span><span class="p">)</span>
@@ -1292,36 +1657,49 @@ Differences (center, right) between the model PSF and IPS-simulated PSF will tra
 <span class="n">f</span><span class="p">,</span> <span class="p">([</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">],</span> <span class="p">[</span><span class="n">ax4</span><span class="p">,</span> <span class="n">ax5</span><span class="p">,</span> <span class="n">ax6</span><span class="p">])</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> 
 
 <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">profile_star_sum</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;PSF Star Slice sum&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"PSF Star Slice sum"</span><span class="p">)</span>
 
 <span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube_sum</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span> 
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Science Data Slice sum&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Science Data Slice sum"</span><span class="p">)</span>
 
 <span class="n">ax3</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube_sum</span> <span class="o">/</span> <span class="n">profile_star_sum</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
-<span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Data/Star_PSF Ratio&quot;</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Data/Star_PSF Ratio"</span><span class="p">)</span>
 
 <span class="n">star_model_ratio</span> <span class="o">=</span> <span class="n">profile_star_sum</span> <span class="o">/</span> <span class="n">psf_model_sum</span>
 <span class="n">ax4</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">star_model_ratio</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
-<span class="n">ax4</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Star PSF/WebbPSF&quot;</span><span class="p">)</span>
+<span class="n">ax4</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Star PSF/WebbPSF"</span><span class="p">)</span>
 
 <span class="n">ax5</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube_sum</span> <span class="o">-</span> <span class="n">star_scalefactor</span> <span class="o">*</span> <span class="n">profile_star_sum</span><span class="p">)</span>
-<span class="n">ax5</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Data - Star PSF&quot;</span><span class="p">)</span>
+<span class="n">ax5</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Data - Star PSF"</span><span class="p">)</span>
 
 <span class="n">ax6</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">cube_sum</span> <span class="o">-</span> <span class="n">star_scalefactor</span> <span class="o">*</span> <span class="n">profile_star_sum</span><span class="p">)))</span>
-<span class="n">ax6</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;log abs(Data - Star PSF)&quot;</span><span class="p">)</span>
+<span class="n">ax6</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"log abs(Data - Star PSF)"</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p><em>Figure top row</em>: Comparison of PSF star and science data. Bottom left: ratio of PSF star to WebbPSF model shows
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <p>
+           <em>
+            Figure top row
+           </em>
+           : Comparison of PSF star and science data. Bottom left: ratio of PSF star to WebbPSF model shows
 significant differences that can affect the quality of the optimal extraction.  Bottom right:
-Difference of PSF star from science data shows they are well matched, with a scale factor of 0.175.</p>
-<p><em>Developer Note:</em> It would be good to renormalize the PSF profile to account for the fraction of flux lost outside of the detector. Otherwise the extracted flux will be low by a factor of roughly 0.972 to 0.980.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Mask out bad data using 3-sigma clipping in each slice</span>
+Difference of PSF star from science data shows they are well matched, with a scale factor of 0.175.
+          </p>
+          <p>
+           <em>
+            Developer Note:
+           </em>
+           It would be good to renormalize the PSF profile to account for the fraction of flux lost outside of the detector. Otherwise the extracted flux will be low by a factor of roughly 0.972 to 0.980.
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Mask out bad data using 3-sigma clipping in each slice</span>
 <span class="n">data_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">data_win</span> <span class="o">/</span> <span class="n">profile_star</span><span class="p">)</span>
 <span class="n">data_norm_clipped</span> <span class="o">=</span> <span class="n">sigma_clip</span><span class="p">(</span><span class="n">data_norm</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">maxiters</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 <span class="n">data_norm_clipped_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data_norm_clipped</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>   
@@ -1336,28 +1714,33 @@ Difference of PSF star from science data shows they are well matched, with a sca
 
 <span class="c1"># Plots</span>
 <span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span> 
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Optimal Extraction Comparison&quot;</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Observed Wavelength (microns)&quot;</span><span class="p">)</span> 
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux Density&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Optimal Extraction Comparison"</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Observed Wavelength (microns)"</span><span class="p">)</span> 
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Flux Density"</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
 
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">cone_sum</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Conical Extraction&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum_optimal</span> <span class="o">*</span> <span class="n">opt_scalefactor</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;1.3 * Optimal with WebbPSF model&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum_optimal_star</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Optimal with ref. star&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">cone_sum</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Conical Extraction"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum_optimal</span> <span class="o">*</span> <span class="n">opt_scalefactor</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"1.3 * Optimal with WebbPSF model"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum_optimal_star</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Optimal with ref. star"</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>The optimal extraction with the perfectly matched PSF star is less noisy than that achieved with WebbPSF, and unlike the latter, doesn’t need to be rescaled.  The scaling can be off if the PSF of the reference star is not a good match to the PSF of the science data.</p>
-<img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/><p>Notebook created by Patrick Ogle and James Davies.</p>
-</div>
-</div>
-
-    <script type="text/x-thebe-config">
-    {
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <p>
+           The optimal extraction with the perfectly matched PSF star is less noisy than that achieved with WebbPSF, and unlike the latter, doesn’t need to be rescaled.  The scaling can be off if the PSF of the reference star is not a good match to the PSF of the science data.
+          </p>
+          <img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="float: right;" width="200px"/>
+          <p>
+           Notebook created by Patrick Ogle and James Davies.
+          </p>
+         </div>
+        </div>
+        <script type="text/x-thebe-config">
+         {
         requestKernel: true,
         binderOptions: {
             repo: "spacetelescope/jdat_notebooks",
@@ -1373,47 +1756,52 @@ Difference of PSF star from science data shows they are well matched, with a sca
         },
         predefinedOutput: true
     }
-    </script>
-    <script>kernelName = 'python3'</script>
-
-              </div>
-              
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="../soss-transit-spectroscopy/HAT-P-1b-PART3-data-analysis.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Analyzing the JWST Pipeline products of HAT-P-1b observations with NIRISS/SOSS</p>
-        </div>
-    </a>
-    <a class='right-next' id="next-link" href="../optimal_extraction_dynamic/Spectral%20Extraction.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">NIRSpec MOS Optimal Spectral Extraction</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
-</div>
-            
-        </div>
-    </div>
-    <footer class="footer">
-  <p>
-    
-      By STScI<br/>
-    
-        &copy; Copyright 2022.<br/>
-  </p>
-</footer>
-</main>
-
-
+        </script>
+        <script>
+         kernelName = 'python3'
+        </script>
+       </div>
+       <!-- Previous / next buttons -->
+       <div class="prev-next-area">
+        <a class="left-prev" href="../soss-transit-spectroscopy/HAT-P-1b-PART3-data-analysis.html" id="prev-link" title="previous page">
+         <i class="fas fa-angle-left">
+         </i>
+         <div class="prev-next-info">
+          <p class="prev-next-subtitle">
+           previous
+          </p>
+          <p class="prev-next-title">
+           Analyzing the JWST Pipeline products of HAT-P-1b observations with NIRISS/SOSS
+          </p>
+         </div>
+        </a>
+        <a class="right-next" href="../mos-spectroscopy/MOSspec_sv06_revised.html" id="next-link" title="next page">
+         <div class="prev-next-info">
+          <p class="prev-next-subtitle">
+           next
+          </p>
+          <p class="prev-next-title">
+           MOS Spectroscopy of Typical Extragalactic Field
+          </p>
+         </div>
+         <i class="fas fa-angle-right">
+         </i>
+        </a>
+       </div>
       </div>
-    </div>
-  
-  <script src="../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
-
-  </body>
+     </div>
+     <footer class="footer">
+      <p>
+       By STScI
+       <br/>
+       © Copyright 2022.
+       <br/>
+      </p>
+     </footer>
+    </main>
+   </div>
+  </div>
+  <script src="../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+  </script>
+ </body>
 </html>
