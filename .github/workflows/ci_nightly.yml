@@ -8,34 +8,45 @@ env:
   IS_CRON: "true"
 
 jobs:
-  build-linux:
+  gather-notebooks:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: set-matrix
+        run: echo "::set-output name=matrix::$(find notebooks -name "*.ipynb" | jq -cnR '[inputs | select(length>0)]')"
+  nightly-notebook-execution:
+    needs: gather-notebooks
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 5
+        fail-fast: false
+        matrix:
+            notebooks: ${{ fromJson(needs.gather-notebooks.outputs.matrix) }}
     steps:
-    - name: Clear up disc space for nightly
-      run: |
-        sudo rm -rf /usr/share/dotnet
-        sudo rm -rf /opt/ghc
-        sudo rm -rf "/usr/local/share/boost"
-        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8.12
-      uses: actions/setup-python@v2 ## needed for caching
-      with:
-        python-version: 3.8.12
-        cache: 'pip'
-    - name: Add conda to system path
-      run: |
-        # $CONDA is an environment variable pointing to the root of the miniconda directory
-        echo $CONDA/bin >> $GITHUB_PATH
-    - name: Install dependencies
-      run: |
-        #conda env update --file CIenvironment.yml --name base
-        pip install -r requirements.txt
-        pip install pytest
-        pip install nbval
-        pip install nbconvert
-    - name: Execute notebooks
-      run: |
-        find . -name '*.ipynb' -type f -execdir jupyter nbconvert --template classic --to html --execute {} \; 
+      - uses: actions/checkout@v2   
+      #- run: | 
+      #      pip install -r ${${{ matrix.notebooks }}%/*}/requirements.txt
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8.12
+        uses: actions/setup-python@v2 ## needed for caching
+        with:
+          python-version: 3.8.12
+          cache: 'pip'
+      - name: Add conda to system path
+        run: |
+          # $CONDA is an environment variable pointing to the root of the miniconda directory
+          echo $CONDA/bin >> $GITHUB_PATH
+      - name: Install dependencies
+        run: |
+          #conda env update --file CIenvironment.yml --name base
+          pip install -r requirements.txt
+          pip install pytest
+          pip install nbval
+          pip install nbconvert
+      - name: Execute notebooks
+        run: |
+          jupyter nbconvert --template classic --to html --execute "${{ matrix.notebooks }}"
+      #- name: Validate notebooks 
+      #  run: |
+      #   pytest --nbval "${{ matrix.notebooks }}"
