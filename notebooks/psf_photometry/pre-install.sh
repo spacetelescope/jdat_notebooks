@@ -1,20 +1,15 @@
 #!/usr/bin/env bash
-
 set -e
 
 mkdir -p webbpsf-data
-FILE_URL='http://www.stsci.edu/~mperrin/software/webbpsf/webbpsf-data-0.9.0.tar.gz'
-FILE_URL='https://www.stsci.edu/~mperrin/software/webbpsf/webbpsf-data-0.9.0.tar.gz'
+FILE_URL='https://stsci.box.com/s/slmgdud1vz9mmbucbsl1bo4dzm9ft4t3'
 filename=$(basename $FILE_URL)
-filepath="webbpsf-data/$filename"
 
 if [ ! -f "$filepath" ]; then
-    curl -v $FILE_URL -o $filepath
-    cd webbpsf-data
-    tar -xf $filename
-    cd -
+    wget https://stsci.box.com/shared/static/34o0keicz2iujyilg4uz617va46ks6u9.gz --no-check-certificate
+    tar -xf 34o0keicz2iujyilg4uz617va46ks6u9.gz
+    export WEBBPSF_PATH=./webbpsf-data
 fi
-
 
 if [ ! -f "grp" ]; then
 
