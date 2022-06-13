@@ -1180,6 +1180,8 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="kn">import</span> <span class="nn">tarfile</span>
 <span class="kn">import</span> <span class="nn">urllib.request</span>
 
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"WEBBPSF_PATH"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"./webbpsf-data/webbpsf-data"</span>
+
 <span class="n">boxlink</span> <span class="o">=</span> <span class="s1">'https://stsci.box.com/shared/static/34o0keicz2iujyilg4uz617va46ks6u9.gz'</span>                                                           
 <span class="n">boxfile</span> <span class="o">=</span> <span class="s1">'./webbpsf-data/webbpsf-data-1.0.0.tar.gz'</span>
 
@@ -1450,7 +1452,7 @@ Available LW Filters: ['F277W', 'F356W', 'F444W']
              </div>
              <div class="output stderr highlight-myst-ansi notranslate">
               <div class="highlight">
-               <pre><span></span>/tmp/ipykernel_3179/3061117394.py:48: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.
+               <pre><span></span>/tmp/ipykernel_3271/3061117394.py:48: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.
 Deprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations
   wv = np.float(f[1:3])
 </pre>
@@ -1581,7 +1583,7 @@ Deprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdo
              </div>
              <div class="cell_output docutils container">
               <script type="application/vnd.jupyter.widget-view+json">
-               {"version_major": 2, "version_minor": 0, "model_id": "068ca7f70f1e478daaaf490425fbae7f"}
+               {"version_major": 2, "version_minor": 0, "model_id": "f7174a659703498aaeb023e2c3a88d7d"}
               </script>
               <img align=center height=auto width=50% src="../../jdaviz_placeholder_new.png">
               </img align=center height=auto width=50%>
@@ -1770,66 +1772,112 @@ Deprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdo
               </div>
              </div>
              <div class="cell_output docutils container">
+              <div class="output stderr highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>WARNING: Failed to load Vega spectrum from $PWD/grp/redcat/trds//calspec/alpha_lyr_stis_010.fits; Functionality involving Vega will be cripped: FileNotFoundError(2, 'No such file or directory') [stsynphot.spectrum]
+Could not find a match in catalog {0} for key {1}. Check that is a valid name in the lookup table, and/or that synphot is installed properly.
+</pre>
+               </div>
+              </div>
               <div class="output traceback highlight-ipythontb notranslate">
                <div class="highlight">
                 <pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">OSError</span><span class="g g-Whitespace">                                   </span>Traceback (most recent call last)
+<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/poppy/utils.py:1628,</span> in <span class="ni">spectrum_from_spectral_type</span><span class="nt">(sptype, return_list, catalog)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1627</span> <span class="k">try</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1628</span>     <span class="k">return</span> <span class="n">grid_to_spec</span><span class="p">(</span><span class="n">catname</span><span class="p">,</span> <span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">keys</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">keys</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="g g-Whitespace">   </span><span class="mi">1629</span> <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/stsynphot/catalog.py:201,</span> in <span class="ni">grid_to_spec</span><span class="nt">(gridname, t_eff, metallicity, log_g)</span>
+<span class="g g-Whitespace">    </span><span class="mi">161</span> <span class="sd">"""Extract spectrum from given catalog grid parameters.</span>
+<span class="g g-Whitespace">    </span><span class="mi">162</span><span class="sd"> Interpolate if necessary.</span>
+<span class="g g-Whitespace">    </span><span class="mi">163</span><span class="sd"> </span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">199</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">200</span><span class="sd"> """</span>
+<span class="ne">--&gt; </span><span class="mi">201</span> <span class="n">indices</span><span class="p">,</span> <span class="n">catdir</span> <span class="o">=</span> <span class="n">get_catalog_index</span><span class="p">(</span><span class="n">gridname</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">203</span> <span class="n">metallicity</span> <span class="o">=</span> <span class="n">_par_from_parser</span><span class="p">(</span><span class="n">metallicity</span><span class="p">)</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/stsynphot/catalog.py:152,</span> in <span class="ni">get_catalog_index</span><span class="nt">(gridname)</span>
+<span class="g g-Whitespace">    </span><span class="mi">151</span> <span class="k">if</span> <span class="n">filename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_CACHE</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">152</span>     <span class="n">data</span> <span class="o">=</span> <span class="n">stio</span><span class="o">.</span><span class="n">read_catalog</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>  <span class="c1"># EXT 1</span>
+<span class="g g-Whitespace">    </span><span class="mi">153</span>     <span class="n">_CACHE</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">)))</span> <span class="o">+</span>
+<span class="g g-Whitespace">    </span><span class="mi">154</span>                         <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">'FILENAME'</span><span class="p">][</span><span class="n">i</span><span class="p">]]</span>
+<span class="g g-Whitespace">    </span><span class="mi">155</span>                         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'INDEX'</span><span class="p">])]</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/stsynphot/stio.py:454,</span> in <span class="ni">read_catalog</span><span class="nt">(filename, tab_ext)</span>
+<span class="g g-Whitespace">    </span><span class="mi">419</span> <span class="sd">"""Read catalog grid look-up table.</span>
+<span class="g g-Whitespace">    </span><span class="mi">420</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">421</span><span class="sd"> Table must contain the following named columns:</span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">452</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">453</span><span class="sd"> """</span>
+<span class="ne">--&gt; </span><span class="mi">454</span> <span class="k">return</span> <span class="n">_read_table</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">tab_ext</span><span class="p">,</span> <span class="p">{</span><span class="s1">'INDEX'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str_</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">455</span>                                        <span class="s1">'FILENAME'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str_</span><span class="p">})</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/stsynphot/stio.py:289,</span> in <span class="ni">_read_table</span><span class="nt">(filename, ext, dtypes)</span>
+<span class="g g-Whitespace">    </span><span class="mi">288</span> <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s1">'.fits'</span><span class="p">,</span> <span class="s1">'.fit'</span><span class="p">)):</span>
+<span class="ne">--&gt; </span><span class="mi">289</span>     <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">290</span>         <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">ext</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/astropy/io/fits/hdu/hdulist.py:175,</span> in <span class="ni">fitsopen</span><span class="nt">(name, mode, memmap, save_backup, cache, lazy_load_hdus, ignore_missing_simple, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">173</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Empty filename: </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s1">'</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">175</span> <span class="k">return</span> <span class="n">HDUList</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">memmap</span><span class="p">,</span> <span class="n">save_backup</span><span class="p">,</span> <span class="n">cache</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">176</span>                         <span class="n">lazy_load_hdus</span><span class="p">,</span> <span class="n">ignore_missing_simple</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/astropy/io/fits/hdu/hdulist.py:410,</span> in <span class="ni">HDUList.fromfile</span><span class="nt">(cls, fileobj, mode, memmap, save_backup, cache, lazy_load_hdus, ignore_missing_simple, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">402</span> <span class="sd">"""</span>
+<span class="g g-Whitespace">    </span><span class="mi">403</span><span class="sd"> Creates an `HDUList` instance from a file-like object.</span>
+<span class="g g-Whitespace">    </span><span class="mi">404</span><span class="sd"> </span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">407</span><span class="sd"> documentation for details of the parameters accepted by this method).</span>
+<span class="g g-Whitespace">    </span><span class="mi">408</span><span class="sd"> """</span>
+<span class="ne">--&gt; </span><span class="mi">410</span> <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_readfrom</span><span class="p">(</span><span class="n">fileobj</span><span class="o">=</span><span class="n">fileobj</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="n">memmap</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">411</span>                      <span class="n">save_backup</span><span class="o">=</span><span class="n">save_backup</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="n">cache</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">412</span>                      <span class="n">ignore_missing_simple</span><span class="o">=</span><span class="n">ignore_missing_simple</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">413</span>                      <span class="n">lazy_load_hdus</span><span class="o">=</span><span class="n">lazy_load_hdus</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/astropy/io/fits/hdu/hdulist.py:1060,</span> in <span class="ni">HDUList._readfrom</span><span class="nt">(cls, fileobj, data, mode, memmap, cache, lazy_load_hdus, ignore_missing_simple, **kwargs)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1058</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fileobj</span><span class="p">,</span> <span class="n">_File</span><span class="p">):</span>
+<span class="g g-Whitespace">   </span><span class="mi">1059</span>     <span class="c1"># instantiate a FITS file object (ffo)</span>
+<span class="ne">-&gt; </span><span class="mi">1060</span>     <span class="n">fileobj</span> <span class="o">=</span> <span class="n">_File</span><span class="p">(</span><span class="n">fileobj</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="n">memmap</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="n">cache</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1061</span> <span class="c1"># The Astropy mode is determined by the _File initializer if the</span>
+<span class="g g-Whitespace">   </span><span class="mi">1062</span> <span class="c1"># supplied mode was None</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/astropy/io/fits/file.py:170,</span> in <span class="ni">_File.__init__</span><span class="nt">(self, fileobj, mode, memmap, overwrite, cache)</span>
+<span class="g g-Whitespace">    </span><span class="mi">169</span> <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fileobj</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)):</span>
+<span class="ne">--&gt; </span><span class="mi">170</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_open_filename</span><span class="p">(</span><span class="n">fileobj</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">171</span> <span class="k">else</span><span class="p">:</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/astropy/io/fits/file.py:562,</span> in <span class="ni">_File._open_filename</span><span class="nt">(self, filename, mode, overwrite)</span>
+<span class="g g-Whitespace">    </span><span class="mi">561</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_try_read_compressed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">magic</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="n">ext</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">562</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">IO_FITS_MODES</span><span class="p">[</span><span class="n">mode</span><span class="p">])</span>
+<span class="g g-Whitespace">    </span><span class="mi">563</span>     <span class="bp">self</span><span class="o">.</span><span class="n">close_on_error</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: '$PWD/grp/redcat/trds/grid/phoenix/catalog.fits'
+
+<span class="n">During</span> <span class="n">handling</span> <span class="n">of</span> <span class="n">the</span> <span class="n">above</span> <span class="n">exception</span><span class="p">,</span> <span class="n">another</span> <span class="n">exception</span> <span class="n">occurred</span><span class="p">:</span>
+
+<span class="ne">LookupError</span><span class="g g-Whitespace">                               </span>Traceback (most recent call last)
 <span class="nn">Input In [12],</span> in <span class="ni">&lt;cell line: 1&gt;</span><span class="nt">()</span>
 <span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="k">for</span> <span class="n">det</span> <span class="ow">in</span> <span class="n">dets_short</span><span class="p">:</span>
 <span class="g g-Whitespace">      </span><span class="mi">2</span>     <span class="k">for</span> <span class="n">filt</span> <span class="ow">in</span> <span class="n">filts_short</span><span class="p">:</span>
 <span class="ne">----&gt; </span><span class="mi">3</span>         <span class="n">create_psf_model</span><span class="p">(</span><span class="n">fov</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">create_grid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_psf</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">detsampled</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="nn">Input In [11],</span> in <span class="ni">create_psf_model</span><span class="nt">(fov, create_grid, num, save_psf, detsampled)</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="k">def</span> <span class="nf">create_psf_model</span><span class="p">(</span><span class="n">fov</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">create_grid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">save_psf</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">detsampled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="ne">----&gt; </span><span class="mi">3</span>     <span class="n">nrc</span> <span class="o">=</span> <span class="n">webbpsf</span><span class="o">.</span><span class="n">NIRCam</span><span class="p">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>     <span class="n">nrc</span><span class="o">.</span><span class="n">detector</span> <span class="o">=</span> <span class="n">det</span> 
-<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="n">nrc</span><span class="o">.</span><span class="n">filter</span> <span class="o">=</span> <span class="n">filt</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">nrc</span><span class="o">.</span><span class="n">detector</span> <span class="o">=</span> <span class="n">det</span> 
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="n">nrc</span><span class="o">.</span><span class="n">filter</span> <span class="o">=</span> <span class="n">filt</span>
+<span class="ne">----&gt; </span><span class="mi">8</span> <span class="n">src</span> <span class="o">=</span> <span class="n">webbpsf</span><span class="o">.</span><span class="n">specFromSpectralType</span><span class="p">(</span><span class="s1">'G5V'</span><span class="p">,</span> <span class="n">catalog</span><span class="o">=</span><span class="s1">'phoenix'</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="k">if</span> <span class="n">detsampled</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">"Creating a detector sampled PSF"</span><span class="p">)</span>
 
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/webbpsf/webbpsf_core.py:1683,</span> in <span class="ni">NIRCam.__init__</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1680</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span> <span class="o">=</span> <span class="s1">'F200W'</span>
-<span class="g g-Whitespace">   </span><span class="mi">1681</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span> <span class="o">=</span> <span class="s1">'NRCA1'</span>
-<span class="ne">-&gt; </span><span class="mi">1683</span> <span class="n">JWInstrument</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"NIRCam"</span><span class="p">)</span>  <span class="c1"># do this after setting the long &amp; short scales.</span>
-<span class="g g-Whitespace">   </span><span class="mi">1684</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detector</span> <span class="o">=</span> <span class="s1">'NRCA1'</span> <span class="c1"># Must re-do this after superclass init since that sets it to None.</span>
-<span class="g g-Whitespace">   </span><span class="mi">1685</span>                          <span class="c1"># This is an annoying workaround to ensure all the auto-channel stuff is ok</span>
+<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/poppy/utils.py:1633,</span> in <span class="ni">spectrum_from_spectral_type</span><span class="nt">(sptype, return_list, catalog)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1630</span> <span class="n">errmsg</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"Could not find a match in catalog </span><span class="si">{0}</span><span class="s2"> for key </span><span class="si">{1}</span><span class="s2">. Check that is a valid name in the "</span> <span class="o">+</span>
+<span class="g g-Whitespace">   </span><span class="mi">1631</span>           <span class="s2">"lookup table, and/or that synphot is installed properly."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">catname</span><span class="p">,</span> <span class="n">sptype</span><span class="p">))</span>
+<span class="g g-Whitespace">   </span><span class="mi">1632</span> <span class="n">_log</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">errmsg</span><span class="p">)</span>
+<span class="ne">-&gt; </span><span class="mi">1633</span> <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="n">errmsg</span><span class="p">)</span>
 
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/webbpsf/webbpsf_core.py:766,</span> in <span class="ni">JWInstrument.__init__</span><span class="nt">(self, *args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">765</span> <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">766</span>     <span class="nb">super</span><span class="p">(</span><span class="n">JWInstrument</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">768</span>     <span class="bp">self</span><span class="o">.</span><span class="n">siaf</span> <span class="o">=</span> <span class="n">pysiaf</span><span class="o">.</span><span class="n">Siaf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">770</span>     <span class="n">opd_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_datapath</span><span class="p">,</span> <span class="s1">'OPD'</span><span class="p">)</span>
-
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/webbpsf/webbpsf_core.py:174,</span> in <span class="ni">SpaceTelescopeInstrument.__init__</span><span class="nt">(self, name, pixelscale)</span>
-<span class="g g-Whitespace">    </span><span class="mi">171</span> <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="n">pixelscale</span><span class="o">=</span><span class="mf">0.064</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">172</span>     <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-<span class="ne">--&gt; </span><span class="mi">174</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_WebbPSF_basepath</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_version</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_webbpsf_data_path</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">175</span>         <span class="n">data_version_min</span><span class="o">=</span><span class="n">DATA_VERSION_MIN</span><span class="p">,</span> <span class="n">return_version</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">177</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_datapath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_WebbPSF_basepath</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">178</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_image_mask</span> <span class="o">=</span> <span class="kc">None</span>
-
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/webbpsf/utils.py:208,</span> in <span class="ni">get_webbpsf_data_path</span><span class="nt">(data_version_min, return_version)</span>
-<span class="g g-Whitespace">    </span><span class="mi">206</span> <span class="c1"># at minimum, the path must be a valid directory</span>
-<span class="g g-Whitespace">    </span><span class="mi">207</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">208</span>     <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"WEBBPSF_PATH (</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">) is not a valid directory path!</span><span class="se">\n</span><span class="si">{</span><span class="n">MISSING_WEBBPSF_DATA_MESSAGE</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">210</span> <span class="k">if</span> <span class="n">data_version_min</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">211</span>     <span class="c1"># Check if the data in WEBBPSF_PATH meet the minimum data version</span>
-<span class="g g-Whitespace">    </span><span class="mi">212</span>     <span class="n">version_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">'version.txt'</span><span class="p">)</span>
-
-<span class="ne">OSError</span>: WEBBPSF_PATH ($HOME/data/webbpsf-data) is not a valid directory path!
-
- <span class="o">***********</span>  <span class="n">ERROR</span>  <span class="o">******</span>  <span class="n">ERROR</span>  <span class="o">******</span>  <span class="n">ERROR</span>  <span class="o">******</span>  <span class="n">ERROR</span>  <span class="o">***********</span>
- <span class="o">*</span>                                                                          <span class="o">*</span>
- <span class="o">*</span>  <span class="n">WebbPSF</span> <span class="n">requires</span> <span class="n">several</span> <span class="n">data</span> <span class="n">files</span> <span class="n">to</span> <span class="n">operate</span><span class="o">.</span>                         <span class="o">*</span>
- <span class="o">*</span>  <span class="n">These</span> <span class="n">files</span> <span class="n">could</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">located</span> <span class="n">automatically</span> <span class="n">at</span> <span class="n">this</span> <span class="n">time</span><span class="p">,</span> <span class="ow">or</span> <span class="n">this</span>    <span class="o">*</span>
- <span class="o">*</span>  <span class="n">version</span> <span class="n">of</span> <span class="n">the</span> <span class="n">software</span> <span class="n">requires</span> <span class="n">a</span> <span class="n">newer</span> <span class="nb">set</span> <span class="n">of</span> <span class="n">reference</span> <span class="n">files</span> <span class="n">than</span>    <span class="o">*</span>
- <span class="o">*</span>  <span class="n">you</span> <span class="n">have</span> <span class="n">installed</span><span class="o">.</span>  <span class="n">For</span> <span class="n">more</span> <span class="n">details</span> <span class="n">see</span><span class="p">:</span>                              <span class="o">*</span>
- <span class="o">*</span>                                                                          <span class="o">*</span>
- <span class="o">*</span>        <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">webbpsf</span><span class="o">.</span><span class="n">readthedocs</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">en</span><span class="o">/</span><span class="n">stable</span><span class="o">/</span><span class="n">installation</span><span class="o">.</span><span class="n">html</span>        <span class="o">*</span>
- <span class="o">*</span>                                                                          <span class="o">*</span>
- <span class="o">*</span>  <span class="n">under</span> <span class="s2">"Installing the Required Data Files"</span><span class="o">.</span>                             <span class="o">*</span>
- <span class="o">*</span>  <span class="n">WebbPSF</span> <span class="n">will</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">able</span> <span class="n">to</span> <span class="n">function</span> <span class="n">properly</span> <span class="n">until</span> <span class="n">the</span> <span class="n">appropriate</span>     <span class="o">*</span>
- <span class="o">*</span>  <span class="n">reference</span> <span class="n">files</span> <span class="n">have</span> <span class="n">been</span> <span class="n">downloaded</span> <span class="n">to</span> <span class="n">your</span> <span class="n">machine</span> <span class="ow">and</span> <span class="n">installed</span><span class="o">.</span>     <span class="o">*</span>
- <span class="o">*</span>                                                                          <span class="o">*</span>
- <span class="o">****************************************************************************</span>
+<span class="ne">LookupError</span>: Could not find a match in catalog {0} for key {1}. Check that is a valid name in the lookup table, and/or that synphot is installed properly.
 </pre>
                </div>
               </div>
