@@ -17,65 +17,62 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-exposure = datamodels.SpecModel('calibrated_data_hatp1_transit.fits')
+base_data_url = 'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/soss-transit-spectroscopy'
+transit_model_path = 'hp1_model.txt'
+transit_fits_results_path = 'transit_spectra_results.pkl'
 
-# Get number of rows and columns on the first integration:
-rows,columns = data[0,:,:].shape
-
-# Prepare map that will save the wavelength corresponding to each pixel in the frame:
-wmap = np.zeros([2, rows, columns])
-
-# Save it:
-for order in [1,2]:
-    for row in range(rows):
-        for column in range(columns):
-            wmap[order - 1, row, column] = exposure.meta.wcs(column, row, order)[-1]
+if not os.path.exists('calibrated_data_hatp1_transit.fits'):
+    file_path = download_file(base_data_url + '/data/calibrated_data_hatp1_transit.fits')
+    os.rename(file_path, 'calibrated_data_hatp1_transit.fits')
+    
+if not os.path.exists(transit_model_path):
+    file_path = download_file(base_data_url + '/data/hp1_tspec.dat')
+    os.rename(file_path, transit_model_path)
+    
+if not os.path.exists(transit_fits_results_path):
+    file_path = download_file(base_data_url + '/data/transit_spectra_results.pkl')
+    os.rename(file_path, transit_fits_results_path)
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m
-[0;31mFileNotFoundError[0m                         Traceback (most recent call last)
-Input [0;32mIn [21][0m, in [0;36m<cell line: 1>[0;34m()[0m
-[0;32m----> 1[0m exposure [38;5;241m=[39m [43mdatamodels[49m[38;5;241;43m.[39;49m[43mSpecModel[49m[43m([49m[38;5;124;43m'[39;49m[38;5;124;43mcalibrated_data_hatp1_transit.fits[39;49m[38;5;124;43m'[39;49m[43m)[49m
-[1;32m      3[0m [38;5;66;03m# Get number of rows and columns on the first integration:[39;00m
-[1;32m      4[0m rows,columns [38;5;241m=[39m data[[38;5;241m0[39m,:,:][38;5;241m.[39mshape
+[0;31mOSError[0m                                   Traceback (most recent call last)
+Input [0;32mIn [2][0m, in [0;36m<cell line: 5>[0;34m()[0m
+[1;32m      3[0m transit_fits_results_path [38;5;241m=[39m [38;5;124m'[39m[38;5;124mtransit_spectra_results.pkl[39m[38;5;124m'[39m
+[1;32m      5[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m os[38;5;241m.[39mpath[38;5;241m.[39mexists([38;5;124m'[39m[38;5;124mcalibrated_data_hatp1_transit.fits[39m[38;5;124m'[39m):
+[0;32m----> 6[0m     file_path [38;5;241m=[39m [43mdownload_file[49m[43m([49m[43mbase_data_url[49m[43m [49m[38;5;241;43m+[39;49m[43m [49m[38;5;124;43m'[39;49m[38;5;124;43m/data/calibrated_data_hatp1_transit.fits[39;49m[38;5;124;43m'[39;49m[43m)[49m
+[1;32m      7[0m     os[38;5;241m.[39mrename(file_path, [38;5;124m'[39m[38;5;124mcalibrated_data_hatp1_transit.fits[39m[38;5;124m'[39m)
+[1;32m      9[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m os[38;5;241m.[39mpath[38;5;241m.[39mexists(transit_model_path):
 
-File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/stdatamodels/model_base.py:174[0m, in [0;36mDataModel.__init__[0;34m(self, init, schema, memmap, pass_invalid_values, strict_validation, validate_on_assignment, cast_fits_arrays, validate_arrays, ignore_missing_extensions, **kwargs)[0m
-[1;32m    171[0m         schema [38;5;241m=[39m _DEFAULT_SCHEMA
-[1;32m    172[0m     [38;5;28;01melse[39;00m:
-[1;32m    173[0m         [38;5;66;03m# Create an AsdfFile so we can use its resolver for loading schemas[39;00m
-[0;32m--> 174[0m         schema [38;5;241m=[39m [43masdf_schema[49m[38;5;241;43m.[39;49m[43mload_schema[49m[43m([49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mschema_url[49m[43m,[49m[43m [49m[43mresolve_references[49m[38;5;241;43m=[39;49m[38;5;28;43;01mTrue[39;49;00m[43m)[49m
-[1;32m    176[0m [38;5;28mself[39m[38;5;241m.[39m_schema [38;5;241m=[39m mschema[38;5;241m.[39mmerge_property_trees(schema)
-[1;32m    178[0m [38;5;66;03m# Provide the object as context to other classes and functions[39;00m
+File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/astropy/utils/data.py:1363[0m, in [0;36mdownload_file[0;34m(remote_url, cache, show_progress, timeout, sources, pkgname, http_headers, ssl_context, allow_insecure)[0m
+[1;32m   1361[0m [38;5;28;01mfor[39;00m source_url [38;5;129;01min[39;00m sources:
+[1;32m   1362[0m     [38;5;28;01mtry[39;00m:
+[0;32m-> 1363[0m         f_name [38;5;241m=[39m [43m_download_file_from_source[49m[43m([49m
+[1;32m   1364[0m [43m                [49m[43msource_url[49m[43m,[49m
+[1;32m   1365[0m [43m                [49m[43mtimeout[49m[38;5;241;43m=[39;49m[43mtimeout[49m[43m,[49m
+[1;32m   1366[0m [43m                [49m[43mshow_progress[49m[38;5;241;43m=[39;49m[43mshow_progress[49m[43m,[49m
+[1;32m   1367[0m [43m                [49m[43mcache[49m[38;5;241;43m=[39;49m[43mcache[49m[43m,[49m
+[1;32m   1368[0m [43m                [49m[43mremote_url[49m[38;5;241;43m=[39;49m[43mremote_url[49m[43m,[49m
+[1;32m   1369[0m [43m                [49m[43mpkgname[49m[38;5;241;43m=[39;49m[43mpkgname[49m[43m,[49m
+[1;32m   1370[0m [43m                [49m[43mhttp_headers[49m[38;5;241;43m=[39;49m[43mhttp_headers[49m[43m,[49m
+[1;32m   1371[0m [43m                [49m[43mssl_context[49m[38;5;241;43m=[39;49m[43mssl_context[49m[43m,[49m
+[1;32m   1372[0m [43m                [49m[43mallow_insecure[49m[38;5;241;43m=[39;49m[43mallow_insecure[49m[43m)[49m
+[1;32m   1373[0m         [38;5;66;03m# Success![39;00m
+[1;32m   1374[0m         [38;5;28;01mbreak[39;00m
 
-File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/asdf/schema.py:435[0m, in [0;36mload_schema[0;34m(url, resolver, resolve_references, resolve_local_refs)[0m
-[1;32m    430[0m     resolver [38;5;241m=[39m extension[38;5;241m.[39mget_default_resolver()
-[1;32m    432[0m [38;5;66;03m# We want to cache the work that went into constructing the schema, but returning[39;00m
-[1;32m    433[0m [38;5;66;03m# the same object is treacherous, because users who mutate the result will not[39;00m
-[1;32m    434[0m [38;5;66;03m# expect that they're changing the schema everywhere.[39;00m
-[0;32m--> 435[0m [38;5;28;01mreturn[39;00m copy[38;5;241m.[39mdeepcopy([43m_load_schema_cached[49m[43m([49m[43murl[49m[43m,[49m[43m [49m[43mresolver[49m[43m,[49m[43m [49m[43mresolve_references[49m[43m,[49m[43m [49m[43mresolve_local_refs[49m[43m)[49m)
+File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/astropy/utils/data.py:1177[0m, in [0;36m_download_file_from_source[0;34m(source_url, show_progress, timeout, remote_url, cache, pkgname, http_headers, ftp_tls, ssl_context, allow_insecure)[0m
+[1;32m   1174[0m     size [38;5;241m=[39m [38;5;28;01mNone[39;00m
+[1;32m   1176[0m [38;5;28;01mif[39;00m size [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+[0;32m-> 1177[0m     [43mcheck_free_space_in_dir[49m[43m([49m[43mgettempdir[49m[43m([49m[43m)[49m[43m,[49m[43m [49m[43msize[49m[43m)[49m
+[1;32m   1178[0m     [38;5;28;01mif[39;00m cache:
+[1;32m   1179[0m         dldir [38;5;241m=[39m _get_download_cache_loc(pkgname)
 
-File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/asdf/schema.py:482[0m, in [0;36m_load_schema_cached[0;34m(url, resolver, resolve_references, resolve_local_refs)[0m
-[1;32m    479[0m [38;5;129m@lru_cache[39m()
-[1;32m    480[0m [38;5;28;01mdef[39;00m [38;5;21m_load_schema_cached[39m(url, resolver, resolve_references, resolve_local_refs):
-[1;32m    481[0m     loader [38;5;241m=[39m _make_schema_loader(resolver)
-[0;32m--> 482[0m     schema, url [38;5;241m=[39m [43mloader[49m[43m([49m[43murl[49m[43m)[49m
-[1;32m    484[0m     [38;5;28;01mif[39;00m resolve_references [38;5;129;01mor[39;00m resolve_local_refs:
-[1;32m    486[0m         [38;5;28;01mdef[39;00m [38;5;21mresolve_refs[39m(node, json_id):
+File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/astropy/utils/data.py:1024[0m, in [0;36mcheck_free_space_in_dir[0;34m(path, size)[0m
+[1;32m   1022[0m [38;5;28;01mif[39;00m space [38;5;241m<[39m size:
+[1;32m   1023[0m     [38;5;28;01mfrom[39;00m [38;5;21;01mastropy[39;00m[38;5;21;01m.[39;00m[38;5;21;01mutils[39;00m[38;5;21;01m.[39;00m[38;5;21;01mconsole[39;00m [38;5;28;01mimport[39;00m human_file_size
+[0;32m-> 1024[0m     [38;5;28;01mraise[39;00m [38;5;167;01mOSError[39;00m([38;5;124mf[39m[38;5;124m"[39m[38;5;124mNot enough free space in [39m[38;5;132;01m{[39;00mpath[38;5;132;01m}[39;00m[38;5;124m [39m[38;5;124m"[39m
+[1;32m   1025[0m                   [38;5;124mf[39m[38;5;124m"[39m[38;5;124mto download a [39m[38;5;132;01m{[39;00mhuman_file_size(size)[38;5;132;01m}[39;00m[38;5;124m file, [39m[38;5;124m"[39m
+[1;32m   1026[0m                   [38;5;124mf[39m[38;5;124m"[39m[38;5;124monly [39m[38;5;132;01m{[39;00mhuman_file_size(space)[38;5;132;01m}[39;00m[38;5;124m left[39m[38;5;124m"[39m)
 
-File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/asdf/schema.py:359[0m, in [0;36m_make_schema_loader.<locals>.load_schema[0;34m(url)[0m
-[1;32m    355[0m     [38;5;28;01mreturn[39;00m result, url
-[1;32m    357[0m [38;5;66;03m# If not, this must be a URL (or missing).  Fall back to fetching[39;00m
-[1;32m    358[0m [38;5;66;03m# the schema the old way:[39;00m
-[0;32m--> 359[0m [38;5;28;01mreturn[39;00m [43m_load_schema[49m[43m([49m[43murl[49m[43m)[49m
-
-File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/asdf/schema.py:323[0m, in [0;36m_load_schema[0;34m(url)[0m
-[1;32m    320[0m [38;5;129m@lru_cache[39m()
-[1;32m    321[0m [38;5;28;01mdef[39;00m [38;5;21m_load_schema[39m(url):
-[1;32m    322[0m     [38;5;28;01mif[39;00m url[38;5;241m.[39mstartswith([38;5;124m"[39m[38;5;124mhttp://[39m[38;5;124m"[39m) [38;5;129;01mor[39;00m url[38;5;241m.[39mstartswith([38;5;124m"[39m[38;5;124mhttps://[39m[38;5;124m"[39m) [38;5;129;01mor[39;00m url[38;5;241m.[39mstartswith([38;5;124m"[39m[38;5;124masdf://[39m[38;5;124m"[39m):
-[0;32m--> 323[0m         [38;5;28;01mraise[39;00m [38;5;167;01mFileNotFoundError[39;00m([38;5;124m"[39m[38;5;124mUnable to fetch schema from non-file URL: [39m[38;5;124m"[39m [38;5;241m+[39m url)
-[1;32m    325[0m     [38;5;28;01mwith[39;00m generic_io[38;5;241m.[39mget_file(url) [38;5;28;01mas[39;00m fd:
-[1;32m    326[0m         [38;5;28;01mif[39;00m [38;5;28misinstance[39m(url, [38;5;28mstr[39m) [38;5;129;01mand[39;00m url[38;5;241m.[39mendswith([38;5;124m"[39m[38;5;124mjson[39m[38;5;124m"[39m):
-
-[0;31mFileNotFoundError[0m: Unable to fetch schema from non-file URL: http://stsci.edu/schemas/jwst_datamodel/spec.schema
-FileNotFoundError: Unable to fetch schema from non-file URL: http://stsci.edu/schemas/jwst_datamodel/spec.schema
+[0;31mOSError[0m: Not enough free space in /tmp to download a  15G file, only  11G left
+OSError: Not enough free space in /tmp to download a  15G file, only  11G left
 

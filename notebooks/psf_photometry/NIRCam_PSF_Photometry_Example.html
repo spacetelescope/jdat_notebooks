@@ -462,8 +462,8 @@ const thebe_selector_output = ".output, .cell_output"
           </a>
          </li>
          <li class="toc-h2 nav-item toc-entry">
-          <a class="reference internal nav-link" href="#download-webbpsf-data">
-           Download WEBBPSF Data
+          <a class="reference internal nav-link" href="#data-download-functions">
+           Data Download Functions
           </a>
          </li>
          <li class="toc-h2 nav-item toc-entry">
@@ -746,8 +746,8 @@ const thebe_selector_output = ".output, .cell_output"
              </a>
             </li>
             <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#download-webbpsf-data">
-              Download WEBBPSF Data
+             <a class="reference internal nav-link" href="#data-download-functions">
+              Data Download Functions
              </a>
             </li>
             <li class="toc-h2 nav-item toc-entry">
@@ -1165,10 +1165,10 @@ const thebe_selector_output = ".output, .cell_output"
             for the configuration and download of the data files.
            </p>
           </section>
-          <section id="download-webbpsf-data">
+          <section id="data-download-functions">
            <h2>
-            Download WEBBPSF Data
-            <a class="headerlink" href="#download-webbpsf-data" title="Permalink to this headline">
+            Data Download Functions
+            <a class="headerlink" href="#data-download-functions" title="Permalink to this headline">
              #
             </a>
            </h2>
@@ -1180,22 +1180,34 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="kn">import</span> <span class="nn">tarfile</span>
 <span class="kn">import</span> <span class="nn">urllib.request</span>
 
+<span class="c1"># Set environmental variables</span>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"WEBBPSF_PATH"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"./webbpsf-data/webbpsf-data"</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"PYSYN_CDBS"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"./grp/redcat/trds/"</span>
 
+<span class="c1"># WEBBPSF Data</span>
 <span class="n">boxlink</span> <span class="o">=</span> <span class="s1">'https://stsci.box.com/shared/static/34o0keicz2iujyilg4uz617va46ks6u9.gz'</span>                                                           
 <span class="n">boxfile</span> <span class="o">=</span> <span class="s1">'./webbpsf-data/webbpsf-data-1.0.0.tar.gz'</span>
+<span class="n">synphot_url</span> <span class="o">=</span> <span class="s1">'http://ssb.stsci.edu/trds/tarfiles/synphot5.tar.gz'</span>
+<span class="n">synphot_file</span> <span class="o">=</span> <span class="s1">'./synphot5.tar.gz'</span>
 
 <span class="n">webbpsf_folder</span> <span class="o">=</span> <span class="s1">'./webbpsf-data'</span>
+<span class="n">synphot_folder</span> <span class="o">=</span> <span class="s1">'./grp'</span>
 
-<span class="c1"># Check whether the specified path exists or not</span>
-<span class="n">isExist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">isExist</span><span class="p">:</span>
-  <span class="c1"># Create a new directory because it does not exist </span>
-  <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
-    
-<span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
-<span class="n">gzf</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">boxfile</span><span class="p">)</span>
-<span class="n">gzf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
+<span class="c1"># Gather webbpsf files</span>
+<span class="n">psfExist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">psfExist</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
+    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
+    <span class="n">gzf</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">boxfile</span><span class="p">)</span>
+    <span class="n">gzf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
+
+<span class="c1"># Gather synphot files</span>
+<span class="n">synExist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">synphot_folder</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">synExist</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">synphot_folder</span><span class="p">)</span>
+    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">synphot_url</span><span class="p">,</span> <span class="n">synphot_file</span><span class="p">)</span>
+    <span class="n">gzf</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">synphot_file</span><span class="p">)</span>
+    <span class="n">gzf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="s1">'./'</span><span class="p">)</span>
 </pre>
               </div>
              </div>
@@ -1452,7 +1464,7 @@ Available LW Filters: ['F277W', 'F356W', 'F444W']
              </div>
              <div class="output stderr highlight-myst-ansi notranslate">
               <div class="highlight">
-               <pre><span></span>/tmp/ipykernel_3271/3061117394.py:48: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.
+               <pre><span></span>/tmp/ipykernel_3336/3061117394.py:48: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.
 Deprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations
   wv = np.float(f[1:3])
 </pre>
@@ -1583,7 +1595,7 @@ Deprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdo
              </div>
              <div class="cell_output docutils container">
               <script type="application/vnd.jupyter.widget-view+json">
-               {"version_major": 2, "version_minor": 0, "model_id": "f7174a659703498aaeb023e2c3a88d7d"}
+               {"version_major": 2, "version_minor": 0, "model_id": "6672c3ca619e434195fa0cc42ce50ef1"}
               </script>
               <img align=center height=auto width=50% src="../../jdaviz_placeholder_new.png">
               </img align=center height=auto width=50%>
@@ -1774,110 +1786,35 @@ Deprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdo
              <div class="cell_output docutils container">
               <div class="output stderr highlight-myst-ansi notranslate">
                <div class="highlight">
-                <pre><span></span>WARNING: Failed to load Vega spectrum from $PWD/grp/redcat/trds//calspec/alpha_lyr_stis_010.fits; Functionality involving Vega will be cripped: FileNotFoundError(2, 'No such file or directory') [stsynphot.spectrum]
-Could not find a match in catalog {0} for key {1}. Check that is a valid name in the lookup table, and/or that synphot is installed properly.
+                <pre><span></span>WARNING: Failed to load Vega spectrum from ./grp/redcat/trds//calspec/alpha_lyr_stis_010.fits; Functionality involving Vega will be cripped: FileNotFoundError(2, 'No such file or directory') [stsynphot.spectrum]
 </pre>
                </div>
               </div>
-              <div class="output traceback highlight-ipythontb notranslate">
+              <div class="output stream highlight-myst-ansi notranslate">
                <div class="highlight">
-                <pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/poppy/utils.py:1628,</span> in <span class="ni">spectrum_from_spectral_type</span><span class="nt">(sptype, return_list, catalog)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1627</span> <span class="k">try</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1628</span>     <span class="k">return</span> <span class="n">grid_to_spec</span><span class="p">(</span><span class="n">catname</span><span class="p">,</span> <span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">keys</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">keys</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-<span class="g g-Whitespace">   </span><span class="mi">1629</span> <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+                <pre><span></span>Creating a oversampled PSF
+Using a 11 px fov
 
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/stsynphot/catalog.py:201,</span> in <span class="ni">grid_to_spec</span><span class="nt">(gridname, t_eff, metallicity, log_g)</span>
-<span class="g g-Whitespace">    </span><span class="mi">161</span> <span class="sd">"""Extract spectrum from given catalog grid parameters.</span>
-<span class="g g-Whitespace">    </span><span class="mi">162</span><span class="sd"> Interpolate if necessary.</span>
-<span class="g g-Whitespace">    </span><span class="mi">163</span><span class="sd"> </span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">    </span><span class="mi">199</span><span class="sd"> </span>
-<span class="g g-Whitespace">    </span><span class="mi">200</span><span class="sd"> """</span>
-<span class="ne">--&gt; </span><span class="mi">201</span> <span class="n">indices</span><span class="p">,</span> <span class="n">catdir</span> <span class="o">=</span> <span class="n">get_catalog_index</span><span class="p">(</span><span class="n">gridname</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">203</span> <span class="n">metallicity</span> <span class="o">=</span> <span class="n">_par_from_parser</span><span class="p">(</span><span class="n">metallicity</span><span class="p">)</span>
+Creating a single PSF for filter F115W and detector NRCB1
 
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/stsynphot/catalog.py:152,</span> in <span class="ni">get_catalog_index</span><span class="nt">(gridname)</span>
-<span class="g g-Whitespace">    </span><span class="mi">151</span> <span class="k">if</span> <span class="n">filename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_CACHE</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">152</span>     <span class="n">data</span> <span class="o">=</span> <span class="n">stio</span><span class="o">.</span><span class="n">read_catalog</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>  <span class="c1"># EXT 1</span>
-<span class="g g-Whitespace">    </span><span class="mi">153</span>     <span class="n">_CACHE</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">)))</span> <span class="o">+</span>
-<span class="g g-Whitespace">    </span><span class="mi">154</span>                         <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">'FILENAME'</span><span class="p">][</span><span class="n">i</span><span class="p">]]</span>
-<span class="g g-Whitespace">    </span><span class="mi">155</span>                         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'INDEX'</span><span class="p">])]</span>
 
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/stsynphot/stio.py:454,</span> in <span class="ni">read_catalog</span><span class="nt">(filename, tab_ext)</span>
-<span class="g g-Whitespace">    </span><span class="mi">419</span> <span class="sd">"""Read catalog grid look-up table.</span>
-<span class="g g-Whitespace">    </span><span class="mi">420</span><span class="sd"> </span>
-<span class="g g-Whitespace">    </span><span class="mi">421</span><span class="sd"> Table must contain the following named columns:</span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">    </span><span class="mi">452</span><span class="sd"> </span>
-<span class="g g-Whitespace">    </span><span class="mi">453</span><span class="sd"> """</span>
-<span class="ne">--&gt; </span><span class="mi">454</span> <span class="k">return</span> <span class="n">_read_table</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">tab_ext</span><span class="p">,</span> <span class="p">{</span><span class="s1">'INDEX'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str_</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">455</span>                                        <span class="s1">'FILENAME'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">str_</span><span class="p">})</span>
+Running instrument: NIRCam, filter: F115W
+  Running detector: NRCB1
+    Position 1/1: (1023, 1023) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>Creating a oversampled PSF
+Using a 11 px fov
 
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/stsynphot/stio.py:289,</span> in <span class="ni">_read_table</span><span class="nt">(filename, ext, dtypes)</span>
-<span class="g g-Whitespace">    </span><span class="mi">288</span> <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s1">'.fits'</span><span class="p">,</span> <span class="s1">'.fit'</span><span class="p">)):</span>
-<span class="ne">--&gt; </span><span class="mi">289</span>     <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">290</span>         <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">ext</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+Creating a single PSF for filter F200W and detector NRCB1
 
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/astropy/io/fits/hdu/hdulist.py:175,</span> in <span class="ni">fitsopen</span><span class="nt">(name, mode, memmap, save_backup, cache, lazy_load_hdus, ignore_missing_simple, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">173</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Empty filename: </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s1">'</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">175</span> <span class="k">return</span> <span class="n">HDUList</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">memmap</span><span class="p">,</span> <span class="n">save_backup</span><span class="p">,</span> <span class="n">cache</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">176</span>                         <span class="n">lazy_load_hdus</span><span class="p">,</span> <span class="n">ignore_missing_simple</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/astropy/io/fits/hdu/hdulist.py:410,</span> in <span class="ni">HDUList.fromfile</span><span class="nt">(cls, fileobj, mode, memmap, save_backup, cache, lazy_load_hdus, ignore_missing_simple, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">402</span> <span class="sd">"""</span>
-<span class="g g-Whitespace">    </span><span class="mi">403</span><span class="sd"> Creates an `HDUList` instance from a file-like object.</span>
-<span class="g g-Whitespace">    </span><span class="mi">404</span><span class="sd"> </span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">    </span><span class="mi">407</span><span class="sd"> documentation for details of the parameters accepted by this method).</span>
-<span class="g g-Whitespace">    </span><span class="mi">408</span><span class="sd"> """</span>
-<span class="ne">--&gt; </span><span class="mi">410</span> <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_readfrom</span><span class="p">(</span><span class="n">fileobj</span><span class="o">=</span><span class="n">fileobj</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="n">memmap</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">411</span>                      <span class="n">save_backup</span><span class="o">=</span><span class="n">save_backup</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="n">cache</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">412</span>                      <span class="n">ignore_missing_simple</span><span class="o">=</span><span class="n">ignore_missing_simple</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">413</span>                      <span class="n">lazy_load_hdus</span><span class="o">=</span><span class="n">lazy_load_hdus</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/astropy/io/fits/hdu/hdulist.py:1060,</span> in <span class="ni">HDUList._readfrom</span><span class="nt">(cls, fileobj, data, mode, memmap, cache, lazy_load_hdus, ignore_missing_simple, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1058</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fileobj</span><span class="p">,</span> <span class="n">_File</span><span class="p">):</span>
-<span class="g g-Whitespace">   </span><span class="mi">1059</span>     <span class="c1"># instantiate a FITS file object (ffo)</span>
-<span class="ne">-&gt; </span><span class="mi">1060</span>     <span class="n">fileobj</span> <span class="o">=</span> <span class="n">_File</span><span class="p">(</span><span class="n">fileobj</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="n">memmap</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="n">cache</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1061</span> <span class="c1"># The Astropy mode is determined by the _File initializer if the</span>
-<span class="g g-Whitespace">   </span><span class="mi">1062</span> <span class="c1"># supplied mode was None</span>
-
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/astropy/io/fits/file.py:170,</span> in <span class="ni">_File.__init__</span><span class="nt">(self, fileobj, mode, memmap, overwrite, cache)</span>
-<span class="g g-Whitespace">    </span><span class="mi">169</span> <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fileobj</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)):</span>
-<span class="ne">--&gt; </span><span class="mi">170</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_open_filename</span><span class="p">(</span><span class="n">fileobj</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">171</span> <span class="k">else</span><span class="p">:</span>
-
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/astropy/io/fits/file.py:562,</span> in <span class="ni">_File._open_filename</span><span class="nt">(self, filename, mode, overwrite)</span>
-<span class="g g-Whitespace">    </span><span class="mi">561</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_try_read_compressed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">magic</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="n">ext</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">562</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">IO_FITS_MODES</span><span class="p">[</span><span class="n">mode</span><span class="p">])</span>
-<span class="g g-Whitespace">    </span><span class="mi">563</span>     <span class="bp">self</span><span class="o">.</span><span class="n">close_on_error</span> <span class="o">=</span> <span class="kc">True</span>
-
-<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: '$PWD/grp/redcat/trds/grid/phoenix/catalog.fits'
-
-<span class="n">During</span> <span class="n">handling</span> <span class="n">of</span> <span class="n">the</span> <span class="n">above</span> <span class="n">exception</span><span class="p">,</span> <span class="n">another</span> <span class="n">exception</span> <span class="n">occurred</span><span class="p">:</span>
-
-<span class="ne">LookupError</span><span class="g g-Whitespace">                               </span>Traceback (most recent call last)
-<span class="nn">Input In [12],</span> in <span class="ni">&lt;cell line: 1&gt;</span><span class="nt">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="k">for</span> <span class="n">det</span> <span class="ow">in</span> <span class="n">dets_short</span><span class="p">:</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span>     <span class="k">for</span> <span class="n">filt</span> <span class="ow">in</span> <span class="n">filts_short</span><span class="p">:</span>
-<span class="ne">----&gt; </span><span class="mi">3</span>         <span class="n">create_psf_model</span><span class="p">(</span><span class="n">fov</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">create_grid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_psf</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">detsampled</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="nn">Input In [11],</span> in <span class="ni">create_psf_model</span><span class="nt">(fov, create_grid, num, save_psf, detsampled)</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">nrc</span><span class="o">.</span><span class="n">detector</span> <span class="o">=</span> <span class="n">det</span> 
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="n">nrc</span><span class="o">.</span><span class="n">filter</span> <span class="o">=</span> <span class="n">filt</span>
-<span class="ne">----&gt; </span><span class="mi">8</span> <span class="n">src</span> <span class="o">=</span> <span class="n">webbpsf</span><span class="o">.</span><span class="n">specFromSpectralType</span><span class="p">(</span><span class="s1">'G5V'</span><span class="p">,</span> <span class="n">catalog</span><span class="o">=</span><span class="s1">'phoenix'</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="k">if</span> <span class="n">detsampled</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">10</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">"Creating a detector sampled PSF"</span><span class="p">)</span>
-
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/poppy/utils.py:1633,</span> in <span class="ni">spectrum_from_spectral_type</span><span class="nt">(sptype, return_list, catalog)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1630</span> <span class="n">errmsg</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"Could not find a match in catalog </span><span class="si">{0}</span><span class="s2"> for key </span><span class="si">{1}</span><span class="s2">. Check that is a valid name in the "</span> <span class="o">+</span>
-<span class="g g-Whitespace">   </span><span class="mi">1631</span>           <span class="s2">"lookup table, and/or that synphot is installed properly."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">catname</span><span class="p">,</span> <span class="n">sptype</span><span class="p">))</span>
-<span class="g g-Whitespace">   </span><span class="mi">1632</span> <span class="n">_log</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">errmsg</span><span class="p">)</span>
-<span class="ne">-&gt; </span><span class="mi">1633</span> <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="n">errmsg</span><span class="p">)</span>
-
-<span class="ne">LookupError</span>: Could not find a match in catalog {0} for key {1}. Check that is a valid name in the lookup table, and/or that synphot is installed properly.
+Running instrument: NIRCam, filter: F200W
+  Running detector: NRCB1
+    Position 1/1: (1023, 1023) pixels
 </pre>
                </div>
               </div>
@@ -1912,6 +1849,9 @@ Could not find a match in catalog {0} for key {1}. Check that is a valid name in
               </div>
              </div>
             </div>
+            <div class="cell_output docutils container">
+             <img alt="../../_images/NIRCam_PSF_Photometry_Example_26_0.png" src="../../_images/NIRCam_PSF_Photometry_Example_26_0.png"/>
+            </div>
            </div>
            <section id="psf-grid">
             <h3>
@@ -1927,6 +1867,324 @@ Could not find a match in catalog {0} for key {1}. Check that is a valid name in
                 <pre><span></span><span class="k">for</span> <span class="n">det</span> <span class="ow">in</span> <span class="n">dets_short</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">filt</span> <span class="ow">in</span> <span class="n">filts_short</span><span class="p">:</span>
         <span class="n">create_psf_model</span><span class="p">(</span><span class="n">fov</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">create_grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_psf</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">detsampled</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre>
+               </div>
+              </div>
+             </div>
+             <div class="cell_output docutils container">
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>Creating a oversampled PSF
+Using a 11 px fov
+
+Creating a grid of PSF for filter F115W and detector NRCB1
+
+
+Running instrument: NIRCam, filter: F115W
+  Running detector: NRCB1
+    Position 1/25: (0, 0) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 2/25: (0, 512) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 3/25: (0, 1024) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 4/25: (0, 1535) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 5/25: (0, 2047) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 6/25: (512, 0) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 7/25: (512, 512) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 8/25: (512, 1024) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 9/25: (512, 1535) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 10/25: (512, 2047) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 11/25: (1024, 0) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 12/25: (1024, 512) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 13/25: (1024, 1024) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 14/25: (1024, 1535) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 15/25: (1024, 2047) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 16/25: (1535, 0) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 17/25: (1535, 512) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 18/25: (1535, 1024) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 19/25: (1535, 1535) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 20/25: (1535, 2047) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 21/25: (2047, 0) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 22/25: (2047, 512) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 23/25: (2047, 1024) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 24/25: (2047, 1535) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 25/25: (2047, 2047) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>Creating a oversampled PSF
+Using a 11 px fov
+
+Creating a grid of PSF for filter F200W and detector NRCB1
+
+
+Running instrument: NIRCam, filter: F200W
+  Running detector: NRCB1
+    Position 1/25: (0, 0) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 2/25: (0, 512) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 3/25: (0, 1024) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 4/25: (0, 1535) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 5/25: (0, 2047) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 6/25: (512, 0) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 7/25: (512, 512) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 8/25: (512, 1024) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 9/25: (512, 1535) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 10/25: (512, 2047) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 11/25: (1024, 0) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 12/25: (1024, 512) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 13/25: (1024, 1024) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 14/25: (1024, 1535) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 15/25: (1024, 2047) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 16/25: (1535, 0) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 17/25: (1535, 512) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 18/25: (1535, 1024) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 19/25: (1535, 1535) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 20/25: (1535, 2047) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 21/25: (2047, 0) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 22/25: (2047, 512) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 23/25: (2047, 1024) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 24/25: (2047, 1535) pixels
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>    Position 25/25: (2047, 2047) pixels
 </pre>
                </div>
               </div>
@@ -2149,6 +2407,102 @@ zoom_in=False, figsize=(14, 14))
               </div>
              </div>
             </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Finding PSF stars on image 1 of filter F115W, detector NRCB1
+Conversion factor from MJy/sr to DN/s for filter F115W: 3.821892261505127
+FWHM for the filter F115W: 1.298 px
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Number of sources used to build ePSF for F115W: 1306
+--------------------------------------------
+
+Finding PSF stars on image 2 of filter F115W, detector NRCB1
+Conversion factor from MJy/sr to DN/s for filter F115W: 3.821892261505127
+FWHM for the filter F115W: 1.298 px
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Number of sources used to build ePSF for F115W: 1326
+--------------------------------------------
+
+Finding PSF stars on image 3 of filter F115W, detector NRCB1
+Conversion factor from MJy/sr to DN/s for filter F115W: 3.821892261505127
+FWHM for the filter F115W: 1.298 px
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Number of sources used to build ePSF for F115W: 1309
+--------------------------------------------
+
+Finding PSF stars on image 4 of filter F115W, detector NRCB1
+Conversion factor from MJy/sr to DN/s for filter F115W: 3.821892261505127
+FWHM for the filter F115W: 1.298 px
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Number of sources used to build ePSF for F115W: 1318
+--------------------------------------------
+
+Finding PSF stars on image 1 of filter F200W, detector NRCB1
+Conversion factor from MJy/sr to DN/s for filter F200W: 2.564082860946655
+FWHM for the filter F200W: 2.141 px
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Number of sources used to build ePSF for F200W: 1277
+--------------------------------------------
+
+Finding PSF stars on image 2 of filter F200W, detector NRCB1
+Conversion factor from MJy/sr to DN/s for filter F200W: 2.564082860946655
+FWHM for the filter F200W: 2.141 px
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Number of sources used to build ePSF for F200W: 1288
+--------------------------------------------
+
+Finding PSF stars on image 3 of filter F200W, detector NRCB1
+Conversion factor from MJy/sr to DN/s for filter F200W: 2.564082860946655
+FWHM for the filter F200W: 2.141 px
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Number of sources used to build ePSF for F200W: 1293
+--------------------------------------------
+
+Finding PSF stars on image 4 of filter F200W, detector NRCB1
+Conversion factor from MJy/sr to DN/s for filter F200W: 2.564082860946655
+FWHM for the filter F200W: 2.141 px
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Number of sources used to build ePSF for F200W: 1279
+--------------------------------------------
+
+Elapsed Time for finding stars: 14.438681130000077
+</pre>
+              </div>
+             </div>
+            </div>
            </div>
            <section id="ii-build-effective-psf">
             <h3>
@@ -2228,6 +2582,116 @@ zoom_in=False, figsize=(14, 14))
                </div>
               </div>
              </div>
+             <div class="cell_output docutils container">
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>Creating ePSF for image 1 of filter F115W, detector NRCB1
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>Creating ePSF for image 2 of filter F115W, detector NRCB1
+</pre>
+               </div>
+              </div>
+              <div class="output stderr highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>WARNING: The star at ({star.center[0]}, {star.center[1]}) cannot be fit because its fitting region extends beyond the star cutout image. [photutils.psf.epsf]
+</pre>
+               </div>
+              </div>
+              <div class="output stderr highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>WARNING: The star at ({star.center[0]}, {star.center[1]}) cannot be fit because its fitting region extends beyond the star cutout image. [photutils.psf.epsf]
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>Creating ePSF for image 3 of filter F115W, detector NRCB1
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>Creating ePSF for image 4 of filter F115W, detector NRCB1
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>Creating ePSF for image 1 of filter F200W, detector NRCB1
+</pre>
+               </div>
+              </div>
+              <div class="output stderr highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>WARNING: The star at ({star.center[0]}, {star.center[1]}) cannot be fit because its fitting region extends beyond the star cutout image. [photutils.psf.epsf]
+</pre>
+               </div>
+              </div>
+              <div class="output stderr highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>WARNING: The star at ({star.center[0]}, {star.center[1]}) cannot be fit because its fitting region extends beyond the star cutout image. [photutils.psf.epsf]
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>Creating ePSF for image 2 of filter F200W, detector NRCB1
+</pre>
+               </div>
+              </div>
+              <div class="output stderr highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>WARNING: The star at ({star.center[0]}, {star.center[1]}) cannot be fit because its fitting region extends beyond the star cutout image. [photutils.psf.epsf]
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>Creating ePSF for image 3 of filter F200W, detector NRCB1
+</pre>
+               </div>
+              </div>
+              <div class="output stderr highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>WARNING: The star at ({star.center[0]}, {star.center[1]}) cannot be fit because its fitting region extends beyond the star cutout image. [photutils.psf.epsf]
+</pre>
+               </div>
+              </div>
+              <div class="output stderr highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>WARNING: The star at ({star.center[0]}, {star.center[1]}) cannot be fit because its fitting region extends beyond the star cutout image. [photutils.psf.epsf]
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>Creating ePSF for image 4 of filter F200W, detector NRCB1
+</pre>
+               </div>
+              </div>
+              <div class="output stderr highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>WARNING: The star at ({star.center[0]}, {star.center[1]}) cannot be fit because its fitting region extends beyond the star cutout image. [photutils.psf.epsf]
+</pre>
+               </div>
+              </div>
+              <div class="output stderr highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>WARNING: The star at ({star.center[0]}, {star.center[1]}) cannot be fit because its fitting region extends beyond the star cutout image. [photutils.psf.epsf]
+</pre>
+               </div>
+              </div>
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>Time to build the Effective PSF: 244.70876754899973
+</pre>
+               </div>
+              </div>
+             </div>
             </div>
            </section>
           </section>
@@ -2257,6 +2721,9 @@ zoom_in=False, figsize=(14, 14))
 </pre>
               </div>
              </div>
+            </div>
+            <div class="cell_output docutils container">
+             <img alt="../../_images/NIRCam_PSF_Photometry_Example_43_0.png" src="../../_images/NIRCam_PSF_Photometry_Example_43_0.png"/>
             </div>
            </div>
           </section>
@@ -2361,6 +2828,556 @@ zoom_in=False, figsize=(14, 14))
             <span class="nb">print</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
 
             <span class="n">count_PSFstars_grid</span><span class="p">(</span><span class="n">grid_points</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">min_numpsf</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</pre>
+               </div>
+              </div>
+             </div>
+             <div class="cell_output docutils container">
+              <div class="output stream highlight-myst-ansi notranslate">
+               <div class="highlight">
+                <pre><span></span>Analyzing image 1 of filter F115W, detector NRCB1 
+
+Calculating the number of PSF stars in a 5 x 5 grid:
+
+Center Coordinate of grid cell 1 are (204, 204) --- Number of PSF stars: 72
+Center Coordinate of grid cell 2 are (204, 612) --- Number of PSF stars: 46
+Center Coordinate of grid cell 3 are (204, 1020) --- Number of PSF stars: 51
+Center Coordinate of grid cell 4 are (204, 1428) --- Number of PSF stars: 48
+Center Coordinate of grid cell 5 are (204, 1836) --- Number of PSF stars: 51
+Center Coordinate of grid cell 6 are (612, 204) --- Number of PSF stars: 55
+Center Coordinate of grid cell 7 are (612, 612) --- Number of PSF stars: 51
+Center Coordinate of grid cell 8 are (612, 1020) --- Number of PSF stars: 45
+Center Coordinate of grid cell 9 are (612, 1428) --- Number of PSF stars: 40
+Center Coordinate of grid cell 10 are (612, 1836) --- Number of PSF stars: 57
+Center Coordinate of grid cell 11 are (1020, 204) --- Number of PSF stars: 47
+Center Coordinate of grid cell 12 are (1020, 612) --- Number of PSF stars: 50
+Center Coordinate of grid cell 13 are (1020, 1020) --- Number of PSF stars: 55
+Center Coordinates of grid cell 1 are (1020, 1428) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinate of grid cell 15 are (1020, 1836) --- Number of PSF stars: 43
+Center Coordinate of grid cell 16 are (1428, 204) --- Number of PSF stars: 50
+Center Coordinate of grid cell 17 are (1428, 612) --- Number of PSF stars: 44
+Center Coordinates of grid cell 1 are (1428, 1020) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinate of grid cell 19 are (1428, 1428) --- Number of PSF stars: 47
+Center Coordinate of grid cell 20 are (1428, 1836) --- Number of PSF stars: 50
+Center Coordinate of grid cell 21 are (1836, 204) --- Number of PSF stars: 45
+Center Coordinate of grid cell 22 are (1836, 612) --- Number of PSF stars: 50
+Center Coordinate of grid cell 23 are (1836, 1020) --- Number of PSF stars: 54
+Center Coordinate of grid cell 24 are (1836, 1428) --- Number of PSF stars: 44
+Center Coordinate of grid cell 25 are (1836, 1836) --- Number of PSF stars: 40
+
+Calculating the number of PSF stars in a 4 x 4 grid:
+
+Center Coordinate of grid cell 1 are (256, 256) --- Number of PSF stars: 122
+Center Coordinate of grid cell 2 are (256, 768) --- Number of PSF stars: 73
+Center Coordinate of grid cell 3 are (256, 1280) --- Number of PSF stars: 70
+Center Coordinate of grid cell 4 are (256, 1792) --- Number of PSF stars: 90
+Center Coordinate of grid cell 5 are (768, 256) --- Number of PSF stars: 84
+Center Coordinate of grid cell 6 are (768, 768) --- Number of PSF stars: 75
+Center Coordinate of grid cell 7 are (768, 1280) --- Number of PSF stars: 84
+Center Coordinate of grid cell 8 are (768, 1792) --- Number of PSF stars: 81
+Center Coordinate of grid cell 9 are (1280, 256) --- Number of PSF stars: 77
+Center Coordinate of grid cell 10 are (1280, 768) --- Number of PSF stars: 87
+Center Coordinate of grid cell 11 are (1280, 1280) --- Number of PSF stars: 59
+Center Coordinate of grid cell 12 are (1280, 1792) --- Number of PSF stars: 75
+Center Coordinate of grid cell 13 are (1792, 256) --- Number of PSF stars: 75
+Center Coordinate of grid cell 14 are (1792, 768) --- Number of PSF stars: 64
+Center Coordinate of grid cell 15 are (1792, 1280) --- Number of PSF stars: 76
+Center Coordinate of grid cell 16 are (1792, 1792) --- Number of PSF stars: 67
+
+Calculating the number of PSF stars in a 3 x 3 grid:
+
+Center Coordinate of grid cell 1 are (341, 341) --- Number of PSF stars: 186
+Center Coordinate of grid cell 2 are (341, 1023) --- Number of PSF stars: 129
+Center Coordinate of grid cell 3 are (341, 1705) --- Number of PSF stars: 149
+Center Coordinate of grid cell 4 are (1023, 341) --- Number of PSF stars: 132
+Center Coordinate of grid cell 5 are (1023, 1023) --- Number of PSF stars: 151
+Center Coordinate of grid cell 6 are (1023, 1705) --- Number of PSF stars: 132
+Center Coordinate of grid cell 7 are (1705, 341) --- Number of PSF stars: 132
+Center Coordinate of grid cell 8 are (1705, 1023) --- Number of PSF stars: 118
+Center Coordinate of grid cell 9 are (1705, 1705) --- Number of PSF stars: 126
+
+Calculating the number of PSF stars in a 2 x 2 grid:
+
+Center Coordinate of grid cell 1 are (512, 512) --- Number of PSF stars: 359
+Center Coordinate of grid cell 2 are (512, 1536) --- Number of PSF stars: 331
+Center Coordinate of grid cell 3 are (1536, 512) --- Number of PSF stars: 307
+Center Coordinate of grid cell 4 are (1536, 1536) --- Number of PSF stars: 286
+
+Analyzing image 2 of filter F115W, detector NRCB1 
+
+Calculating the number of PSF stars in a 5 x 5 grid:
+
+Center Coordinate of grid cell 1 are (204, 204) --- Number of PSF stars: 74
+Center Coordinate of grid cell 2 are (204, 612) --- Number of PSF stars: 49
+Center Coordinate of grid cell 3 are (204, 1020) --- Number of PSF stars: 50
+Center Coordinate of grid cell 4 are (204, 1428) --- Number of PSF stars: 45
+Center Coordinate of grid cell 5 are (204, 1836) --- Number of PSF stars: 48
+Center Coordinate of grid cell 6 are (612, 204) --- Number of PSF stars: 59
+Center Coordinate of grid cell 7 are (612, 612) --- Number of PSF stars: 53
+Center Coordinate of grid cell 8 are (612, 1020) --- Number of PSF stars: 43
+Center Coordinate of grid cell 9 are (612, 1428) --- Number of PSF stars: 46
+Center Coordinate of grid cell 10 are (612, 1836) --- Number of PSF stars: 62
+Center Coordinate of grid cell 11 are (1020, 204) --- Number of PSF stars: 50
+Center Coordinate of grid cell 12 are (1020, 612) --- Number of PSF stars: 49
+Center Coordinate of grid cell 13 are (1020, 1020) --- Number of PSF stars: 55
+Center Coordinate of grid cell 14 are (1020, 1428) --- Number of PSF stars: 42
+Center Coordinate of grid cell 15 are (1020, 1836) --- Number of PSF stars: 42
+Center Coordinate of grid cell 16 are (1428, 204) --- Number of PSF stars: 55
+Center Coordinate of grid cell 17 are (1428, 612) --- Number of PSF stars: 43
+Center Coordinates of grid cell 2 are (1428, 1020) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinate of grid cell 19 are (1428, 1428) --- Number of PSF stars: 47
+Center Coordinate of grid cell 20 are (1428, 1836) --- Number of PSF stars: 50
+Center Coordinate of grid cell 21 are (1836, 204) --- Number of PSF stars: 41
+Center Coordinate of grid cell 22 are (1836, 612) --- Number of PSF stars: 47
+Center Coordinate of grid cell 23 are (1836, 1020) --- Number of PSF stars: 60
+Center Coordinate of grid cell 24 are (1836, 1428) --- Number of PSF stars: 44
+Center Coordinates of grid cell 2 are (1836, 1836) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+
+Calculating the number of PSF stars in a 4 x 4 grid:
+
+Center Coordinate of grid cell 1 are (256, 256) --- Number of PSF stars: 138
+Center Coordinate of grid cell 2 are (256, 768) --- Number of PSF stars: 79
+Center Coordinate of grid cell 3 are (256, 1280) --- Number of PSF stars: 75
+Center Coordinate of grid cell 4 are (256, 1792) --- Number of PSF stars: 82
+Center Coordinate of grid cell 5 are (768, 256) --- Number of PSF stars: 84
+Center Coordinate of grid cell 6 are (768, 768) --- Number of PSF stars: 73
+Center Coordinate of grid cell 7 are (768, 1280) --- Number of PSF stars: 84
+Center Coordinate of grid cell 8 are (768, 1792) --- Number of PSF stars: 86
+Center Coordinate of grid cell 9 are (1280, 256) --- Number of PSF stars: 80
+Center Coordinate of grid cell 10 are (1280, 768) --- Number of PSF stars: 82
+Center Coordinate of grid cell 11 are (1280, 1280) --- Number of PSF stars: 61
+Center Coordinate of grid cell 12 are (1280, 1792) --- Number of PSF stars: 69
+Center Coordinate of grid cell 13 are (1792, 256) --- Number of PSF stars: 72
+Center Coordinate of grid cell 14 are (1792, 768) --- Number of PSF stars: 62
+Center Coordinate of grid cell 15 are (1792, 1280) --- Number of PSF stars: 71
+Center Coordinate of grid cell 16 are (1792, 1792) --- Number of PSF stars: 73
+
+Calculating the number of PSF stars in a 3 x 3 grid:
+
+Center Coordinate of grid cell 1 are (341, 341) --- Number of PSF stars: 201
+Center Coordinate of grid cell 2 are (341, 1023) --- Number of PSF stars: 134
+Center Coordinate of grid cell 3 are (341, 1705) --- Number of PSF stars: 150
+Center Coordinate of grid cell 4 are (1023, 341) --- Number of PSF stars: 139
+Center Coordinate of grid cell 5 are (1023, 1023) --- Number of PSF stars: 143
+Center Coordinate of grid cell 6 are (1023, 1705) --- Number of PSF stars: 133
+Center Coordinate of grid cell 7 are (1705, 341) --- Number of PSF stars: 126
+Center Coordinate of grid cell 8 are (1705, 1023) --- Number of PSF stars: 124
+Center Coordinate of grid cell 9 are (1705, 1705) --- Number of PSF stars: 125
+
+Calculating the number of PSF stars in a 2 x 2 grid:
+
+Center Coordinate of grid cell 1 are (512, 512) --- Number of PSF stars: 378
+Center Coordinate of grid cell 2 are (512, 1536) --- Number of PSF stars: 333
+Center Coordinate of grid cell 3 are (1536, 512) --- Number of PSF stars: 303
+Center Coordinate of grid cell 4 are (1536, 1536) --- Number of PSF stars: 281
+
+Analyzing image 3 of filter F115W, detector NRCB1 
+
+Calculating the number of PSF stars in a 5 x 5 grid:
+
+Center Coordinate of grid cell 1 are (204, 204) --- Number of PSF stars: 73
+Center Coordinate of grid cell 2 are (204, 612) --- Number of PSF stars: 50
+Center Coordinate of grid cell 3 are (204, 1020) --- Number of PSF stars: 47
+Center Coordinate of grid cell 4 are (204, 1428) --- Number of PSF stars: 45
+Center Coordinate of grid cell 5 are (204, 1836) --- Number of PSF stars: 46
+Center Coordinate of grid cell 6 are (612, 204) --- Number of PSF stars: 57
+Center Coordinate of grid cell 7 are (612, 612) --- Number of PSF stars: 49
+Center Coordinate of grid cell 8 are (612, 1020) --- Number of PSF stars: 47
+Center Coordinate of grid cell 9 are (612, 1428) --- Number of PSF stars: 46
+Center Coordinate of grid cell 10 are (612, 1836) --- Number of PSF stars: 58
+Center Coordinate of grid cell 11 are (1020, 204) --- Number of PSF stars: 46
+Center Coordinate of grid cell 12 are (1020, 612) --- Number of PSF stars: 52
+Center Coordinate of grid cell 13 are (1020, 1020) --- Number of PSF stars: 56
+Center Coordinate of grid cell 14 are (1020, 1428) --- Number of PSF stars: 44
+Center Coordinates of grid cell 3 are (1020, 1836) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinate of grid cell 16 are (1428, 204) --- Number of PSF stars: 48
+Center Coordinate of grid cell 17 are (1428, 612) --- Number of PSF stars: 41
+Center Coordinates of grid cell 3 are (1428, 1020) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinate of grid cell 19 are (1428, 1428) --- Number of PSF stars: 51
+Center Coordinate of grid cell 20 are (1428, 1836) --- Number of PSF stars: 53
+Center Coordinate of grid cell 21 are (1836, 204) --- Number of PSF stars: 43
+Center Coordinate of grid cell 22 are (1836, 612) --- Number of PSF stars: 49
+Center Coordinate of grid cell 23 are (1836, 1020) --- Number of PSF stars: 52
+Center Coordinate of grid cell 24 are (1836, 1428) --- Number of PSF stars: 46
+Center Coordinates of grid cell 3 are (1836, 1836) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+
+Calculating the number of PSF stars in a 4 x 4 grid:
+
+Center Coordinate of grid cell 1 are (256, 256) --- Number of PSF stars: 128
+Center Coordinate of grid cell 2 are (256, 768) --- Number of PSF stars: 78
+Center Coordinate of grid cell 3 are (256, 1280) --- Number of PSF stars: 69
+Center Coordinate of grid cell 4 are (256, 1792) --- Number of PSF stars: 81
+Center Coordinate of grid cell 5 are (768, 256) --- Number of PSF stars: 81
+Center Coordinate of grid cell 6 are (768, 768) --- Number of PSF stars: 73
+Center Coordinate of grid cell 7 are (768, 1280) --- Number of PSF stars: 87
+Center Coordinate of grid cell 8 are (768, 1792) --- Number of PSF stars: 79
+Center Coordinate of grid cell 9 are (1280, 256) --- Number of PSF stars: 75
+Center Coordinate of grid cell 10 are (1280, 768) --- Number of PSF stars: 82
+Center Coordinate of grid cell 11 are (1280, 1280) --- Number of PSF stars: 65
+Center Coordinate of grid cell 12 are (1280, 1792) --- Number of PSF stars: 74
+Center Coordinate of grid cell 13 are (1792, 256) --- Number of PSF stars: 71
+Center Coordinate of grid cell 14 are (1792, 768) --- Number of PSF stars: 66
+Center Coordinate of grid cell 15 are (1792, 1280) --- Number of PSF stars: 75
+Center Coordinate of grid cell 16 are (1792, 1792) --- Number of PSF stars: 69
+
+Calculating the number of PSF stars in a 3 x 3 grid:
+
+Center Coordinate of grid cell 1 are (341, 341) --- Number of PSF stars: 191
+Center Coordinate of grid cell 2 are (341, 1023) --- Number of PSF stars: 128
+Center Coordinate of grid cell 3 are (341, 1705) --- Number of PSF stars: 147
+Center Coordinate of grid cell 4 are (1023, 341) --- Number of PSF stars: 135
+Center Coordinate of grid cell 5 are (1023, 1023) --- Number of PSF stars: 140
+Center Coordinate of grid cell 6 are (1023, 1705) --- Number of PSF stars: 133
+Center Coordinate of grid cell 7 are (1705, 341) --- Number of PSF stars: 131
+Center Coordinate of grid cell 8 are (1705, 1023) --- Number of PSF stars: 121
+Center Coordinate of grid cell 9 are (1705, 1705) --- Number of PSF stars: 131
+
+Calculating the number of PSF stars in a 2 x 2 grid:
+
+Center Coordinate of grid cell 1 are (512, 512) --- Number of PSF stars: 367
+Center Coordinate of grid cell 2 are (512, 1536) --- Number of PSF stars: 320
+Center Coordinate of grid cell 3 are (1536, 512) --- Number of PSF stars: 298
+Center Coordinate of grid cell 4 are (1536, 1536) --- Number of PSF stars: 292
+
+Analyzing image 4 of filter F115W, detector NRCB1 
+
+Calculating the number of PSF stars in a 5 x 5 grid:
+
+Center Coordinate of grid cell 1 are (204, 204) --- Number of PSF stars: 66
+Center Coordinate of grid cell 2 are (204, 612) --- Number of PSF stars: 46
+Center Coordinate of grid cell 3 are (204, 1020) --- Number of PSF stars: 48
+Center Coordinate of grid cell 4 are (204, 1428) --- Number of PSF stars: 48
+Center Coordinate of grid cell 5 are (204, 1836) --- Number of PSF stars: 51
+Center Coordinate of grid cell 6 are (612, 204) --- Number of PSF stars: 59
+Center Coordinate of grid cell 7 are (612, 612) --- Number of PSF stars: 52
+Center Coordinate of grid cell 8 are (612, 1020) --- Number of PSF stars: 47
+Center Coordinate of grid cell 9 are (612, 1428) --- Number of PSF stars: 44
+Center Coordinate of grid cell 10 are (612, 1836) --- Number of PSF stars: 63
+Center Coordinate of grid cell 11 are (1020, 204) --- Number of PSF stars: 47
+Center Coordinate of grid cell 12 are (1020, 612) --- Number of PSF stars: 50
+Center Coordinate of grid cell 13 are (1020, 1020) --- Number of PSF stars: 56
+Center Coordinate of grid cell 14 are (1020, 1428) --- Number of PSF stars: 41
+Center Coordinate of grid cell 15 are (1020, 1836) --- Number of PSF stars: 41
+Center Coordinate of grid cell 16 are (1428, 204) --- Number of PSF stars: 54
+Center Coordinate of grid cell 17 are (1428, 612) --- Number of PSF stars: 45
+Center Coordinate of grid cell 18 are (1428, 1020) --- Number of PSF stars: 41
+Center Coordinate of grid cell 19 are (1428, 1428) --- Number of PSF stars: 50
+Center Coordinate of grid cell 20 are (1428, 1836) --- Number of PSF stars: 50
+Center Coordinate of grid cell 21 are (1836, 204) --- Number of PSF stars: 42
+Center Coordinate of grid cell 22 are (1836, 612) --- Number of PSF stars: 51
+Center Coordinate of grid cell 23 are (1836, 1020) --- Number of PSF stars: 55
+Center Coordinate of grid cell 24 are (1836, 1428) --- Number of PSF stars: 42
+Center Coordinates of grid cell 4 are (1836, 1836) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+
+Calculating the number of PSF stars in a 4 x 4 grid:
+
+Center Coordinate of grid cell 1 are (256, 256) --- Number of PSF stars: 121
+Center Coordinate of grid cell 2 are (256, 768) --- Number of PSF stars: 76
+Center Coordinate of grid cell 3 are (256, 1280) --- Number of PSF stars: 70
+Center Coordinate of grid cell 4 are (256, 1792) --- Number of PSF stars: 90
+Center Coordinate of grid cell 5 are (768, 256) --- Number of PSF stars: 86
+Center Coordinate of grid cell 6 are (768, 768) --- Number of PSF stars: 76
+Center Coordinate of grid cell 7 are (768, 1280) --- Number of PSF stars: 84
+Center Coordinate of grid cell 8 are (768, 1792) --- Number of PSF stars: 83
+Center Coordinate of grid cell 9 are (1280, 256) --- Number of PSF stars: 79
+Center Coordinate of grid cell 10 are (1280, 768) --- Number of PSF stars: 89
+Center Coordinate of grid cell 11 are (1280, 1280) --- Number of PSF stars: 64
+Center Coordinate of grid cell 12 are (1280, 1792) --- Number of PSF stars: 71
+Center Coordinate of grid cell 13 are (1792, 256) --- Number of PSF stars: 72
+Center Coordinate of grid cell 14 are (1792, 768) --- Number of PSF stars: 67
+Center Coordinate of grid cell 15 are (1792, 1280) --- Number of PSF stars: 71
+Center Coordinate of grid cell 16 are (1792, 1792) --- Number of PSF stars: 70
+
+Calculating the number of PSF stars in a 3 x 3 grid:
+
+Center Coordinate of grid cell 1 are (341, 341) --- Number of PSF stars: 188
+Center Coordinate of grid cell 2 are (341, 1023) --- Number of PSF stars: 132
+Center Coordinate of grid cell 3 are (341, 1705) --- Number of PSF stars: 155
+Center Coordinate of grid cell 4 are (1023, 341) --- Number of PSF stars: 138
+Center Coordinate of grid cell 5 are (1023, 1023) --- Number of PSF stars: 145
+Center Coordinate of grid cell 6 are (1023, 1705) --- Number of PSF stars: 132
+Center Coordinate of grid cell 7 are (1705, 341) --- Number of PSF stars: 134
+Center Coordinate of grid cell 8 are (1705, 1023) --- Number of PSF stars: 121
+Center Coordinate of grid cell 9 are (1705, 1705) --- Number of PSF stars: 124
+
+Calculating the number of PSF stars in a 2 x 2 grid:
+
+Center Coordinate of grid cell 1 are (512, 512) --- Number of PSF stars: 366
+Center Coordinate of grid cell 2 are (512, 1536) --- Number of PSF stars: 334
+Center Coordinate of grid cell 3 are (1536, 512) --- Number of PSF stars: 312
+Center Coordinate of grid cell 4 are (1536, 1536) --- Number of PSF stars: 282
+
+Analyzing image 1 of filter F200W, detector NRCB1 
+
+Calculating the number of PSF stars in a 5 x 5 grid:
+
+Center Coordinate of grid cell 1 are (204, 204) --- Number of PSF stars: 81
+Center Coordinate of grid cell 2 are (204, 612) --- Number of PSF stars: 49
+Center Coordinate of grid cell 3 are (204, 1020) --- Number of PSF stars: 45
+Center Coordinate of grid cell 4 are (204, 1428) --- Number of PSF stars: 46
+Center Coordinate of grid cell 5 are (204, 1836) --- Number of PSF stars: 46
+Center Coordinate of grid cell 6 are (612, 204) --- Number of PSF stars: 65
+Center Coordinate of grid cell 7 are (612, 612) --- Number of PSF stars: 46
+Center Coordinate of grid cell 8 are (612, 1020) --- Number of PSF stars: 43
+Center Coordinates of grid cell 1 are (612, 1428) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinate of grid cell 10 are (612, 1836) --- Number of PSF stars: 57
+Center Coordinate of grid cell 11 are (1020, 204) --- Number of PSF stars: 43
+Center Coordinate of grid cell 12 are (1020, 612) --- Number of PSF stars: 47
+Center Coordinate of grid cell 13 are (1020, 1020) --- Number of PSF stars: 55
+Center Coordinates of grid cell 1 are (1020, 1428) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinates of grid cell 1 are (1020, 1836) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinate of grid cell 16 are (1428, 204) --- Number of PSF stars: 46
+Center Coordinate of grid cell 17 are (1428, 612) --- Number of PSF stars: 41
+Center Coordinate of grid cell 18 are (1428, 1020) --- Number of PSF stars: 42
+Center Coordinate of grid cell 19 are (1428, 1428) --- Number of PSF stars: 46
+Center Coordinate of grid cell 20 are (1428, 1836) --- Number of PSF stars: 57
+Center Coordinate of grid cell 21 are (1836, 204) --- Number of PSF stars: 43
+Center Coordinate of grid cell 22 are (1836, 612) --- Number of PSF stars: 44
+Center Coordinate of grid cell 23 are (1836, 1020) --- Number of PSF stars: 49
+Center Coordinate of grid cell 24 are (1836, 1428) --- Number of PSF stars: 42
+Center Coordinates of grid cell 1 are (1836, 1836) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+
+Calculating the number of PSF stars in a 4 x 4 grid:
+
+Center Coordinate of grid cell 1 are (256, 256) --- Number of PSF stars: 149
+Center Coordinate of grid cell 2 are (256, 768) --- Number of PSF stars: 79
+Center Coordinate of grid cell 3 are (256, 1280) --- Number of PSF stars: 65
+Center Coordinate of grid cell 4 are (256, 1792) --- Number of PSF stars: 81
+Center Coordinate of grid cell 5 are (768, 256) --- Number of PSF stars: 75
+Center Coordinate of grid cell 6 are (768, 768) --- Number of PSF stars: 68
+Center Coordinate of grid cell 7 are (768, 1280) --- Number of PSF stars: 80
+Center Coordinate of grid cell 8 are (768, 1792) --- Number of PSF stars: 77
+Center Coordinate of grid cell 9 are (1280, 256) --- Number of PSF stars: 71
+Center Coordinate of grid cell 10 are (1280, 768) --- Number of PSF stars: 89
+Center Coordinate of grid cell 11 are (1280, 1280) --- Number of PSF stars: 58
+Center Coordinate of grid cell 12 are (1280, 1792) --- Number of PSF stars: 71
+Center Coordinate of grid cell 13 are (1792, 256) --- Number of PSF stars: 72
+Center Coordinate of grid cell 14 are (1792, 768) --- Number of PSF stars: 56
+Center Coordinate of grid cell 15 are (1792, 1280) --- Number of PSF stars: 70
+Center Coordinate of grid cell 16 are (1792, 1792) --- Number of PSF stars: 69
+
+Calculating the number of PSF stars in a 3 x 3 grid:
+
+Center Coordinate of grid cell 1 are (341, 341) --- Number of PSF stars: 211
+Center Coordinate of grid cell 2 are (341, 1023) --- Number of PSF stars: 121
+Center Coordinate of grid cell 3 are (341, 1705) --- Number of PSF stars: 142
+Center Coordinate of grid cell 4 are (1023, 341) --- Number of PSF stars: 127
+Center Coordinate of grid cell 5 are (1023, 1023) --- Number of PSF stars: 145
+Center Coordinate of grid cell 6 are (1023, 1705) --- Number of PSF stars: 123
+Center Coordinate of grid cell 7 are (1705, 341) --- Number of PSF stars: 123
+Center Coordinate of grid cell 8 are (1705, 1023) --- Number of PSF stars: 108
+Center Coordinate of grid cell 9 are (1705, 1705) --- Number of PSF stars: 128
+
+Calculating the number of PSF stars in a 2 x 2 grid:
+
+Center Coordinate of grid cell 1 are (512, 512) --- Number of PSF stars: 376
+Center Coordinate of grid cell 2 are (512, 1536) --- Number of PSF stars: 308
+Center Coordinate of grid cell 3 are (1536, 512) --- Number of PSF stars: 291
+Center Coordinate of grid cell 4 are (1536, 1536) --- Number of PSF stars: 278
+
+Analyzing image 2 of filter F200W, detector NRCB1 
+
+Calculating the number of PSF stars in a 5 x 5 grid:
+
+Center Coordinate of grid cell 1 are (204, 204) --- Number of PSF stars: 78
+Center Coordinate of grid cell 2 are (204, 612) --- Number of PSF stars: 48
+Center Coordinate of grid cell 3 are (204, 1020) --- Number of PSF stars: 45
+Center Coordinate of grid cell 4 are (204, 1428) --- Number of PSF stars: 40
+Center Coordinate of grid cell 5 are (204, 1836) --- Number of PSF stars: 47
+Center Coordinate of grid cell 6 are (612, 204) --- Number of PSF stars: 77
+Center Coordinate of grid cell 7 are (612, 612) --- Number of PSF stars: 45
+Center Coordinates of grid cell 2 are (612, 1020) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinate of grid cell 9 are (612, 1428) --- Number of PSF stars: 43
+Center Coordinate of grid cell 10 are (612, 1836) --- Number of PSF stars: 61
+Center Coordinate of grid cell 11 are (1020, 204) --- Number of PSF stars: 47
+Center Coordinate of grid cell 12 are (1020, 612) --- Number of PSF stars: 48
+Center Coordinate of grid cell 13 are (1020, 1020) --- Number of PSF stars: 56
+Center Coordinates of grid cell 2 are (1020, 1428) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinates of grid cell 2 are (1020, 1836) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinate of grid cell 16 are (1428, 204) --- Number of PSF stars: 49
+Center Coordinate of grid cell 17 are (1428, 612) --- Number of PSF stars: 42
+Center Coordinate of grid cell 18 are (1428, 1020) --- Number of PSF stars: 42
+Center Coordinate of grid cell 19 are (1428, 1428) --- Number of PSF stars: 47
+Center Coordinate of grid cell 20 are (1428, 1836) --- Number of PSF stars: 51
+Center Coordinate of grid cell 21 are (1836, 204) --- Number of PSF stars: 40
+Center Coordinate of grid cell 22 are (1836, 612) --- Number of PSF stars: 47
+Center Coordinate of grid cell 23 are (1836, 1020) --- Number of PSF stars: 53
+Center Coordinate of grid cell 24 are (1836, 1428) --- Number of PSF stars: 41
+Center Coordinates of grid cell 2 are (1836, 1836) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+
+Calculating the number of PSF stars in a 4 x 4 grid:
+
+Center Coordinate of grid cell 1 are (256, 256) --- Number of PSF stars: 155
+Center Coordinate of grid cell 2 are (256, 768) --- Number of PSF stars: 77
+Center Coordinate of grid cell 3 are (256, 1280) --- Number of PSF stars: 63
+Center Coordinate of grid cell 4 are (256, 1792) --- Number of PSF stars: 80
+Center Coordinate of grid cell 5 are (768, 256) --- Number of PSF stars: 80
+Center Coordinate of grid cell 6 are (768, 768) --- Number of PSF stars: 69
+Center Coordinate of grid cell 7 are (768, 1280) --- Number of PSF stars: 81
+Center Coordinate of grid cell 8 are (768, 1792) --- Number of PSF stars: 81
+Center Coordinate of grid cell 9 are (1280, 256) --- Number of PSF stars: 77
+Center Coordinate of grid cell 10 are (1280, 768) --- Number of PSF stars: 91
+Center Coordinate of grid cell 11 are (1280, 1280) --- Number of PSF stars: 57
+Center Coordinate of grid cell 12 are (1280, 1792) --- Number of PSF stars: 67
+Center Coordinate of grid cell 13 are (1792, 256) --- Number of PSF stars: 68
+Center Coordinate of grid cell 14 are (1792, 768) --- Number of PSF stars: 58
+Center Coordinate of grid cell 15 are (1792, 1280) --- Number of PSF stars: 66
+Center Coordinate of grid cell 16 are (1792, 1792) --- Number of PSF stars: 67
+
+Calculating the number of PSF stars in a 3 x 3 grid:
+
+Center Coordinate of grid cell 1 are (341, 341) --- Number of PSF stars: 216
+Center Coordinate of grid cell 2 are (341, 1023) --- Number of PSF stars: 119
+Center Coordinate of grid cell 3 are (341, 1705) --- Number of PSF stars: 143
+Center Coordinate of grid cell 4 are (1023, 341) --- Number of PSF stars: 132
+Center Coordinate of grid cell 5 are (1023, 1023) --- Number of PSF stars: 147
+Center Coordinate of grid cell 6 are (1023, 1705) --- Number of PSF stars: 124
+Center Coordinate of grid cell 7 are (1705, 341) --- Number of PSF stars: 124
+Center Coordinate of grid cell 8 are (1705, 1023) --- Number of PSF stars: 110
+Center Coordinate of grid cell 9 are (1705, 1705) --- Number of PSF stars: 121
+
+Calculating the number of PSF stars in a 2 x 2 grid:
+
+Center Coordinate of grid cell 1 are (512, 512) --- Number of PSF stars: 385
+Center Coordinate of grid cell 2 are (512, 1536) --- Number of PSF stars: 310
+Center Coordinate of grid cell 3 are (1536, 512) --- Number of PSF stars: 301
+Center Coordinate of grid cell 4 are (1536, 1536) --- Number of PSF stars: 263
+
+Analyzing image 3 of filter F200W, detector NRCB1 
+
+Calculating the number of PSF stars in a 5 x 5 grid:
+
+Center Coordinate of grid cell 1 are (204, 204) --- Number of PSF stars: 76
+Center Coordinate of grid cell 2 are (204, 612) --- Number of PSF stars: 52
+Center Coordinate of grid cell 3 are (204, 1020) --- Number of PSF stars: 41
+Center Coordinate of grid cell 4 are (204, 1428) --- Number of PSF stars: 45
+Center Coordinate of grid cell 5 are (204, 1836) --- Number of PSF stars: 46
+Center Coordinate of grid cell 6 are (612, 204) --- Number of PSF stars: 69
+Center Coordinate of grid cell 7 are (612, 612) --- Number of PSF stars: 43
+Center Coordinate of grid cell 8 are (612, 1020) --- Number of PSF stars: 44
+Center Coordinate of grid cell 9 are (612, 1428) --- Number of PSF stars: 45
+Center Coordinate of grid cell 10 are (612, 1836) --- Number of PSF stars: 55
+Center Coordinate of grid cell 11 are (1020, 204) --- Number of PSF stars: 47
+Center Coordinate of grid cell 12 are (1020, 612) --- Number of PSF stars: 51
+Center Coordinate of grid cell 13 are (1020, 1020) --- Number of PSF stars: 54
+Center Coordinates of grid cell 3 are (1020, 1428) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinates of grid cell 3 are (1020, 1836) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinate of grid cell 16 are (1428, 204) --- Number of PSF stars: 47
+Center Coordinates of grid cell 3 are (1428, 612) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinate of grid cell 18 are (1428, 1020) --- Number of PSF stars: 42
+Center Coordinate of grid cell 19 are (1428, 1428) --- Number of PSF stars: 46
+Center Coordinate of grid cell 20 are (1428, 1836) --- Number of PSF stars: 55
+Center Coordinate of grid cell 21 are (1836, 204) --- Number of PSF stars: 43
+Center Coordinate of grid cell 22 are (1836, 612) --- Number of PSF stars: 45
+Center Coordinate of grid cell 23 are (1836, 1020) --- Number of PSF stars: 51
+Center Coordinate of grid cell 24 are (1836, 1428) --- Number of PSF stars: 43
+Center Coordinates of grid cell 3 are (1836, 1836) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+
+Calculating the number of PSF stars in a 4 x 4 grid:
+
+Center Coordinate of grid cell 1 are (256, 256) --- Number of PSF stars: 156
+Center Coordinate of grid cell 2 are (256, 768) --- Number of PSF stars: 76
+Center Coordinate of grid cell 3 are (256, 1280) --- Number of PSF stars: 66
+Center Coordinate of grid cell 4 are (256, 1792) --- Number of PSF stars: 79
+Center Coordinate of grid cell 5 are (768, 256) --- Number of PSF stars: 76
+Center Coordinate of grid cell 6 are (768, 768) --- Number of PSF stars: 69
+Center Coordinate of grid cell 7 are (768, 1280) --- Number of PSF stars: 82
+Center Coordinate of grid cell 8 are (768, 1792) --- Number of PSF stars: 74
+Center Coordinate of grid cell 9 are (1280, 256) --- Number of PSF stars: 73
+Center Coordinate of grid cell 10 are (1280, 768) --- Number of PSF stars: 88
+Center Coordinate of grid cell 11 are (1280, 1280) --- Number of PSF stars: 57
+Center Coordinate of grid cell 12 are (1280, 1792) --- Number of PSF stars: 70
+Center Coordinate of grid cell 13 are (1792, 256) --- Number of PSF stars: 70
+Center Coordinate of grid cell 14 are (1792, 768) --- Number of PSF stars: 61
+Center Coordinate of grid cell 15 are (1792, 1280) --- Number of PSF stars: 69
+Center Coordinate of grid cell 16 are (1792, 1792) --- Number of PSF stars: 71
+
+Calculating the number of PSF stars in a 3 x 3 grid:
+
+Center Coordinate of grid cell 1 are (341, 341) --- Number of PSF stars: 218
+Center Coordinate of grid cell 2 are (341, 1023) --- Number of PSF stars: 115
+Center Coordinate of grid cell 3 are (341, 1705) --- Number of PSF stars: 145
+Center Coordinate of grid cell 4 are (1023, 341) --- Number of PSF stars: 132
+Center Coordinate of grid cell 5 are (1023, 1023) --- Number of PSF stars: 146
+Center Coordinate of grid cell 6 are (1023, 1705) --- Number of PSF stars: 123
+Center Coordinate of grid cell 7 are (1705, 341) --- Number of PSF stars: 125
+Center Coordinate of grid cell 8 are (1705, 1023) --- Number of PSF stars: 113
+Center Coordinate of grid cell 9 are (1705, 1705) --- Number of PSF stars: 127
+
+Calculating the number of PSF stars in a 2 x 2 grid:
+
+Center Coordinate of grid cell 1 are (512, 512) --- Number of PSF stars: 383
+Center Coordinate of grid cell 2 are (512, 1536) --- Number of PSF stars: 305
+Center Coordinate of grid cell 3 are (1536, 512) --- Number of PSF stars: 296
+Center Coordinate of grid cell 4 are (1536, 1536) --- Number of PSF stars: 275
+
+Analyzing image 4 of filter F200W, detector NRCB1 
+
+Calculating the number of PSF stars in a 5 x 5 grid:
+
+Center Coordinate of grid cell 1 are (204, 204) --- Number of PSF stars: 73
+Center Coordinate of grid cell 2 are (204, 612) --- Number of PSF stars: 47
+Center Coordinate of grid cell 3 are (204, 1020) --- Number of PSF stars: 42
+Center Coordinate of grid cell 4 are (204, 1428) --- Number of PSF stars: 46
+Center Coordinate of grid cell 5 are (204, 1836) --- Number of PSF stars: 49
+Center Coordinate of grid cell 6 are (612, 204) --- Number of PSF stars: 73
+Center Coordinate of grid cell 7 are (612, 612) --- Number of PSF stars: 45
+Center Coordinate of grid cell 8 are (612, 1020) --- Number of PSF stars: 42
+Center Coordinate of grid cell 9 are (612, 1428) --- Number of PSF stars: 42
+Center Coordinate of grid cell 10 are (612, 1836) --- Number of PSF stars: 57
+Center Coordinate of grid cell 11 are (1020, 204) --- Number of PSF stars: 45
+Center Coordinate of grid cell 12 are (1020, 612) --- Number of PSF stars: 45
+Center Coordinate of grid cell 13 are (1020, 1020) --- Number of PSF stars: 54
+Center Coordinates of grid cell 4 are (1020, 1428) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinates of grid cell 4 are (1020, 1836) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinate of grid cell 16 are (1428, 204) --- Number of PSF stars: 52
+Center Coordinate of grid cell 17 are (1428, 612) --- Number of PSF stars: 41
+Center Coordinate of grid cell 18 are (1428, 1020) --- Number of PSF stars: 45
+Center Coordinate of grid cell 19 are (1428, 1428) --- Number of PSF stars: 46
+Center Coordinate of grid cell 20 are (1428, 1836) --- Number of PSF stars: 51
+Center Coordinates of grid cell 4 are (1836, 204) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+Center Coordinate of grid cell 22 are (1836, 612) --- Number of PSF stars: 49
+Center Coordinate of grid cell 23 are (1836, 1020) --- Number of PSF stars: 55
+Center Coordinate of grid cell 24 are (1836, 1428) --- Number of PSF stars: 42
+Center Coordinates of grid cell 4 are (1836, 1836) --- Not enough PSF stars in the cell (number of PSF stars &lt; 40)
+
+Calculating the number of PSF stars in a 4 x 4 grid:
+
+Center Coordinate of grid cell 1 are (256, 256) --- Number of PSF stars: 143
+Center Coordinate of grid cell 2 are (256, 768) --- Number of PSF stars: 75
+Center Coordinate of grid cell 3 are (256, 1280) --- Number of PSF stars: 64
+Center Coordinate of grid cell 4 are (256, 1792) --- Number of PSF stars: 85
+Center Coordinate of grid cell 5 are (768, 256) --- Number of PSF stars: 78
+Center Coordinate of grid cell 6 are (768, 768) --- Number of PSF stars: 69
+Center Coordinate of grid cell 7 are (768, 1280) --- Number of PSF stars: 80
+Center Coordinate of grid cell 8 are (768, 1792) --- Number of PSF stars: 75
+Center Coordinate of grid cell 9 are (1280, 256) --- Number of PSF stars: 76
+Center Coordinate of grid cell 10 are (1280, 768) --- Number of PSF stars: 88
+Center Coordinate of grid cell 11 are (1280, 1280) --- Number of PSF stars: 58
+Center Coordinate of grid cell 12 are (1280, 1792) --- Number of PSF stars: 71
+Center Coordinate of grid cell 13 are (1792, 256) --- Number of PSF stars: 68
+Center Coordinate of grid cell 14 are (1792, 768) --- Number of PSF stars: 65
+Center Coordinate of grid cell 15 are (1792, 1280) --- Number of PSF stars: 68
+Center Coordinate of grid cell 16 are (1792, 1792) --- Number of PSF stars: 68
+
+Calculating the number of PSF stars in a 3 x 3 grid:
+
+Center Coordinate of grid cell 1 are (341, 341) --- Number of PSF stars: 206
+Center Coordinate of grid cell 2 are (341, 1023) --- Number of PSF stars: 117
+Center Coordinate of grid cell 3 are (341, 1705) --- Number of PSF stars: 148
+Center Coordinate of grid cell 4 are (1023, 341) --- Number of PSF stars: 129
+Center Coordinate of grid cell 5 are (1023, 1023) --- Number of PSF stars: 145
+Center Coordinate of grid cell 6 are (1023, 1705) --- Number of PSF stars: 122
+Center Coordinate of grid cell 7 are (1705, 341) --- Number of PSF stars: 125
+Center Coordinate of grid cell 8 are (1705, 1023) --- Number of PSF stars: 116
+Center Coordinate of grid cell 9 are (1705, 1705) --- Number of PSF stars: 121
+
+Calculating the number of PSF stars in a 2 x 2 grid:
+
+Center Coordinate of grid cell 1 are (512, 512) --- Number of PSF stars: 371
+Center Coordinate of grid cell 2 are (512, 1536) --- Number of PSF stars: 311
+Center Coordinate of grid cell 3 are (1536, 512) --- Number of PSF stars: 302
+Center Coordinate of grid cell 4 are (1536, 1536) --- Number of PSF stars: 272
 </pre>
                </div>
               </div>
@@ -2573,6 +3590,246 @@ zoom_in=False, figsize=(14, 14))
               </div>
              </div>
             </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Conversion factor from MJy/sr to DN/s for filter F115W: 3.821892261505127
+Applying conversion to the data
+FWHM for the filter F115W: 1.298
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Using as PSF model WebbPSF PSFs grid
+Performing the photometry on image 1 of filter F115W, detector NRCB1
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>WARNING: The fit may be unsuccessful; check fit_info['message'] for more information. [astropy.modeling.fitting]
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>WARNING: The fit may be unsuccessful; check fit_info['message'] for more information. [astropy.modeling.fitting]
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Time needed to perform photometry on image 1: 0.02 hours
+Number of sources detected in image 1 for filter F115W: 555
+Conversion factor from MJy/sr to DN/s for filter F115W: 3.821892261505127
+Applying conversion to the data
+FWHM for the filter F115W: 1.298
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Using as PSF model WebbPSF PSFs grid
+Performing the photometry on image 2 of filter F115W, detector NRCB1
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>WARNING: The fit may be unsuccessful; check fit_info['message'] for more information. [astropy.modeling.fitting]
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>WARNING: The fit may be unsuccessful; check fit_info['message'] for more information. [astropy.modeling.fitting]
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Time needed to perform photometry on image 2: 0.02 hours
+Number of sources detected in image 2 for filter F115W: 566
+Conversion factor from MJy/sr to DN/s for filter F115W: 3.821892261505127
+Applying conversion to the data
+FWHM for the filter F115W: 1.298
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Using as PSF model WebbPSF PSFs grid
+Performing the photometry on image 3 of filter F115W, detector NRCB1
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>WARNING: The fit may be unsuccessful; check fit_info['message'] for more information. [astropy.modeling.fitting]
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>WARNING: The fit may be unsuccessful; check fit_info['message'] for more information. [astropy.modeling.fitting]
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Time needed to perform photometry on image 3: 0.02 hours
+Number of sources detected in image 3 for filter F115W: 586
+Conversion factor from MJy/sr to DN/s for filter F115W: 3.821892261505127
+Applying conversion to the data
+FWHM for the filter F115W: 1.298
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Using as PSF model WebbPSF PSFs grid
+Performing the photometry on image 4 of filter F115W, detector NRCB1
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>WARNING: The fit may be unsuccessful; check fit_info['message'] for more information. [astropy.modeling.fitting]
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>WARNING: The fit may be unsuccessful; check fit_info['message'] for more information. [astropy.modeling.fitting]
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Time needed to perform photometry on image 4: 0.01 hours
+Number of sources detected in image 4 for filter F115W: 570
+Conversion factor from MJy/sr to DN/s for filter F200W: 2.564082860946655
+Applying conversion to the data
+FWHM for the filter F200W: 2.141
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Using as PSF model WebbPSF PSFs grid
+Performing the photometry on image 1 of filter F200W, detector NRCB1
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>WARNING: The fit may be unsuccessful; check fit_info['message'] for more information. [astropy.modeling.fitting]
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>WARNING: The fit may be unsuccessful; check fit_info['message'] for more information. [astropy.modeling.fitting]
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Time needed to perform photometry on image 1: 0.01 hours
+Number of sources detected in image 1 for filter F200W: 411
+Conversion factor from MJy/sr to DN/s for filter F200W: 2.564082860946655
+Applying conversion to the data
+FWHM for the filter F200W: 2.141
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Using as PSF model WebbPSF PSFs grid
+Performing the photometry on image 2 of filter F200W, detector NRCB1
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>WARNING: The fit may be unsuccessful; check fit_info['message'] for more information. [astropy.modeling.fitting]
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>WARNING: The fit may be unsuccessful; check fit_info['message'] for more information. [astropy.modeling.fitting]
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Time needed to perform photometry on image 2: 0.01 hours
+Number of sources detected in image 2 for filter F200W: 432
+Conversion factor from MJy/sr to DN/s for filter F200W: 2.564082860946655
+Applying conversion to the data
+FWHM for the filter F200W: 2.141
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Using as PSF model WebbPSF PSFs grid
+Performing the photometry on image 3 of filter F200W, detector NRCB1
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>WARNING: The fit may be unsuccessful; check fit_info['message'] for more information. [astropy.modeling.fitting]
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>WARNING: The fit may be unsuccessful; check fit_info['message'] for more information. [astropy.modeling.fitting]
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Time needed to perform photometry on image 3: 0.01 hours
+Number of sources detected in image 3 for filter F200W: 427
+Conversion factor from MJy/sr to DN/s for filter F200W: 2.564082860946655
+Applying conversion to the data
+FWHM for the filter F200W: 2.141
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Using as PSF model WebbPSF PSFs grid
+Performing the photometry on image 4 of filter F200W, detector NRCB1
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>WARNING: The fit may be unsuccessful; check fit_info['message'] for more information. [astropy.modeling.fitting]
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>WARNING: The fit may be unsuccessful; check fit_info['message'] for more information. [astropy.modeling.fitting]
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Time needed to perform photometry on image 4: 0.01 hours
+Number of sources detected in image 4 for filter F200W: 428
+Time elapsed to perform the photometry of the 8 images: 0.12 hours
+</pre>
+              </div>
+             </div>
+            </div>
            </div>
           </section>
           <section id="output-photometry-table">
@@ -2598,6 +3855,895 @@ zoom_in=False, figsize=(14, 14))
                <div class="highlight">
                 <pre><span></span><span class="n">dict_phot</span><span class="p">[</span><span class="s1">'NRCB1'</span><span class="p">][</span><span class="s1">'F115W'</span><span class="p">][</span><span class="s1">'output photometry tables'</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
 </pre>
+               </div>
+              </div>
+             </div>
+             <div class="cell_output docutils container">
+              <div class="output text_html">
+               <div>
+                <i>
+                 QTable length=555
+                </i>
+                <table class="table-striped table-bordered table-condensed" id="table140130114820656">
+                 <thead>
+                  <tr>
+                   <th>
+                    x_0
+                   </th>
+                   <th>
+                    x_fit
+                   </th>
+                   <th>
+                    y_0
+                   </th>
+                   <th>
+                    y_fit
+                   </th>
+                   <th>
+                    flux_0
+                   </th>
+                   <th>
+                    flux_fit
+                   </th>
+                   <th>
+                    id
+                   </th>
+                   <th>
+                    group_id
+                   </th>
+                   <th>
+                    flux_unc
+                   </th>
+                   <th>
+                    x_0_unc
+                   </th>
+                   <th>
+                    y_0_unc
+                   </th>
+                   <th>
+                    iter_detected
+                   </th>
+                  </tr>
+                 </thead>
+                 <thead>
+                  <tr>
+                   <th>
+                    float64
+                   </th>
+                   <th>
+                    float64
+                   </th>
+                   <th>
+                    float64
+                   </th>
+                   <th>
+                    float64
+                   </th>
+                   <th>
+                    float64
+                   </th>
+                   <th>
+                    float64
+                   </th>
+                   <th>
+                    int64
+                   </th>
+                   <th>
+                    int64
+                   </th>
+                   <th>
+                    float64
+                   </th>
+                   <th>
+                    float64
+                   </th>
+                   <th>
+                    float64
+                   </th>
+                   <th>
+                    int64
+                   </th>
+                  </tr>
+                 </thead>
+                 <tr>
+                  <td>
+                   319.4246272692402
+                  </td>
+                  <td>
+                   319.614432609092
+                  </td>
+                  <td>
+                   16.698703477762294
+                  </td>
+                  <td>
+                   16.800449249833818
+                  </td>
+                  <td>
+                   501.75719770521033
+                  </td>
+                  <td>
+                   639.8321697911673
+                  </td>
+                  <td>
+                   1
+                  </td>
+                  <td>
+                   1
+                  </td>
+                  <td>
+                   3.3209801416078935
+                  </td>
+                  <td>
+                   0.004215855731049078
+                  </td>
+                  <td>
+                   0.004723466179597582
+                  </td>
+                  <td>
+                   1
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   239.0768721020347
+                  </td>
+                  <td>
+                   239.06415408391143
+                  </td>
+                  <td>
+                   21.592480836614882
+                  </td>
+                  <td>
+                   21.41414253086782
+                  </td>
+                  <td>
+                   343.6234934840883
+                  </td>
+                  <td>
+                   435.724132305131
+                  </td>
+                  <td>
+                   2
+                  </td>
+                  <td>
+                   2
+                  </td>
+                  <td>
+                   2.7507372613617393
+                  </td>
+                  <td>
+                   0.0066146440554843726
+                  </td>
+                  <td>
+                   0.005116731871655969
+                  </td>
+                  <td>
+                   1
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   486.6367666857731
+                  </td>
+                  <td>
+                   486.38990920579386
+                  </td>
+                  <td>
+                   25.298505463617687
+                  </td>
+                  <td>
+                   25.605558632158374
+                  </td>
+                  <td>
+                   604.8881437343549
+                  </td>
+                  <td>
+                   767.129276688593
+                  </td>
+                  <td>
+                   3
+                  </td>
+                  <td>
+                   3
+                  </td>
+                  <td>
+                   4.269360234598296
+                  </td>
+                  <td>
+                   0.004327878110198025
+                  </td>
+                  <td>
+                   0.004403692771710415
+                  </td>
+                  <td>
+                   1
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   1498.5839125909997
+                  </td>
+                  <td>
+                   1498.365719035797
+                  </td>
+                  <td>
+                   25.6631229240583
+                  </td>
+                  <td>
+                   25.767535093427128
+                  </td>
+                  <td>
+                   378.6377445720579
+                  </td>
+                  <td>
+                   471.4310679400343
+                  </td>
+                  <td>
+                   4
+                  </td>
+                  <td>
+                   4
+                  </td>
+                  <td>
+                   3.884821313014044
+                  </td>
+                  <td>
+                   0.006425460106236856
+                  </td>
+                  <td>
+                   0.007276487319329438
+                  </td>
+                  <td>
+                   1
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   1772.2253846017907
+                  </td>
+                  <td>
+                   1772.1719268323254
+                  </td>
+                  <td>
+                   25.870632603225165
+                  </td>
+                  <td>
+                   25.90373355911056
+                  </td>
+                  <td>
+                   309.43207431013496
+                  </td>
+                  <td>
+                   388.91158213171974
+                  </td>
+                  <td>
+                   5
+                  </td>
+                  <td>
+                   5
+                  </td>
+                  <td>
+                   4.461046441902263
+                  </td>
+                  <td>
+                   0.010011899089591778
+                  </td>
+                  <td>
+                   0.011345607755247502
+                  </td>
+                  <td>
+                   1
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   1249.3889857168049
+                  </td>
+                  <td>
+                   1249.513706234338
+                  </td>
+                  <td>
+                   33.16566789529202
+                  </td>
+                  <td>
+                   33.61719739076302
+                  </td>
+                  <td>
+                   5405.538619274992
+                  </td>
+                  <td>
+                   3078.9387831047143
+                  </td>
+                  <td>
+                   6
+                  </td>
+                  <td>
+                   6
+                  </td>
+                  <td>
+                   14.909640537227755
+                  </td>
+                  <td>
+                   0.011553779775221528
+                  </td>
+                  <td>
+                   0.010356846669278308
+                  </td>
+                  <td>
+                   1
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   1969.249564486074
+                  </td>
+                  <td>
+                   1969.1858683501841
+                  </td>
+                  <td>
+                   33.29229202474314
+                  </td>
+                  <td>
+                   33.58281460875994
+                  </td>
+                  <td>
+                   867.9781668624267
+                  </td>
+                  <td>
+                   1111.4098283229755
+                  </td>
+                  <td>
+                   7
+                  </td>
+                  <td>
+                   7
+                  </td>
+                  <td>
+                   90.64468686030148
+                  </td>
+                  <td>
+                   0.03699356120689583
+                  </td>
+                  <td>
+                   0.029755176433755817
+                  </td>
+                  <td>
+                   1
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   1815.8771749851915
+                  </td>
+                  <td>
+                   1815.8941205382537
+                  </td>
+                  <td>
+                   39.23846442364802
+                  </td>
+                  <td>
+                   39.28430808471543
+                  </td>
+                  <td>
+                   2717.0411072916036
+                  </td>
+                  <td>
+                   2666.8461101276366
+                  </td>
+                  <td>
+                   8
+                  </td>
+                  <td>
+                   8
+                  </td>
+                  <td>
+                   3.4326493507976203
+                  </td>
+                  <td>
+                   0.004543898723236874
+                  </td>
+                  <td>
+                   0.0060803377545316185
+                  </td>
+                  <td>
+                   1
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   524.6487414790004
+                  </td>
+                  <td>
+                   524.3924351739768
+                  </td>
+                  <td>
+                   47.0243260305926
+                  </td>
+                  <td>
+                   47.05182493381155
+                  </td>
+                  <td>
+                   472.5062413512691
+                  </td>
+                  <td>
+                   591.3874391128802
+                  </td>
+                  <td>
+                   9
+                  </td>
+                  <td>
+                   9
+                  </td>
+                  <td>
+                   36.965582079111336
+                  </td>
+                  <td>
+                   0.023996624725601087
+                  </td>
+                  <td>
+                   0.02459355475797289
+                  </td>
+                  <td>
+                   1
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   283.71266676422766
+                  </td>
+                  <td>
+                   283.6971715320774
+                  </td>
+                  <td>
+                   51.77102830090859
+                  </td>
+                  <td>
+                   51.77366422883455
+                  </td>
+                  <td>
+                   1290.358437806277
+                  </td>
+                  <td>
+                   1338.3757775256674
+                  </td>
+                  <td>
+                   10
+                  </td>
+                  <td>
+                   10
+                  </td>
+                  <td>
+                   10.462067951300027
+                  </td>
+                  <td>
+                   0.004620143414951886
+                  </td>
+                  <td>
+                   0.004635962767410058
+                  </td>
+                  <td>
+                   1
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   ...
+                  </td>
+                  <td>
+                   ...
+                  </td>
+                  <td>
+                   ...
+                  </td>
+                  <td>
+                   ...
+                  </td>
+                  <td>
+                   ...
+                  </td>
+                  <td>
+                   ...
+                  </td>
+                  <td>
+                   ...
+                  </td>
+                  <td>
+                   ...
+                  </td>
+                  <td>
+                   ...
+                  </td>
+                  <td>
+                   ...
+                  </td>
+                  <td>
+                   ...
+                  </td>
+                  <td>
+                   ...
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   1662.0784227181123
+                  </td>
+                  <td>
+                   1661.7031980038075
+                  </td>
+                  <td>
+                   1707.0680962395472
+                  </td>
+                  <td>
+                   1705.7722356711688
+                  </td>
+                  <td>
+                   -1028.1388861054534
+                  </td>
+                  <td>
+                   -728.7203192871494
+                  </td>
+                  <td>
+                   31
+                  </td>
+                  <td>
+                   24
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   2
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   632.0481580197213
+                  </td>
+                  <td>
+                   633.3034746855061
+                  </td>
+                  <td>
+                   1832.1091309936398
+                  </td>
+                  <td>
+                   1832.279021139653
+                  </td>
+                  <td>
+                   -939.316915566727
+                  </td>
+                  <td>
+                   -581.7585805081652
+                  </td>
+                  <td>
+                   32
+                  </td>
+                  <td>
+                   25
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   2
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   829.2835527234259
+                  </td>
+                  <td>
+                   829.5020142588331
+                  </td>
+                  <td>
+                   1840.4717024078438
+                  </td>
+                  <td>
+                   1840.2109180818131
+                  </td>
+                  <td>
+                   491.48489633896986
+                  </td>
+                  <td>
+                   498.1651917503171
+                  </td>
+                  <td>
+                   33
+                  </td>
+                  <td>
+                   26
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   2
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   1953.188670819475
+                  </td>
+                  <td>
+                   1953.7030392134022
+                  </td>
+                  <td>
+                   1879.2076214294204
+                  </td>
+                  <td>
+                   1878.9846850462613
+                  </td>
+                  <td>
+                   785.0123245478006
+                  </td>
+                  <td>
+                   814.7267880243177
+                  </td>
+                  <td>
+                   34
+                  </td>
+                  <td>
+                   27
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   2
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   1803.0450422242557
+                  </td>
+                  <td>
+                   1803.095580208553
+                  </td>
+                  <td>
+                   1888.5964307997951
+                  </td>
+                  <td>
+                   1889.0521854882068
+                  </td>
+                  <td>
+                   264.11587901377294
+                  </td>
+                  <td>
+                   343.6584570045035
+                  </td>
+                  <td>
+                   35
+                  </td>
+                  <td>
+                   28
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   2
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   80.96610720572573
+                  </td>
+                  <td>
+                   81.10557758064944
+                  </td>
+                  <td>
+                   1947.0145813103545
+                  </td>
+                  <td>
+                   1945.7564534138778
+                  </td>
+                  <td>
+                   -965.9685418712497
+                  </td>
+                  <td>
+                   -592.384775268624
+                  </td>
+                  <td>
+                   36
+                  </td>
+                  <td>
+                   29
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   2
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   219.98598207746315
+                  </td>
+                  <td>
+                   219.8894676280997
+                  </td>
+                  <td>
+                   1947.0278130114093
+                  </td>
+                  <td>
+                   1945.7251647028247
+                  </td>
+                  <td>
+                   -705.7095102455148
+                  </td>
+                  <td>
+                   -440.75446734473
+                  </td>
+                  <td>
+                   37
+                  </td>
+                  <td>
+                   30
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   2
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   904.1745255971633
+                  </td>
+                  <td>
+                   904.0606795582356
+                  </td>
+                  <td>
+                   1981.5235153514277
+                  </td>
+                  <td>
+                   1981.8314994803115
+                  </td>
+                  <td>
+                   572.6413588150949
+                  </td>
+                  <td>
+                   542.9774488569387
+                  </td>
+                  <td>
+                   38
+                  </td>
+                  <td>
+                   31
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   2
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   1194.960763318125
+                  </td>
+                  <td>
+                   1195.0061938335255
+                  </td>
+                  <td>
+                   1992.26818345456
+                  </td>
+                  <td>
+                   1992.397518743671
+                  </td>
+                  <td>
+                   1601.6043576535567
+                  </td>
+                  <td>
+                   1142.223319010138
+                  </td>
+                  <td>
+                   39
+                  </td>
+                  <td>
+                   32
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   2
+                  </td>
+                 </tr>
+                 <tr>
+                  <td>
+                   1911.263903967847
+                  </td>
+                  <td>
+                   1911.659165965828
+                  </td>
+                  <td>
+                   2038.010069945047
+                  </td>
+                  <td>
+                   2037.6251208638475
+                  </td>
+                  <td>
+                   907.3328373002328
+                  </td>
+                  <td>
+                   688.0135646796034
+                  </td>
+                  <td>
+                   40
+                  </td>
+                  <td>
+                   33
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   --
+                  </td>
+                  <td>
+                   2
+                  </td>
+                 </tr>
+                </table>
                </div>
               </div>
              </div>
@@ -2652,6 +4798,9 @@ zoom_in=False, figsize=(14, 14))
 </pre>
               </div>
              </div>
+            </div>
+            <div class="cell_output docutils container">
+             <img alt="../../_images/NIRCam_PSF_Photometry_Example_60_0.png" src="../../_images/NIRCam_PSF_Photometry_Example_60_0.png"/>
             </div>
            </div>
           </section>
@@ -2725,6 +4874,14 @@ zoom_in=False, figsize=(14, 14))
               </div>
              </div>
             </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Downloading Photometry Output
+</pre>
+              </div>
+             </div>
+            </div>
            </div>
           </section>
           <section id="transform-the-images-to-datamodel">
@@ -2757,6 +4914,118 @@ zoom_in=False, figsize=(14, 14))
 
     <span class="n">image_f200w</span> <span class="o">=</span> <span class="n">ImageModel</span><span class="p">(</span><span class="n">dict_images</span><span class="p">[</span><span class="s1">'NRCB1'</span><span class="p">][</span><span class="s1">'F200W'</span><span class="p">][</span><span class="s1">'images'</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
     <span class="n">images_f200w</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image_f200w</span><span class="p">)</span>
+</pre>
+              </div>
+             </div>
+            </div>
+            <div class="cell_output docutils container">
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.extensions plugin from package asdf-astropy==0.2.1 failed to load:
+
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
+  warnings.warn(
+/usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.extensions plugin from package gwcs==0.18.1 failed to load:
+
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
+  warnings.warn(
+/usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.extensions plugin from package jwst==1.5.2 failed to load:
+
+VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'))
+  warnings.warn(
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf_extensions plugin from package jwst==1.5.2 failed to load:
+
+VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'))
+  warnings.warn(
+/usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf_extensions plugin from package specutils==1.7.0 failed to load:
+
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
+  warnings.warn(
+/usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf_extensions plugin from package stpipe==0.3.3 failed to load:
+
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
+  warnings.warn(
+/usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf_extensions plugin from package asdf==2.12.0 failed to load:
+
+VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'))
+  warnings.warn(
+/usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.resource_mappings plugin from package asdf-astropy==0.2.1 failed to load:
+
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
+  warnings.warn(
+/usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.resource_mappings plugin from package asdf-coordinates-schemas==0.1.0 failed to load:
+
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
+  warnings.warn(
+/usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.resource_mappings plugin from package asdf-wcs-schemas==0.1.1 failed to load:
+
+ContextualVersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'), {'asdf'})
+  warnings.warn(
+/usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.resource_mappings plugin from package jwst==1.5.2 failed to load:
+
+VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'))
+  warnings.warn(
+/usr/share/miniconda/lib/python3.9/site-packages/asdf/entry_points.py:46: AsdfWarning: asdf.resource_mappings plugin from package asdf==2.12.0 failed to load:
+
+VersionConflict: (jsonschema 3.2.0 (/usr/share/miniconda/lib/python3.9/site-packages), Requirement.parse('jsonschema&gt;=4.0.1'))
+  warnings.warn(
+</pre>
+              </div>
+             </div>
+             <div class="output traceback highlight-ipythontb notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="nn">Input In [29],</span> in <span class="ni">&lt;cell line: 4&gt;</span><span class="nt">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">images_f200w</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dict_images</span><span class="p">[</span><span class="s1">'NRCB1'</span><span class="p">][</span><span class="s1">'F115W'</span><span class="p">][</span><span class="s1">'images'</span><span class="p">]),</span> <span class="mi">1</span><span class="p">):</span>
+<span class="ne">----&gt; </span><span class="mi">6</span>     <span class="n">image_f115w</span> <span class="o">=</span> <span class="n">ImageModel</span><span class="p">(</span><span class="n">dict_images</span><span class="p">[</span><span class="s1">'NRCB1'</span><span class="p">][</span><span class="s1">'F115W'</span><span class="p">][</span><span class="s1">'images'</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span>     <span class="n">images_f115w</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image_f115w</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dict_images</span><span class="p">[</span><span class="s1">'NRCB1'</span><span class="p">][</span><span class="s1">'F200W'</span><span class="p">][</span><span class="s1">'images'</span><span class="p">]),</span> <span class="mi">1</span><span class="p">):</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/stdatamodels/model_base.py:174,</span> in <span class="ni">DataModel.__init__</span><span class="nt">(self, init, schema, memmap, pass_invalid_values, strict_validation, validate_on_assignment, cast_fits_arrays, validate_arrays, ignore_missing_extensions, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">171</span>         <span class="n">schema</span> <span class="o">=</span> <span class="n">_DEFAULT_SCHEMA</span>
+<span class="g g-Whitespace">    </span><span class="mi">172</span>     <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">173</span>         <span class="c1"># Create an AsdfFile so we can use its resolver for loading schemas</span>
+<span class="ne">--&gt; </span><span class="mi">174</span>         <span class="n">schema</span> <span class="o">=</span> <span class="n">asdf_schema</span><span class="o">.</span><span class="n">load_schema</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">schema_url</span><span class="p">,</span> <span class="n">resolve_references</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">176</span> <span class="bp">self</span><span class="o">.</span><span class="n">_schema</span> <span class="o">=</span> <span class="n">mschema</span><span class="o">.</span><span class="n">merge_property_trees</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">178</span> <span class="c1"># Provide the object as context to other classes and functions</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/asdf/schema.py:435,</span> in <span class="ni">load_schema</span><span class="nt">(url, resolver, resolve_references, resolve_local_refs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">430</span>     <span class="n">resolver</span> <span class="o">=</span> <span class="n">extension</span><span class="o">.</span><span class="n">get_default_resolver</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">432</span> <span class="c1"># We want to cache the work that went into constructing the schema, but returning</span>
+<span class="g g-Whitespace">    </span><span class="mi">433</span> <span class="c1"># the same object is treacherous, because users who mutate the result will not</span>
+<span class="g g-Whitespace">    </span><span class="mi">434</span> <span class="c1"># expect that they're changing the schema everywhere.</span>
+<span class="ne">--&gt; </span><span class="mi">435</span> <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">_load_schema_cached</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">resolver</span><span class="p">,</span> <span class="n">resolve_references</span><span class="p">,</span> <span class="n">resolve_local_refs</span><span class="p">))</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/asdf/schema.py:482,</span> in <span class="ni">_load_schema_cached</span><span class="nt">(url, resolver, resolve_references, resolve_local_refs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">479</span> <span class="nd">@lru_cache</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">480</span> <span class="k">def</span> <span class="nf">_load_schema_cached</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">resolver</span><span class="p">,</span> <span class="n">resolve_references</span><span class="p">,</span> <span class="n">resolve_local_refs</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">481</span>     <span class="n">loader</span> <span class="o">=</span> <span class="n">_make_schema_loader</span><span class="p">(</span><span class="n">resolver</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">482</span>     <span class="n">schema</span><span class="p">,</span> <span class="n">url</span> <span class="o">=</span> <span class="n">loader</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">484</span>     <span class="k">if</span> <span class="n">resolve_references</span> <span class="ow">or</span> <span class="n">resolve_local_refs</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">486</span>         <span class="k">def</span> <span class="nf">resolve_refs</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">json_id</span><span class="p">):</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/asdf/schema.py:359,</span> in <span class="ni">_make_schema_loader.&lt;locals&gt;.load_schema</span><span class="nt">(url)</span>
+<span class="g g-Whitespace">    </span><span class="mi">355</span>     <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">url</span>
+<span class="g g-Whitespace">    </span><span class="mi">357</span> <span class="c1"># If not, this must be a URL (or missing).  Fall back to fetching</span>
+<span class="g g-Whitespace">    </span><span class="mi">358</span> <span class="c1"># the schema the old way:</span>
+<span class="ne">--&gt; </span><span class="mi">359</span> <span class="k">return</span> <span class="n">_load_schema</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/asdf/schema.py:323,</span> in <span class="ni">_load_schema</span><span class="nt">(url)</span>
+<span class="g g-Whitespace">    </span><span class="mi">320</span> <span class="nd">@lru_cache</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">321</span> <span class="k">def</span> <span class="nf">_load_schema</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">322</span>     <span class="k">if</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"http://"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"https://"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"asdf://"</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">323</span>         <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">"Unable to fetch schema from non-file URL: "</span> <span class="o">+</span> <span class="n">url</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">325</span>     <span class="k">with</span> <span class="n">generic_io</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">326</span>         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">url</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"json"</span><span class="p">):</span>
+
+<span class="ne">FileNotFoundError</span>: Unable to fetch schema from non-file URL: http://stsci.edu/schemas/jwst_datamodel/image.schema
 </pre>
               </div>
              </div>
