@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+  <title>
+   NIRCam Preimaging: Pipeline Stages 1, 2 — STScI JDAT Notebooks
+  </title>
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet"/>
+  <link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet"/>
+  <link href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css" rel="stylesheet"/>
+  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+  <link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/togglebutton.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/copybutton.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/mystnb.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/sphinx-thebe.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/main.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" rel="stylesheet" type="text/css"/>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf" rel="preload"/>
+  <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js">
+  </script>
+  <script src="../../_static/jquery.js">
+  </script>
+  <script src="../../_static/underscore.js">
+  </script>
+  <script src="../../_static/doctools.js">
+  </script>
+  <script src="../../_static/clipboard.min.js">
+  </script>
+  <script src="../../_static/copybutton.js">
+  </script>
+  <script src="../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456">
+  </script>
+  <script>
+   let toggleHintShow = 'Click to show';
+  </script>
+  <script>
+   let toggleHintHide = 'Click to hide';
+  </script>
+  <script>
+   let toggleOpenOnPrint = 'true';
+  </script>
+  <script src="../../_static/togglebutton.js">
+  </script>
+  <script>
+   var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';
+  </script>
+  <script src="../../_static/design-tabs.js">
+  </script>
+  <script>
+   const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+  </script>
+  <script async="async" src="../../_static/sphinx-thebe.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js">
+  </script>
+  <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.1/dist/embed-amd.js">
+  </script>
+  <link href="../../genindex.html" rel="index" title="Index"/>
+  <link href="../../search.html" rel="search" title="Search"/>
+  <link href="preimaging_03_association.html" rel="next" title="NIRCam Preimaging: Pipeline Stage 3"/>
+  <link href="preimaging_01_mirage.html" rel="prev" title="NIRCam Preimaging: MIRAGE Simulations"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="None" name="docsearch:language"/>
+  <!-- Google Analytics -->
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3">
+  </script>
+  <script>
+   window.dataLayer = window.dataLayer || [];
+                    function gtag(){ dataLayer.push(arguments); }
+                    gtag('js', new Date());
+                    gtag('config', 'G-D46G4HKJY3');
+  </script>
+ </head>
+ <body data-offset="60" data-spy="scroll" data-target="#bd-toc-nav">
+  <!-- Checkboxes to toggle the left sidebar -->
+  <input aria-label="Toggle navigation sidebar" class="sidebar-toggle" id="__navigation" name="__navigation" type="checkbox"/>
+  <label class="overlay overlay-navbar" for="__navigation">
+   <div class="visually-hidden">
+    Toggle navigation sidebar
+   </div>
+  </label>
+  <!-- Checkboxes to toggle the in-page toc -->
+  <input aria-label="Toggle in-page Table of Contents" class="sidebar-toggle" id="__page-toc" name="__page-toc" type="checkbox"/>
+  <label class="overlay overlay-pagetoc" for="__page-toc">
+   <div class="visually-hidden">
+    Toggle in-page Table of Contents
+   </div>
+  </label>
+  <!-- Headers at the top -->
+  <div class="announcement header-item noprint">
+  </div>
+  <div class="header header-item noprint">
+  </div>
+  <div class="container-fluid" id="banner">
+  </div>
+  <div class="container-xl">
+   <div class="row">
+    <!-- Sidebar -->
+    <div class="bd-sidebar noprint" id="site-navigation">
+     <div class="bd-sidebar__content">
+      <div class="bd-sidebar__top">
+       <div class="navbar-brand-box">
+        <a class="navbar-brand text-wrap" href="../../index.html">
+         <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+         <img alt="logo" class="logo" src="../../_static/stsci_logo2.png"/>
+         <h1 class="site-logo" id="site-title">
+          STScI JDAT Notebooks
+         </h1>
+        </a>
+       </div>
+       <form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
+        <i class="icon fas fa-search">
+        </i>
+        <input aria-label="Search this book..." autocomplete="off" class="form-control" id="search-input" name="q" placeholder="Search this book..." type="search"/>
+       </form>
+       <nav aria-label="Main" class="bd-links" id="bd-docs-nav">
+        <div class="bd-toc-item active">
+         <ul class="nav bd-sidenav bd-sidenav__home-link">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../intro.html">
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           Cross-Instrument
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../asdf_example/asdf_example.html">
+            ASDF Example
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../background_estimation_imaging/Imaging%20Sky%20Background%20Estimation.html">
+            Complex 2D Background
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">
+            Composite Model Spectral Fitting
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">
+            MAST Query
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">
+            Specviz Simple Demo
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           MIRI
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">
+            MRS Mstar - Run Pipeline
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">
+            MRS Mstar - Data Analysis
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">
+            IFU of YSOs in LMC
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../MIRI_LRS_spectral_extraction/miri_lrs_spectral_extraction.html">
+            LRS Optimal Spectral Extraction
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           NIRCam
+          </span>
+         </p>
+         <ul class="current nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">
+            Point Source Aperture Photometry
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRCam_photometry/NIRCam%20multiband%20photometry.html">
+            Extended Aperture Photometry
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">
+            PSF Photometry
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">
+            Cross-Filter PSF Matching
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="preimaging_01_mirage.html">
+            NIRCam Preimaging: MIRAGE Simulations
+           </a>
+          </li>
+          <li class="toctree-l1 current active">
+           <a class="current reference internal" href="#">
+            Preimaging - Pipeline Stages 1, 2
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="preimaging_03_association.html">
+            NIRCam Preimaging: Pipeline Stage 3
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           NIRISS
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/00.%20Optimal%20extraction.html">
+            WFSS Spectra - Optimal Extraction
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/01.%20Combine%20and%20normalize%201D%20spectra.html">
+            WFSS Spectra - Combine and Normalize 1D Spectra
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/02.%20Cross%20correlation%20template.html">
+            Part 2: Cross Correlation to Determine Redshift of NIRISS WFSS Spectra
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/03.%20Spatially%20resolved%20emission%20line%20map.html">
+            WFSS Spectra - Emission Line Map
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../niriss_ami_binary/1_niriss_ami_binary.html">
+            AMI - MIRAGE
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../niriss_ami_binary/2_niriss_ami_binary.html">
+            AMI - Pipeline
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../soss-transit-spectroscopy/HAT-P-1b-PART3-data-analysis.html">
+            SOSS Transit Spectroscopy
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           NIRSpec
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">
+            IFU Cube Fitting
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../cube_fitting/cube_fitting.html">
+            IFU Cube Modeling
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../ifu_optimal/ifu_optimal.html">
+            IFU Optimal Spectral Extraction
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../optimal_extraction_dynamic/Spectral%20Extraction.html">
+            NIRSpec MOS Optimal Spectral Extraction
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../mos-spectroscopy/MOSspec_sv06_revised.html">
+            MOS Spectroscopy of Extragalactic Field
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">
+            BOTS Time Series Observations
+           </a>
+          </li>
+         </ul>
+        </div>
+       </nav>
+      </div>
+      <div class="bd-sidebar__bottom">
+       <!-- To handle the deprecated key -->
+       <div class="navbar_extra_footer">
+        Powered by
+        <a href="https://jupyterbook.org">
+         Jupyter Book
+        </a>
+       </div>
+      </div>
+     </div>
+     <div id="rtd-footer-container">
+     </div>
+    </div>
+    <!-- A tiny helper pixel to detect if we've scrolled -->
+    <div class="sbt-scroll-pixel-helper">
+    </div>
+    <!-- Main content -->
+    <div class="col py-0 content-container">
+     <div class="header-article row sticky-top noprint">
+      <div class="col py-1 d-flex header-article-main">
+       <div class="header-article__left">
+        <label class="headerbtn" data-placement="right" data-toggle="tooltip" for="__navigation" title="Toggle navigation">
+         <span class="headerbtn__icon-container">
+          <i class="fas fa-bars">
+          </i>
+         </span>
+        </label>
+       </div>
+       <div class="header-article__right">
+        <div class="menu-dropdown menu-dropdown-launch-buttons">
+         <button aria-label="Launch interactive content" class="headerbtn menu-dropdown__trigger">
+          <i class="fas fa-rocket">
+          </i>
+         </button>
+         <div class="menu-dropdown__content">
+          <ul>
+           <li>
+            <button class="headerbtn headerbtn-launch-thebe" data-placement="left" data-toggle="tooltip" onclick="initThebeSBT()" title="Launch Thebe">
+             <span class="headerbtn__icon-container">
+              <i class="fas fa-play">
+              </i>
+             </span>
+             <span class="headerbtn__text-container">
+              Live Code
+             </span>
+            </button>
+           </li>
+          </ul>
+         </div>
+        </div>
+        <button class="headerbtn" data-placement="bottom" data-toggle="tooltip" onclick="toggleFullScreen()" title="Fullscreen mode">
+         <span class="headerbtn__icon-container">
+          <i class="fas fa-expand">
+          </i>
+         </span>
+        </button>
+        <div class="menu-dropdown menu-dropdown-repository-buttons">
+         <button aria-label="Source repositories" class="headerbtn menu-dropdown__trigger">
+          <i class="fab fa-github">
+          </i>
+         </button>
+         <div class="menu-dropdown__content">
+          <ul>
+           <li>
+            <a class="headerbtn" data-placement="left" data-toggle="tooltip" href="https://github.com/spacetelescope/jdat_notebooks/" title="Source repository">
+             <span class="headerbtn__icon-container">
+              <i class="fab fa-github">
+              </i>
+             </span>
+             <span class="headerbtn__text-container">
+              repository
+             </span>
+            </a>
+           </li>
+           <li>
+            <a class="headerbtn" data-placement="left" data-toggle="tooltip" href="https://github.com/spacetelescope/jdat_notebooks//issues/new?title=Issue%20on%20page%20%2Fnotebooks/preimaging/preimaging_02_calwebb.html&amp;body=Your%20issue%20content%20here." title="Open an issue">
+             <span class="headerbtn__icon-container">
+              <i class="fas fa-lightbulb">
+              </i>
+             </span>
+             <span class="headerbtn__text-container">
+              open issue
+             </span>
+            </a>
+           </li>
+          </ul>
+         </div>
+        </div>
+        <div class="menu-dropdown menu-dropdown-download-buttons">
+         <button aria-label="Download this page" class="headerbtn menu-dropdown__trigger">
+          <i class="fas fa-download">
+          </i>
+         </button>
+         <div class="menu-dropdown__content">
+          <ul>
+           <li>
+            <a class="headerbtn" data-placement="left" data-toggle="tooltip" href="../../_sources/notebooks/preimaging/preimaging_02_calwebb.ipynb" title="Download source file">
+             <span class="headerbtn__icon-container">
+              <i class="fas fa-file">
+              </i>
+             </span>
+             <span class="headerbtn__text-container">
+              .ipynb
+             </span>
+            </a>
+           </li>
+           <li>
+            <button class="headerbtn" data-placement="left" data-toggle="tooltip" onclick="printPdf(this)" title="Print to PDF">
+             <span class="headerbtn__icon-container">
+              <i class="fas fa-file-pdf">
+              </i>
+             </span>
+             <span class="headerbtn__text-container">
+              .pdf
+             </span>
+            </button>
+           </li>
+          </ul>
+         </div>
+        </div>
+        <label class="headerbtn headerbtn-page-toc" for="__page-toc">
+         <span class="headerbtn__icon-container">
+          <i class="fas fa-list">
+          </i>
+         </span>
+        </label>
+       </div>
+      </div>
+      <!-- Table of contents -->
+      <div class="col-md-3 bd-toc show noprint">
+       <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list">
+        </i>
+        Contents
+       </div>
+       <nav aria-label="Page" id="bd-toc-nav">
+        <ul class="visible nav section-nav flex-column">
+         <li class="toc-h2 nav-item toc-entry">
+          <a class="reference internal nav-link" href="#introduction">
+           Introduction
+          </a>
+         </li>
+         <li class="toc-h2 nav-item toc-entry">
+          <a class="reference internal nav-link" href="#setting-things-up">
+           Setting things up
+          </a>
+         </li>
+         <li class="toc-h2 nav-item toc-entry">
+          <a class="reference internal nav-link" href="#executing-calwebb-detector1">
+           Executing calwebb_detector1
+          </a>
+         </li>
+         <li class="toc-h2 nav-item toc-entry">
+          <a class="reference internal nav-link" href="#executing-calwebb-image2">
+           Executing calwebb_image2
+          </a>
+         </li>
+        </ul>
+       </nav>
+      </div>
+     </div>
+     <div class="article row">
+      <div class="col pl-md-3 pl-lg-5 content-container">
+       <!-- Table of contents that is only displayed when printing the page -->
+       <div class="onlyprint" id="jb-print-docs-body">
+        <h1>
+         NIRCam Preimaging: Pipeline Stages 1, 2
+        </h1>
+        <!-- Table of contents -->
+        <div id="print-main-content">
+         <div id="jb-print-toc">
+          <div>
+           <h2>
+            Contents
+           </h2>
+          </div>
+          <nav aria-label="Page">
+           <ul class="visible nav section-nav flex-column">
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#introduction">
+              Introduction
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#setting-things-up">
+              Setting things up
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#executing-calwebb-detector1">
+              Executing calwebb_detector1
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#executing-calwebb-image2">
+              Executing calwebb_image2
+             </a>
+            </li>
+           </ul>
+          </nav>
+         </div>
+        </div>
+       </div>
+       <main id="main-content" role="main">
+        <div>
+         <section class="tex2jax_ignore mathjax_ignore" id="nircam-preimaging-pipeline-stages-1-2">
+          <h1>
+           NIRCam Preimaging: Pipeline Stages 1, 2
+           <a class="headerlink" href="#nircam-preimaging-pipeline-stages-1-2" title="Permalink to this headline">
+            #
+           </a>
+          </h1>
+          <p>
+           <strong>
+            Use case:
+           </strong>
+           Running JWST Pipeline on NIRCam Preimaging Simulations.
+           <br/>
+           <strong>
+            Data:
+           </strong>
+           JWST simulated NIRCam data from MIRAGE; LMC.
+           <br/>
+           <strong>
+            Tools:
+           </strong>
+           jwst.
+           <br/>
+           <strong>
+            Cross-intrument:
+           </strong>
+           NIRCam.
+           <br/>
+           <strong>
+            Documentation:
+           </strong>
+           This notebook is part of a STScI’s larger
+           <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis">
+            post-pipeline Data Analysis Tools Ecosystem
+           </a>
+           .
+           <br/>
+          </p>
+          <section id="introduction">
+           <h2>
+            Introduction
+            <a class="headerlink" href="#introduction" title="Permalink to this headline">
+             #
+            </a>
+           </h2>
+           <p>
+            This Notebook must be executed from an environment that has the JWST pipeline installed. In this tutorial we show step by step instructions on how to run the JWST pipeline on the simulated images created using the previous notebook.
+           </p>
+           <p>
+            This notebook executes the first two steps of the NIRCam pipeline on the images that were created with the simulator MIRAGE in
+            <code class="docutils literal notranslate">
+             <span class="pre">
+              preimaging_01_mirage
+             </span>
+            </code>
+            . The example shows how to execute the pipeline on the F150W images only.
+           </p>
+          </section>
+          <section id="setting-things-up">
+           <h2>
+            Setting things up
+            <a class="headerlink" href="#setting-things-up" title="Permalink to this headline">
+             #
+            </a>
+           </h2>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">exit</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">jwst.pipeline</span> <span class="kn">import</span> <span class="n">Detector1Pipeline</span>
+<span class="kn">from</span> <span class="nn">jwst.pipeline</span> <span class="kn">import</span> <span class="n">Image2Pipeline</span>
+<span class="kn">from</span> <span class="nn">jwst.pipeline</span> <span class="kn">import</span> <span class="n">calwebb_image2</span>
+
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="n">path</span><span class="o">=</span><span class="s1">'./.'</span> <span class="c1"># this is the working directory</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+</pre>
+              </div>
+             </div>
+            </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>/home/runner/work/jdat_notebooks/jdat_notebooks/notebooks/preimaging
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="n">filtname</span> <span class="o">=</span> <span class="s1">'f150w'</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="c1"># gather the F150W yaml files back in the working directory</span>
+<span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+<span class="n">filter_pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="s1">'yaml'</span><span class="p">,</span> <span class="n">filtname</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="s1">'jw*yaml'</span><span class="p">)</span> 
+<span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">filter_pattern</span><span class="p">)[:]</span>
+<span class="n">inputyaml</span> <span class="o">=</span> <span class="n">files</span>
+<span class="n">namelist</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">outlist</span> <span class="o">=</span> <span class="p">[]</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <p>
+            We define the calwebb_detector1 configuration file to use in the pipeline call.
+           </p>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="n">calwebb_detector1_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'preimaging'</span><span class="p">,</span> <span class="s1">'calwebb_detector1.cfg'</span><span class="p">)</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+          </section>
+          <section id="executing-calwebb-detector1">
+           <h2>
+            Executing calwebb_detector1
+            <a class="headerlink" href="#executing-calwebb-detector1" title="Permalink to this headline">
+             #
+            </a>
+           </h2>
+           <p>
+            We select the *_uncal.fits files and execute calwebb_detector1 to generate the *_rate.fits files.
+           </p>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="k">for</span> <span class="n">input_yaml_path</span> <span class="ow">in</span> <span class="n">inputyaml</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">input_yaml_path</span><span class="p">)</span> 
+    
+    <span class="n">base</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_yaml_path</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">base</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">exi</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">'_rate.fits'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">exi</span><span class="p">:</span>
+        <span class="k">continue</span>
+        
+    <span class="n">namelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">'_uncal.fits'</span><span class="p">)</span>
+    <span class="n">outlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">'.fits'</span><span class="p">)</span>
+    
+<span class="nb">print</span><span class="p">(</span><span class="n">namelist</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">outlist</span><span class="p">)</span>
+
+<span class="n">files</span>  <span class="o">=</span> <span class="n">namelist</span> 
+<span class="n">outfile</span> <span class="o">=</span> <span class="n">outlist</span> 
+
+
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+    <span class="n">Detector1Pipeline</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="n">calwebb_detector1_file</span><span class="p">,</span> 
+                           <span class="n">output_file</span><span class="o">=</span><span class="n">outfile</span><span class="p">[</span><span class="n">k</span><span class="p">]);</span>
+</pre>
+              </div>
+             </div>
+            </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>[]
+[]
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <p>
+            Here we run the second stage of the pipeline.
+           </p>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="c1"># gather the F150W yaml files back in the working directory</span>
+<span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+<span class="n">filter_pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="s1">'yaml'</span><span class="p">,</span> <span class="n">filtname</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="s1">'jw*yaml'</span><span class="p">)</span> 
+<span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">filter_pattern</span><span class="p">)[:]</span> <span class="c1"># Use [0:2] to test the first two files.</span>
+<span class="n">inputyaml</span> <span class="o">=</span> <span class="n">files</span>
+<span class="n">namelist</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">outlist</span> <span class="o">=</span> <span class="p">[]</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+          </section>
+          <section id="executing-calwebb-image2">
+           <h2>
+            Executing calwebb_image2
+            <a class="headerlink" href="#executing-calwebb-image2" title="Permalink to this headline">
+             #
+            </a>
+           </h2>
+           <p>
+            We select the *_rate.fits files and execute calwebb_image2 to generate the *_cal.fits files.
+           </p>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="k">for</span> <span class="n">input_yaml_path</span> <span class="ow">in</span> <span class="n">inputyaml</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">input_yaml_path</span><span class="p">)</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_yaml_path</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">base</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+   
+    <span class="n">exi</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">'_cal.fits'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">exi</span><span class="p">:</span>
+        <span class="k">continue</span>
+
+    <span class="n">namelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">'_rate.fits'</span><span class="p">)</span>
+    <span class="n">outlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">'.fits'</span><span class="p">)</span>
+        
+<span class="nb">print</span><span class="p">(</span><span class="n">namelist</span><span class="p">)</span>
+    
+<span class="n">files</span> <span class="o">=</span> <span class="n">namelist</span> 
+<span class="n">outfile</span> <span class="o">=</span> <span class="n">outlist</span> 
+</pre>
+              </div>
+             </div>
+            </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>[]
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <p>
+            Generate the _cal.fits files.
+           </p>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'-'</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">m</span>  <span class="o">=</span>  <span class="n">calwebb_image2</span><span class="o">.</span><span class="n">Image2Pipeline</span><span class="p">(</span><span class="n">output_file</span><span class="o">=</span><span class="n">outfile</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+   
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+          </section>
+         </section>
+         <script type="text/x-thebe-config">
+          {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/jdat_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./notebooks/preimaging"
+        },
+        predefinedOutput: true
+    }
+         </script>
+         <script>
+          kernelName = 'python3'
+         </script>
+        </div>
+       </main>
+       <footer class="footer-article noprint">
+        <!-- Previous / next buttons -->
+        <div class="prev-next-area">
+         <a class="left-prev" href="preimaging_01_mirage.html" id="prev-link" title="previous page">
+          <i class="fas fa-angle-left">
+          </i>
+          <div class="prev-next-info">
+           <p class="prev-next-subtitle">
+            previous
+           </p>
+           <p class="prev-next-title">
+            NIRCam Preimaging: MIRAGE Simulations
+           </p>
+          </div>
+         </a>
+         <a class="right-next" href="preimaging_03_association.html" id="next-link" title="next page">
+          <div class="prev-next-info">
+           <p class="prev-next-subtitle">
+            next
+           </p>
+           <p class="prev-next-title">
+            NIRCam Preimaging: Pipeline Stage 3
+           </p>
+          </div>
+          <i class="fas fa-angle-right">
+          </i>
+         </a>
+        </div>
+       </footer>
+      </div>
+     </div>
+     <div class="footer-content row">
+      <footer class="col footer">
+       <p>
+        By STScI
+        <br/>
+        © Copyright 2022.
+        <br/>
+       </p>
+      </footer>
+     </div>
+    </div>
+   </div>
+  </div>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  </script>
+ </body>
+</html>
