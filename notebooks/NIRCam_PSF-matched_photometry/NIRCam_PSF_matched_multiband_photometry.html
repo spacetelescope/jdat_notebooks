@@ -1107,29 +1107,11 @@ but flux
 
 <span class="kn">import</span> <span class="nn">photutils</span>
 <span class="c1"># print('photutils', photutils.__version__)</span>
-<span class="kn">from</span> <span class="nn">photutils</span> <span class="kn">import</span> <span class="n">Background2D</span><span class="p">,</span> <span class="n">MedianBackground</span><span class="p">,</span> <span class="n">detect_sources</span><span class="p">,</span> <span class="n">deblend_sources</span><span class="p">,</span> <span class="n">source_properties</span>
+<span class="kn">from</span> <span class="nn">photutils</span> <span class="kn">import</span> <span class="n">Background2D</span><span class="p">,</span> <span class="n">MedianBackground</span><span class="p">,</span> <span class="n">detect_sources</span><span class="p">,</span> <span class="n">deblend_sources</span><span class="p">,</span> <span class="n">SourceCatalog</span><span class="c1">#, source_properties (new API)</span>
 <span class="kn">from</span> <span class="nn">photutils.utils</span> <span class="kn">import</span> <span class="n">calc_total_error</span>
 
-<span class="kn">from</span> <span class="nn">photutils.psf.matching</span> <span class="kn">import</span> <span class="n">resize_psf</span>
-<span class="kn">from</span> <span class="nn">photutils</span> <span class="kn">import</span> <span class="n">CosineBellWindow</span><span class="p">,</span> <span class="n">create_matching_kernel</span>
+<span class="kn">from</span> <span class="nn">photutils.psf.matching</span> <span class="kn">import</span> <span class="n">resize_psf</span><span class="p">,</span> <span class="n">SplitCosineBellWindow</span><span class="p">,</span> <span class="n">create_matching_kernel</span>
 <span class="kn">from</span> <span class="nn">astropy.convolution</span> <span class="kn">import</span> <span class="n">convolve</span><span class="p">,</span> <span class="n">convolve_fft</span> <span class="c1"># , Gaussian2DKernel, Tophat2DKernel</span>
-</pre>
-              </div>
-             </div>
-            </div>
-            <div class="cell_output docutils container">
-             <div class="output traceback highlight-ipythontb notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ImportError</span><span class="g g-Whitespace">                               </span>Traceback (most recent call last)
-<span class="nn">Input In [2],</span> in <span class="ni">&lt;cell line: 19&gt;</span><span class="nt">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">17</span> <span class="kn">import</span> <span class="nn">photutils</span>
-<span class="g g-Whitespace">     </span><span class="mi">18</span> <span class="c1"># print('photutils', photutils.__version__)</span>
-<span class="ne">---&gt; </span><span class="mi">19</span> <span class="kn">from</span> <span class="nn">photutils</span> <span class="kn">import</span> <span class="n">Background2D</span><span class="p">,</span> <span class="n">MedianBackground</span><span class="p">,</span> <span class="n">detect_sources</span><span class="p">,</span> <span class="n">deblend_sources</span><span class="p">,</span> <span class="n">source_properties</span>
-<span class="g g-Whitespace">     </span><span class="mi">20</span> <span class="kn">from</span> <span class="nn">photutils.utils</span> <span class="kn">import</span> <span class="n">calc_total_error</span>
-<span class="g g-Whitespace">     </span><span class="mi">22</span> <span class="kn">from</span> <span class="nn">photutils.psf.matching</span> <span class="kn">import</span> <span class="n">resize_psf</span>
-
-<span class="ne">ImportError</span>: cannot import name 'source_properties' from 'photutils' (/usr/share/miniconda/lib/python3.9/site-packages/photutils/__init__.py)
 </pre>
               </div>
              </div>
@@ -1318,6 +1300,14 @@ but flux
               </div>
              </div>
             </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>1000 x 1000 pixels = 30" x 30" (0.03" / pixel)
+</pre>
+              </div>
+             </div>
+            </div>
            </div>
           </section>
           <section id="create-color-images-optional">
@@ -1394,6 +1384,15 @@ As a workaround, I tried but was unable to turn off yticklabels in the right plo
               </div>
              </div>
             </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Interactive zoom / pan controls both images simultaneously
+</pre>
+              </div>
+             </div>
+             <img alt="../../_images/NIRCam_PSF_matched_multiband_photometry_20_1.png" src="../../_images/NIRCam_PSF_matched_multiband_photometry_20_1.png"/>
+            </div>
            </div>
           </section>
           <section id="detect-sources-and-deblend-using-astropy-photutils">
@@ -1447,11 +1446,11 @@ As a workaround, I tried but was unable to turn off yticklabels in the right plo
 
         <span class="c1"># Detect sources with npixels connected pixels at/above threshold in data smoothed by kernel</span>
         <span class="c1"># https://photutils.readthedocs.io/en/stable/segmentation.html</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">segm_detect</span> <span class="o">=</span> <span class="n">detect_sources</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">detection_threshold</span><span class="p">,</span> <span class="n">npixels</span><span class="o">=</span><span class="n">npixels</span><span class="p">,</span> <span class="n">filter_kernel</span><span class="o">=</span><span class="n">smooth_kernel</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segm_detect</span> <span class="o">=</span> <span class="n">detect_sources</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">detection_threshold</span><span class="p">,</span> <span class="n">npixels</span><span class="o">=</span><span class="n">npixels</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="n">smooth_kernel</span><span class="p">)</span>
 
         <span class="c1"># Deblend: separate connected/overlapping sources</span>
         <span class="c1"># https://photutils.readthedocs.io/en/stable/segmentation.html#source-deblending</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">segm_deblend</span> <span class="o">=</span> <span class="n">deblend_sources</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">segm_detect</span><span class="p">,</span> <span class="n">npixels</span><span class="o">=</span><span class="n">npixels</span><span class="p">,</span> <span class="n">filter_kernel</span><span class="o">=</span><span class="n">smooth_kernel</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segm_deblend</span> <span class="o">=</span> <span class="n">deblend_sources</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">segm_detect</span><span class="p">,</span> <span class="n">npixels</span><span class="o">=</span><span class="n">npixels</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="n">smooth_kernel</span><span class="p">,</span>
                                             <span class="n">nlevels</span><span class="o">=</span><span class="n">deblend_levels</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="n">deblend_contrast</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="n">output</span> <span class="o">=</span> <span class="s1">'Cataloged </span><span class="si">%d</span><span class="s1"> objects'</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">segm_deblend</span><span class="o">.</span><span class="n">nlabels</span>
@@ -1477,7 +1476,7 @@ As a workaround, I tried but was unable to turn off yticklabels in the right plo
         <span class="c1"># effective gain parameter required to be positive everywhere (not zero), so adding small value 1e-8</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_rms</span> <span class="o">=</span> <span class="n">calc_total_error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">background_rms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exposure_time_map</span><span class="o">+</span><span class="mf">1e-8</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span> <span class="o">=</span> <span class="n">source_properties</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">background_map</span><span class="o">.</span><span class="n">background</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">segm_deblend</span><span class="p">,</span> <span class="n">wcs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imwcs</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span> <span class="o">=</span> <span class="n">SourceCatalog</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">background_map</span><span class="o">.</span><span class="n">background</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">segm_deblend</span><span class="p">,</span> <span class="n">wcs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imwcs</span><span class="p">,</span> 
                                          <span class="n">error</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_rms</span><span class="p">,</span> <span class="n">background</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">background_map</span><span class="o">.</span><span class="n">background</span><span class="p">,</span> 
                                          <span class="n">localbkg_width</span><span class="o">=</span><span class="n">local_background_width</span><span class="p">)</span>
 </pre>
@@ -1492,6 +1491,23 @@ As a workaround, I tried but was unable to turn off yticklabels in the right plo
                <pre><span></span><span class="n">detection_catalog</span> <span class="o">=</span> <span class="n">Photutils_Catalog</span><span class="p">(</span><span class="n">detection_filter</span><span class="p">)</span>
 <span class="n">detection_catalog</span><span class="o">.</span><span class="n">measure_background_map</span><span class="p">()</span>
 <span class="n">detection_catalog</span><span class="o">.</span><span class="n">run_detect_sources</span><span class="p">(</span><span class="n">nsigma</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">npixels</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre>
+              </div>
+             </div>
+            </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>F200W   zeropoint = 27.9973 mag(AB)
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F200W.fits
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F200W_wht.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Cataloged 323 objects, deblended from 301 detections with 5 pixels above 2-sigma threshold
+Background median 6.25759e-06, RMS 0.00187681, threshold median 0.00375987
 </pre>
               </div>
              </div>
@@ -1602,6 +1618,15 @@ As a workaround, I tried but was unable to turn off yticklabels in the right plo
               </div>
              </div>
             </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Interactive zoom / pan controls all images simultaneously
+</pre>
+              </div>
+             </div>
+             <img alt="../../_images/NIRCam_PSF_matched_multiband_photometry_29_1.png" src="../../_images/NIRCam_PSF_matched_multiband_photometry_29_1.png"/>
+            </div>
            </div>
           </section>
           <section id="view-save-measured-quantities-in-detection-image-optional">
@@ -1623,14 +1648,14 @@ As a workaround, I tried but was unable to turn off yticklabels in the right plo
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="s1">'id xcentroid ycentroid sky_centroid area semimajor_axis_sigma semiminor_axis_sigma'</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+               <pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="s1">'label xcentroid ycentroid sky_centroid area semimajor_sigma semiminor_sigma'</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
 <span class="n">columns</span> <span class="o">+=</span> <span class="s1">'ellipticity orientation gini'</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-<span class="n">columns</span> <span class="o">+=</span> <span class="s1">'kron_radius local_background source_sum source_sum_err kron_flux kron_fluxerr'</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+<span class="n">columns</span> <span class="o">+=</span> <span class="s1">'kron_radius local_background segment_flux segment_fluxerr kron_flux kron_fluxerr'</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
 <span class="c1"># columns += 'source_sum source_sum_err kron_flux kron_fluxerr kron_radius local_background'.split()</span>
 
 <span class="n">source_table</span> <span class="o">=</span> <span class="n">detection_catalog</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">to_table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
-<span class="n">source_table</span><span class="o">.</span><span class="n">rename_column</span><span class="p">(</span><span class="s1">'semimajor_axis_sigma'</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">)</span>
-<span class="n">source_table</span><span class="o">.</span><span class="n">rename_column</span><span class="p">(</span><span class="s1">'semiminor_axis_sigma'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span>
+<span class="n">source_table</span><span class="o">.</span><span class="n">rename_column</span><span class="p">(</span><span class="s1">'semimajor_sigma'</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">)</span>
+<span class="n">source_table</span><span class="o">.</span><span class="n">rename_column</span><span class="p">(</span><span class="s1">'semiminor_sigma'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span>
 
 <span class="c1"># Replace sky_centroid with ra, dec</span>
 <span class="n">source_table</span><span class="p">[</span><span class="s1">'ra'</span><span class="p">]</span> <span class="o">=</span> <span class="n">source_table</span><span class="p">[</span><span class="s1">'sky_centroid'</span><span class="p">]</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">degree</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">degree</span>
@@ -1759,12 +1784,113 @@ They need to be the same, so we go with u.ABmag
     
     <span class="c1"># Convert measured fluxes to fluxes in nJy and to AB magnitudes</span>
     <span class="n">filter_table</span> <span class="o">=</span> <span class="n">filter_catalog</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">to_table</span><span class="p">()</span>
-    <span class="n">source_table</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_flux'</span><span class="p">]</span> <span class="o">=</span> <span class="n">flux</span> <span class="o">=</span> <span class="n">filter_table</span><span class="p">[</span><span class="s1">'source_sum'</span><span class="p">]</span> <span class="o">*</span> <span class="n">filter_catalog</span><span class="o">.</span><span class="n">zeropoint</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">nJy</span><span class="p">)</span>
-    <span class="n">source_table</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_fluxerr'</span><span class="p">]</span> <span class="o">=</span> <span class="n">fluxerr</span> <span class="o">=</span> <span class="n">filter_table</span><span class="p">[</span><span class="s1">'source_sum_err'</span><span class="p">]</span> <span class="o">*</span> <span class="n">filter_catalog</span><span class="o">.</span><span class="n">zeropoint</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">nJy</span><span class="p">)</span>
+    <span class="n">source_table</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_flux'</span><span class="p">]</span> <span class="o">=</span> <span class="n">flux</span> <span class="o">=</span> <span class="n">filter_table</span><span class="p">[</span><span class="s1">'segment_flux'</span><span class="p">]</span> <span class="o">*</span> <span class="n">filter_catalog</span><span class="o">.</span><span class="n">zeropoint</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">nJy</span><span class="p">)</span>
+    <span class="n">source_table</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_fluxerr'</span><span class="p">]</span> <span class="o">=</span> <span class="n">fluxerr</span> <span class="o">=</span> <span class="n">filter_table</span><span class="p">[</span><span class="s1">'segment_fluxerr'</span><span class="p">]</span> <span class="o">*</span> <span class="n">filter_catalog</span><span class="o">.</span><span class="n">zeropoint</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">nJy</span><span class="p">)</span>
 
     <span class="n">mag</span><span class="p">,</span> <span class="n">magerr</span> <span class="o">=</span> <span class="n">fluxes2mags</span><span class="p">(</span><span class="n">flux</span><span class="p">,</span> <span class="n">fluxerr</span><span class="p">)</span>
     <span class="n">source_table</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_mag'</span><span class="p">]</span> <span class="o">=</span> <span class="n">mag</span>
     <span class="n">source_table</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_magerr'</span><span class="p">]</span> <span class="o">=</span> <span class="n">magerr</span>
+</pre>
+              </div>
+             </div>
+            </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>F090W   zeropoint = 27.4525 mag(AB)
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F090W.fits
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F090W_wht.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/function/logarithmic.py:47: RuntimeWarning: invalid value encountered in log10
+  return dex.to(self._function_unit, np.log10(x))
+/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/quantity.py:611: RuntimeWarning: invalid value encountered in log10
+  result = super().__array_ufunc__(function, method, *arrays, **kwargs)
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>F115W   zeropoint = 27.5681 mag(AB)
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F115W.fits
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F115W_wht.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>F150W   zeropoint = 27.814 mag(AB)
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F150W.fits
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F150W_wht.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>F200W   zeropoint = 27.9973 mag(AB)
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F200W.fits
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F200W_wht.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>F277W   zeropoint = 27.8803 mag(AB)
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F277W.fits
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F277W_wht.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>F335M   zeropoint = 27.0579 mag(AB)
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F335M.fits
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F335M_wht.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>F356W   zeropoint = 28.0068 mag(AB)
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F356W.fits
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F356W_wht.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>F410M   zeropoint = 27.1848 mag(AB)
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F410M.fits
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F410M_wht.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/function/logarithmic.py:47: RuntimeWarning: invalid value encountered in log10
+  return dex.to(self._function_unit, np.log10(x))
+/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/quantity.py:611: RuntimeWarning: invalid value encountered in log10
+  result = super().__array_ufunc__(function, method, *arrays, **kwargs)
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>F444W   zeropoint = 28.0647 mag(AB)
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F444W.fits
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F444W_wht.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/function/logarithmic.py:47: RuntimeWarning: invalid value encountered in log10
+  return dex.to(self._function_unit, np.log10(x))
+/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/quantity.py:611: RuntimeWarning: invalid value encountered in log10
+  result = super().__array_ufunc__(function, method, *arrays, **kwargs)
 </pre>
               </div>
              </div>
@@ -1785,7 +1911,7 @@ They need to be the same, so we go with u.ABmag
                <pre><span></span><span class="n">total_flux_table</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">source_table</span><span class="p">)</span> <span class="c1"># copy to new table, which will include total magnitude corrections</span>
 
 <span class="n">reference_flux_auto</span> <span class="o">=</span> <span class="n">total_flux_table</span><span class="p">[</span><span class="s1">'kron_flux'</span><span class="p">]</span>
-<span class="n">reference_flux_iso</span> <span class="o">=</span> <span class="n">total_flux_table</span><span class="p">[</span><span class="s1">'source_sum'</span><span class="p">]</span>
+<span class="n">reference_flux_iso</span> <span class="o">=</span> <span class="n">total_flux_table</span><span class="p">[</span><span class="s1">'segment_flux'</span><span class="p">]</span>
 <span class="n">kron_flux_corrections</span> <span class="o">=</span> <span class="n">reference_flux_auto</span> <span class="o">/</span> <span class="n">reference_flux_iso</span>
 <span class="n">total_flux_table</span><span class="p">[</span><span class="s1">'total_flux_cor'</span><span class="p">]</span> <span class="o">=</span> <span class="n">kron_flux_corrections</span>
 
@@ -1831,7 +1957,7 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
 <span class="n">old_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">isophotal_table</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 
 <span class="c1"># Reorder columns,</span>
-<span class="n">i</span> <span class="o">=</span> <span class="n">old_columns</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">'source_sum'</span><span class="p">)</span>
+<span class="n">i</span> <span class="o">=</span> <span class="n">old_columns</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">'segment_flux'</span><span class="p">)</span>
 <span class="n">j</span> <span class="o">=</span> <span class="n">old_columns</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">filters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">'_flux'</span><span class="p">)</span>
 <span class="n">columns</span> <span class="o">=</span> <span class="n">old_columns</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="c1"># detection catalog (except source_sum &amp; kron_flux)</span>
 <span class="n">columns</span> <span class="o">+=</span> <span class="n">old_columns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># total_flux_cor</span>
@@ -1845,7 +1971,7 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
 <span class="n">isophotal_table</span><span class="p">[</span><span class="s1">'ra'</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">'11.7f'</span>
 <span class="n">isophotal_table</span><span class="p">[</span><span class="s1">'dec'</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">' 11.7f'</span>
 
-<span class="n">isophotal_table</span><span class="p">[</span><span class="s1">'id'</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">'d'</span>
+<span class="n">isophotal_table</span><span class="p">[</span><span class="s1">'label'</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">'d'</span>
 <span class="n">isophotal_table</span><span class="p">[</span><span class="s1">'area'</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">'.0f'</span>  <span class="c1"># 'd' raises error</span>
 </pre>
               </div>
@@ -1989,6 +2115,70 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
               </div>
              </div>
             </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/NIRCam_PSFs/PSF_F090Wcen_G5V_fov299px_ISIM41.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>/tmp/ipykernel_3628/3721777878.py:29: DeprecationWarning: `np.int` is a deprecated alias for the builtin `int`. To silence this warning, use `int` by itself. Doing this will not modify any behavior and is safe. When replacing `np.int`, you may wish to use e.g. `np.int64` or `np.int32` to specify the precision. If you wish to review your current use, check the release note link for additional information.
+Deprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations
+  ny_resize = np.int((ny_resize // 2) * 2 + 1)  # Make it an odd number of pixels to ensure PSF is centered
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/NIRCam_PSFs/PSF_F115Wcen_G5V_fov299px_ISIM41.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/NIRCam_PSFs/PSF_F150Wcen_G5V_fov299px_ISIM41.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/NIRCam_PSFs/PSF_F200Wcen_G5V_fov299px_ISIM41.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/NIRCam_PSFs/PSF_F277Wcen_G5V_fov299px_ISIM41.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/NIRCam_PSFs/PSF_F335Mcen_G5V_fov299px_ISIM41.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/NIRCam_PSFs/PSF_F356Wcen_G5V_fov299px_ISIM41.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/NIRCam_PSFs/PSF_F410Mcen_G5V_fov299px_ISIM41.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/NIRCam_PSFs/PSF_F444Wcen_G5V_fov299px_ISIM41.fits
+</pre>
+              </div>
+             </div>
+            </div>
            </div>
            <div class="cell docutils container">
             <div class="cell_input docutils container">
@@ -1999,12 +2189,28 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
               </div>
              </div>
             </div>
+            <div class="cell_output docutils container">
+             <div class="output text_plain highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>0.9857464993548493
+</pre>
+              </div>
+             </div>
+            </div>
            </div>
            <div class="cell docutils container">
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
                <pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">PSF_image</span><span class="p">[</span><span class="n">r</span><span class="p">:</span><span class="o">-</span><span class="n">r</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span><span class="o">-</span><span class="n">r</span><span class="p">])</span>
+</pre>
+              </div>
+             </div>
+            </div>
+            <div class="cell_output docutils container">
+             <div class="output text_plain highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>0.9857464993548493
 </pre>
               </div>
              </div>
@@ -2032,6 +2238,9 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
 </pre>
               </div>
              </div>
+            </div>
+            <div class="cell_output docutils container">
+             <img alt="../../_images/NIRCam_PSF_matched_multiband_photometry_52_0.png" src="../../_images/NIRCam_PSF_matched_multiband_photometry_52_0.png"/>
             </div>
            </div>
           </section>
@@ -2063,7 +2272,7 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
 <span class="n">reference_filter</span> <span class="o">=</span> <span class="s1">'F200W'</span>
 <span class="n">reference_PSF</span> <span class="o">=</span> <span class="n">PSF_images</span><span class="p">[</span><span class="n">reference_filter</span><span class="p">]</span>
 <span class="n">i_reference</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">reference_filter</span><span class="p">)</span>
-<span class="n">window</span> <span class="o">=</span> <span class="n">CosineBellWindow</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.35</span><span class="p">)</span>
+<span class="n">window</span> <span class="o">=</span> <span class="n">SplitCosineBellWindow</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">filt</span> <span class="ow">in</span> <span class="n">filters</span><span class="p">[</span><span class="n">i_reference</span><span class="o">+</span><span class="mi">1</span><span class="p">:]:</span>
     <span class="n">PSF_kernels</span><span class="p">[</span><span class="n">filt</span><span class="p">]</span> <span class="o">=</span> <span class="n">create_matching_kernel</span><span class="p">(</span><span class="n">reference_PSF</span><span class="p">,</span> <span class="n">PSF_images</span><span class="p">[</span><span class="n">filt</span><span class="p">],</span> <span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">)</span>
 </pre>
@@ -2102,6 +2311,48 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
               </div>
              </div>
             </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>F277W...
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>SAVING jades_convolved_F200W_to_F277W.fits
+F335M...
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>SAVING jades_convolved_F200W_to_F335M.fits
+F356W...
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>SAVING jades_convolved_F200W_to_F356W.fits
+F410M...
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>SAVING jades_convolved_F200W_to_F410M.fits
+F444W...
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>SAVING jades_convolved_F200W_to_F444W.fits
+</pre>
+              </div>
+             </div>
+            </div>
            </div>
           </section>
           <section id="multiband-photometry-in-convolved-images">
@@ -2130,7 +2381,49 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
 
     <span class="c1"># Convert measured fluxes to fluxes in nJy</span>
     <span class="n">filter_table</span> <span class="o">=</span> <span class="n">filter_catalog</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">to_table</span><span class="p">()</span>
-    <span class="n">blurry_catalog</span><span class="p">[</span><span class="n">blurry_filter</span><span class="o">+</span><span class="s1">'_flux'</span><span class="p">]</span> <span class="o">=</span> <span class="n">filter_table</span><span class="p">[</span><span class="s1">'source_sum'</span><span class="p">]</span> <span class="o">*</span> <span class="n">filter_catalog</span><span class="o">.</span><span class="n">zeropoint</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">nJy</span><span class="p">)</span>
+    <span class="n">blurry_catalog</span><span class="p">[</span><span class="n">blurry_filter</span><span class="o">+</span><span class="s1">'_flux'</span><span class="p">]</span> <span class="o">=</span> <span class="n">filter_table</span><span class="p">[</span><span class="s1">'segment_flux'</span><span class="p">]</span> <span class="o">*</span> <span class="n">filter_catalog</span><span class="o">.</span><span class="n">zeropoint</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">nJy</span><span class="p">)</span>
+</pre>
+              </div>
+             </div>
+            </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>F277W   zeropoint = 27.9973 mag(AB)
+jades_convolved_F200W_to_F277W.fits
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F277W_wht.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>F335M   zeropoint = 27.9973 mag(AB)
+jades_convolved_F200W_to_F335M.fits
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F335M_wht.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>F356W   zeropoint = 27.9973 mag(AB)
+jades_convolved_F200W_to_F356W.fits
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F356W_wht.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>F410M   zeropoint = 27.9973 mag(AB)
+jades_convolved_F200W_to_F410M.fits
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F410M_wht.fits
+</pre>
+              </div>
+             </div>
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>F444W   zeropoint = 27.9973 mag(AB)
+jades_convolved_F200W_to_F444W.fits
+https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/jades_jwst_nircam_goods_s_crop_F444W_wht.fits
 </pre>
               </div>
              </div>
@@ -2167,6 +2460,17 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
     <span class="n">PSF_corrected_table</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_mag'</span><span class="p">],</span> <span class="n">PSF_corrected_table</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_magerr'</span><span class="p">]</span> <span class="o">=</span> \
         <span class="n">fluxes2mags</span><span class="p">(</span><span class="n">PSF_corrected_table</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_flux'</span><span class="p">],</span> <span class="n">PSF_corrected_table</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_fluxerr'</span><span class="p">])</span>
     <span class="n">PSF_corrected_table</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_PSF_flux_cor'</span><span class="p">]</span> <span class="o">=</span> <span class="n">PSF_flux_corrections</span>    
+</pre>
+              </div>
+             </div>
+            </div>
+            <div class="cell_output docutils container">
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/function/logarithmic.py:47: RuntimeWarning: invalid value encountered in log10
+  return dex.to(self._function_unit, np.log10(x))
+/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/quantity.py:611: RuntimeWarning: invalid value encountered in log10
+  result = super().__array_ufunc__(function, method, *arrays, **kwargs)
 </pre>
               </div>
              </div>
@@ -2331,6 +2635,15 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
               </div>
              </div>
             </div>
+            <div class="cell_output docutils container">
+             <div class="output text_plain highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>&lt;matplotlib.legend.Legend at 0x7f2ec6fab2b0&gt;
+</pre>
+              </div>
+             </div>
+             <img alt="../../_images/NIRCam_PSF_matched_multiband_photometry_77_1.png" src="../../_images/NIRCam_PSF_matched_multiband_photometry_77_1.png"/>
+            </div>
            </div>
            <div class="cell docutils container">
             <div class="cell_input docutils container">
@@ -2345,6 +2658,14 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
 <span class="n">multiple_matches</span> <span class="o">=</span> <span class="n">unique_matches</span><span class="p">[</span><span class="n">index_counts</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">multiple_matches</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">'Input sources matched multiple times:'</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_catalog</span><span class="p">[</span><span class="s1">'id'</span><span class="p">][</span><span class="n">multiple_matches</span><span class="p">]))</span>
+</pre>
+              </div>
+             </div>
+            </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>296 matches (296 unique) between input catalog (653 galaxies) and photutils catalog (323 detected sources)
 </pre>
               </div>
              </div>
@@ -2366,7 +2687,7 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
 
 <span class="n">output_mag1</span> <span class="o">=</span> <span class="n">output_catalog</span><span class="p">[</span><span class="n">filt1</span> <span class="o">+</span> <span class="s1">'_mag'</span><span class="p">][</span><span class="n">good_matches</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
 <span class="n">output_mag2</span> <span class="o">=</span> <span class="n">output_catalog</span><span class="p">[</span><span class="n">filt2</span> <span class="o">+</span> <span class="s1">'_mag'</span><span class="p">][</span><span class="n">good_matches</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
-<span class="n">output_ids</span> <span class="o">=</span> <span class="n">output_catalog</span><span class="p">[</span><span class="s1">'id'</span><span class="p">][</span><span class="n">good_matches</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">output_ids</span> <span class="o">=</span> <span class="n">output_catalog</span><span class="p">[</span><span class="s1">'label'</span><span class="p">][</span><span class="n">good_matches</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
 <span class="c1"># Only plot detections</span>
 <span class="n">det1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">output_mag1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">output_mag1</span> <span class="o">&lt;</span> <span class="mi">90</span><span class="p">)</span>
@@ -2401,6 +2722,9 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
               </div>
              </div>
             </div>
+            <div class="cell_output docutils container">
+             <img alt="../../_images/NIRCam_PSF_matched_multiband_photometry_79_0.png" src="../../_images/NIRCam_PSF_matched_multiband_photometry_79_0.png"/>
+            </div>
            </div>
           </section>
           <section id="plot-f200w-vs-f090w-magnitudes-and-look-for-dropouts">
@@ -2422,7 +2746,7 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
 
 <span class="n">mag1</span> <span class="o">=</span> <span class="n">mag1</span><span class="p">[</span><span class="n">det2</span><span class="p">]</span>
 <span class="n">mag2</span> <span class="o">=</span> <span class="n">mag2</span><span class="p">[</span><span class="n">det2</span><span class="p">]</span>
-<span class="n">ids</span> <span class="o">=</span> <span class="n">output_catalog</span><span class="p">[</span><span class="s1">'id'</span><span class="p">][</span><span class="n">det2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">ids</span> <span class="o">=</span> <span class="n">output_catalog</span><span class="p">[</span><span class="s1">'label'</span><span class="p">][</span><span class="n">det2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
@@ -2440,6 +2764,15 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
               </div>
              </div>
             </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>Hover cursor over data point to reveal magnitudes and catalog ID number
+</pre>
+              </div>
+             </div>
+             <img alt="../../_images/NIRCam_PSF_matched_multiband_photometry_81_1.png" src="../../_images/NIRCam_PSF_matched_multiband_photometry_81_1.png"/>
+            </div>
            </div>
            <div class="cell docutils container">
             <div class="cell_input docutils container">
@@ -2448,8 +2781,16 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
                <pre><span></span><span class="c1"># Select brightest F090W dropout</span>
 <span class="n">dropouts</span> <span class="o">=</span> <span class="n">output_catalog</span><span class="p">[</span><span class="s1">'F090W_mag'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">90</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">ABmag</span>
 <span class="n">i_brightest_dropout</span> <span class="o">=</span> <span class="n">output_catalog</span><span class="p">[</span><span class="n">dropouts</span><span class="p">][</span><span class="s1">'F200W_mag'</span><span class="p">]</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
-<span class="n">output_id</span> <span class="o">=</span> <span class="n">output_catalog</span><span class="p">[</span><span class="n">dropouts</span><span class="p">][</span><span class="n">i_brightest_dropout</span><span class="p">][</span><span class="s1">'id'</span><span class="p">]</span>
+<span class="n">output_id</span> <span class="o">=</span> <span class="n">output_catalog</span><span class="p">[</span><span class="n">dropouts</span><span class="p">][</span><span class="n">i_brightest_dropout</span><span class="p">][</span><span class="s1">'label'</span><span class="p">]</span>
 <span class="n">output_id</span>
+</pre>
+              </div>
+             </div>
+            </div>
+            <div class="cell_output docutils container">
+             <div class="output text_plain highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>256
 </pre>
               </div>
              </div>
@@ -2462,8 +2803,16 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
                <pre><span></span><span class="c1"># Select object with id from catalog</span>
 <span class="n">output_index</span> <span class="o">=</span> <span class="n">segm</span><span class="o">.</span><span class="n">get_index</span><span class="p">(</span><span class="n">output_id</span><span class="p">)</span>
 <span class="n">output_obj</span> <span class="o">=</span> <span class="n">output_catalog</span><span class="p">[</span><span class="n">output_index</span><span class="p">]</span>
-<span class="n">segmobj</span> <span class="o">=</span> <span class="n">segm</span><span class="p">[</span><span class="n">segm</span><span class="o">.</span><span class="n">get_index</span><span class="p">(</span><span class="n">output_id</span><span class="p">)]</span>
+<span class="n">segmobj</span> <span class="o">=</span> <span class="n">segm</span><span class="o">.</span><span class="n">segments</span><span class="p">[</span><span class="n">segm</span><span class="o">.</span><span class="n">get_index</span><span class="p">(</span><span class="n">output_id</span><span class="p">)]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">output_id</span><span class="p">,</span> <span class="n">output_obj</span><span class="p">[</span><span class="s1">'F090W_mag'</span><span class="p">],</span> <span class="n">output_obj</span><span class="p">[</span><span class="s1">'F200W_mag'</span><span class="p">])</span>
+</pre>
+              </div>
+             </div>
+            </div>
+            <div class="cell_output docutils container">
+             <div class="output stream highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>256 99.0 mag(AB) 27.878194241385504 mag(AB)
 </pre>
               </div>
              </div>
@@ -2495,11 +2844,11 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
               <div class="highlight">
                <pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">filters</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">color_image_short_wavelength</span><span class="p">[</span><span class="n">segmobj</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">slices</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">segmobj</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">extent</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">color_image_short_wavelength</span><span class="p">[</span><span class="n">segmobj</span><span class="o">.</span><span class="n">slices</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">segmobj</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">extent</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Color'</span><span class="p">)</span>
 
 <span class="n">cmap</span> <span class="o">=</span> <span class="n">segm</span><span class="o">.</span><span class="n">make_cmap</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>  <span class="c1"># ERROR</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">segm</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">segmobj</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">slices</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">segmobj</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">extent</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">segm</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">segmobj</span><span class="o">.</span><span class="n">slices</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">segmobj</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">extent</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
                 <span class="n">interpolation</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Segment'</span><span class="p">)</span>
 
@@ -2508,14 +2857,14 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
 
     <span class="c1"># Show data on top row</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">image_files</span><span class="p">[</span><span class="n">filt</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">stamp</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">segmobj</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">slices</span><span class="p">]</span>
+    <span class="n">stamp</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">segmobj</span><span class="o">.</span><span class="n">slices</span><span class="p">]</span>
     <span class="n">norm</span> <span class="o">=</span> <span class="n">ImageNormalize</span><span class="p">(</span><span class="n">stretch</span><span class="o">=</span><span class="n">SqrtStretch</span><span class="p">())</span>  <span class="c1"># scale each filter individually</span>
     <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">stamp</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">segmobj</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">extent</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Greys_r'</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
     <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">filt</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
 
     <span class="c1"># Show weights on bottom row</span>
     <span class="n">weight</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">weight_files</span><span class="p">[</span><span class="n">filt</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">stamp</span> <span class="o">=</span> <span class="n">weight</span><span class="p">[</span><span class="n">segmobj</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">slices</span><span class="p">]</span>
+    <span class="n">stamp</span> <span class="o">=</span> <span class="n">weight</span><span class="p">[</span><span class="n">segmobj</span><span class="o">.</span><span class="n">slices</span><span class="p">]</span>
     <span class="c1"># set black to zero weight (no exposure time / bad pixel)</span>
     <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">stamp</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">segmobj</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">extent</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Greys_r'</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
 
@@ -2524,6 +2873,9 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
 </pre>
               </div>
              </div>
+            </div>
+            <div class="cell_output docutils container">
+             <img alt="../../_images/NIRCam_PSF_matched_multiband_photometry_86_0.png" src="../../_images/NIRCam_PSF_matched_multiband_photometry_86_0.png"/>
             </div>
            </div>
           </section>
@@ -2576,6 +2928,14 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
              </div>
             </div>
            </div>
+           <div class="cell_output docutils container">
+            <div class="output stream highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>71% of input flux recovered by photutils
+</pre>
+             </div>
+            </div>
+           </div>
           </div>
           <div class="cell docutils container">
            <div class="cell_input docutils container">
@@ -2605,6 +2965,15 @@ ValueError: Unable to parse format string "d" for entry "101.0" in column "area"
         <span class="n">PSF_flux_corrections</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">output_obj</span><span class="p">[</span><span class="n">PSFcor_column</span><span class="p">]</span>
 
 <span class="n">PSF_flux_corrections</span>
+</pre>
+             </div>
+            </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output text_plain highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>array([1.        , 1.        , 1.        , 1.        , 1.04189254,
+       1.08944304, 1.09654586, 1.13612549, 1.16272316])
 </pre>
              </div>
             </div>
@@ -2713,6 +3082,9 @@ so I wrote my own code to do this
              </div>
             </div>
            </div>
+           <div class="cell_output docutils container">
+            <img alt="../../_images/NIRCam_PSF_matched_multiband_photometry_96_0.png" src="../../_images/NIRCam_PSF_matched_multiband_photometry_96_0.png"/>
+           </div>
           </div>
           <p>
            <em>
@@ -2791,6 +3163,15 @@ So for now, I just hard-coded a range that works for this object: y=10-70.
 </pre>
              </div>
             </div>
+           </div>
+           <div class="cell_output docutils container">
+            <div class="output text_plain highlight-myst-ansi notranslate">
+             <div class="highlight">
+              <pre><span></span>Text(0.5, 1.0, 'JADES SED PSF-corrected')
+</pre>
+             </div>
+            </div>
+            <img alt="../../_images/NIRCam_PSF_matched_multiband_photometry_98_1.png" src="../../_images/NIRCam_PSF_matched_multiband_photometry_98_1.png"/>
            </div>
           </div>
          </section>

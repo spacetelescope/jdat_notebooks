@@ -460,11 +460,25 @@ const thebe_selector_output = ".output, .cell_output"
             <a class="reference internal nav-link" href="#introduction">
              Introduction
             </a>
+            <ul class="nav section-nav flex-column">
+             <li class="toc-h3 nav-item toc-entry">
+              <a class="reference internal nav-link" href="#mirage-tutorials">
+               MIRAGE Tutorials
+              </a>
+             </li>
+            </ul>
            </li>
            <li class="toc-h2 nav-item toc-entry">
             <a class="reference internal nav-link" href="#setting-things-up">
              Setting things up
             </a>
+            <ul class="nav section-nav flex-column">
+             <li class="toc-h3 nav-item toc-entry">
+              <a class="reference internal nav-link" href="#download-reference-files-this-will-take-a-long-time-you-will-need-around-100-gb-of-space">
+               Download reference files. This will take a long time. You will need around ~100 GB of space.
+              </a>
+             </li>
+            </ul>
            </li>
           </ul>
          </li>
@@ -495,6 +509,11 @@ const thebe_selector_output = ".output, .cell_output"
            Execute MIRAGE and create simulated data
           </a>
           <ul class="visible nav section-nav flex-column">
+           <li class="toc-h2 nav-item toc-entry">
+            <a class="reference internal nav-link" href="#this-step-will-take-a-long-time-to-run-to-decrease-the-run-time-we-will-only-process-exposure-0004-you-can-change-the-filter-to-process-all-files-if-desired">
+             This step will take a long time to run. To decrease the run-time, we will only process Exposure 0004. You can change the filter to process all files if desired.
+            </a>
+           </li>
            <li class="toc-h2 nav-item toc-entry">
             <a class="reference internal nav-link" href="#examine-the-output">
              Examine the output
@@ -549,11 +568,25 @@ const thebe_selector_output = ".output, .cell_output"
                <a class="reference internal nav-link" href="#introduction">
                 Introduction
                </a>
+               <ul class="nav section-nav flex-column">
+                <li class="toc-h3 nav-item toc-entry">
+                 <a class="reference internal nav-link" href="#mirage-tutorials">
+                  MIRAGE Tutorials
+                 </a>
+                </li>
+               </ul>
               </li>
               <li class="toc-h2 nav-item toc-entry">
                <a class="reference internal nav-link" href="#setting-things-up">
                 Setting things up
                </a>
+               <ul class="nav section-nav flex-column">
+                <li class="toc-h3 nav-item toc-entry">
+                 <a class="reference internal nav-link" href="#download-reference-files-this-will-take-a-long-time-you-will-need-around-100-gb-of-space">
+                  Download reference files. This will take a long time. You will need around ~100 GB of space.
+                 </a>
+                </li>
+               </ul>
               </li>
              </ul>
             </li>
@@ -584,6 +617,11 @@ const thebe_selector_output = ".output, .cell_output"
               Execute MIRAGE and create simulated data
              </a>
              <ul class="visible nav section-nav flex-column">
+              <li class="toc-h2 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#this-step-will-take-a-long-time-to-run-to-decrease-the-run-time-we-will-only-process-exposure-0004-you-can-change-the-filter-to-process-all-files-if-desired">
+                This step will take a long time to run. To decrease the run-time, we will only process Exposure 0004. You can change the filter to process all files if desired.
+               </a>
+              </li>
               <li class="toc-h2 nav-item toc-entry">
                <a class="reference internal nav-link" href="#examine-the-output">
                 Examine the output
@@ -674,42 +712,65 @@ const thebe_selector_output = ".output, .cell_output"
             </a>
             before executing this Jupyter Notebook.
            </p>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+           <section id="mirage-tutorials">
+            <h3>
+             MIRAGE Tutorials
+             <a class="headerlink" href="#mirage-tutorials" title="Permalink to this headline">
+              #
+             </a>
+            </h3>
+            <p>
+             This notebook provides an example of running MIRAGE in a specific science use case. For a broader tutorial on running MIRAGE, it is suggested you review the
+             <a class="reference external" href="https://www.stsci.edu/jwst/science-execution/jwebbinars">
+              Jwebbinar Number 10
+             </a>
+             .
+            </p>
+            <div class="cell docutils container">
+             <div class="cell_input docutils container">
+              <div class="highlight-ipython3 notranslate">
+               <div class="highlight">
+                <pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">zipfile</span>
 <span class="kn">import</span> <span class="nn">urllib.request</span>
 
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"PYSYN_CDBS"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"./grp/redcat/trds/"</span>
+<span class="n">synphot_folder</span> <span class="o">=</span> <span class="s1">'./grp'</span>
+
+<span class="n">synExist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">synphot_folder</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">synExist</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">synphot_folder</span><span class="p">)</span>
+    
 <span class="c1"># mirage imports</span>
-<span class="kn">from</span> <span class="nn">mirage</span> <span class="kn">import</span> <span class="n">imaging_simulator</span>
+<span class="kn">from</span> <span class="nn">mirage.imaging_simulator</span> <span class="kn">import</span> <span class="n">ImgSim</span>
 <span class="kn">from</span> <span class="nn">mirage.seed_image</span> <span class="kn">import</span> <span class="n">catalog_seed_image</span>
 <span class="kn">from</span> <span class="nn">mirage.dark</span> <span class="kn">import</span> <span class="n">dark_prep</span>
 <span class="kn">from</span> <span class="nn">mirage.ramp_generator</span> <span class="kn">import</span> <span class="n">obs_generator</span>
 <span class="kn">from</span> <span class="nn">mirage.yaml</span> <span class="kn">import</span> <span class="n">yaml_generator</span>
+<span class="kn">from</span> <span class="nn">mirage.reference_files</span> <span class="kn">import</span> <span class="n">downloader</span>
 
 <span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
 <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
 </pre>
+               </div>
               </div>
              </div>
             </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+            <div class="cell docutils container">
+             <div class="cell_input docutils container">
+              <div class="highlight-ipython3 notranslate">
+               <div class="highlight">
+                <pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre>
+               </div>
               </div>
              </div>
             </div>
-           </div>
+           </section>
           </section>
           <section id="setting-things-up">
            <h2>
@@ -725,7 +786,7 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">path</span><span class="o">=</span><span class="s1">'./.'</span>  <span class="c1"># write here your working directory</span>
+               <pre><span></span><span class="n">path</span><span class="o">=</span><span class="s1">'./'</span>  <span class="c1"># write here your working directory</span>
 
 <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 </pre>
@@ -738,14 +799,6 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
                <pre><span></span><span class="n">pwd</span>
-</pre>
-              </div>
-             </div>
-            </div>
-            <div class="cell_output docutils container">
-             <div class="output text_plain highlight-myst-ansi notranslate">
-              <div class="highlight">
-               <pre><span></span>'/home/runner/work/jdat_notebooks/jdat_notebooks/notebooks/preimaging'
 </pre>
               </div>
              </div>
@@ -765,20 +818,57 @@ For users at STScI, this is the location of MIRAGE data:
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'MIRAGE_DATA'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'MIRAGE_DATA'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'/path/to/mirage_data/'</span>
+               <pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'MIRAGE_DATA'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'./mirage_data/'</span>
 </pre>
               </div>
              </div>
             </div>
            </div>
-           <p>
-            If the user is outside of STScI then the reference files must be downloaded using the “downloader” module. Please follow the instructions in
-            <a class="reference external" href="https://mirage-data-simulator.readthedocs.io/en/latest/reference_files.html">
-             https://mirage-data-simulator.readthedocs.io/en/latest/reference_files.html
-            </a>
-            and create an appropriate MIRAGE_DATA location.
-           </p>
+           <section id="download-reference-files-this-will-take-a-long-time-you-will-need-around-100-gb-of-space">
+            <h3>
+             Download reference files. This will take a long time. You will need around ~100 GB of space.
+             <a class="headerlink" href="#download-reference-files-this-will-take-a-long-time-you-will-need-around-100-gb-of-space" title="Permalink to this headline">
+              #
+             </a>
+            </h3>
+            <p>
+             If the user is outside of STScI then the reference files must be downloaded using the “downloader” module. Please follow the instructions in
+             <a class="reference external" href="https://mirage-data-simulator.readthedocs.io/en/latest/reference_files.html">
+              https://mirage-data-simulator.readthedocs.io/en/latest/reference_files.html
+             </a>
+             and create an appropriate MIRAGE_DATA location.
+            </p>
+            <div class="cell docutils container">
+             <div class="cell_input docutils container">
+              <div class="highlight-ipython3 notranslate">
+               <div class="highlight">
+                <pre><span></span><span class="n">download_path</span> <span class="o">=</span> <span class="s1">'./'</span>
+</pre>
+               </div>
+              </div>
+             </div>
+            </div>
+            <div class="cell docutils container">
+             <div class="cell_input docutils container">
+              <div class="highlight-ipython3 notranslate">
+               <div class="highlight">
+                <pre><span></span><span class="n">downloader</span><span class="o">.</span><span class="n">download_reffiles</span><span class="p">(</span><span class="n">download_path</span><span class="p">,</span> <span class="n">instrument</span><span class="o">=</span><span class="s1">'FGS'</span><span class="p">,</span> <span class="n">dark_type</span><span class="o">=</span><span class="s1">'linearized'</span><span class="p">,</span> <span class="n">skip_darks</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">single_dark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skip_cosmic_rays</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">skip_psfs</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre>
+               </div>
+              </div>
+             </div>
+            </div>
+            <div class="cell docutils container">
+             <div class="cell_input docutils container">
+              <div class="highlight-ipython3 notranslate">
+               <div class="highlight">
+                <pre><span></span><span class="n">downloader</span><span class="o">.</span><span class="n">download_reffiles</span><span class="p">(</span><span class="n">download_path</span><span class="p">,</span> <span class="n">instrument</span><span class="o">=</span><span class="s1">'NIRCam'</span><span class="p">,</span> <span class="n">dark_type</span><span class="o">=</span><span class="s1">'linearized'</span><span class="p">,</span> <span class="n">skip_darks</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">single_dark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skip_cosmic_rays</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">skip_psfs</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre>
+               </div>
+              </div>
+             </div>
+            </div>
+           </section>
           </section>
          </section>
          <section class="tex2jax_ignore mathjax_ignore" id="download-data">
@@ -796,7 +886,7 @@ For users at STScI, this is the location of MIRAGE data:
 <span class="n">boxfile</span> <span class="o">=</span> <span class="s1">'./preimaging.zip'</span>
 
 <span class="c1"># Download zip file</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="n">boxfile</span><span class="p">):</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">boxfile</span><span class="p">):</span>
     <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
     
     <span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
@@ -919,6 +1009,7 @@ For users at STScI, this is the location of MIRAGE data:
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
                <pre><span></span><span class="c1"># Run the yaml generator</span>
+
 <span class="n">yam</span> <span class="o">=</span> <span class="n">yaml_generator</span><span class="o">.</span><span class="n">SimInput</span><span class="p">(</span><span class="n">xml_file</span><span class="p">,</span> <span class="n">pointing_file</span><span class="p">,</span> 
                               <span class="n">catalogs</span><span class="o">=</span><span class="n">cat_dict</span><span class="p">,</span> 
                               <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -930,62 +1021,6 @@ For users at STScI, this is the location of MIRAGE data:
 
 <span class="n">yam</span><span class="o">.</span><span class="n">use_linearized_darks</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">yam</span><span class="o">.</span><span class="n">create_inputs</span><span class="p">()</span>
-</pre>
-              </div>
-             </div>
-            </div>
-            <div class="cell_output docutils container">
-             <div class="output stream highlight-myst-ansi notranslate">
-              <div class="highlight">
-               <pre><span></span>2022-06-20 16:23:35,318 - mirage.yaml.yaml_generator - INFO - Running yaml_generator....
-</pre>
-              </div>
-             </div>
-             <div class="output stream highlight-myst-ansi notranslate">
-              <div class="highlight">
-               <pre><span></span>2022-06-20 16:23:35,321 - mirage.yaml.yaml_generator - INFO - using APT xml file: preimaging/NRC21_pid1069_2018_rev2.xml
-</pre>
-              </div>
-             </div>
-             <div class="output stream highlight-myst-ansi notranslate">
-              <div class="highlight">
-               <pre><span></span>2022-06-20 16:23:35,321 - mirage.yaml.yaml_generator - INFO - Original log file name: ./mirage_latest.log
-</pre>
-              </div>
-             </div>
-             <div class="output traceback highlight-ipythontb notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="nn">Input In [10],</span> in <span class="ni">&lt;cell line: 2&gt;</span><span class="nt">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># Run the yaml generator</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">yam</span> <span class="o">=</span> <span class="n">yaml_generator</span><span class="o">.</span><span class="n">SimInput</span><span class="p">(</span><span class="n">xml_file</span><span class="p">,</span> <span class="n">pointing_file</span><span class="p">,</span> 
-<span class="g g-Whitespace">      </span><span class="mi">3</span>                               <span class="n">catalogs</span><span class="o">=</span><span class="n">cat_dict</span><span class="p">,</span> 
-<span class="g g-Whitespace">      </span><span class="mi">4</span>                               <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>                               <span class="n">simdata_output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span>                               <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span>                               <span class="n">roll_angle</span><span class="o">=</span><span class="n">pav3</span><span class="p">,</span> 
-<span class="g g-Whitespace">      </span><span class="mi">8</span>                               <span class="c1"># to do : explain linear vs raw</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span>                               <span class="n">datatype</span><span class="o">=</span><span class="s1">'linear,raw'</span><span class="p">)</span> 
-<span class="g g-Whitespace">     </span><span class="mi">11</span> <span class="n">yam</span><span class="o">.</span><span class="n">use_linearized_darks</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="g g-Whitespace">     </span><span class="mi">12</span> <span class="n">yam</span><span class="o">.</span><span class="n">create_inputs</span><span class="p">()</span>
-
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/mirage/yaml/yaml_generator.py:329,</span> in <span class="ni">SimInput.__init__</span><span class="nt">(self, input_xml, pointing_file, datatype, reffile_defaults, reffile_overrides, use_JWST_pipeline, catalogs, cosmic_rays, background, roll_angle, dates, observation_list_file, verbose, output_dir, simdata_output_dir, dateobs_for_background, segmap_flux_limit, segmap_flux_limit_units, add_ghosts, convolve_ghosts_with_psf, convolve_extended_with_psf, offline)</span>
-<span class="g g-Whitespace">    </span><span class="mi">326</span>     <span class="bp">self</span><span class="o">.</span><span class="n">segmentation_threshold_units</span> <span class="o">=</span> <span class="n">segmap_flux_limit_units</span>
-<span class="g g-Whitespace">    </span><span class="mi">328</span> <span class="c1"># Expand the MIRAGE_DATA environment variable</span>
-<span class="ne">--&gt; </span><span class="mi">329</span> <span class="bp">self</span><span class="o">.</span><span class="n">datadir</span> <span class="o">=</span> <span class="n">expand_environment_variable</span><span class="p">(</span><span class="n">ENV_VAR</span><span class="p">,</span> <span class="n">offline</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">offline</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">331</span> <span class="c1"># Check that CRDS-related environment variables are set correctly</span>
-<span class="g g-Whitespace">    </span><span class="mi">332</span> <span class="bp">self</span><span class="o">.</span><span class="n">crds_datadir</span> <span class="o">=</span> <span class="n">crds_tools</span><span class="o">.</span><span class="n">env_variables</span><span class="p">()</span>
-
-<span class="nn">File /usr/share/miniconda/lib/python3.9/site-packages/mirage/utils/utils.py:421,</span> in <span class="ni">expand_environment_variable</span><span class="nt">(variable_name, offline)</span>
-<span class="g g-Whitespace">    </span><span class="mi">419</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">offline</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">420</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">variable_directory</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">421</span>         <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">((</span><span class="s2">"The directory contained in the </span><span class="si">{}</span><span class="s2"> "</span>
-<span class="g g-Whitespace">    </span><span class="mi">422</span>                                  <span class="s2">"environment variable: </span><span class="si">{}</span><span class="s2"> does not exist or "</span>
-<span class="g g-Whitespace">    </span><span class="mi">423</span>                                  <span class="s2">"is not accessible."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variable_name</span><span class="p">,</span> <span class="n">variable_directory</span><span class="p">)))</span>
-<span class="g g-Whitespace">    </span><span class="mi">424</span> <span class="k">return</span> <span class="n">variable_directory</span>
-
-<span class="ne">FileNotFoundError</span>: The directory contained in the MIRAGE_DATA environment variable: /path/to/mirage_data/ does not exist or is not accessible.
 </pre>
               </div>
              </div>
@@ -1077,26 +1112,35 @@ pipeline_level2: cal files
           <p>
            As an example, let us choose filter F150W. We are going to simulate all of the images that were observed using filter F150W. The variable “listname” contains the names of the yaml files that we want to process through MIRAGE. There are 128 F150W yaml files.
           </p>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># input parameters</span>
+          <section id="this-step-will-take-a-long-time-to-run-to-decrease-the-run-time-we-will-only-process-exposure-0004-you-can-change-the-filter-to-process-all-files-if-desired">
+           <h2>
+            This step will take a long time to run. To decrease the run-time, we will only process Exposure 0004. You can change the filter to process all files if desired.
+            <a class="headerlink" href="#this-step-will-take-a-long-time-to-run-to-decrease-the-run-time-we-will-only-process-exposure-0004-you-can-change-the-filter-to-process-all-files-if-desired" title="Permalink to this headline">
+             #
+            </a>
+           </h2>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="c1"># input parameters</span>
+
 <span class="n">filtname</span> <span class="o">=</span> <span class="s1">'f150w'</span>
+
+<span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+<span class="n">filter_pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span><span class="s1">'yaml'</span><span class="p">,</span><span class="n">filtname</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span><span class="s1">'jw01069001001*0004*yaml'</span><span class="p">)</span> 
+<span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">filter_pattern</span><span class="p">)[:]</span>
+<span class="n">listname</span> <span class="o">=</span> <span class="n">files</span>
 </pre>
+              </div>
              </div>
             </div>
            </div>
-          </div>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># copy the F150W yaml files back in the working directory</span>
-<span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
-<span class="n">filter_pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span><span class="s1">'yaml'</span><span class="p">,</span><span class="n">filtname</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span><span class="s1">'jw*yaml'</span><span class="p">)</span> 
-<span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">filter_pattern</span><span class="p">)[:]</span>
-<span class="n">listname</span> <span class="o">=</span> <span class="n">files</span>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="c1"># copy the F150W yaml files back in the working directory</span>
 <span class="k">for</span> <span class="n">yamlfile</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
     <span class="n">input_file</span> <span class="o">=</span> <span class="n">yamlfile</span>         
     <span class="n">output_file</span> <span class="o">=</span> <span class="n">cwd</span> 
@@ -1104,15 +1148,15 @@ pipeline_level2: cal files
     <span class="nb">print</span><span class="p">(</span><span class="s1">'output = '</span><span class="p">,</span><span class="n">output_file</span><span class="p">)</span>
     <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span> <span class="c1">#this copies over filter files</span>
 </pre>
+              </div>
              </div>
             </div>
            </div>
-          </div>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># read the list of yaml files to process</span>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="c1"># read the list of yaml files to process</span>
 <span class="n">t</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">listname</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'ascii.fast_no_header'</span><span class="p">)</span>
 <span class="n">input_yaml</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="s1">'col1'</span><span class="p">]</span>
 
@@ -1126,41 +1170,38 @@ pipeline_level2: cal files
 <span class="n">paramlist</span> <span class="o">=</span> <span class="n">yaml_list</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
 </pre>
+              </div>
              </div>
             </div>
            </div>
-          </div>
-          <p>
-           From each yaml file, Mirage will produce a noiseless seed image, a “raw”
-           <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/data_products/science_products.html?highlight=uncal#uncalibrated-raw-data-uncal">
-            (level 1b) file
-           </a>
-           , and a linearized ramp (equivalent to the output of the linearity correction step of the
-           <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/pipeline/calwebb_detector1.html">
-            calwebb_detector1 pipeline
-           </a>
-           )
-          </p>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># here we loop over the yaml files and run MIRAGE in a sequence</span>
-<span class="c1"># this step will take a long time to run</span>
- 
-
-<span class="k">for</span> <span class="n">yamlfile</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">'---------------------processing '</span><span class="p">,</span><span class="n">yamlfile</span><span class="p">,</span><span class="s1">'  -------------------------------'</span><span class="p">)</span>
+           <p>
+            From each yaml file, Mirage will produce a noiseless seed image, a “raw”
+            <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/data_products/science_products.html?highlight=uncal#uncalibrated-raw-data-uncal">
+             (level 1b) file
+            </a>
+            , and a linearized ramp (equivalent to the output of the linearity correction step of the
+            <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/pipeline/calwebb_detector1.html">
+             calwebb_detector1 pipeline
+            </a>
+            )
+           </p>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="k">for</span> <span class="n">yamlfile</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'---------------------PROCESSING: '</span><span class="p">,</span><span class="n">yamlfile</span><span class="p">,</span><span class="s1">'  -------------------------------'</span><span class="p">)</span>
     
     <span class="c1"># run Mirage</span>
-    <span class="n">sim</span> <span class="o">=</span> <span class="n">imaging_simulator</span><span class="o">.</span><span class="n">ImgSim</span><span class="p">()</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">ImgSim</span><span class="p">()</span>
     <span class="n">sim</span><span class="o">.</span><span class="n">paramfile</span> <span class="o">=</span> <span class="n">yamlfile</span>
     <span class="n">sim</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
 </pre>
+              </div>
              </div>
             </div>
            </div>
-          </div>
+          </section>
           <section id="examine-the-output">
            <h2>
             Examine the output
@@ -1199,7 +1240,8 @@ pipeline_level2: cal files
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">seed_file</span> <span class="o">=</span> <span class="s1">'jw01069001001_01101_00003_nrca2_uncal_F150W_final_seed_image.fits'</span>
+                <pre><span></span><span class="n">seed_file</span> <span class="o">=</span> <span class="s1">'jw01069001001_01101_00004_nrcb4_uncal_F150W_CLEAR_final_seed_image.fits'</span>
+
 <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">seed_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdulist</span><span class="p">:</span>
     <span class="n">seed_data</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">seed_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -1224,7 +1266,7 @@ pipeline_level2: cal files
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">linear_file</span> <span class="o">=</span> <span class="s1">'jw01069001001_01101_00003_nrca2_linear.fits'</span>
+                <pre><span></span><span class="n">linear_file</span> <span class="o">=</span> <span class="s1">'jw01069001001_01101_00004_nrcb4_linear.fits'</span>
 <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">linear_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdulist</span><span class="p">:</span>
     <span class="n">linear_data</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">'SCI'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">linear_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -1260,7 +1302,7 @@ pipeline_level2: cal files
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">raw_file</span> <span class="o">=</span> <span class="s1">'jw01069001001_01101_00003_nrca2_uncal.fits'</span>
+                <pre><span></span><span class="n">raw_file</span> <span class="o">=</span> <span class="s1">'jw01069001001_01101_00004_nrcb4_uncal.fits'</span>
 <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">raw_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdulist</span><span class="p">:</span>
     <span class="n">raw_data</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">'SCI'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">raw_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
