@@ -23,12 +23,11 @@ jobs:
   deploy-book:
     runs-on: ubuntu-latest
     steps:
-    - name: Maximize disk space
-      uses: easimon/maximize-build-space@master
-      with:
-          root-reserve-mb: 512
-          swap-size-mb: 1024
-          remove-dotnet: 'true'
+    - name: Free up disk space
+      run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
     - uses: actions/checkout@v2
     - name: Set up Python 3.8.12
       uses: actions/setup-python@v2 ## needed for caching
