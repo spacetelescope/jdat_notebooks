@@ -13,37 +13,7 @@ The following [table](https://spacetelescope.github.io/jdat_notebooks/) summariz
 
 You can view [rendered versions of the notebooks](https://spacetelescope.github.io/jdat_notebooks/), which require no special tools beyond your web browser.
 
-To download and execute the notebooks, we recommend you [clone](https://github.com/git-guides/git-clone) this repository to your local computer. You can also click the "Download ZIP" option for the entire repository listed under the green "Code" button at the top of this page.
-
-You can also download individual notebooks, but it is not as straight forward.  This is because Git doesn't directly support downloading parts of the repository. However, in some web browsers, you should be able to navigate to your desired notebook, right click on the "RAW" formatting button, and download.  There are also options to use wget or curl for advanced users. 
-
-Note, however, most notebooks have additional associated files in their folder, including a `requirements` document that lists packages necessary to run the notebooks.  These packages can be installed using [pip](https://pip.pypa.io/en/stable/). The version dependencies are listed in the `environment.yaml` and in the `requirements` file in each notebook folder. 
-You will need **python version 3.8.10**.  We recommend the following command sequence:
-
-```   
-% git clone https://github.com/spacetelescope/jdat_notebooks.git
-% cd jdat_notebooks/notebooks/<whatever-notebook>
-% conda create -n jdat-nb python=3.8.10
-% conda activate jdat-nb
-% pip install -r pre-requirements.txt (if necessary)
-% pip install -r requirements.txt
-% pip install jupyter
-% jupyter notebook
-```
-
-
-### If you locally cloned this repo before 5 Feb 2021
-
-The primary branch for this repo has been transitioned from ``master`` to ``main``.  If you have a local clone of this repository and want to keep your local branch in sync with this repo, you'll need to do the following in your local clone from your terminal:
-
-```   
-% git branch -m master main
-% git fetch origin
-% git branch -u origin/main main
-```
-
-If you are using a GUI to manage your repos you'll have to find the equivalent commands as it's different for different programs. Alternatively, you can just delete your local clone and re-clone!
-
+To download and execute the notebooks, please read the [detailed instructions](https://spacetelescope.github.io/jdat_notebooks/install.html). for cloning this repository to your local computer.
 
 ## Help
 
