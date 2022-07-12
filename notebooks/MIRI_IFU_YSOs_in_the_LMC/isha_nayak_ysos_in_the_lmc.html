@@ -457,6 +457,13 @@ const thebe_selector_output = ".output, .cell_output"
           <a class="reference internal nav-link" href="#set-path-to-data">
            Set path to data
           </a>
+          <ul class="nav section-nav flex-column">
+           <li class="toc-h3 nav-item toc-entry">
+            <a class="reference internal nav-link" href="#note-that-the-data-file-is-2-gb-so-download-will-take-a-while-depending-on-your-intenet-speed-you-can-also-download-directly-using-the-link-below">
+             Note that the data file is ~2 GB, so download will take a while depending on your intenet speed. You can also download directly using the link below.
+            </a>
+           </li>
+          </ul>
          </li>
          <li class="toc-h2 nav-item toc-entry">
           <a class="reference internal nav-link" href="#load-and-display-data-cube">
@@ -578,6 +585,13 @@ const thebe_selector_output = ".output, .cell_output"
              <a class="reference internal nav-link" href="#set-path-to-data">
               Set path to data
              </a>
+             <ul class="nav section-nav flex-column">
+              <li class="toc-h3 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#note-that-the-data-file-is-2-gb-so-download-will-take-a-while-depending-on-your-intenet-speed-you-can-also-download-directly-using-the-link-below">
+                Note that the data file is ~2 GB, so download will take a while depending on your intenet speed. You can also download directly using the link below.
+               </a>
+              </li>
+             </ul>
             </li>
             <li class="toc-h2 nav-item toc-entry">
              <a class="reference internal nav-link" href="#load-and-display-data-cube">
@@ -740,6 +754,8 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="kn">from</span> <span class="nn">astropy.modeling</span> <span class="kn">import</span> <span class="n">models</span>
 <span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span><span class="p">,</span> <span class="n">Column</span><span class="p">,</span> <span class="n">vstack</span>
 <span class="kn">from</span> <span class="nn">astropy.stats</span> <span class="kn">import</span> <span class="n">sigma_clipped_stats</span>
+<span class="kn">from</span> <span class="nn">astropy.utils.data</span> <span class="kn">import</span> <span class="n">download_file</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -890,22 +906,32 @@ const thebe_selector_output = ".output, .cell_output"
             </a>
            </h2>
            <p>
-            I am using ALMA 13CO from a known star formation region in the LMC host to nearly 150 massive YSOs.
+            Using ALMA 13CO from a known star formation region in the LMC host to nearly 150 massive YSOs.
            </p>
-           <p>
-            Note that the data file can be pulled from Box and installed locally in the user’s disk. This will save time when running the notebook multiple times.
-           </p>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="n">data_cube_file</span> <span class="o">=</span> <span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MIRI_IFU_YSOs_in_the_LMC/LMC_13CO.fits'</span>
-<span class="c1"># data_cube_file = 'LMC_13CO.fits'</span>
+           <section id="note-that-the-data-file-is-2-gb-so-download-will-take-a-while-depending-on-your-intenet-speed-you-can-also-download-directly-using-the-link-below">
+            <h3>
+             Note that the data file is ~2 GB, so download will take a while depending on your intenet speed. You can also download directly using the link below.
+             <a class="headerlink" href="#note-that-the-data-file-is-2-gb-so-download-will-take-a-while-depending-on-your-intenet-speed-you-can-also-download-directly-using-the-link-below" title="Permalink to this headline">
+              #
+             </a>
+            </h3>
+            <div class="cell docutils container">
+             <div class="cell_input docutils container">
+              <div class="highlight-ipython3 notranslate">
+               <div class="highlight">
+                <pre><span></span><span class="n">data_file</span> <span class="o">=</span> <span class="s1">'./LMC_13CO.fits'</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"LMC_13CO.fits"</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"LMC_13CO.fits Already Exists"</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Downloading LMC_13CO.fits"</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MIRI_IFU_YSOs_in_the_LMC/LMC_13CO.fits'</span>
+    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="s1">'./LMC_13CO.fits'</span><span class="p">)</span>
 </pre>
+               </div>
               </div>
              </div>
             </div>
-           </div>
+           </section>
           </section>
           <section id="load-and-display-data-cube">
            <h2>
@@ -918,7 +944,7 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">cube</span> <span class="o">=</span> <span class="n">SpectralCube</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">data_cube_file</span><span class="p">,</span> <span class="n">hdu</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  
+               <pre><span></span><span class="n">cube</span> <span class="o">=</span> <span class="n">SpectralCube</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="n">hdu</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  
 <span class="nb">print</span><span class="p">(</span><span class="n">cube</span><span class="p">)</span>
 </pre>
               </div>
