@@ -17,50 +17,256 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-cubeviz = Cubeviz()
-cubeviz.app
+# This cell accesses the datacube file, defines the wavelength grid from header information and then plots a simple
+# 1-D collapsed spectrum of the IFU data.
+
+# Read in a 3-D IFU datacube of interest, and header.
+cube_file = 'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/NGC4151_Hband.fits'
+fn = download_file('https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/NGC4151_Hband.fits', cache=True)
+cube = fits.getdata(cube_file)
+header_cube = fits.getheader(cube_file)
+
+# grab data information and wavelength definitions.
+nz, ny, nx = cube.shape
+crdelt3 = header_cube['CDELT3']
+crval3 = header_cube['CRVAL3']
+
+# define the wavelength grid (microns) from the header (Angstroms)
+# and the AGN redshift and the emission line of interest.
+wave = ((crdelt3 * (np.arange(0, nz, 1))) + crval3)/10000.0
+redshift = 0.00332
+emission_line = 1.64400*(1 + redshift)
+emission_line_index = (np.abs(wave-emission_line)).argmin()
+
+# make a simple summed 1d spectrum of the full cube
+flux1 = np.sum(cube, axis=(1, 2))
+
+# plot the full 1-D spectrum.
+plt.figure(0)
+plt.plot(wave, flux1)
+plt.show()
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m
-[0;31mAttributeError[0m                            Traceback (most recent call last)
-Input [0;32mIn [7][0m, in [0;36m<cell line: 1>[0;34m()[0m
-[0;32m----> 1[0m cubeviz [38;5;241m=[39m [43mCubeviz[49m[43m([49m[43m)[49m
-[1;32m      2[0m cubeviz[38;5;241m.[39mapp
+[0;31mtimeout[0m                                   Traceback (most recent call last)
+Input [0;32mIn [4][0m, in [0;36m<cell line: 6>[0;34m()[0m
+[1;32m      1[0m [38;5;66;03m# This cell accesses the datacube file, defines the wavelength grid from header information and then plots a simple[39;00m
+[1;32m      2[0m [38;5;66;03m# 1-D collapsed spectrum of the IFU data.[39;00m
+[1;32m      3[0m 
+[1;32m      4[0m [38;5;66;03m# Read in a 3-D IFU datacube of interest, and header.[39;00m
+[1;32m      5[0m cube_file [38;5;241m=[39m [38;5;124m'[39m[38;5;124mhttps://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/NGC4151_Hband.fits[39m[38;5;124m'[39m
+[0;32m----> 6[0m fn [38;5;241m=[39m [43mdownload_file[49m[43m([49m[38;5;124;43m'[39;49m[38;5;124;43mhttps://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/NGC4151_Hband.fits[39;49m[38;5;124;43m'[39;49m[43m,[49m[43m [49m[43mcache[49m[38;5;241;43m=[39;49m[38;5;28;43;01mTrue[39;49;00m[43m)[49m
+[1;32m      7[0m cube [38;5;241m=[39m fits[38;5;241m.[39mgetdata(cube_file)
+[1;32m      8[0m header_cube [38;5;241m=[39m fits[38;5;241m.[39mgetheader(cube_file)
 
-File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/jdaviz/configs/cubeviz/helper.py:18[0m, in [0;36mCubeviz.__init__[0;34m(self, *args, **kwargs)[0m
-[1;32m     17[0m [38;5;28;01mdef[39;00m [38;5;21m__init__[39m([38;5;28mself[39m, [38;5;241m*[39margs, [38;5;241m*[39m[38;5;241m*[39mkwargs):
-[0;32m---> 18[0m     [38;5;28;43msuper[39;49m[43m([49m[43m)[49m[38;5;241;43m.[39;49m[38;5;21;43m__init__[39;49m[43m([49m[38;5;241;43m*[39;49m[43margs[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m
-[1;32m     19[0m     [38;5;28mself[39m[38;5;241m.[39mapp[38;5;241m.[39mhub[38;5;241m.[39msubscribe([38;5;28mself[39m, SliceSelectWavelengthMessage,
-[1;32m     20[0m                            handler[38;5;241m=[39m[38;5;28mself[39m[38;5;241m.[39mselect_wavelength)
-[1;32m     21[0m     [38;5;28mself[39m[38;5;241m.[39mapp[38;5;241m.[39mhub[38;5;241m.[39msubscribe([38;5;28mself[39m, AddDataMessage,
-[1;32m     22[0m                            handler[38;5;241m=[39m[38;5;28mself[39m[38;5;241m.[39m_set_spectrum_x_axis)
+File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/astropy/utils/data.py:1363[0m, in [0;36mdownload_file[0;34m(remote_url, cache, show_progress, timeout, sources, pkgname, http_headers, ssl_context, allow_insecure)[0m
+[1;32m   1361[0m [38;5;28;01mfor[39;00m source_url [38;5;129;01min[39;00m sources:
+[1;32m   1362[0m     [38;5;28;01mtry[39;00m:
+[0;32m-> 1363[0m         f_name [38;5;241m=[39m [43m_download_file_from_source[49m[43m([49m
+[1;32m   1364[0m [43m                [49m[43msource_url[49m[43m,[49m
+[1;32m   1365[0m [43m                [49m[43mtimeout[49m[38;5;241;43m=[39;49m[43mtimeout[49m[43m,[49m
+[1;32m   1366[0m [43m                [49m[43mshow_progress[49m[38;5;241;43m=[39;49m[43mshow_progress[49m[43m,[49m
+[1;32m   1367[0m [43m                [49m[43mcache[49m[38;5;241;43m=[39;49m[43mcache[49m[43m,[49m
+[1;32m   1368[0m [43m                [49m[43mremote_url[49m[38;5;241;43m=[39;49m[43mremote_url[49m[43m,[49m
+[1;32m   1369[0m [43m                [49m[43mpkgname[49m[38;5;241;43m=[39;49m[43mpkgname[49m[43m,[49m
+[1;32m   1370[0m [43m                [49m[43mhttp_headers[49m[38;5;241;43m=[39;49m[43mhttp_headers[49m[43m,[49m
+[1;32m   1371[0m [43m                [49m[43mssl_context[49m[38;5;241;43m=[39;49m[43mssl_context[49m[43m,[49m
+[1;32m   1372[0m [43m                [49m[43mallow_insecure[49m[38;5;241;43m=[39;49m[43mallow_insecure[49m[43m)[49m
+[1;32m   1373[0m         [38;5;66;03m# Success![39;00m
+[1;32m   1374[0m         [38;5;28;01mbreak[39;00m
 
-File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/jdaviz/core/helpers.py:47[0m, in [0;36mConfigHelper.__init__[0;34m(self, app, verbosity, history_verbosity)[0m
-[1;32m     45[0m [38;5;28;01mdef[39;00m [38;5;21m__init__[39m([38;5;28mself[39m, app[38;5;241m=[39m[38;5;28;01mNone[39;00m, verbosity[38;5;241m=[39m[38;5;124m'[39m[38;5;124mwarning[39m[38;5;124m'[39m, history_verbosity[38;5;241m=[39m[38;5;124m'[39m[38;5;124minfo[39m[38;5;124m'[39m):
-[1;32m     46[0m     [38;5;28;01mif[39;00m app [38;5;129;01mis[39;00m [38;5;28;01mNone[39;00m:
-[0;32m---> 47[0m         [38;5;28mself[39m[38;5;241m.[39mapp [38;5;241m=[39m [43mApplication[49m[43m([49m[43mconfiguration[49m[38;5;241;43m=[39;49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_default_configuration[49m[43m)[49m
-[1;32m     48[0m     [38;5;28;01melse[39;00m:
-[1;32m     49[0m         [38;5;28mself[39m[38;5;241m.[39mapp [38;5;241m=[39m app
+File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/astropy/utils/data.py:1167[0m, in [0;36m_download_file_from_source[0;34m(source_url, show_progress, timeout, remote_url, cache, pkgname, http_headers, ftp_tls, ssl_context, allow_insecure)[0m
+[1;32m   1164[0m         [38;5;28;01melse[39;00m:
+[1;32m   1165[0m             [38;5;28;01mraise[39;00m
+[0;32m-> 1167[0m [38;5;28;01mwith[39;00m [43m_try_url_open[49m[43m([49m[43msource_url[49m[43m,[49m[43m [49m[43mtimeout[49m[38;5;241;43m=[39;49m[43mtimeout[49m[43m,[49m[43m [49m[43mhttp_headers[49m[38;5;241;43m=[39;49m[43mhttp_headers[49m[43m,[49m
+[1;32m   1168[0m [43m                   [49m[43mftp_tls[49m[38;5;241;43m=[39;49m[43mftp_tls[49m[43m,[49m[43m [49m[43mssl_context[49m[38;5;241;43m=[39;49m[43mssl_context[49m[43m,[49m
+[1;32m   1169[0m [43m                   [49m[43mallow_insecure[49m[38;5;241;43m=[39;49m[43mallow_insecure[49m[43m)[49m [38;5;28;01mas[39;00m remote:
+[1;32m   1170[0m     info [38;5;241m=[39m remote[38;5;241m.[39minfo()
+[1;32m   1171[0m     [38;5;28;01mtry[39;00m:
 
-File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/jdaviz/app.py:185[0m, in [0;36mApplication.__init__[0;34m(self, configuration, *args, **kwargs)[0m
-[1;32m    183[0m [38;5;28mself[39m[38;5;241m.[39m_verbosity [38;5;241m=[39m [38;5;124m'[39m[38;5;124mwarning[39m[38;5;124m'[39m
-[1;32m    184[0m [38;5;28mself[39m[38;5;241m.[39m_history_verbosity [38;5;241m=[39m [38;5;124m'[39m[38;5;124minfo[39m[38;5;124m'[39m
-[0;32m--> 185[0m [38;5;28mself[39m[38;5;241m.[39mpopout_button [38;5;241m=[39m [43mPopoutButton[49m[43m([49m[38;5;28;43mself[39;49m[43m)[49m
-[1;32m    187[0m [38;5;66;03m# Generate a state object for this application to maintain the state of[39;00m
-[1;32m    188[0m [38;5;66;03m#  the user interface.[39;00m
-[1;32m    189[0m [38;5;28mself[39m[38;5;241m.[39mstate [38;5;241m=[39m ApplicationState()
+File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/astropy/utils/data.py:1104[0m, in [0;36m_try_url_open[0;34m(source_url, timeout, http_headers, ftp_tls, ssl_context, allow_insecure)[0m
+[1;32m   1101[0m req [38;5;241m=[39m urllib[38;5;241m.[39mrequest[38;5;241m.[39mRequest(source_url, headers[38;5;241m=[39mhttp_headers)
+[1;32m   1103[0m [38;5;28;01mtry[39;00m:
+[0;32m-> 1104[0m     [38;5;28;01mreturn[39;00m [43murlopener[49m[38;5;241;43m.[39;49m[43mopen[49m[43m([49m[43mreq[49m[43m,[49m[43m [49m[43mtimeout[49m[38;5;241;43m=[39;49m[43mtimeout[49m[43m)[49m
+[1;32m   1105[0m [38;5;28;01mexcept[39;00m urllib[38;5;241m.[39merror[38;5;241m.[39mURLError [38;5;28;01mas[39;00m exc:
+[1;32m   1106[0m     reason [38;5;241m=[39m exc[38;5;241m.[39mreason
 
-File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/ipypopout/popout_button.py:34[0m, in [0;36mPopoutButton.__init__[0;34m(self, target, **kwargs)[0m
-[1;32m     33[0m [38;5;28;01mdef[39;00m [38;5;21m__init__[39m([38;5;28mself[39m, target, [38;5;241m*[39m[38;5;241m*[39mkwargs):
-[0;32m---> 34[0m     [38;5;28mself[39m[38;5;241m.[39mkernel_id [38;5;241m=[39m [43mget_kernel_id[49m[43m([49m[43m)[49m
-[1;32m     35[0m     [38;5;28mself[39m[38;5;241m.[39mtarget_model_id [38;5;241m=[39m target[38;5;241m.[39m_model_id
-[1;32m     36[0m     [38;5;28mself[39m[38;5;241m.[39mwindow_name [38;5;241m=[39m target[38;5;241m.[39m_model_id
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:523[0m, in [0;36mOpenerDirector.open[0;34m(self, fullurl, data, timeout)[0m
+[1;32m    521[0m [38;5;28;01mfor[39;00m processor [38;5;129;01min[39;00m [38;5;28mself[39m[38;5;241m.[39mprocess_response[38;5;241m.[39mget(protocol, []):
+[1;32m    522[0m     meth [38;5;241m=[39m [38;5;28mgetattr[39m(processor, meth_name)
+[0;32m--> 523[0m     response [38;5;241m=[39m [43mmeth[49m[43m([49m[43mreq[49m[43m,[49m[43m [49m[43mresponse[49m[43m)[49m
+[1;32m    525[0m [38;5;28;01mreturn[39;00m response
 
-File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/ipypopout/popout_button.py:16[0m, in [0;36mget_kernel_id[0;34m()[0m
-[1;32m     14[0m regex [38;5;241m=[39m [38;5;124mr[39m[38;5;124m'[39m[38;5;124m[[39m[38;5;130;01m\\[39;00m[38;5;124m/]kernel-([0-9a-f][39m[38;5;132;01m{8}[39;00m[38;5;124m-[0-9a-f][39m[38;5;132;01m{4}[39;00m[38;5;124m-[0-9a-f][39m[38;5;132;01m{4}[39;00m[38;5;124m-[0-9a-f][39m[38;5;132;01m{4}[39;00m[38;5;124m-[0-9a-f][39m[38;5;132;01m{12}[39;00m[38;5;124m)[39m[38;5;124m\[39m[38;5;124m.json$[39m[38;5;124m'[39m
-[1;32m     15[0m connection_file [38;5;241m=[39m kernel[38;5;241m.[39mconfig[[38;5;124m'[39m[38;5;124mIPKernelApp[39m[38;5;124m'[39m][[38;5;124m'[39m[38;5;124mconnection_file[39m[38;5;124m'[39m]
-[0;32m---> 16[0m [38;5;28;01mreturn[39;00m [43mre[49m[38;5;241;43m.[39;49m[43mcompile[49m[43m([49m[43mregex[49m[43m)[49m[38;5;241;43m.[39;49m[43msearch[49m[43m([49m[43mconnection_file[49m[43m)[49m[38;5;241;43m.[39;49m[43mgroup[49m([38;5;241m1[39m)
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:632[0m, in [0;36mHTTPErrorProcessor.http_response[0;34m(self, request, response)[0m
+[1;32m    629[0m [38;5;66;03m# According to RFC 2616, "2xx" code indicates that the client's[39;00m
+[1;32m    630[0m [38;5;66;03m# request was successfully received, understood, and accepted.[39;00m
+[1;32m    631[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m ([38;5;241m200[39m [38;5;241m<[39m[38;5;241m=[39m code [38;5;241m<[39m [38;5;241m300[39m):
+[0;32m--> 632[0m     response [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mparent[49m[38;5;241;43m.[39;49m[43merror[49m[43m([49m
+[1;32m    633[0m [43m        [49m[38;5;124;43m'[39;49m[38;5;124;43mhttp[39;49m[38;5;124;43m'[39;49m[43m,[49m[43m [49m[43mrequest[49m[43m,[49m[43m [49m[43mresponse[49m[43m,[49m[43m [49m[43mcode[49m[43m,[49m[43m [49m[43mmsg[49m[43m,[49m[43m [49m[43mhdrs[49m[43m)[49m
+[1;32m    635[0m [38;5;28;01mreturn[39;00m response
 
-[0;31mAttributeError[0m: 'NoneType' object has no attribute 'group'
-AttributeError: 'NoneType' object has no attribute 'group'
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:555[0m, in [0;36mOpenerDirector.error[0;34m(self, proto, *args)[0m
+[1;32m    553[0m     http_err [38;5;241m=[39m [38;5;241m0[39m
+[1;32m    554[0m args [38;5;241m=[39m ([38;5;28mdict[39m, proto, meth_name) [38;5;241m+[39m args
+[0;32m--> 555[0m result [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_call_chain[49m[43m([49m[38;5;241;43m*[39;49m[43margs[49m[43m)[49m
+[1;32m    556[0m [38;5;28;01mif[39;00m result:
+[1;32m    557[0m     [38;5;28;01mreturn[39;00m result
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:494[0m, in [0;36mOpenerDirector._call_chain[0;34m(self, chain, kind, meth_name, *args)[0m
+[1;32m    492[0m [38;5;28;01mfor[39;00m handler [38;5;129;01min[39;00m handlers:
+[1;32m    493[0m     func [38;5;241m=[39m [38;5;28mgetattr[39m(handler, meth_name)
+[0;32m--> 494[0m     result [38;5;241m=[39m [43mfunc[49m[43m([49m[38;5;241;43m*[39;49m[43margs[49m[43m)[49m
+[1;32m    495[0m     [38;5;28;01mif[39;00m result [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+[1;32m    496[0m         [38;5;28;01mreturn[39;00m result
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:747[0m, in [0;36mHTTPRedirectHandler.http_error_302[0;34m(self, req, fp, code, msg, headers)[0m
+[1;32m    744[0m fp[38;5;241m.[39mread()
+[1;32m    745[0m fp[38;5;241m.[39mclose()
+[0;32m--> 747[0m [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mparent[49m[38;5;241;43m.[39;49m[43mopen[49m[43m([49m[43mnew[49m[43m,[49m[43m [49m[43mtimeout[49m[38;5;241;43m=[39;49m[43mreq[49m[38;5;241;43m.[39;49m[43mtimeout[49m[43m)[49m
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:523[0m, in [0;36mOpenerDirector.open[0;34m(self, fullurl, data, timeout)[0m
+[1;32m    521[0m [38;5;28;01mfor[39;00m processor [38;5;129;01min[39;00m [38;5;28mself[39m[38;5;241m.[39mprocess_response[38;5;241m.[39mget(protocol, []):
+[1;32m    522[0m     meth [38;5;241m=[39m [38;5;28mgetattr[39m(processor, meth_name)
+[0;32m--> 523[0m     response [38;5;241m=[39m [43mmeth[49m[43m([49m[43mreq[49m[43m,[49m[43m [49m[43mresponse[49m[43m)[49m
+[1;32m    525[0m [38;5;28;01mreturn[39;00m response
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:632[0m, in [0;36mHTTPErrorProcessor.http_response[0;34m(self, request, response)[0m
+[1;32m    629[0m [38;5;66;03m# According to RFC 2616, "2xx" code indicates that the client's[39;00m
+[1;32m    630[0m [38;5;66;03m# request was successfully received, understood, and accepted.[39;00m
+[1;32m    631[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m ([38;5;241m200[39m [38;5;241m<[39m[38;5;241m=[39m code [38;5;241m<[39m [38;5;241m300[39m):
+[0;32m--> 632[0m     response [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mparent[49m[38;5;241;43m.[39;49m[43merror[49m[43m([49m
+[1;32m    633[0m [43m        [49m[38;5;124;43m'[39;49m[38;5;124;43mhttp[39;49m[38;5;124;43m'[39;49m[43m,[49m[43m [49m[43mrequest[49m[43m,[49m[43m [49m[43mresponse[49m[43m,[49m[43m [49m[43mcode[49m[43m,[49m[43m [49m[43mmsg[49m[43m,[49m[43m [49m[43mhdrs[49m[43m)[49m
+[1;32m    635[0m [38;5;28;01mreturn[39;00m response
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:555[0m, in [0;36mOpenerDirector.error[0;34m(self, proto, *args)[0m
+[1;32m    553[0m     http_err [38;5;241m=[39m [38;5;241m0[39m
+[1;32m    554[0m args [38;5;241m=[39m ([38;5;28mdict[39m, proto, meth_name) [38;5;241m+[39m args
+[0;32m--> 555[0m result [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_call_chain[49m[43m([49m[38;5;241;43m*[39;49m[43margs[49m[43m)[49m
+[1;32m    556[0m [38;5;28;01mif[39;00m result:
+[1;32m    557[0m     [38;5;28;01mreturn[39;00m result
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:494[0m, in [0;36mOpenerDirector._call_chain[0;34m(self, chain, kind, meth_name, *args)[0m
+[1;32m    492[0m [38;5;28;01mfor[39;00m handler [38;5;129;01min[39;00m handlers:
+[1;32m    493[0m     func [38;5;241m=[39m [38;5;28mgetattr[39m(handler, meth_name)
+[0;32m--> 494[0m     result [38;5;241m=[39m [43mfunc[49m[43m([49m[38;5;241;43m*[39;49m[43margs[49m[43m)[49m
+[1;32m    495[0m     [38;5;28;01mif[39;00m result [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+[1;32m    496[0m         [38;5;28;01mreturn[39;00m result
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:747[0m, in [0;36mHTTPRedirectHandler.http_error_302[0;34m(self, req, fp, code, msg, headers)[0m
+[1;32m    744[0m fp[38;5;241m.[39mread()
+[1;32m    745[0m fp[38;5;241m.[39mclose()
+[0;32m--> 747[0m [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mparent[49m[38;5;241;43m.[39;49m[43mopen[49m[43m([49m[43mnew[49m[43m,[49m[43m [49m[43mtimeout[49m[38;5;241;43m=[39;49m[43mreq[49m[38;5;241;43m.[39;49m[43mtimeout[49m[43m)[49m
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:523[0m, in [0;36mOpenerDirector.open[0;34m(self, fullurl, data, timeout)[0m
+[1;32m    521[0m [38;5;28;01mfor[39;00m processor [38;5;129;01min[39;00m [38;5;28mself[39m[38;5;241m.[39mprocess_response[38;5;241m.[39mget(protocol, []):
+[1;32m    522[0m     meth [38;5;241m=[39m [38;5;28mgetattr[39m(processor, meth_name)
+[0;32m--> 523[0m     response [38;5;241m=[39m [43mmeth[49m[43m([49m[43mreq[49m[43m,[49m[43m [49m[43mresponse[49m[43m)[49m
+[1;32m    525[0m [38;5;28;01mreturn[39;00m response
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:632[0m, in [0;36mHTTPErrorProcessor.http_response[0;34m(self, request, response)[0m
+[1;32m    629[0m [38;5;66;03m# According to RFC 2616, "2xx" code indicates that the client's[39;00m
+[1;32m    630[0m [38;5;66;03m# request was successfully received, understood, and accepted.[39;00m
+[1;32m    631[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m ([38;5;241m200[39m [38;5;241m<[39m[38;5;241m=[39m code [38;5;241m<[39m [38;5;241m300[39m):
+[0;32m--> 632[0m     response [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mparent[49m[38;5;241;43m.[39;49m[43merror[49m[43m([49m
+[1;32m    633[0m [43m        [49m[38;5;124;43m'[39;49m[38;5;124;43mhttp[39;49m[38;5;124;43m'[39;49m[43m,[49m[43m [49m[43mrequest[49m[43m,[49m[43m [49m[43mresponse[49m[43m,[49m[43m [49m[43mcode[49m[43m,[49m[43m [49m[43mmsg[49m[43m,[49m[43m [49m[43mhdrs[49m[43m)[49m
+[1;32m    635[0m [38;5;28;01mreturn[39;00m response
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:555[0m, in [0;36mOpenerDirector.error[0;34m(self, proto, *args)[0m
+[1;32m    553[0m     http_err [38;5;241m=[39m [38;5;241m0[39m
+[1;32m    554[0m args [38;5;241m=[39m ([38;5;28mdict[39m, proto, meth_name) [38;5;241m+[39m args
+[0;32m--> 555[0m result [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_call_chain[49m[43m([49m[38;5;241;43m*[39;49m[43margs[49m[43m)[49m
+[1;32m    556[0m [38;5;28;01mif[39;00m result:
+[1;32m    557[0m     [38;5;28;01mreturn[39;00m result
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:494[0m, in [0;36mOpenerDirector._call_chain[0;34m(self, chain, kind, meth_name, *args)[0m
+[1;32m    492[0m [38;5;28;01mfor[39;00m handler [38;5;129;01min[39;00m handlers:
+[1;32m    493[0m     func [38;5;241m=[39m [38;5;28mgetattr[39m(handler, meth_name)
+[0;32m--> 494[0m     result [38;5;241m=[39m [43mfunc[49m[43m([49m[38;5;241;43m*[39;49m[43margs[49m[43m)[49m
+[1;32m    495[0m     [38;5;28;01mif[39;00m result [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+[1;32m    496[0m         [38;5;28;01mreturn[39;00m result
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:747[0m, in [0;36mHTTPRedirectHandler.http_error_302[0;34m(self, req, fp, code, msg, headers)[0m
+[1;32m    744[0m fp[38;5;241m.[39mread()
+[1;32m    745[0m fp[38;5;241m.[39mclose()
+[0;32m--> 747[0m [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mparent[49m[38;5;241;43m.[39;49m[43mopen[49m[43m([49m[43mnew[49m[43m,[49m[43m [49m[43mtimeout[49m[38;5;241;43m=[39;49m[43mreq[49m[38;5;241;43m.[39;49m[43mtimeout[49m[43m)[49m
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:517[0m, in [0;36mOpenerDirector.open[0;34m(self, fullurl, data, timeout)[0m
+[1;32m    514[0m     req [38;5;241m=[39m meth(req)
+[1;32m    516[0m sys[38;5;241m.[39maudit([38;5;124m'[39m[38;5;124murllib.Request[39m[38;5;124m'[39m, req[38;5;241m.[39mfull_url, req[38;5;241m.[39mdata, req[38;5;241m.[39mheaders, req[38;5;241m.[39mget_method())
+[0;32m--> 517[0m response [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_open[49m[43m([49m[43mreq[49m[43m,[49m[43m [49m[43mdata[49m[43m)[49m
+[1;32m    519[0m [38;5;66;03m# post-process response[39;00m
+[1;32m    520[0m meth_name [38;5;241m=[39m protocol[38;5;241m+[39m[38;5;124m"[39m[38;5;124m_response[39m[38;5;124m"[39m
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:534[0m, in [0;36mOpenerDirector._open[0;34m(self, req, data)[0m
+[1;32m    531[0m     [38;5;28;01mreturn[39;00m result
+[1;32m    533[0m protocol [38;5;241m=[39m req[38;5;241m.[39mtype
+[0;32m--> 534[0m result [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_call_chain[49m[43m([49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mhandle_open[49m[43m,[49m[43m [49m[43mprotocol[49m[43m,[49m[43m [49m[43mprotocol[49m[43m [49m[38;5;241;43m+[39;49m
+[1;32m    535[0m [43m                          [49m[38;5;124;43m'[39;49m[38;5;124;43m_open[39;49m[38;5;124;43m'[39;49m[43m,[49m[43m [49m[43mreq[49m[43m)[49m
+[1;32m    536[0m [38;5;28;01mif[39;00m result:
+[1;32m    537[0m     [38;5;28;01mreturn[39;00m result
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:494[0m, in [0;36mOpenerDirector._call_chain[0;34m(self, chain, kind, meth_name, *args)[0m
+[1;32m    492[0m [38;5;28;01mfor[39;00m handler [38;5;129;01min[39;00m handlers:
+[1;32m    493[0m     func [38;5;241m=[39m [38;5;28mgetattr[39m(handler, meth_name)
+[0;32m--> 494[0m     result [38;5;241m=[39m [43mfunc[49m[43m([49m[38;5;241;43m*[39;49m[43margs[49m[43m)[49m
+[1;32m    495[0m     [38;5;28;01mif[39;00m result [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+[1;32m    496[0m         [38;5;28;01mreturn[39;00m result
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:1389[0m, in [0;36mHTTPSHandler.https_open[0;34m(self, req)[0m
+[1;32m   1388[0m [38;5;28;01mdef[39;00m [38;5;21mhttps_open[39m([38;5;28mself[39m, req):
+[0;32m-> 1389[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mdo_open[49m[43m([49m[43mhttp[49m[38;5;241;43m.[39;49m[43mclient[49m[38;5;241;43m.[39;49m[43mHTTPSConnection[49m[43m,[49m[43m [49m[43mreq[49m[43m,[49m
+[1;32m   1390[0m [43m        [49m[43mcontext[49m[38;5;241;43m=[39;49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_context[49m[43m,[49m[43m [49m[43mcheck_hostname[49m[38;5;241;43m=[39;49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_check_hostname[49m[43m)[49m
+
+File [0;32m/usr/share/miniconda/lib/python3.9/urllib/request.py:1350[0m, in [0;36mAbstractHTTPHandler.do_open[0;34m(self, http_class, req, **http_conn_args)[0m
+[1;32m   1348[0m     [38;5;28;01mexcept[39;00m [38;5;167;01mOSError[39;00m [38;5;28;01mas[39;00m err: [38;5;66;03m# timeout error[39;00m
+[1;32m   1349[0m         [38;5;28;01mraise[39;00m URLError(err)
+[0;32m-> 1350[0m     r [38;5;241m=[39m [43mh[49m[38;5;241;43m.[39;49m[43mgetresponse[49m[43m([49m[43m)[49m
+[1;32m   1351[0m [38;5;28;01mexcept[39;00m:
+[1;32m   1352[0m     h[38;5;241m.[39mclose()
+
+File [0;32m/usr/share/miniconda/lib/python3.9/http/client.py:1377[0m, in [0;36mHTTPConnection.getresponse[0;34m(self)[0m
+[1;32m   1375[0m [38;5;28;01mtry[39;00m:
+[1;32m   1376[0m     [38;5;28;01mtry[39;00m:
+[0;32m-> 1377[0m         [43mresponse[49m[38;5;241;43m.[39;49m[43mbegin[49m[43m([49m[43m)[49m
+[1;32m   1378[0m     [38;5;28;01mexcept[39;00m [38;5;167;01mConnectionError[39;00m:
+[1;32m   1379[0m         [38;5;28mself[39m[38;5;241m.[39mclose()
+
+File [0;32m/usr/share/miniconda/lib/python3.9/http/client.py:320[0m, in [0;36mHTTPResponse.begin[0;34m(self)[0m
+[1;32m    318[0m [38;5;66;03m# read until we get a non-100 response[39;00m
+[1;32m    319[0m [38;5;28;01mwhile[39;00m [38;5;28;01mTrue[39;00m:
+[0;32m--> 320[0m     version, status, reason [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_read_status[49m[43m([49m[43m)[49m
+[1;32m    321[0m     [38;5;28;01mif[39;00m status [38;5;241m!=[39m CONTINUE:
+[1;32m    322[0m         [38;5;28;01mbreak[39;00m
+
+File [0;32m/usr/share/miniconda/lib/python3.9/http/client.py:281[0m, in [0;36mHTTPResponse._read_status[0;34m(self)[0m
+[1;32m    280[0m [38;5;28;01mdef[39;00m [38;5;21m_read_status[39m([38;5;28mself[39m):
+[0;32m--> 281[0m     line [38;5;241m=[39m [38;5;28mstr[39m([38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mfp[49m[38;5;241;43m.[39;49m[43mreadline[49m[43m([49m[43m_MAXLINE[49m[43m [49m[38;5;241;43m+[39;49m[43m [49m[38;5;241;43m1[39;49m[43m)[49m, [38;5;124m"[39m[38;5;124miso-8859-1[39m[38;5;124m"[39m)
+[1;32m    282[0m     [38;5;28;01mif[39;00m [38;5;28mlen[39m(line) [38;5;241m>[39m _MAXLINE:
+[1;32m    283[0m         [38;5;28;01mraise[39;00m LineTooLong([38;5;124m"[39m[38;5;124mstatus line[39m[38;5;124m"[39m)
+
+File [0;32m/usr/share/miniconda/lib/python3.9/socket.py:704[0m, in [0;36mSocketIO.readinto[0;34m(self, b)[0m
+[1;32m    702[0m [38;5;28;01mwhile[39;00m [38;5;28;01mTrue[39;00m:
+[1;32m    703[0m     [38;5;28;01mtry[39;00m:
+[0;32m--> 704[0m         [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_sock[49m[38;5;241;43m.[39;49m[43mrecv_into[49m[43m([49m[43mb[49m[43m)[49m
+[1;32m    705[0m     [38;5;28;01mexcept[39;00m timeout:
+[1;32m    706[0m         [38;5;28mself[39m[38;5;241m.[39m_timeout_occurred [38;5;241m=[39m [38;5;28;01mTrue[39;00m
+
+File [0;32m/usr/share/miniconda/lib/python3.9/ssl.py:1241[0m, in [0;36mSSLSocket.recv_into[0;34m(self, buffer, nbytes, flags)[0m
+[1;32m   1237[0m     [38;5;28;01mif[39;00m flags [38;5;241m!=[39m [38;5;241m0[39m:
+[1;32m   1238[0m         [38;5;28;01mraise[39;00m [38;5;167;01mValueError[39;00m(
+[1;32m   1239[0m           [38;5;124m"[39m[38;5;124mnon-zero flags not allowed in calls to recv_into() on [39m[38;5;132;01m%s[39;00m[38;5;124m"[39m [38;5;241m%[39m
+[1;32m   1240[0m           [38;5;28mself[39m[38;5;241m.[39m[38;5;18m__class__[39m)
+[0;32m-> 1241[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mread[49m[43m([49m[43mnbytes[49m[43m,[49m[43m [49m[43mbuffer[49m[43m)[49m
+[1;32m   1242[0m [38;5;28;01melse[39;00m:
+[1;32m   1243[0m     [38;5;28;01mreturn[39;00m [38;5;28msuper[39m()[38;5;241m.[39mrecv_into(buffer, nbytes, flags)
+
+File [0;32m/usr/share/miniconda/lib/python3.9/ssl.py:1099[0m, in [0;36mSSLSocket.read[0;34m(self, len, buffer)[0m
+[1;32m   1097[0m [38;5;28;01mtry[39;00m:
+[1;32m   1098[0m     [38;5;28;01mif[39;00m buffer [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+[0;32m-> 1099[0m         [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_sslobj[49m[38;5;241;43m.[39;49m[43mread[49m[43m([49m[38;5;28;43mlen[39;49m[43m,[49m[43m [49m[43mbuffer[49m[43m)[49m
+[1;32m   1100[0m     [38;5;28;01melse[39;00m:
+[1;32m   1101[0m         [38;5;28;01mreturn[39;00m [38;5;28mself[39m[38;5;241m.[39m_sslobj[38;5;241m.[39mread([38;5;28mlen[39m)
+
+[0;31mtimeout[0m: The read operation timed out
+timeout: The read operation timed out
 
