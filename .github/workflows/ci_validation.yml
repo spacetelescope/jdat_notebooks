@@ -33,6 +33,7 @@ jobs:
         pip install -r requirements.txt
         pip install pytest
         pip install nbval
+        pip install pytest-timeout
         pip install nbconvert
         
     - name: Gather changed notebooks
@@ -47,7 +48,7 @@ jobs:
         for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
           echo "$file was updated, validating notebook"
           run: | 
-            pytest --nbval $file
+            pytest --nbval --timeout=7200 $file
         done
         
     - name: Executing changed notebooks
