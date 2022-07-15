@@ -17,89 +17,109 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-# Execute calwebb_spec2 pipeline. This will overwrite previous reductions.
+# Execute calwebb_detector1 pipeline on raw simulation output.  This will overwrite previous reductions.
 
-# All the local calwebb_detector1 files
-allshortfiles2 = glob.glob('det_image_*_MIRIFUSHORT_*_rate.fits')
-alllongfiles2 = glob.glob('det_image_*_MIRIFULONG_*_rate.fits')
+allshortfiles = glob.glob('20210413_*_mirisim/det_images/*MIRIFUSHORT*fits')
+alllongfiles = glob.glob('20210413_*_mirisim/det_images/*MIRIFULONG*fits')
+      
+pipe1short = Detector1Pipeline()
 
-for short2file in allshortfiles2:
-    print(short2file)
-    pipe2short = Spec2Pipeline()
-    base2short, remainder2short = short2file.split('.')
-    
-    pipe2short.straylight.skip = True
+# run calwebb_detector1 on the MIRIFUSHORT data separate from MIRIFULONG data, as it saves time this way
+for shortfile in allshortfiles:
+    print(shortfile)
+    baseshort, remaindershort = shortfile.split('.')
     
     # If you run your own simulations, you will need to update these hardcoded files.
-    if (short2file == 'det_image_seq1_MIRIFUSHORT_12LONGexp1125354_rate.fits'):
-        print('this one will have the level 2b cube built')
-    else:
-        pipe2short.cube_build.skip = True
-    pipe2short.extract_1d.skip = True
-    pipe2short.output_file = base2short
-        
-    pipe2short.run(short2file)
+    beforestuffshort, dateafterstuffshort = shortfile.split('20210413_')    
+    datestringshort, afterstuffshort = dateafterstuffshort.split('_mirisim')
+    
+    pipe1short.refpix.skip = True
+    pipe1short.output_file = baseshort + datestringshort
+    
+    pipe1short.run(shortfile)
 
-for long2file in alllongfiles2:
-    print(long2file)
-    pipe2long = Spec2Pipeline()
-    base2long, remainder2long = long2file.split('.')
+pipe1long = Detector1Pipeline()
+
+for longfile in alllongfiles:
+    print(longfile)
+    baselong, remainderlong = longfile.split('.')
     
-    pipe2long.straylight.skip = True
     # If you run your own simulations, you will need to update these hardcoded files.
-    if (long2file == 'det_image_seq1_MIRIFULONG_34SHORTexp1120546_rate.fits'):
-        print('this one will have the level 2b cube built')
-    else:
-        pipe2long.cube_build.skip = True
-    pipe2long.extract_1d.skip = True
-    pipe2long.output_file = base2long
+    beforestufflong, dateafterstufflong = longfile.split('20210413_')
+    datestringlong, afterstufflong = dateafterstufflong.split('_mirisim')
     
-    pipe2long.run(long2file)
+    pipe1long.refpix.skip = True
+    pipe1long.output_file = baselong + datestringlong
+    
+    pipe1long.run(longfile)
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m
-[0;31mRuntimeError[0m                              Traceback (most recent call last)
-Input [0;32mIn [9][0m, in [0;36m<cell line: 7>[0;34m()[0m
-[1;32m     19[0m     pipe2short[38;5;241m.[39mextract_1d[38;5;241m.[39mskip [38;5;241m=[39m [38;5;28;01mTrue[39;00m
-[1;32m     20[0m     pipe2short[38;5;241m.[39moutput_file [38;5;241m=[39m base2short
-[0;32m---> 22[0m     [43mpipe2short[49m[38;5;241;43m.[39;49m[43mrun[49m[43m([49m[43mshort2file[49m[43m)[49m
-[1;32m     24[0m [38;5;28;01mfor[39;00m long2file [38;5;129;01min[39;00m alllongfiles2:
-[1;32m     25[0m     [38;5;28mprint[39m(long2file)
+[0;31mFileNotFoundError[0m                         Traceback (most recent call last)
+Input [0;32mIn [8][0m, in [0;36m<cell line: 9>[0;34m()[0m
+[1;32m     17[0m     pipe1short[38;5;241m.[39mrefpix[38;5;241m.[39mskip [38;5;241m=[39m [38;5;28;01mTrue[39;00m
+[1;32m     18[0m     pipe1short[38;5;241m.[39moutput_file [38;5;241m=[39m baseshort [38;5;241m+[39m datestringshort
+[0;32m---> 20[0m     [43mpipe1short[49m[38;5;241;43m.[39;49m[43mrun[49m[43m([49m[43mshortfile[49m[43m)[49m
+[1;32m     22[0m pipe1long [38;5;241m=[39m Detector1Pipeline()
+[1;32m     24[0m [38;5;28;01mfor[39;00m longfile [38;5;129;01min[39;00m alllongfiles:
 
-File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/stpipe/step.py:478[0m, in [0;36mStep.run[0;34m(self, *args)[0m
-[1;32m    476[0m     [38;5;28mself[39m[38;5;241m.[39mprefetch([38;5;241m*[39margs)
-[1;32m    477[0m [38;5;28;01mtry[39;00m:
-[0;32m--> 478[0m     step_result [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mprocess[49m[43m([49m[38;5;241;43m*[39;49m[43margs[49m[43m)[49m
-[1;32m    479[0m [38;5;28;01mexcept[39;00m [38;5;167;01mTypeError[39;00m [38;5;28;01mas[39;00m e:
-[1;32m    480[0m     [38;5;28;01mif[39;00m [38;5;124m"[39m[38;5;124mprocess() takes exactly[39m[38;5;124m"[39m [38;5;129;01min[39;00m [38;5;28mstr[39m(e):
+File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/stpipe/step.py:430[0m, in [0;36mStep.run[0;34m(self, *args)[0m
+[1;32m    428[0m     [38;5;28mself[39m[38;5;241m.[39mprefetch([38;5;241m*[39margs)
+[1;32m    429[0m [38;5;28;01mtry[39;00m:
+[0;32m--> 430[0m     step_result [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mprocess[49m[43m([49m[38;5;241;43m*[39;49m[43margs[49m[43m)[49m
+[1;32m    431[0m [38;5;28;01mexcept[39;00m [38;5;167;01mTypeError[39;00m [38;5;28;01mas[39;00m e:
+[1;32m    432[0m     [38;5;28;01mif[39;00m [38;5;124m"[39m[38;5;124mprocess() takes exactly[39m[38;5;124m"[39m [38;5;129;01min[39;00m [38;5;28mstr[39m(e):
 
-File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/jwst/pipeline/calwebb_spec2.py:135[0m, in [0;36mSpec2Pipeline.process[0;34m(self, data)[0m
-[1;32m    132[0m             results[38;5;241m.[39mappend(result)
-[1;32m    134[0m [38;5;28;01mif[39;00m [38;5;28mlen[39m(failures) [38;5;241m>[39m [38;5;241m0[39m [38;5;129;01mand[39;00m [38;5;28mself[39m[38;5;241m.[39mfail_on_exception:
-[0;32m--> 135[0m     [38;5;28;01mraise[39;00m [38;5;167;01mRuntimeError[39;00m([38;5;124m'[39m[38;5;130;01m\n[39;00m[38;5;124m'[39m[38;5;241m.[39mjoin(failures))
-[1;32m    137[0m [38;5;66;03m# We're done[39;00m
-[1;32m    138[0m [38;5;28mself[39m[38;5;241m.[39mlog[38;5;241m.[39minfo([38;5;124m'[39m[38;5;124mEnding calwebb_spec2[39m[38;5;124m'[39m)
+File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/jwst/pipeline/calwebb_detector1.py:71[0m, in [0;36mDetector1Pipeline.process[0;34m(self, input)[0m
+[1;32m     68[0m log[38;5;241m.[39minfo([38;5;124m'[39m[38;5;124mStarting calwebb_detector1 ...[39m[38;5;124m'[39m)
+[1;32m     70[0m [38;5;66;03m# open the input as a RampModel[39;00m
+[0;32m---> 71[0m [38;5;28minput[39m [38;5;241m=[39m [43mdatamodels[49m[38;5;241;43m.[39;49m[43mRampModel[49m[43m([49m[38;5;28;43minput[39;49m[43m)[49m
+[1;32m     73[0m [38;5;66;03m# propagate output_dir to steps that might need it[39;00m
+[1;32m     74[0m [38;5;28mself[39m[38;5;241m.[39mdark_current[38;5;241m.[39moutput_dir [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39moutput_dir
 
-[0;31mRuntimeError[0m: Traceback (most recent call last):
-  File "/usr/share/miniconda/lib/python3.9/site-packages/jwst/pipeline/calwebb_spec2.py", line 117, in process
-    result = self.process_exposure_product(
-  File "/usr/share/miniconda/lib/python3.9/site-packages/jwst/pipeline/calwebb_spec2.py", line 307, in process_exposure_product
-    x1d = self.extract_1d(resampled)
-  File "/usr/share/miniconda/lib/python3.9/site-packages/stpipe/step.py", line 470, in run
-    args[0][f"meta.cal_step.{self.class_alias}"] = 'SKIPPED'
-  File "/usr/share/miniconda/lib/python3.9/site-packages/jwst/datamodels/container.py", line 145, in __setitem__
-    self._models[index] = model
-TypeError: list indices must be integers or slices, not str
+File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/jwst/datamodels/ramp.py:38[0m, in [0;36mRampModel.__init__[0;34m(self, init, **kwargs)[0m
+[1;32m     37[0m [38;5;28;01mdef[39;00m [38;5;21m__init__[39m([38;5;28mself[39m, init[38;5;241m=[39m[38;5;28;01mNone[39;00m, [38;5;241m*[39m[38;5;241m*[39mkwargs):
+[0;32m---> 38[0m     [38;5;28;43msuper[39;49m[43m([49m[43mRampModel[49m[43m,[49m[43m [49m[38;5;28;43mself[39;49m[43m)[49m[38;5;241;43m.[39;49m[38;5;21;43m__init__[39;49m[43m([49m[43minit[49m[38;5;241;43m=[39;49m[43minit[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m
+[1;32m     40[0m     [38;5;66;03m# Implicitly create arrays[39;00m
+[1;32m     41[0m     [38;5;28mself[39m[38;5;241m.[39mpixeldq [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39mpixeldq
 
-RuntimeError: Traceback (most recent call last):
-  File "/usr/share/miniconda/lib/python3.9/site-packages/jwst/pipeline/calwebb_spec2.py", line 117, in process
-    result = self.process_exposure_product(
-  File "/usr/share/miniconda/lib/python3.9/site-packages/jwst/pipeline/calwebb_spec2.py", line 307, in process_exposure_product
-    x1d = self.extract_1d(resampled)
-  File "/usr/share/miniconda/lib/python3.9/site-packages/stpipe/step.py", line 470, in run
-    args[0][f"meta.cal_step.{self.class_alias}"] = 'SKIPPED'
-  File "/usr/share/miniconda/lib/python3.9/site-packages/jwst/datamodels/container.py", line 145, in __setitem__
-    self._models[index] = model
-TypeError: list indices must be integers or slices, not str
+File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/stdatamodels/model_base.py:174[0m, in [0;36mDataModel.__init__[0;34m(self, init, schema, memmap, pass_invalid_values, strict_validation, validate_on_assignment, cast_fits_arrays, validate_arrays, ignore_missing_extensions, **kwargs)[0m
+[1;32m    171[0m         schema [38;5;241m=[39m _DEFAULT_SCHEMA
+[1;32m    172[0m     [38;5;28;01melse[39;00m:
+[1;32m    173[0m         [38;5;66;03m# Create an AsdfFile so we can use its resolver for loading schemas[39;00m
+[0;32m--> 174[0m         schema [38;5;241m=[39m [43masdf_schema[49m[38;5;241;43m.[39;49m[43mload_schema[49m[43m([49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mschema_url[49m[43m,[49m[43m [49m[43mresolve_references[49m[38;5;241;43m=[39;49m[38;5;28;43;01mTrue[39;49;00m[43m)[49m
+[1;32m    176[0m [38;5;28mself[39m[38;5;241m.[39m_schema [38;5;241m=[39m mschema[38;5;241m.[39mmerge_property_trees(schema)
+[1;32m    178[0m [38;5;66;03m# Provide the object as context to other classes and functions[39;00m
 
+File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/asdf/schema.py:443[0m, in [0;36mload_schema[0;34m(url, resolver, resolve_references, resolve_local_refs)[0m
+[1;32m    438[0m     resolver [38;5;241m=[39m extension[38;5;241m.[39mget_default_resolver()
+[1;32m    440[0m [38;5;66;03m# We want to cache the work that went into constructing the schema, but returning[39;00m
+[1;32m    441[0m [38;5;66;03m# the same object is treacherous, because users who mutate the result will not[39;00m
+[1;32m    442[0m [38;5;66;03m# expect that they're changing the schema everywhere.[39;00m
+[0;32m--> 443[0m [38;5;28;01mreturn[39;00m copy[38;5;241m.[39mdeepcopy([43m_load_schema_cached[49m[43m([49m[43murl[49m[43m,[49m[43m [49m[43mresolver[49m[43m,[49m[43m [49m[43mresolve_references[49m[43m,[49m[43m [49m[43mresolve_local_refs[49m[43m)[49m)
+
+File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/asdf/schema.py:490[0m, in [0;36m_load_schema_cached[0;34m(url, resolver, resolve_references, resolve_local_refs)[0m
+[1;32m    487[0m [38;5;129m@lru_cache[39m()
+[1;32m    488[0m [38;5;28;01mdef[39;00m [38;5;21m_load_schema_cached[39m(url, resolver, resolve_references, resolve_local_refs):
+[1;32m    489[0m     loader [38;5;241m=[39m _make_schema_loader(resolver)
+[0;32m--> 490[0m     schema, url [38;5;241m=[39m [43mloader[49m[43m([49m[43murl[49m[43m)[49m
+[1;32m    492[0m     [38;5;28;01mif[39;00m resolve_references [38;5;129;01mor[39;00m resolve_local_refs:
+[1;32m    494[0m         [38;5;28;01mdef[39;00m [38;5;21mresolve_refs[39m(node, json_id):
+
+File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/asdf/schema.py:367[0m, in [0;36m_make_schema_loader.<locals>.load_schema[0;34m(url)[0m
+[1;32m    363[0m     [38;5;28;01mreturn[39;00m result, url
+[1;32m    365[0m [38;5;66;03m# If not, this must be a URL (or missing).  Fall back to fetching[39;00m
+[1;32m    366[0m [38;5;66;03m# the schema the old way:[39;00m
+[0;32m--> 367[0m [38;5;28;01mreturn[39;00m [43m_load_schema[49m[43m([49m[43murl[49m[43m)[49m
+
+File [0;32m/usr/share/miniconda/lib/python3.9/site-packages/asdf/schema.py:331[0m, in [0;36m_load_schema[0;34m(url)[0m
+[1;32m    328[0m [38;5;129m@lru_cache[39m()
+[1;32m    329[0m [38;5;28;01mdef[39;00m [38;5;21m_load_schema[39m(url):
+[1;32m    330[0m     [38;5;28;01mif[39;00m url[38;5;241m.[39mstartswith([38;5;124m"[39m[38;5;124mhttp://[39m[38;5;124m"[39m) [38;5;129;01mor[39;00m url[38;5;241m.[39mstartswith([38;5;124m"[39m[38;5;124mhttps://[39m[38;5;124m"[39m) [38;5;129;01mor[39;00m url[38;5;241m.[39mstartswith([38;5;124m"[39m[38;5;124masdf://[39m[38;5;124m"[39m):
+[0;32m--> 331[0m         [38;5;28;01mraise[39;00m [38;5;167;01mFileNotFoundError[39;00m([38;5;124m"[39m[38;5;124mUnable to fetch schema from non-file URL: [39m[38;5;124m"[39m [38;5;241m+[39m url)
+[1;32m    333[0m     [38;5;28;01mwith[39;00m generic_io[38;5;241m.[39mget_file(url) [38;5;28;01mas[39;00m fd:
+[1;32m    334[0m         [38;5;28;01mif[39;00m [38;5;28misinstance[39m(url, [38;5;28mstr[39m) [38;5;129;01mand[39;00m url[38;5;241m.[39mendswith([38;5;124m"[39m[38;5;124mjson[39m[38;5;124m"[39m):
+
+[0;31mFileNotFoundError[0m: Unable to fetch schema from non-file URL: http://stsci.edu/schemas/jwst_datamodel/ramp.schema
+FileNotFoundError: Unable to fetch schema from non-file URL: http://stsci.edu/schemas/jwst_datamodel/ramp.schema
 
