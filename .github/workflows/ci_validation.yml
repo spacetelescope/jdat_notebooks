@@ -46,7 +46,8 @@ jobs:
       run: |
         for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
           echo "$file was updated, validating notebook"
-          run: | 
+          run: |
+            jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace $file
             pytest --nbval --timeout=7200 $file
         done
         
