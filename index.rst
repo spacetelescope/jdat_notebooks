@@ -40,7 +40,7 @@ location of the notebooks for you to :ref:`download <install>`.
        - **Tools:** asdf, gwcs, astrocut.
        - **Cross-instrument:** All.
    * - `Background Estimation <https://github.com/spacetelescope/jdat_notebooks/tree/main/notebooks/background_estimation_imaging>`_
-     - - **Use case:** estimate the sk background in complex scenes.
+     - - **Use case:** estimate the sky background in complex scenes.
        - **Data:** images with pathological background pattern created in the notebook.
        - **Tools:** photutils
        - **Cross-instrument:** All.
