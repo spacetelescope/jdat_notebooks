@@ -1,0 +1,246 @@
+name: notebook-pep8-check
+on:
+  # use pull_request_target instead of pull_request to allow pushes to PR branch
+  pull_request_target:
+    branches:
+      - main-next
+    paths:
+      - 'notebooks/*/*.ipynb' # in jdat_notebooks
+      - 'nb_zone/*' # in proof-of-concept
+    types: [ labeled, opened, synchronize, reopened ]
+
+# looks like either each folder needs its own job or pull requests need to be
+# limited to one folder at a time, otherwise requirements files will be mixed.
+
+env:
+  pep8_script: '.github/helpers/pep8_nb_checker.py'
+  magic_cells: '.github/helpers/nb_flake8_magic.json'
+  instruct_post: '.github/helpers/tech_review_instructions.md'
+  flake8_config: '.flake8'
+  bot_name: 'github-actions[bot]'
+  bot_email: '41898282+github-actions[bot]@users.noreply.github.com'
+
+permissions:
+  contents: write
+  pull-requests: write
+  # GITHUB_TOKEN cannot push to PR branch without these permissions
+
+jobs:
+  do-notebook-pep8-check:
+    if: |
+     contains(github.event.pull_request.labels.*.name, 'Technical Review') &&
+     github.event.pull_request.head.user.login != 'github-actions[bot]' &&
+     github.event.pull_request.draft == false &&
+     github.event.pull_request.state == 'open'
+
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Event familiarization
+        run: |
+          echo "---github.event.pull_request.draft---"
+          echo ${{ github.event.pull_request.draft }}
+
+          echo "---github.event.pull_request.state---"
+          echo ${{ github.event.pull_request.state }}
+
+          echo "---contains(github.event.pull_request.labels.*.name, 'Technical Review')---"
+          echo ${{ contains(github.event.pull_request.labels.*.name, 'Technical Review') }}
+
+          echo "---github.event.pull_request.user.login---"
+          echo ${{ github.event.pull_request.user.login }}
+
+          echo "---github.event.pull_request.author_association---"
+          echo ${{ github.event.pull_request.author_association }}
+
+          echo "---github.event.pull_request.head.ref---"
+          echo ${{ github.event.pull_request.head.ref }}
+
+          echo "---github.event.pull_request.head.sha---"
+          echo ${{ github.event.pull_request.head.sha }}
+
+          echo "---github.event.pull_request.base.ref---"
+          echo ${{ github.event.pull_request.base.ref }}
+
+          echo "---github.event.pull_request.base.sha---"
+          echo ${{ github.event.pull_request.base.sha }}
+          # this is the latest commit on the base/target branch; NOT
+          # (necessarily) the commit from which the PR diverges!
+
+          echo "---github.event.action---"
+          echo ${{ github.event.action }}
+
+          echo "---github.event.sender.login---"
+          echo ${{ github.event.sender.login }}
+
+      - name: Check out PR branch
+        uses: actions/checkout@v3
+        with:
+          repository: ${{github.event.pull_request.head.repo.full_name}}
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          #  (0 fetches all branches even with ref specified... don't love
+          #   fetching everything, but don't see how else to pull base + PR)
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get changed files
+        run: |
+          # for clarity, add an upstream remote and fetch the base/target branch
+          # ('origin' after checkout step is the PR branch's remote.
+          #  if the PR branch is from a fork, 'upstream' is needed to fetch the
+          #  base branch. if the PR and base branches share a remote, 'origin'
+          #  and 'upstream' will point to the same repository, which is fine.)
+
+          echo "---add upstream remote---";
+          git remote add upstream "https://github.com/${{ github.event.pull_request.base.user.login }}/${{ github.event.repository.name }}.git";
+          git remote -v
+
+          echo "---fetch upstream base branch---";
+          git fetch upstream ${{ github.event.pull_request.base.ref }}
+
+          # find last common ancestor commit between target and PR branches
+
+          last_common=$(git merge-base upstream/${{ github.event.pull_request.base.ref }} ${{ github.event.pull_request.head.ref }})
+          echo "last_common"
+          echo $last_common
+
+          # make an array of all files added/copied/modified in the PR branch
+
+          git_diff=$(git diff --name-only --diff-filter=ACM $last_common ${{ github.event.pull_request.head.sha }})
+          echo "git_diff"
+          echo $git_diff
+
+          # (yes to added, copied, modified and NO to renamed, deleted, type
+          #  changed, unmerged, or unknown seems reasonable.)
+
+          changed_files=($(printf '%s\n' $git_diff))
+          echo "changed_files"
+          echo "${changed_files[@]}"
+          echo "changed_files=${changed_files[@]}" >> $GITHUB_ENV
+
+          # use arrays to check that all changed files are in the same directory
+          # https://unix.stackexchange.com/a/377820
+
+          changed_dirs_all=( $(printf '%s\n' "${changed_files[@]}" | xargs dirname) )
+          echo "changed_dirs_all"
+          echo "${changed_dirs_all[@]}"
+
+          changed_dirs_uniq=( $(printf '%s\n' "${changed_dirs_all[@]}" | sort -u) )
+          echo "changed_dirs_uniq"
+          echo "${changed_dirs_uniq[@]}"
+
+          if [ "${#changed_dirs_uniq[@]}" != 1 ]; then echo "one_dir=no" >> $GITHUB_ENV; fi
+
+      - name: Auto-fail if changed files are not in same directory
+        if: env.one_dir
+        uses: actions/github-script@v5
+        with:
+          script: |
+            core.setFailed('All changed files are not in the same directory.')
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8 # JDAT recommends 3.8.10
+
+      - name: Install flake8 and script dependencies
+        if: steps.cache-step.outputs.cache-hit != 'true'
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 numpy pytz
+
+      - name: Run the PEP8 check's Python script
+        run: |
+          # ensure script's helper files come from the base branch, not the PR
+          # (checkout also works, though you have to unstage the file afterward)
+
+          git restore --source=upstream/${{ github.event.pull_request.base.ref }} --worktree $pep8_script $magic_cells $instruct_post $flake8_config
+
+          # isolate changed notebooks in order to run PEP8 check
+
+          for ff in ${{ env.changed_files }}; do
+            # https://stackoverflow.com/a/6397979
+            if [[ $ff == *".ipynb" ]]; then
+              python ${{ env.pep8_script }} -f $ff;
+            fi
+          done
+
+          # check for changes to the notebooks in this local branch
+          if [[ `git status --porcelain --untracked-files=no` ]]; then echo "push=yes" >> $GITHUB_ENV; fi
+        shell: bash
+
+      # if env.push is empty, the next steps are skipped and the job should pass
+      - name: Push any changes to PR
+        if: env.push
+        run: |
+          # verify identity to allow a push to which other workflows can respond
+          git config --local user.email $bot_email
+          git config --local user.name $bot_name
+
+          # add the changed notebook(s)
+          git add --update *.ipynb
+          git status
+          # (script output files should be untracked)
+
+          # list changed notebooks in commit message; push the changes
+          git_diff_new=($(git diff --name-only --diff-filter=M *ipynb))
+          git commit -m "[BOT] Left PEP8 feedback on PR #${{ github.event.number }}'s notebooks" -m "Files: $(printf '%s\n' $git_diff_new)"
+          # (is tagging the PR for the best here?)
+
+          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
+
+      - name: Write instructional message (if new branch)
+        if: env.push
+        uses: actions/github-script@v5
+        with:
+          script: |
+            async function scanAndPost()
+            {
+              const template = "${{ env.instruct_post }}";
+              const branch = "${{ github.event.pull_request.head.ref }}";
+              const creator = "${{ github.event.pull_request.user.login }}";
+              const issueno = context.issue.number
+              const { owner, repo } = context.repo;
+
+              // scan PR comments (expecting JS array of JS lists)
+              const comments = await github.rest.issues.listComments({
+                owner: owner, // as in account that owns the repo
+                repo: repo,
+                issue_number: issueno
+              });
+              console.log("imported comments")
+              //console.log(comments.data[0].user);
+
+              // see how many were written by the bot
+              const botPosts = comments.data.filter(post => post.user.login === "${{ env.bot_name }}").length;
+
+              // if any, terminate early
+              if (botPosts != 0) { console.log("Already commented!"); return; }
+
+              // else, read text from template file
+              const fs = require("fs").promises;
+              const message = await fs.readFile(template, "utf8");
+              console.log("read file");
+
+              // format message with user and PR info
+              const util = require("util");
+              const injectedMsg = util.format(message, creator, branch,
+                                              branch, creator, repo);
+              console.log("formatted message");
+
+              // create the comment
+              github.rest.issues.createComment({
+                issue_number: issueno,
+                owner: owner,
+                repo: repo,
+                body: injectedMsg
+              });
+              // could label with github.rest.issues.addLabels...
+            }
+            scanAndPost();
+
+      - name: Auto-fail if changes were pushed
+        if: env.push
+        uses: actions/github-script@v5
+        with:
+          script: core.setFailed('Notebook(s) failed PEP8 tests.')
