@@ -41,6 +41,13 @@ code_file = pathlib.Path(f"{nb_file.stem}_scripted.py")
 warn_file = pathlib.Path(f"{nb_file.stem}_pep8.txt")
 nb_magic_file = pathlib.Path(".github/helpers/nb_flake8_magic.json")
 
+def check_cell_content(source):
+    """Verify that a cell contains any content besides whitespace or newlines"""
+    for line in source:
+        if re.search('^(?!(?:\\n)$)', line):
+            # a "negative lookahead" for any characters in "non-capturing group"
+            return True
+
 # save code cell contents to a script divided into blocks with the separator
 code_cells = []
 with open(nb_file) as nf:
@@ -48,7 +55,11 @@ with open(nb_file) as nf:
 
     with open(code_file, 'w') as cf:
         for i, cl in enumerate(og_nb['cells']):
-            if cl['cell_type'] == 'code':
+            if (cl['cell_type'] == 'code'
+                and cl['source']
+                and check_cell_content(cl['source'])
+            ):
+                # only check code cells containing actual code; skip blanks
                 code_cells.append(i)
                 for o in cl['source']:
                     # comment out lines with IPython magic commands
