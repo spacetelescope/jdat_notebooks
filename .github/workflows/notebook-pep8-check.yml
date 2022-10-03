@@ -103,9 +103,9 @@ jobs:
           echo "last_common"
           echo $last_common
 
-          # make an array of all files added/copied/modified in the PR branch
+          # make an array of all notebooks added/copied/modified in PR branch
 
-          git_diff=$(git diff --name-only --diff-filter=ACM $last_common ${{ github.event.pull_request.head.sha }})
+          git_diff=$(git diff --name-only --diff-filter=ACM $last_common ${{ github.event.pull_request.head.sha }} *ipynb)
           echo "git_diff"
           echo $git_diff
 
@@ -117,8 +117,9 @@ jobs:
           echo "${changed_files[@]}"
           echo "changed_files=${changed_files[@]}" >> $GITHUB_ENV
 
-          # use arrays to check that all changed files are in the same directory
-          # https://unix.stackexchange.com/a/377820
+          # use arrays to check that changed notebooks are in the same directory
+          # (note that xargs dirname can only be used in this way on Linux)
+          # (https://unix.stackexchange.com/a/377820 for unique check)
 
           changed_dirs_all=( $(printf '%s\n' "${changed_files[@]}" | xargs dirname) )
           echo "changed_dirs_all"
