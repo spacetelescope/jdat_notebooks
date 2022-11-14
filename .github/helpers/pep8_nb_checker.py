@@ -29,12 +29,14 @@ except Exception as err:
 
 # create a separating line for the script file with unique text, like:
 # #################################flake-8-check################################
+# (plus a closing newline to avoid W391 at end of file)
 identifier = 'flake-8-check'
 line_length = 80
 fill_0 = (line_length // 2 - 1) - np.floor(len(identifier) / 2).astype(int)
 fill_1 = (line_length // 2 - 1) - np.ceil(len(identifier) / 2).astype(int)
 
-separator = '# ' + '#' * fill_0 + identifier + '#' * fill_1
+separator = '# ' + '#' * fill_0 + identifier + '#' * fill_1 + '\n'
+buffer_lines = 3  # sections must end with >2 blank lines to avoid E302
 
 # save relevant file paths
 code_file = pathlib.Path(f"{nb_file.stem}_scripted.py")
@@ -61,13 +63,12 @@ with open(nb_file) as nf:
             ):
                 # only check code cells containing actual code; skip blanks
                 code_cells.append(i)
-                for o in cl['source']:
+                for ln in cl['source']:
                     # comment out lines with IPython magic commands
-                    line = o if o[0] != '%' else '# ' + o
+                    line = ln if ln[0] != '%' else '# ' + ln
                     cf.write(line)
-                cf.write('\n' * 3) # >2 blank lines to avoid E302 between cells
+                cf.write('\n' * buffer_lines)
                 cf.write(separator)
-                cf.write('\n') # important, file must end with blank line
 
 # without spawning a shell, run flake8 and save any PEP8 warnings to a new file
 with open(warn_file, 'w') as wf:
@@ -87,7 +88,7 @@ if not warns:
 with open(code_file) as cf:
     script = cf.readlines()
 
-borderlines = [j for j, ll in enumerate(script)
+borderlines = [j for j, ll in enumerate(script, start=1)  # 1-indexed, like file
                if re.search(fr"#+{identifier}#+", ll)]
 
 # customize the beginning of each PEP8 warning
@@ -102,24 +103,32 @@ stderr_shared = {'name': 'stderr', 'output_type': 'stream'}
 nu_output_dict = defaultdict(lambda: defaultdict(list))
 
 # match the warnings' line numbers to the notebook's cells with regex and math
-for w in warns:
-    # get line numbers of each warning from the script
-    w = w[re.match(code_file.name, w).end():]
-    loc = [int(d) for d in re.findall(r'(?<=:)\d+(?=:)', w)]
+for script_line in warns:
+    # get this warning's line number in the script
+    wrn = script_line[re.match(code_file.name, script_line).end():]
+    script_line_num = int(re.search(r'(?<=:)\d+(?=:)', wrn).group())
 
-    # translate them into cell numbers and intra-cell line number
-    code_cell_num = np.searchsorted(borderlines, loc[0])
+    # translate it into cell numbers and then to intra-cell line number
+    code_cell_num = np.searchsorted(borderlines, script_line_num)
     all_cell_num = code_cells[code_cell_num]
-    borderline_num = borderlines[code_cell_num - 1] if code_cell_num > 0 else -1
-    line_in_cell = str(loc[0] - borderline_num - 1)
-    # (the final minus one accounts for the buffer after the separator
+    borderline_num = borderlines[code_cell_num - 1] if code_cell_num > 0 else 0
+    next_borderline_num = borderlines[code_cell_num]
 
+    if script_line_num != next_borderline_num:
+        line_in_cell = str(script_line_num - borderline_num)
+    else:
+        # correct line number for E303 by accounting for buffer added earlier
+        line_in_cell = str(script_line_num - borderline_num - buffer_lines)
+
+    # print(f"--borderline:L{borderlines[code_cell_num - 1]},"
+    #       f"next borderline:L{borderlines[code_cell_num]},"
+    #       f"errorline:L{script_line_num}--")
     # print(f"code_cell_num {code_cell_num}, line_in_cell {line_in_cell}, "
     #       f"all_cell_num {all_cell_num}")
 
     # only keep line/column info and warning from original flake8 text.
     # prepend it with the customized string chosen earlier
-    nu_msg = pre + re.sub(r':\d+(?=:)', line_in_cell, w, count=1)
+    nu_msg = pre + re.sub(r':\d+(?=:)', line_in_cell, wrn, count=1)
 
     # update the defaultdict
     nu_output_dict[all_cell_num].update({'name': 'stderr',
