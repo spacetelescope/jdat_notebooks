@@ -63,9 +63,26 @@ with open(nb_file) as nf:
             ):
                 # only check code cells containing actual code; skip blanks
                 code_cells.append(i)
+
+                # check zeroth line for comment on errors to be ignored in this
+                # cell. if any, generate appropriate "noqa" comment
+                top_line = cl['source'][0]
+                noqa_check = re.search('^# flake8-ignore', top_line)
+                noqa_comment = ('' if noqa_check is None
+                                else '  # noqa' + top_line[noqa_check.end():])
+
                 for ln in cl['source']:
                     # comment out lines with IPython magic commands
                     line = ln if ln[0] != '%' else '# ' + ln
+
+                    # insert noqa comment if needed (with care for newline char)
+                    if (noqa_comment and not line.startswith('#')
+                            and line != '\n' and line.endswith('\n')):
+                        line = line[:-1] + noqa_comment
+                    elif (noqa_comment and not line.startswith('#')
+                            and line != '\n'):
+                        line += noqa_comment[:-1]
+
                     cf.write(line)
                 cf.write('\n' * buffer_lines)
                 cf.write(separator)
