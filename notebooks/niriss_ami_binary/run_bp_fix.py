@@ -49,14 +49,6 @@ WL_OVERSIZEFACTOR = 0.1  # increase filter wl support by this amount to 'oversiz
 
 pix_arcsec = 0.0656  # nominal isotropic pixel scale - refine later
 pix_rad = pix_arcsec * np.pi / (60 * 60 * 180)
-pupilfile_nrm = "./niriss_ami_binary2_inflight/MASK_NRM.fits"
-pupilfile_clearp = "./niriss_ami_binary2_inflight/MASK_CLEARP.fits"
-nrm_pupil = pyfits.getdata(pupilfile_nrm)
-clearp_pupil = pyfits.getdata(pupilfile_clearp)
-pupil_masks = {
-    "NRM": nrm_pupil,
-    "CLEARP": clearp_pupil,
-}
 
 DIAM = 6.559348  # / Flat-to-flat distance across pupil in V3 axis
 PUPLDIAM = 6.603464  # / Full pupil file size, incl padding.
@@ -111,7 +103,13 @@ def calcpsf(wl, fovnpix, pupil="NRM"):
     # instantiate an mft object:
     ft = matrixDFT.MatrixFourierTransform()
 
-    pupil_mask = pupil_masks[pupil]
+    if pupil == "NRM":
+        pupil_mask = pyfits.getdata("./niriss_ami_binary2_inflight/MASK_NRM.fits")
+    elif pupil == "CLEARP":
+        pupil_mask = pyfits.getdata("./niriss_ami_binary2_inflight/MASK_CLEARP.fits")
+    else:
+        raise ValueError("pupil should be 'NRM' or 'CLEARP'")
+
     image_field = ft.perform(pupil_mask, nlamD, fovnpix)
     image_intensity = (image_field * image_field.conj()).real
 
@@ -435,22 +433,22 @@ def correct_fitsfiles(indir, odir, pattern='*calints.fits', show=None, save=Fals
     tic = time.time()
     print("RUNTIME: %.2f s" % (tic - toc))
 
-# if __name__ == '__main__':
-#    parser = argparse.ArgumentParser()
-#    parser.add_argument("--indir",
-#                        help="Location of files to be fixed")
-#    parser.add_argument("--odir",
-#                        help="Location to save bad-pixel-corrected files")
-#    parser.add_argument("-p", "--pattern", default="*calints.fits", type=str,
-#                        help="Pattern of file names that will be processed in indir")
-#    parser.add_argument("--show", help="Slices to show in plot",
-#                        nargs='*')
-#    parser.add_argument("--save",  help="Save plots of corrected images",
-#                        action="store_true")
-#    args = parser.parse_args()
-#
-#    correct_fitsfiles(indir=args.indir,
-#                      odir=args.odir,
-#                      pattern=args.pattern,
-#                      show=args.show,
-#                      save=args.save)
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--indir",
+                        help="Location of files to be fixed")
+    parser.add_argument("--odir",
+                        help="Location to save bad-pixel-corrected files")
+    parser.add_argument("-p", "--pattern", default="*calints.fits", type=str,
+                        help="Pattern of file names that will be processed in indir")
+    parser.add_argument("--show", help="Slices to show in plot",
+                        nargs='*')
+    parser.add_argument("--save",  help="Save plots of corrected images",
+                        action="store_true")
+    args = parser.parse_args()
+
+    correct_fitsfiles(indir=args.indir,
+                      odir=args.odir,
+                      pattern=args.pattern,
+                      show=args.show,
+                      save=args.save)
