@@ -932,24 +932,24 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">tarfile</span>
-<span class="kn">import</span> <span class="nn">urllib.request</span>
+               <pre><span></span>import os
+import tarfile
+import urllib.request
 
-<span class="n">boxlink</span> <span class="o">=</span> <span class="s1">'https://stsci.box.com/shared/static/34o0keicz2iujyilg4uz617va46ks6u9.gz'</span>                                                           
-<span class="n">boxfile</span> <span class="o">=</span> <span class="s1">'./webbpsf-data/webbpsf-data-1.0.0.tar.gz'</span>
+boxlink = 'https://stsci.box.com/shared/static/34o0keicz2iujyilg4uz617va46ks6u9.gz'                                                           
+boxfile = './webbpsf-data/webbpsf-data-1.0.0.tar.gz'
 
-<span class="n">webbpsf_folder</span> <span class="o">=</span> <span class="s1">'./webbpsf-data'</span>
+webbpsf_folder = './webbpsf-data'
 
-<span class="c1"># Check whether the specified path exists or not</span>
-<span class="n">isExist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">isExist</span><span class="p">:</span>
-  <span class="c1"># Create a new directory because it does not exist </span>
-  <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
+# Check whether the specified path exists or not
+isExist = os.path.exists(webbpsf_folder)
+if not isExist:
+  # Create a new directory because it does not exist 
+  os.makedirs(webbpsf_folder)
     
-<span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
-<span class="n">gzf</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">boxfile</span><span class="p">)</span>
-<span class="n">gzf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
+urllib.request.urlretrieve(boxlink, boxfile)
+gzf = tarfile.open(boxfile)
+gzf.extractall(webbpsf_folder)
 </pre>
               </div>
              </div>
@@ -967,23 +967,23 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+               <pre><span></span>import os
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+import numpy as np
 
-<span class="kn">from</span> <span class="nn">astropy.convolution</span> <span class="kn">import</span> <span class="n">Gaussian2DKernel</span>
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
-<span class="kn">from</span> <span class="nn">astropy.stats</span> <span class="kn">import</span> <span class="n">gaussian_fwhm_to_sigma</span>
-<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">QTable</span>
-<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
-<span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">make_lupton_rgb</span><span class="p">,</span> <span class="n">SqrtStretch</span><span class="p">,</span> <span class="n">ImageNormalize</span><span class="p">,</span> <span class="n">simple_norm</span>
-<span class="kn">import</span> <span class="nn">astropy.wcs</span> <span class="k">as</span> <span class="nn">wcs</span>
+from astropy.convolution import Gaussian2DKernel
+from astropy.io import fits
+from astropy.stats import gaussian_fwhm_to_sigma
+from astropy.table import QTable
+import astropy.units as u
+from astropy.visualization import make_lupton_rgb, SqrtStretch, ImageNormalize, simple_norm
+import astropy.wcs as wcs
 
-<span class="kn">import</span> <span class="nn">photutils</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'photutils'</span><span class="p">,</span> <span class="n">photutils</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+import photutils
+print('photutils', photutils.__version__)
 
-<span class="kn">from</span> <span class="nn">photutils</span> <span class="kn">import</span> <span class="n">Background2D</span><span class="p">,</span> <span class="n">MedianBackground</span><span class="p">,</span> <span class="n">detect_sources</span><span class="p">,</span> <span class="n">deblend_sources</span><span class="p">,</span> <span class="n">SourceCatalog</span><span class="c1">#, source_properties (new API)</span>
-<span class="kn">from</span> <span class="nn">photutils.utils</span> <span class="kn">import</span> <span class="n">calc_total_error</span>
+from photutils import Background2D, MedianBackground, detect_sources, deblend_sources, SourceCatalog#, source_properties (new API)
+from photutils.utils import calc_total_error
 </pre>
               </div>
              </div>
@@ -991,7 +991,22 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_output docutils container">
              <div class="output stream highlight-myst-ansi notranslate">
               <div class="highlight">
-               <pre><span></span>photutils 1.5.0
+               <pre><span></span>photutils 1.6.0
+</pre>
+              </div>
+             </div>
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>/tmp/ipykernel_3720/473964775.py:16: DeprecationWarning: `photutils.Background2D` is a deprecated alias for `photutils.background.Background2D` and will be removed in the future. Instead, please use `from photutils.background import Background2D` to silence this warning.
+  from photutils import Background2D, MedianBackground, detect_sources, deblend_sources, SourceCatalog#, source_properties (new API)
+/tmp/ipykernel_3720/473964775.py:16: DeprecationWarning: `photutils.MedianBackground` is a deprecated alias for `photutils.background.MedianBackground` and will be removed in the future. Instead, please use `from photutils.background import MedianBackground` to silence this warning.
+  from photutils import Background2D, MedianBackground, detect_sources, deblend_sources, SourceCatalog#, source_properties (new API)
+/tmp/ipykernel_3720/473964775.py:16: DeprecationWarning: `photutils.detect_sources` is a deprecated alias for `photutils.segmentation.detect_sources` and will be removed in the future. Instead, please use `from photutils.segmentation import detect_sources` to silence this warning.
+  from photutils import Background2D, MedianBackground, detect_sources, deblend_sources, SourceCatalog#, source_properties (new API)
+/tmp/ipykernel_3720/473964775.py:16: DeprecationWarning: `photutils.deblend_sources` is a deprecated alias for `photutils.segmentation.deblend_sources` and will be removed in the future. Instead, please use `from photutils.segmentation import deblend_sources` to silence this warning.
+  from photutils import Background2D, MedianBackground, detect_sources, deblend_sources, SourceCatalog#, source_properties (new API)
+/tmp/ipykernel_3720/473964775.py:16: DeprecationWarning: `photutils.SourceCatalog` is a deprecated alias for `photutils.segmentation.SourceCatalog` and will be removed in the future. Instead, please use `from photutils.segmentation import SourceCatalog` to silence this warning.
+  from photutils import Background2D, MedianBackground, detect_sources, deblend_sources, SourceCatalog#, source_properties (new API)
 </pre>
               </div>
              </div>
@@ -1034,21 +1049,21 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+               <pre><span></span>import matplotlib.pyplot as plt
+import matplotlib as mpl
 
-<span class="c1"># Use this version for non-interactive plots (easier scrolling of the notebook)</span>
-<span class="o">%</span><span class="k">matplotlib</span> inline
+# Use this version for non-interactive plots (easier scrolling of the notebook)
+%matplotlib inline
 
-<span class="c1"># Use this version if you want interactive plots</span>
-<span class="c1"># %matplotlib notebook</span>
+# Use this version if you want interactive plots
+# %matplotlib notebook
 
-<span class="c1"># These gymnastics are needed to make the sizes of the figures</span>
-<span class="c1"># be the same in both the inline and notebook versions</span>
-<span class="o">%</span><span class="k">config</span> InlineBackend.print_figure_kwargs = {'bbox_inches': None}
+# These gymnastics are needed to make the sizes of the figures
+# be the same in both the inline and notebook versions
+%config InlineBackend.print_figure_kwargs = {'bbox_inches': None}
 
-<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'savefig.dpi'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
-<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'figure.dpi'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
+mpl.rcParams['savefig.dpi'] = 80
+mpl.rcParams['figure.dpi'] = 80
 </pre>
               </div>
              </div>
@@ -1066,21 +1081,21 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">baseurl</span> <span class="o">=</span> <span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/'</span>
+               <pre><span></span>baseurl = 'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_photometry/'
 
-<span class="n">filters</span> <span class="o">=</span> <span class="s1">'F090W F115W F150W F200W F277W F335M F356W F410M F444W'</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+filters = 'F090W F115W F150W F200W F277W F335M F356W F410M F444W'.split()
 
-<span class="c1"># Data images [e-/s]</span>
-<span class="n">imagefiles</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="k">for</span> <span class="n">filt</span> <span class="ow">in</span> <span class="n">filters</span><span class="p">:</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'jades_jwst_nircam_goods_s_crop_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">.fits'</span>
-    <span class="n">imagefiles</span><span class="p">[</span><span class="n">filt</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">baseurl</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+# Data images [e-/s]
+imagefiles = {}
+for filt in filters:
+    filename = f'jades_jwst_nircam_goods_s_crop_{filt}.fits'
+    imagefiles[filt] = os.path.join(baseurl, filename)
 
-<span class="c1"># Weight images (Inverse Variance Maps; IVM)</span>
-<span class="n">weightfiles</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="k">for</span> <span class="n">filt</span> <span class="ow">in</span> <span class="n">filters</span><span class="p">:</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'jades_jwst_nircam_goods_s_crop_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_wht.fits'</span>
-    <span class="n">weightfiles</span><span class="p">[</span><span class="n">filt</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">baseurl</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+# Weight images (Inverse Variance Maps; IVM)
+weightfiles = {}
+for filt in filters:
+    filename = f'jades_jwst_nircam_goods_s_crop_{filt}_wht.fits'
+    weightfiles[filt] = os.path.join(baseurl, filename)
 </pre>
               </div>
              </div>
@@ -1098,13 +1113,13 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">filt</span> <span class="o">=</span> <span class="s1">'F200W'</span>
-<span class="n">infile</span> <span class="o">=</span> <span class="n">imagefiles</span><span class="p">[</span><span class="n">filt</span><span class="p">]</span>
-<span class="n">hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="n">imwcs</span> <span class="o">=</span> <span class="n">wcs</span><span class="o">.</span><span class="n">WCS</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">,</span> <span class="n">hdu</span><span class="p">)</span>
+               <pre><span></span>filt = 'F200W'
+infile = imagefiles[filt]
+hdu = fits.open(infile)
+data = hdu[0].data
+imwcs = wcs.WCS(hdu[0].header, hdu)
 
-<span class="n">weight</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">weightfiles</span><span class="p">[</span><span class="n">filt</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+weight = fits.open(weightfiles[filt])[0].data
 </pre>
               </div>
              </div>
@@ -1122,13 +1137,13 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">ny</span><span class="p">,</span> <span class="n">nx</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
-<span class="n">pixscale</span> <span class="o">=</span> <span class="n">wcs</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">proj_plane_pixel_scales</span><span class="p">(</span><span class="n">imwcs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> 
-<span class="n">pixscale</span> <span class="o">*=</span> <span class="n">imwcs</span><span class="o">.</span><span class="n">wcs</span><span class="o">.</span><span class="n">cunit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">'arcsec'</span><span class="p">)</span>
-<span class="n">outline</span> <span class="o">=</span> <span class="s1">'</span><span class="si">%d</span><span class="s1"> x </span><span class="si">%d</span><span class="s1"> pixels'</span> <span class="o">%</span> <span class="p">(</span><span class="n">ny</span><span class="p">,</span> <span class="n">nx</span><span class="p">)</span>
-<span class="n">outline</span> <span class="o">+=</span> <span class="s1">' = </span><span class="si">%g</span><span class="s1">" x </span><span class="si">%g</span><span class="s1">"'</span> <span class="o">%</span> <span class="p">(</span><span class="n">ny</span> <span class="o">*</span> <span class="n">pixscale</span><span class="p">,</span> <span class="n">nx</span> <span class="o">*</span> <span class="n">pixscale</span><span class="p">)</span>
-<span class="n">outline</span> <span class="o">+=</span> <span class="s1">' (</span><span class="si">%.2f</span><span class="s1">" / pixel)'</span> <span class="o">%</span> <span class="n">pixscale</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">outline</span><span class="p">)</span>
+               <pre><span></span>ny, nx = data.shape
+pixscale = wcs.utils.proj_plane_pixel_scales(imwcs)[0] 
+pixscale *= imwcs.wcs.cunit[0].to('arcsec')
+outline = '%d x %d pixels' % (ny, nx)
+outline += ' = %g" x %g"' % (ny * pixscale, nx * pixscale)
+outline += ' (%.2f" / pixel)' % pixscale
+print(outline)
 </pre>
               </div>
              </div>
@@ -1154,20 +1169,20 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># 3 NIRCam short wavelength channel images</span>
-<span class="n">r</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">imagefiles</span><span class="p">[</span><span class="s1">'F200W'</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="n">g</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">imagefiles</span><span class="p">[</span><span class="s1">'F150W'</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">imagefiles</span><span class="p">[</span><span class="s1">'F090W'</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+               <pre><span></span># 3 NIRCam short wavelength channel images
+r = fits.open(imagefiles['F200W'])[0].data
+g = fits.open(imagefiles['F150W'])[0].data
+b = fits.open(imagefiles['F090W'])[0].data
 
-<span class="n">rgb</span> <span class="o">=</span> <span class="n">make_lupton_rgb</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">Q</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>  <span class="c1"># , minimum=-0.001</span>
+rgb = make_lupton_rgb(r, g, b, Q=5, stretch=0.02)  # , minimum=-0.001
 
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">imwcs</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">rgb</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Right Ascension'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Declination'</span><span class="p">)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.15</span><span class="p">)</span>
+fig = plt.figure(figsize=(8, 8))
+ax = plt.subplot(projection=imwcs)
+plt.imshow(rgb, origin='lower')
+plt.xlabel('Right Ascension')
+plt.ylabel('Declination')
+fig.tight_layout()
+plt.subplots_adjust(left=0.15)
 </pre>
               </div>
              </div>
@@ -1198,26 +1213,26 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># For detection, requiring 5 connected pixels 2-sigma above background</span>
+               <pre><span></span># For detection, requiring 5 connected pixels 2-sigma above background
 
-<span class="c1"># Measure background and set detection threshold</span>
-<span class="n">bkg_estimator</span> <span class="o">=</span> <span class="n">MedianBackground</span><span class="p">()</span>
-<span class="n">bkg</span> <span class="o">=</span> <span class="n">Background2D</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">filter_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">bkg_estimator</span><span class="o">=</span><span class="n">bkg_estimator</span><span class="p">)</span>
-<span class="n">threshold</span> <span class="o">=</span> <span class="n">bkg</span><span class="o">.</span><span class="n">background</span> <span class="o">+</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">bkg</span><span class="o">.</span><span class="n">background_rms</span><span class="p">)</span>
+# Measure background and set detection threshold
+bkg_estimator = MedianBackground()
+bkg = Background2D(data, (50, 50), filter_size=(3, 3), bkg_estimator=bkg_estimator)
+threshold = bkg.background + (2. * bkg.background_rms)
 
-<span class="c1"># Before detection, smooth image with Gaussian FWHM = 3 pixels</span>
-<span class="n">sigma</span> <span class="o">=</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="n">gaussian_fwhm_to_sigma</span>  
-<span class="n">kernel</span> <span class="o">=</span> <span class="n">Gaussian2DKernel</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">x_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">y_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">kernel</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+# Before detection, smooth image with Gaussian FWHM = 3 pixels
+sigma = 3.0 * gaussian_fwhm_to_sigma  
+kernel = Gaussian2DKernel(sigma, x_size=3, y_size=3)
+kernel.normalize()
 
-<span class="c1"># Detect and deblend</span>
-<span class="n">segm_detect</span> <span class="o">=</span> <span class="n">detect_sources</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">npixels</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">)</span>
+# Detect and deblend
+segm_detect = detect_sources(data, threshold, npixels=5, kernel=kernel)
 
-<span class="n">segm_deblend</span> <span class="o">=</span> <span class="n">deblend_sources</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">segm_detect</span><span class="p">,</span> <span class="n">npixels</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">nlevels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+segm_deblend = deblend_sources(data, segm_detect, npixels=5, kernel=kernel, nlevels=32, contrast=0.001)
 
-<span class="c1"># Save segmentation map of detected objects</span>
-<span class="n">segm_hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">segm_deblend</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">),</span> <span class="n">header</span><span class="o">=</span><span class="n">imwcs</span><span class="o">.</span><span class="n">to_header</span><span class="p">())</span>
-<span class="n">segm_hdu</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="s1">'JADES_detections_segm.fits'</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+# Save segmentation map of detected objects
+segm_hdu = fits.PrimaryHDU(segm_deblend.data.astype(np.uint32), header=imwcs.to_header())
+segm_hdu.writeto('JADES_detections_segm.fits', overwrite=True)
 </pre>
               </div>
              </div>
@@ -1231,7 +1246,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
               </div>
              </div>
              <script type="application/vnd.jupyter.widget-view+json">
-              {"version_major": 2, "version_minor": 0, "model_id": "9972f47a8f054117a04453b8255b1dc4"}
+              {"version_major": 2, "version_minor": 0, "model_id": "de9e32dd5d3d4e6aa4db55038d43ca23"}
              </script>
              <img align=center height=auto width=50% src="../../jdaviz_placeholder_new.png">
              </img align=center height=auto width=50%>
@@ -1254,11 +1269,11 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1">#error = bkg.background_rms</span>
-<span class="c1"># Input weight should be exposure map. Fudging for now.</span>
-<span class="n">error</span> <span class="o">=</span> <span class="n">calc_total_error</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">bkg</span><span class="o">.</span><span class="n">background_rms</span><span class="p">,</span> <span class="n">weight</span><span class="o">/</span><span class="mi">500</span><span class="p">)</span>
-<span class="c1">#cat = source_properties(data-bkg.background, segm_deblend, wcs=imwcs, background=bkg.background, error=error)</span>
-<span class="n">cat</span> <span class="o">=</span> <span class="n">SourceCatalog</span><span class="p">(</span><span class="n">data</span><span class="o">-</span><span class="n">bkg</span><span class="o">.</span><span class="n">background</span><span class="p">,</span> <span class="n">segm_deblend</span><span class="p">,</span> <span class="n">wcs</span><span class="o">=</span><span class="n">imwcs</span><span class="p">,</span> <span class="n">background</span><span class="o">=</span><span class="n">bkg</span><span class="o">.</span><span class="n">background</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">)</span>
+               <pre><span></span>#error = bkg.background_rms
+# Input weight should be exposure map. Fudging for now.
+error = calc_total_error(data, bkg.background_rms, weight/500)
+#cat = source_properties(data-bkg.background, segm_deblend, wcs=imwcs, background=bkg.background, error=error)
+cat = SourceCatalog(data-bkg.background, segm_deblend, wcs=imwcs, background=bkg.background, error=error)
 </pre>
               </div>
              </div>
@@ -1276,37 +1291,37 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.5</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="c1"># For RA,Dec axes instead of pixels, add: , subplot_kw={'projection': imwcs})</span>
+               <pre><span></span>fig, ax = plt.subplots(2, 3, sharex=True, sharey=True, figsize=(9.5, 6))
+# For RA,Dec axes instead of pixels, add: , subplot_kw={'projection': imwcs})
 
-<span class="c1"># Color image</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">rgb</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Color Image'</span><span class="p">)</span>
+# Color image
+ax[0, 0].imshow(rgb, origin='lower')
+ax[0, 0].set_title('Color Image')
 
-<span class="c1"># Data</span>
-<span class="n">norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">'sqrt'</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mf">99.</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Greys_r'</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Detection Image F200W'</span><span class="p">)</span>
+# Data
+norm = simple_norm(data, 'sqrt', percent=99.)
+ax[0, 1].imshow(data, origin='lower', cmap='Greys_r', norm=norm)
+ax[0, 1].set_title('Detection Image F200W')
 
-<span class="c1"># Segmentation map</span>
-<span class="n">cmap</span> <span class="o">=</span> <span class="n">segm_deblend</span><span class="o">.</span><span class="n">make_cmap</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">segm_deblend</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Detections (Segmentation Image)'</span><span class="p">)</span>
+# Segmentation map
+cmap = segm_deblend.make_cmap(seed=12345)
+ax[0, 2].imshow(segm_deblend, origin='lower', cmap=cmap, interpolation='nearest')
+ax[0, 2].set_title('Detections (Segmentation Image)')
 
-<span class="c1"># Weight</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Greys_r'</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Weight Image F200W'</span><span class="p">)</span>
+# Weight
+ax[1, 0].imshow(weight, origin='lower', cmap='Greys_r', vmin=0)
+ax[1, 0].set_title('Weight Image F200W')
 
-<span class="c1"># RMS</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">bkg</span><span class="o">.</span><span class="n">background_rms</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Background RMS'</span><span class="p">)</span>
+# RMS
+ax[1, 1].imshow(bkg.background_rms, origin='lower', norm=None)
+ax[1, 1].set_title('Background RMS')
 
-<span class="c1"># Total error including Poisson noise</span>
-<span class="n">norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">'sqrt'</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mf">99.</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'RMS + Poisson noise'</span><span class="p">)</span>
+# Total error including Poisson noise
+norm = simple_norm(error, 'sqrt', percent=99.)
+ax[1, 2].imshow(error, origin='lower', norm=norm)
+ax[1, 2].set_title('RMS + Poisson noise')
 
-<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+fig.tight_layout()
 </pre>
               </div>
              </div>
@@ -1327,7 +1342,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">cat</span><span class="o">.</span><span class="n">to_table</span><span class="p">()</span>
+               <pre><span></span>cat.to_table()
 </pre>
               </div>
              </div>
@@ -1338,7 +1353,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                <i>
                 QTable length=327
                </i>
-               <table class="table-striped table-bordered table-condensed" id="table140472415137408">
+               <table class="table-striped table-bordered table-condensed" id="table140358155031360">
                 <thead>
                  <tr>
                   <th>
@@ -1583,10 +1598,10 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   2
                  </td>
                  <td>
-                  104.80681791619067
+                  104.80681791619065
                  </td>
                  <td>
-                  18.082129411035602
+                  18.0821294110356
                  </td>
                  <td>
                   53.17721522973072,-27.805243193448323
@@ -1607,16 +1622,16 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   271.0
                  </td>
                  <td>
-                  4.4330760205526705
+                  4.43307602055267
                  </td>
                  <td>
                   2.8904310038200527
                  </td>
                  <td>
-                  -26.54972210581966
+                  -26.549722105819686
                  </td>
                  <td>
-                  0.7582062720085906
+                  0.7582062720085905
                  </td>
                  <td>
                   0.001169592682614256
@@ -1634,10 +1649,10 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   0.10096273567434758
                  </td>
                  <td>
-                  4.064307886560463
+                  4.064307886560462
                  </td>
                  <td>
-                  0.1178471432803697
+                  0.11784714328036967
                  </td>
                 </tr>
                 <tr>
@@ -1672,13 +1687,13 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   0.8501945455843772
                  </td>
                  <td>
-                  0.6682678017840504
+                  0.6682678017840503
                  </td>
                  <td>
-                  -38.1612276642421
+                  -38.16122766424209
                  </td>
                  <td>
-                  0.6182042301587309
+                  0.618204230158731
                  </td>
                  <td>
                   0.0035728101756059504
@@ -1696,7 +1711,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   0.011222825585360585
                  </td>
                  <td>
-                  0.10086850698470742
+                  0.1008685069847074
                  </td>
                  <td>
                   0.023152305782963536
@@ -1761,7 +1776,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   0.19011686546526946
                  </td>
                  <td>
-                  0.02362558916972023
+                  0.023625589169720226
                  </td>
                 </tr>
                 <tr>
@@ -1772,7 +1787,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   434.52931528855504
                  </td>
                  <td>
-                  22.221938204336563
+                  22.221938204336567
                  </td>
                  <td>
                   53.17410887486057,-27.80520894064138
@@ -1793,13 +1808,13 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   268.0
                  </td>
                  <td>
-                  3.954114371118456
+                  3.9541143711184557
                  </td>
                  <td>
                   2.6317387394125484
                  </td>
                  <td>
-                  -8.167334484702076
+                  -8.16733448470208
                  </td>
                  <td>
                   0.7463356928864708
@@ -1958,7 +1973,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   762.7604138509574
                  </td>
                  <td>
-                  28.2981299719635
+                  28.298129971963505
                  </td>
                  <td>
                   53.17101657158984,-27.805158481182374
@@ -2009,7 +2024,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   3.981147093372532
                  </td>
                  <td>
-                  0.09151504375364358
+                  0.09151504375364357
                  </td>
                 </tr>
                 <tr>
@@ -2047,7 +2062,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   0.6567170220834244
                  </td>
                  <td>
-                  -28.75519616047975
+                  -28.755196160479745
                  </td>
                  <td>
                   0.8706270208190223
@@ -2068,10 +2083,10 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   0.012189355644992149
                  </td>
                  <td>
-                  0.17003504172320322
+                  0.1700350417232032
                  </td>
                  <td>
-                  0.027778386430149567
+                  0.02777838643014956
                  </td>
                 </tr>
                 <tr>
@@ -2168,13 +2183,13 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   4.1970530491670495
                  </td>
                  <td>
-                  1.8021821587433078
+                  1.802182158743307
                  </td>
                  <td>
-                  64.56727691953017
+                  64.56727691953016
                  </td>
                  <td>
-                  0.9031180841005669
+                  0.903118084100567
                  </td>
                  <td>
                   0.0014816106246247486
@@ -2195,7 +2210,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   8.781566974916299
                  </td>
                  <td>
-                  0.16012188685841844
+                  0.16012188685841847
                  </td>
                 </tr>
                 <tr>
@@ -2227,16 +2242,16 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   184.0
                  </td>
                  <td>
-                  3.2861175102309117
+                  3.2861175102309126
                  </td>
                  <td>
                   3.144571547794767
                  </td>
                  <td>
-                  -12.816561509735413
+                  -12.816561509735381
                  </td>
                  <td>
-                  0.2903316676410036
+                  0.290331667641004
                  </td>
                  <td>
                   0.0017370791511803075
@@ -2257,7 +2272,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   3.410121934628213
                  </td>
                  <td>
-                  0.1545924758050408
+                  0.15459247580504082
                  </td>
                 </tr>
                 <tr>
@@ -2316,10 +2331,10 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   0.035024475587970415
                  </td>
                  <td>
-                  0.6893013683010651
+                  0.6893013683010649
                  </td>
                  <td>
-                  0.07610234326451545
+                  0.07610234326451544
                  </td>
                 </tr>
                 <tr>
@@ -2381,7 +2396,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   1.2524114346118043
                  </td>
                  <td>
-                  0.10432157051791158
+                  0.10432157051791156
                  </td>
                 </tr>
                 <tr>
@@ -2419,7 +2434,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   1.2555061677914512
                  </td>
                  <td>
-                  -35.47427950196171
+                  -35.4742795019617
                  </td>
                  <td>
                   0.8103588434156908
@@ -2440,10 +2455,10 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   0.0568718012708143
                  </td>
                  <td>
-                  0.8893801784930943
+                  0.8893801784930939
                  </td>
                  <td>
-                  0.08214060528713435
+                  0.08214060528713434
                  </td>
                 </tr>
                 <tr>
@@ -2502,7 +2517,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   0.07893942785469332
                  </td>
                  <td>
-                  1.6521126492979301
+                  1.65211264929793
                  </td>
                  <td>
                   0.10804543306519863
@@ -2602,7 +2617,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   4.506451359665357
                  </td>
                  <td>
-                  1.493045462994405
+                  1.4930454629944043
                  </td>
                  <td>
                   -44.19824469199431
@@ -2629,7 +2644,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   2.813577038594517
                  </td>
                  <td>
-                  0.13630578304670982
+                  0.13630578304670984
                  </td>
                 </tr>
                 <tr>
@@ -2750,10 +2765,10 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   0.054603633353214456
                  </td>
                  <td>
-                  0.7815995757165103
+                  0.7815995757165104
                  </td>
                  <td>
-                  0.07181097204346874
+                  0.07181097204346876
                  </td>
                 </tr>
                </table>
@@ -2773,10 +2788,10 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="s1">'label xcentroid ycentroid sky_centroid area semimajor_sigma semiminor_sigma ellipticity orientation gini'</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-<span class="n">tbl</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">to_table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
-<span class="n">tbl</span><span class="o">.</span><span class="n">rename_column</span><span class="p">(</span><span class="s1">'semimajor_sigma'</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">)</span>
-<span class="n">tbl</span><span class="o">.</span><span class="n">rename_column</span><span class="p">(</span><span class="s1">'semiminor_sigma'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span>
+               <pre><span></span>columns = 'label xcentroid ycentroid sky_centroid area semimajor_sigma semiminor_sigma ellipticity orientation gini'.split()
+tbl = cat.to_table(columns=columns)
+tbl.rename_column('semimajor_sigma', 'a')
+tbl.rename_column('semiminor_sigma', 'b')
 </pre>
               </div>
              </div>
@@ -2786,7 +2801,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">tbl</span>
+               <pre><span></span>tbl
 </pre>
               </div>
              </div>
@@ -2797,7 +2812,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                <i>
                 QTable length=327
                </i>
-               <table class="table-striped table-bordered table-condensed" id="table140472413118080">
+               <table class="table-striped table-bordered table-condensed" id="table140358151795472">
                 <thead>
                  <tr>
                   <th>
@@ -2932,10 +2947,10 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   2
                  </td>
                  <td>
-                  104.80681791619067
+                  104.80681791619065
                  </td>
                  <td>
-                  18.082129411035602
+                  18.0821294110356
                  </td>
                  <td>
                   53.17721522973072,-27.805243193448323
@@ -2944,16 +2959,16 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   271.0
                  </td>
                  <td>
-                  4.4330760205526705
+                  4.43307602055267
                  </td>
                  <td>
                   2.8904310038200527
                  </td>
                  <td>
-                  0.34798523859744157
+                  0.34798523859744146
                  </td>
                  <td>
-                  -26.54972210581966
+                  -26.549722105819686
                  </td>
                  <td>
                   0.4292034166747856
@@ -2979,13 +2994,13 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   0.8501945455843772
                  </td>
                  <td>
-                  0.6682678017840504
+                  0.6682678017840503
                  </td>
                  <td>
-                  0.21398248759086114
+                  0.21398248759086125
                  </td>
                  <td>
-                  -38.1612276642421
+                  -38.16122766424209
                  </td>
                  <td>
                   0.10521135944081007
@@ -3031,7 +3046,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   434.52931528855504
                  </td>
                  <td>
-                  22.221938204336563
+                  22.221938204336567
                  </td>
                  <td>
                   53.17410887486057,-27.80520894064138
@@ -3040,7 +3055,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   268.0
                  </td>
                  <td>
-                  3.954114371118456
+                  3.9541143711184557
                  </td>
                  <td>
                   2.6317387394125484
@@ -3049,7 +3064,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   0.33443029401596747
                  </td>
                  <td>
-                  -8.167334484702076
+                  -8.16733448470208
                  </td>
                  <td>
                   0.5358632947802063
@@ -3127,7 +3142,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   762.7604138509574
                  </td>
                  <td>
-                  28.2981299719635
+                  28.298129971963505
                  </td>
                  <td>
                   53.17101657158984,-27.805158481182374
@@ -3177,7 +3192,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   0.5080563135685205
                  </td>
                  <td>
-                  -28.75519616047975
+                  -28.755196160479745
                  </td>
                  <td>
                   0.28793220448127643
@@ -3235,13 +3250,13 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   4.1970530491670495
                  </td>
                  <td>
-                  1.8021821587433078
+                  1.802182158743307
                  </td>
                  <td>
-                  0.5706077246031069
+                  0.570607724603107
                  </td>
                  <td>
-                  64.56727691953017
+                  64.56727691953016
                  </td>
                  <td>
                   0.6381184942652184
@@ -3264,16 +3279,16 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   184.0
                  </td>
                  <td>
-                  3.2861175102309117
+                  3.2861175102309126
                  </td>
                  <td>
                   3.144571547794767
                  </td>
                  <td>
-                  0.04307391990562093
+                  0.04307391990562126
                  </td>
                  <td>
-                  -12.816561509735413
+                  -12.816561509735381
                  </td>
                  <td>
                   0.3289496147364014
@@ -3369,7 +3384,7 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   0.41406609169806174
                  </td>
                  <td>
-                  -35.47427950196171
+                  -35.4742795019617
                  </td>
                  <td>
                   0.3421221334166607
@@ -3459,10 +3474,10 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
                   4.506451359665357
                  </td>
                  <td>
-                  1.493045462994405
+                  1.4930454629944043
                  </td>
                  <td>
-                  0.6686871012615841
+                  0.6686871012615843
                  </td>
                  <td>
                   -44.19824469199431
@@ -3567,29 +3582,29 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># not detected: mag =  99; magerr = 1-sigma upper limit assuming zero flux</span>
-<span class="c1"># not observed: mag = -99; magerr = 0</span>
-<span class="k">def</span> <span class="nf">fluxes2mags</span><span class="p">(</span><span class="n">flux</span><span class="p">,</span> <span class="n">fluxerr</span><span class="p">):</span>
-    <span class="n">nondet</span> <span class="o">=</span> <span class="n">flux</span> <span class="o">&lt;</span> <span class="mi">0</span>  <span class="c1"># Non-detection if flux is negative</span>
-    <span class="n">unobs</span> <span class="o">=</span> <span class="p">(</span><span class="n">fluxerr</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">fluxerr</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>  <span class="c1"># Unobserved if flux uncertainty is negative or infinity</span>
+               <pre><span></span># not detected: mag =  99; magerr = 1-sigma upper limit assuming zero flux
+# not observed: mag = -99; magerr = 0
+def fluxes2mags(flux, fluxerr):
+    nondet = flux &lt; 0  # Non-detection if flux is negative
+    unobs = (fluxerr &lt;= 0) + (fluxerr == np.inf)  # Unobserved if flux uncertainty is negative or infinity
 
-    <span class="n">mag</span> <span class="o">=</span> <span class="n">flux</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">ABmag</span><span class="p">)</span>
-    <span class="n">magupperlimit</span> <span class="o">=</span> <span class="n">fluxerr</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">ABmag</span><span class="p">)</span>  <span class="c1"># 1-sigma upper limit if flux=0</span>
+    mag = flux.to(u.ABmag)
+    magupperlimit = fluxerr.to(u.ABmag)  # 1-sigma upper limit if flux=0
 
-    <span class="n">mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nondet</span><span class="p">,</span> <span class="mi">99</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">ABmag</span><span class="p">,</span> <span class="n">mag</span><span class="p">)</span>
-    <span class="n">mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">unobs</span><span class="p">,</span> <span class="o">-</span><span class="mi">99</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">ABmag</span><span class="p">,</span> <span class="n">mag</span><span class="p">)</span>
+    mag = np.where(nondet, 99 * u.ABmag, mag)
+    mag = np.where(unobs, -99 * u.ABmag, mag)
 
-    <span class="n">magerr</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">fluxerr</span><span class="o">/</span><span class="n">flux</span><span class="p">)</span> 
-    <span class="n">magerr</span> <span class="o">=</span> <span class="n">magerr</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">ABmag</span>
+    magerr = 2.5 * np.log10(1 + fluxerr/flux) 
+    magerr = magerr.value * u.ABmag
 
-    <span class="n">magerr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nondet</span><span class="p">,</span> <span class="n">magupperlimit</span><span class="p">,</span> <span class="n">magerr</span><span class="p">)</span>
-    <span class="n">magerr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">unobs</span><span class="p">,</span> <span class="mi">0</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">ABmag</span><span class="p">,</span> <span class="n">magerr</span><span class="p">)</span>
+    magerr = np.where(nondet, magupperlimit, magerr)
+    magerr = np.where(unobs, 0*u.ABmag, magerr)
     
-    <span class="k">return</span> <span class="n">mag</span><span class="p">,</span> <span class="n">magerr</span>
+    return mag, magerr
 
-<span class="c1"># Includes features I couldn't find in astropy:</span>
-<span class="c1"># mag = 99 / -99 for non-detections / unobserved</span>
-<span class="c1"># flux uncertainties -&gt; mag uncertainties</span>
+# Includes features I couldn't find in astropy:
+# mag = 99 / -99 for non-detections / unobserved
+# flux uncertainties -&gt; mag uncertainties
 </pre>
               </div>
              </div>
@@ -3610,34 +3625,34 @@ WARNING: AstropyDeprecationWarning: "kernel" was deprecated in version 1.5 and w
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">filters</span> <span class="o">=</span> <span class="s1">'F090W F115W F150W F200W F277W F335M F356W F410M F444W'</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">filt</span> <span class="ow">in</span> <span class="n">filters</span><span class="p">:</span>
-    <span class="n">infile</span> <span class="o">=</span> <span class="n">imagefiles</span><span class="p">[</span><span class="n">filt</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">filt</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">weightfiles</span><span class="p">[</span><span class="n">filt</span><span class="p">])</span>
-    <span class="n">hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">zp</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">'ABMAG'</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">ABmag</span>  <span class="c1"># zeropoint</span>
-    <span class="n">weight</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">weightfiles</span><span class="p">[</span><span class="n">filt</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+               <pre><span></span>filters = 'F090W F115W F150W F200W F277W F335M F356W F410M F444W'.split()
+for filt in filters:
+    infile = imagefiles[filt]
+    print(filt)
+    print(infile)
+    print(weightfiles[filt])
+    hdu = fits.open(infile)
+    data = hdu[0].data
+    zp = hdu[0].header['ABMAG'] * u.ABmag  # zeropoint
+    weight = fits.open(weightfiles[filt])[0].data
     
-    <span class="c1"># Measure background</span>
-    <span class="n">bkg</span> <span class="o">=</span> <span class="n">Background2D</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">filter_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">bkg_estimator</span><span class="o">=</span><span class="n">bkg_estimator</span><span class="p">)</span>
-    <span class="c1">#error = bkg.background_rms</span>
-    <span class="n">error</span> <span class="o">=</span> <span class="n">calc_total_error</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">bkg</span><span class="o">.</span><span class="n">background_rms</span><span class="p">,</span> <span class="n">weight</span><span class="o">/</span><span class="mi">500</span><span class="p">)</span>
+    # Measure background
+    bkg = Background2D(data, (50, 50), filter_size=(3, 3), bkg_estimator=bkg_estimator)
+    #error = bkg.background_rms
+    error = calc_total_error(data, bkg.background_rms, weight/500)
                              
-    <span class="c1"># Measure properties in each image of previously detected objects </span>
-    <span class="n">filtcat</span> <span class="o">=</span> <span class="n">SourceCatalog</span><span class="p">(</span><span class="n">data</span><span class="o">-</span><span class="n">bkg</span><span class="o">.</span><span class="n">background</span><span class="p">,</span> <span class="n">segm_deblend</span><span class="p">,</span> <span class="n">wcs</span><span class="o">=</span><span class="n">imwcs</span><span class="p">,</span> <span class="n">background</span><span class="o">=</span><span class="n">bkg</span><span class="o">.</span><span class="n">background</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">)</span>
+    # Measure properties in each image of previously detected objects 
+    filtcat = SourceCatalog(data-bkg.background, segm_deblend, wcs=imwcs, background=bkg.background, error=error)
 
-    <span class="c1"># Convert measured fluxes to fluxes in nJy and to AB magnitudes</span>
-    <span class="n">filttbl</span> <span class="o">=</span> <span class="n">filtcat</span><span class="o">.</span><span class="n">to_table</span><span class="p">()</span>
-    <span class="n">tbl</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_flux'</span><span class="p">]</span>    <span class="o">=</span> <span class="n">flux</span>    <span class="o">=</span> <span class="n">filttbl</span><span class="p">[</span><span class="s1">'segment_flux'</span><span class="p">]</span>     <span class="o">*</span> <span class="n">zp</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">nJy</span><span class="p">)</span>
-    <span class="n">tbl</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_fluxerr'</span><span class="p">]</span> <span class="o">=</span> <span class="n">fluxerr</span> <span class="o">=</span> <span class="n">filttbl</span><span class="p">[</span><span class="s1">'segment_fluxerr'</span><span class="p">]</span> <span class="o">*</span> <span class="n">zp</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">nJy</span><span class="p">)</span>
+    # Convert measured fluxes to fluxes in nJy and to AB magnitudes
+    filttbl = filtcat.to_table()
+    tbl[filt+'_flux']    = flux    = filttbl['segment_flux']     * zp.to(u.nJy)
+    tbl[filt+'_fluxerr'] = fluxerr = filttbl['segment_fluxerr'] * zp.to(u.nJy)
 
-    <span class="n">mag</span><span class="p">,</span> <span class="n">magerr</span> <span class="o">=</span> <span class="n">fluxes2mags</span><span class="p">(</span><span class="n">flux</span><span class="p">,</span> <span class="n">fluxerr</span><span class="p">)</span>
-    <span class="c1">#mag = mag * u.ABmag  # incompatible with file writing</span>
-    <span class="n">tbl</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_mag'</span><span class="p">]</span>    <span class="o">=</span> <span class="n">mag</span><span class="o">.</span><span class="n">value</span>
-    <span class="n">tbl</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_magerr'</span><span class="p">]</span> <span class="o">=</span> <span class="n">magerr</span><span class="o">.</span><span class="n">value</span>
+    mag, magerr = fluxes2mags(flux, fluxerr)
+    #mag = mag * u.ABmag  # incompatible with file writing
+    tbl[filt+'_mag']    = mag.value
+    tbl[filt+'_magerr'] = magerr.value
 </pre>
               </div>
              </div>
@@ -3653,7 +3668,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
              </div>
              <div class="output stderr highlight-myst-ansi notranslate">
               <div class="highlight">
-               <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/function/logarithmic.py:47: RuntimeWarning: invalid value encountered in log10
+               <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/function/logarithmic.py:64: RuntimeWarning: invalid value encountered in log10
   return dex.to(self._function_unit, np.log10(x))
 </pre>
               </div>
@@ -3668,9 +3683,9 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
              </div>
              <div class="output stderr highlight-myst-ansi notranslate">
               <div class="highlight">
-               <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/function/logarithmic.py:47: RuntimeWarning: invalid value encountered in log10
+               <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/function/logarithmic.py:64: RuntimeWarning: invalid value encountered in log10
   return dex.to(self._function_unit, np.log10(x))
-/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/quantity.py:620: RuntimeWarning: invalid value encountered in log10
+/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/quantity.py:673: RuntimeWarning: invalid value encountered in log10
   result = super().__array_ufunc__(function, method, *arrays, **kwargs)
 </pre>
               </div>
@@ -3725,9 +3740,9 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
              </div>
              <div class="output stderr highlight-myst-ansi notranslate">
               <div class="highlight">
-               <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/function/logarithmic.py:47: RuntimeWarning: invalid value encountered in log10
+               <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/function/logarithmic.py:64: RuntimeWarning: invalid value encountered in log10
   return dex.to(self._function_unit, np.log10(x))
-/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/quantity.py:620: RuntimeWarning: invalid value encountered in log10
+/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/quantity.py:673: RuntimeWarning: invalid value encountered in log10
   result = super().__array_ufunc__(function, method, *arrays, **kwargs)
 </pre>
               </div>
@@ -3742,9 +3757,9 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
              </div>
              <div class="output stderr highlight-myst-ansi notranslate">
               <div class="highlight">
-               <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/function/logarithmic.py:47: RuntimeWarning: invalid value encountered in log10
+               <pre><span></span>/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/function/logarithmic.py:64: RuntimeWarning: invalid value encountered in log10
   return dex.to(self._function_unit, np.log10(x))
-/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/quantity.py:620: RuntimeWarning: invalid value encountered in log10
+/usr/share/miniconda/lib/python3.9/site-packages/astropy/units/quantity.py:673: RuntimeWarning: invalid value encountered in log10
   result = super().__array_ufunc__(function, method, *arrays, **kwargs)
 </pre>
               </div>
@@ -3763,7 +3778,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">tbl</span>
+               <pre><span></span>tbl
 </pre>
               </div>
              </div>
@@ -3774,7 +3789,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                <i>
                 QTable length=327
                </i>
-               <table class="table-striped table-bordered table-condensed" id="table140472413118080">
+               <table class="table-striped table-bordered table-condensed" id="table140358151795472">
                 <thead>
                  <tr>
                   <th>
@@ -4219,7 +4234,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   28.993743842627527
                  </td>
                  <td>
-                  0.09583064229371432
+                  0.09583064229371434
                  </td>
                  <td>
                   15.251750665804146
@@ -4258,7 +4273,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   0.05182128829099082
                  </td>
                  <td>
-                  15.305414631812216
+                  15.30541463181222
                  </td>
                  <td>
                   0.37242909913150146
@@ -4267,7 +4282,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   28.437887251597694
                  </td>
                  <td>
-                  0.02610307984312319
+                  0.026103079843123198
                  </td>
                  <td>
                   14.02083788279239
@@ -4285,13 +4300,13 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   14.174014573163747
                  </td>
                  <td>
-                  0.39992610811377877
+                  0.3999261081137788
                  </td>
                  <td>
                   28.52126781262446
                  </td>
                  <td>
-                  0.03021030645164098
+                  0.030210306451640984
                  </td>
                  <td>
                   13.880611681957355
@@ -4315,7 +4330,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   28.54970620192208
                  </td>
                  <td>
-                  0.038518276199782
+                  0.038518276199781994
                  </td>
                 </tr>
                 <tr>
@@ -4323,10 +4338,10 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   2
                  </td>
                  <td>
-                  104.80681791619067
+                  104.80681791619065
                  </td>
                  <td>
-                  18.082129411035602
+                  18.0821294110356
                  </td>
                  <td>
                   53.17721522973072,-27.805243193448323
@@ -4335,16 +4350,16 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   271.0
                  </td>
                  <td>
-                  4.4330760205526705
+                  4.43307602055267
                  </td>
                  <td>
                   2.8904310038200527
                  </td>
                  <td>
-                  0.34798523859744157
+                  0.34798523859744146
                  </td>
                  <td>
-                  -26.54972210581966
+                  -26.549722105819686
                  </td>
                  <td>
                   0.4292034166747856
@@ -4371,7 +4386,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   26.82179648873538
                  </td>
                  <td>
-                  0.028163638965809652
+                  0.02816363896580966
                  </td>
                  <td>
                   70.39338412925109
@@ -4407,7 +4422,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   26.743170898753043
                  </td>
                  <td>
-                  0.012319367708500414
+                  0.012319367708500412
                  </td>
                  <td>
                   75.27250253951928
@@ -4416,7 +4431,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   1.070603105909879
                  </td>
                  <td>
-                  26.708409112497115
+                  26.70840911249712
                  </td>
                  <td>
                   0.015333670289260427
@@ -4431,7 +4446,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   26.764418211087325
                  </td>
                  <td>
-                  0.014096626458061819
+                  0.01409662645806182
                  </td>
                  <td>
                   61.42767389099904
@@ -4443,7 +4458,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   26.929089824977595
                  </td>
                  <td>
-                  0.017520685942298192
+                  0.017520685942298195
                  </td>
                  <td>
                   57.2203760546637
@@ -4455,7 +4470,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   27.00612323080047
                  </td>
                  <td>
-                  0.019763151293857934
+                  0.019763151293857938
                  </td>
                 </tr>
                 <tr>
@@ -4478,13 +4493,13 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   0.8501945455843772
                  </td>
                  <td>
-                  0.6682678017840504
+                  0.6682678017840503
                  </td>
                  <td>
-                  0.21398248759086114
+                  0.21398248759086125
                  </td>
                  <td>
-                  -38.1612276642421
+                  -38.16122766424209
                  </td>
                  <td>
                   0.10521135944081007
@@ -4547,7 +4562,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   32.54071862281815
                  </td>
                  <td>
-                  0.19551879280610804
+                  0.19551879280610807
                  </td>
                  <td>
                   0.5607617346802088
@@ -4571,7 +4586,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   32.83426782771905
                  </td>
                  <td>
-                  0.2547307087052081
+                  0.25473070870520814
                  </td>
                  <td>
                   -0.06031654176708369
@@ -4595,7 +4610,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   33.723481188078146
                  </td>
                  <td>
-                  0.5742186726193419
+                  0.574218672619342
                  </td>
                 </tr>
                 <tr>
@@ -4639,7 +4654,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   30.33915040433974
                  </td>
                  <td>
-                  0.1653923745984598
+                  0.16539237459845982
                  </td>
                  <td>
                   3.818279752499735
@@ -4648,7 +4663,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   0.360557908564342
                  </td>
                  <td>
-                  29.945330638706018
+                  29.94533063870602
                  </td>
                  <td>
                   0.09796938884703618
@@ -4687,7 +4702,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   30.826288264009904
                  </td>
                  <td>
-                  0.07822962940363362
+                  0.07822962940363361
                  </td>
                  <td>
                   1.590536535091481
@@ -4746,7 +4761,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   434.52931528855504
                  </td>
                  <td>
-                  22.221938204336563
+                  22.221938204336567
                  </td>
                  <td>
                   53.17410887486057,-27.80520894064138
@@ -4755,7 +4770,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   268.0
                  </td>
                  <td>
-                  3.954114371118456
+                  3.9541143711184557
                  </td>
                  <td>
                   2.6317387394125484
@@ -4764,7 +4779,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   0.33443029401596747
                  </td>
                  <td>
-                  -8.167334484702076
+                  -8.16733448470208
                  </td>
                  <td>
                   0.5358632947802063
@@ -4839,7 +4854,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   26.086564223686825
                  </td>
                  <td>
-                  0.010383846972193137
+                  0.01038384697219314
                  </td>
                  <td>
                   144.03906284324478
@@ -4851,7 +4866,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   26.003799282319697
                  </td>
                  <td>
-                  0.009295039598996599
+                  0.009295039598996597
                  </td>
                  <td>
                   161.60492000841137
@@ -4931,7 +4946,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   30.958942478071556
                  </td>
                  <td>
-                  0.18980531870852316
+                  0.18980531870852319
                  </td>
                  <td>
                   1.045624005692517
@@ -4943,7 +4958,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   31.35156113668441
                  </td>
                  <td>
-                  0.26520490437873934
+                  0.2652049043787394
                  </td>
                  <td>
                   1.955256158588051
@@ -4979,7 +4994,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   30.77954733764033
                  </td>
                  <td>
-                  0.11478335606840087
+                  0.11478335606840086
                  </td>
                  <td>
                   1.4921438342127515
@@ -4991,7 +5006,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   30.96547327829425
                  </td>
                  <td>
-                  0.10445071085094704
+                  0.10445071085094702
                  </td>
                  <td>
                   1.1433927169620364
@@ -5015,7 +5030,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   31.967994562614585
                  </td>
                  <td>
-                  0.2251497308694742
+                  0.22514973086947426
                  </td>
                 </tr>
                 <tr>
@@ -5059,7 +5074,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   30.80372040476935
                  </td>
                  <td>
-                  0.20218906642550222
+                  0.20218906642550227
                  </td>
                  <td>
                   1.643429843026024
@@ -5104,7 +5119,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   0.09617790287548722
                  </td>
                  <td>
-                  31.357458548945587
+                  31.35745854894559
                  </td>
                  <td>
                   0.09603604488615963
@@ -5131,7 +5146,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   31.14867972112842
                  </td>
                  <td>
-                  0.09552272603001738
+                  0.09552272603001735
                  </td>
                  <td>
                   0.40788132175057795
@@ -5143,7 +5158,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   32.37366545505972
                  </td>
                  <td>
-                  0.27123885135203707
+                  0.2712388513520371
                  </td>
                  <td>
                   0.5688140707837224
@@ -5155,7 +5170,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   32.01257417244966
                  </td>
                  <td>
-                  0.18978993015591245
+                  0.18978993015591247
                  </td>
                 </tr>
                 <tr>
@@ -5166,7 +5181,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   762.7604138509574
                  </td>
                  <td>
-                  28.2981299719635
+                  28.298129971963505
                  </td>
                  <td>
                   53.17101657158984,-27.805158481182374
@@ -5223,7 +5238,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   26.92478945297725
                  </td>
                  <td>
-                  0.028332995920166554
+                  0.028332995920166557
                  </td>
                  <td>
                   87.85194348648487
@@ -5235,7 +5250,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   26.540621566180963
                  </td>
                  <td>
-                  0.024842449407777144
+                  0.024842449407777148
                  </td>
                  <td>
                   86.04008354445801
@@ -5259,7 +5274,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   26.729227444357107
                  </td>
                  <td>
-                  0.013070161189289635
+                  0.013070161189289636
                  </td>
                  <td>
                   74.8225190478038
@@ -5268,7 +5283,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   0.8372019588600241
                  </td>
                  <td>
-                  26.71491918627661
+                  26.714919186276617
                  </td>
                  <td>
                   0.012081025050606558
@@ -5295,7 +5310,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   26.725290789617205
                  </td>
                  <td>
-                  0.015124537907185095
+                  0.015124537907185093
                  </td>
                 </tr>
                 <tr>
@@ -5324,7 +5339,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   0.5080563135685205
                  </td>
                  <td>
-                  -28.75519616047975
+                  -28.755196160479745
                  </td>
                  <td>
                   0.28793220448127643
@@ -5339,7 +5354,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   31.272501310051688
                  </td>
                  <td>
-                  0.257101145144837
+                  0.25710114514483706
                  </td>
                  <td>
                   1.2797476107076189
@@ -5351,7 +5366,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   31.13218918151494
                  </td>
                  <td>
-                  0.17984738982032794
+                  0.179847389820328
                  </td>
                  <td>
                   1.2734342232303713
@@ -5387,7 +5402,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   31.313642349074232
                  </td>
                  <td>
-                  0.0961853826328532
+                  0.09618538263285319
                  </td>
                  <td>
                   0.6781367101230981
@@ -5396,10 +5411,10 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   0.1161012153749804
                  </td>
                  <td>
-                  31.821706862430293
+                  31.821706862430297
                  </td>
                  <td>
-                  0.17158341526256438
+                  0.17158341526256443
                  </td>
                  <td>
                   0.5758891043153808
@@ -5408,13 +5423,13 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   0.08989342817146666
                  </td>
                  <td>
-                  31.99915284535117
+                  31.999152845351176
                  </td>
                  <td>
-                  0.15748383733187596
+                  0.15748383733187593
                  </td>
                  <td>
-                  1.1076176036929608
+                  1.1076176036929606
                  </td>
                  <td>
                   0.13520585441853786
@@ -5598,13 +5613,13 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   4.1970530491670495
                  </td>
                  <td>
-                  1.8021821587433078
+                  1.802182158743307
                  </td>
                  <td>
-                  0.5706077246031069
+                  0.570607724603107
                  </td>
                  <td>
-                  64.56727691953017
+                  64.56727691953016
                  </td>
                  <td>
                   0.6381184942652184
@@ -5631,7 +5646,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   25.855705672804568
                  </td>
                  <td>
-                  0.017376934181754438
+                  0.01737693418175444
                  </td>
                  <td>
                   210.82538772196136
@@ -5655,7 +5670,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   25.64970588578926
                  </td>
                  <td>
-                  0.019661163764616296
+                  0.0196611637646163
                  </td>
                  <td>
                   143.09847494169267
@@ -5703,7 +5718,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   26.32797447480941
                  </td>
                  <td>
-                  0.01325130980906172
+                  0.013251309809061716
                  </td>
                  <td>
                   104.25292308993991
@@ -5735,16 +5750,16 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   184.0
                  </td>
                  <td>
-                  3.2861175102309117
+                  3.2861175102309126
                  </td>
                  <td>
                   3.144571547794767
                  </td>
                  <td>
-                  0.04307391990562093
+                  0.04307391990562126
                  </td>
                  <td>
-                  -12.816561509735413
+                  -12.816561509735381
                  </td>
                  <td>
                   0.3289496147364014
@@ -5795,7 +5810,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   27.183507573384148
                  </td>
                  <td>
-                  0.05395036568406384
+                  0.053950365684063833
                  </td>
                  <td>
                   36.65997645594317
@@ -5819,7 +5834,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   27.593892998487796
                  </td>
                  <td>
-                  0.03227910956200878
+                  0.03227910956200879
                  </td>
                  <td>
                   34.258836181673466
@@ -5855,7 +5870,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   27.645847489865684
                  </td>
                  <td>
-                  0.03718046940622831
+                  0.037180469406228316
                  </td>
                 </tr>
                 <tr>
@@ -5899,7 +5914,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   29.775203650276346
                  </td>
                  <td>
-                  0.19581292499061762
+                  0.19581292499061764
                  </td>
                  <td>
                   3.531493143831654
@@ -5932,10 +5947,10 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   0.8043621780644387
                  </td>
                  <td>
-                  29.67060797308068
+                  29.670607973080685
                  </td>
                  <td>
-                  0.16447818783217794
+                  0.16447818783217788
                  </td>
                  <td>
                   3.997287152346768
@@ -5947,7 +5962,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   29.895586630725628
                  </td>
                  <td>
-                  0.07461553548507588
+                  0.07461553548507587
                  </td>
                  <td>
                   3.8377835048269504
@@ -5983,7 +5998,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   30.10857435571395
                  </td>
                  <td>
-                  0.111401289304535
+                  0.11140128930453498
                  </td>
                  <td>
                   3.979156125410199
@@ -5995,7 +6010,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   29.900522551559803
                  </td>
                  <td>
-                  0.10523003616876628
+                  0.10523003616876629
                  </td>
                 </tr>
                 <tr>
@@ -6039,7 +6054,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   29.599048019845632
                  </td>
                  <td>
-                  0.2017971965292954
+                  0.20179719652929543
                  </td>
                  <td>
                   5.833623054813162
@@ -6075,7 +6090,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   28.616907838734512
                  </td>
                  <td>
-                  0.10474385653828142
+                  0.1047438565382814
                  </td>
                  <td>
                   8.314911352869782
@@ -6111,7 +6126,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   29.391528865549652
                  </td>
                  <td>
-                  0.06976238105413049
+                  0.0697623810541305
                  </td>
                  <td>
                   7.4586002239091185
@@ -6135,7 +6150,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   29.34089935425313
                  </td>
                  <td>
-                  0.0840895714458989
+                  0.08408957144589889
                  </td>
                 </tr>
                 <tr>
@@ -6164,7 +6179,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   0.41406609169806174
                  </td>
                  <td>
-                  -35.47427950196171
+                  -35.4742795019617
                  </td>
                  <td>
                   0.3421221334166607
@@ -6179,7 +6194,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   29.297190303788632
                  </td>
                  <td>
-                  0.16511346295363777
+                  0.16511346295363782
                  </td>
                  <td>
                   7.903254851436269
@@ -6191,7 +6206,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   29.1554850335146
                  </td>
                  <td>
-                  0.11331229123717934
+                  0.11331229123717931
                  </td>
                  <td>
                   10.187623103416623
@@ -6239,7 +6254,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   29.559603624665375
                  </td>
                  <td>
-                  0.0874297151873417
+                  0.08742971518734169
                  </td>
                  <td>
                   6.472888687598323
@@ -6319,7 +6334,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   28.108522932043783
                  </td>
                  <td>
-                  0.0937912678974309
+                  0.09379126789743089
                  </td>
                  <td>
                   28.033949477325784
@@ -6367,7 +6382,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   28.086548407739905
                  </td>
                  <td>
-                  0.03168871406956517
+                  0.03168871406956518
                  </td>
                  <td>
                   18.828253167515435
@@ -6379,7 +6394,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   28.212974926843625
                  </td>
                  <td>
-                  0.04227634815304789
+                  0.0422763481530479
                  </td>
                  <td>
                   17.964611476673056
@@ -6403,7 +6418,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   28.632818124807635
                  </td>
                  <td>
-                  0.05561473730016507
+                  0.055614737300165064
                  </td>
                  <td>
                   13.580929019180171
@@ -6415,7 +6430,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   28.567676301555696
                  </td>
                  <td>
-                  0.05761144934684235
+                  0.05761144934684234
                  </td>
                 </tr>
                 <tr>
@@ -6495,7 +6510,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   27.183040657043588
                  </td>
                  <td>
-                  0.05323355846509684
+                  0.053233558465096836
                  </td>
                  <td>
                   33.58368869698832
@@ -6507,7 +6522,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   27.58467901105726
                  </td>
                  <td>
-                  0.024862162100306468
+                  0.02486216210030647
                  </td>
                  <td>
                   23.755213036076142
@@ -6555,7 +6570,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   28.221132763267338
                  </td>
                  <td>
-                  0.049035202457045374
+                  0.04903520245704538
                  </td>
                 </tr>
                 <tr>
@@ -6578,10 +6593,10 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   4.506451359665357
                  </td>
                  <td>
-                  1.493045462994405
+                  1.4930454629944043
                  </td>
                  <td>
-                  0.6686871012615841
+                  0.6686871012615843
                  </td>
                  <td>
                   -44.19824469199431
@@ -6599,7 +6614,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   27.564620760991172
                  </td>
                  <td>
-                  0.07224061933251429
+                  0.0722406193325143
                  </td>
                  <td>
                   36.57135465011538
@@ -6611,7 +6626,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   27.492147381341525
                  </td>
                  <td>
-                  0.050913561018798605
+                  0.05091356101879861
                  </td>
                  <td>
                   42.68849561449194
@@ -6635,7 +6650,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   27.243232824978676
                  </td>
                  <td>
-                  0.05482188387776275
+                  0.054821883877762746
                  </td>
                  <td>
                   34.80004302822041
@@ -6647,7 +6662,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   27.54605054768332
                  </td>
                  <td>
-                  0.02413684700611631
+                  0.02413684700611632
                  </td>
                  <td>
                   23.40568188262023
@@ -6659,7 +6674,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   27.976696754900892
                  </td>
                  <td>
-                  0.03856178701393752
+                  0.03856178701393753
                  </td>
                  <td>
                   22.767378194807595
@@ -6671,7 +6686,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   28.006717445540055
                  </td>
                  <td>
-                  0.034905540803272225
+                  0.03490554080327223
                  </td>
                  <td>
                   20.501256369918995
@@ -6763,7 +6778,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   29.42187194540521
                  </td>
                  <td>
-                  0.1419136259082934
+                  0.14191362590829343
                  </td>
                  <td>
                   8.837316659881695
@@ -6811,7 +6826,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   29.267900242506997
                  </td>
                  <td>
-                  0.060554569012258
+                  0.060554569012257996
                  </td>
                  <td>
                   4.037502746172116
@@ -6891,7 +6906,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   28.834492146285715
                  </td>
                  <td>
-                  0.0937524739668958
+                  0.09375247396689582
                  </td>
                  <td>
                   10.735153071224346
@@ -6915,7 +6930,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   28.645317074711215
                  </td>
                  <td>
-                  0.10267300679924708
+                  0.10267300679924707
                  </td>
                  <td>
                   9.553009517952841
@@ -6951,7 +6966,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   28.881950157725086
                  </td>
                  <td>
-                  0.04961590355201817
+                  0.04961590355201818
                  </td>
                  <td>
                   7.872874739121797
@@ -6975,7 +6990,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
                   29.202417738905766
                  </td>
                  <td>
-                  0.07541224065721708
+                  0.07541224065721709
                  </td>
                 </tr>
                </table>
@@ -6995,7 +7010,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">tbl</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'JADESphotometry.ecsv'</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+               <pre><span></span>tbl.write('JADESphotometry.ecsv', overwrite=True)
 </pre>
               </div>
              </div>
@@ -7005,7 +7020,7 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="o">!</span>head -175 JADESphotometry.ecsv  # show the first <span class="m">175</span> lines
+               <pre><span></span>!head -175 JADESphotometry.ecsv  # show the first 175 lines
 </pre>
               </div>
              </div>
@@ -7172,22 +7187,22 @@ https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_pho
 #           unit: *id002
 #           value: 360.0
 #       representation_type: spherical
-#   date: 2022-11-17 23:27:37 UTC
-#   version: {Python: 3.9.12, astropy: 5.1.1, bottleneck: 1.3.5, gwcs: 0.18.2, matplotlib: 3.6.2, numpy: 1.23.4, photutils: 1.5.0, scipy: 1.9.3,
-#     skimage: 0.19.3, sklearn: 1.1.3}
+#   apermask_method: correct
+#   date: 2022-12-30 16:51:36 UTC
+#   kron_params: !numpy.ndarray
+#     buffer: !!binary |
+#       QUFBQUFBQUFCRUJtWm1abVptYjJQd0FBQUFBQUFBQUE=
+#     dtype: float64
+#     order: C
+#     shape: !!python/tuple [3]
+#   localbkg_width: 0
+#   version: {Python: 3.9.12, astropy: '5.2', bottleneck: 1.3.5, gwcs: 0.18.3, matplotlib: 3.6.2, numpy: 1.24.1, photutils: 1.6.0, scipy: 1.9.3,
+#     skimage: 0.19.3, sklearn: 1.2.0}
 # schema: astropy-2.0
 label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity orientation gini F090W_flux F090W_fluxerr F090W_mag F090W_magerr F115W_flux F115W_fluxerr F115W_mag F115W_magerr F150W_flux F150W_fluxerr F150W_mag F150W_magerr F200W_flux F200W_fluxerr F200W_mag F200W_magerr F277W_flux F277W_fluxerr F277W_mag F277W_magerr F335M_flux F335M_fluxerr F335M_mag F335M_magerr F356W_flux F356W_fluxerr F356W_mag F356W_magerr F410M_flux F410M_fluxerr F410M_mag F410M_magerr F444W_flux F444W_fluxerr F444W_mag F444W_magerr
-1 466.24461350033647 8.7975642602371 53.17381009103326 -27.805320830365776 101.0 3.121883592723396 1.687718238373556 0.4593910412587602 -44.478947493786606 0.3750841422808698 9.172811374136076 0.8464272435968172 28.993743842627527 0.09583064229371432 15.251750665804146 0.735186612920272 28.441700757864936 0.051113935624583086 18.356035098509803 0.907615566909567 28.240552801409102 0.052399286366677095 20.355880166244727 0.9951286984899145 28.128275286137136 0.05182128829099082 15.305414631812216 0.37242909913150146 28.437887251597694 0.02610307984312319 14.02083788279239 0.4536467684272995 28.533065080581018 0.03457285577386587 14.174014573163747 0.39992610811377877 28.52126781262446 0.03021030645164098 13.880611681957355 0.46501162852267625 28.543978488116917 0.035777045316298495 13.807578444079855 0.4986392632950047 28.54970620192208 0.038518276199782
-2 104.80681791619067 18.082129411035602 53.17721522973072 -27.805243193448323 271.0 4.4330760205526705 2.8904310038200527 0.34798523859744157 -26.54972210581966 0.4292034166747856 66.57967761225385 2.436255936703974 26.841645780216258 0.039019197405152646 67.80807330092654 1.7819304802085372 26.82179648873538 0.028163638965809652 70.39338412925109 2.1096858375971363 26.78117038947336 0.032061379743408516 77.74109040131492 2.318681567876357 26.6733734305523 0.031909302523638994 72.90069026757769 0.8318824113256227 26.743170898753043 0.012319367708500414 75.27250253951928 1.070603105909879 26.708409112497115 0.015333670289260427 71.48792896636016 0.9342131216075662 26.764418211087325 0.014096626458061819 61.42767389099904 0.9993087828855896 26.929089824977595 0.017520685942298192 57.2203760546637 1.051093157627436 27.00612323080047 0.019763151293857934
-3 15.04416396551755 13.21870964358083 53.178060898531776 -27.805283643045666 8.0 0.8501945455843772 0.6682678017840504 0.21398248759086114 -38.1612276642421 0.10521135944081007 0.30189458075047043 0.22003285638903267 32.700361707101834 0.5943870266742839 0.7673344575647303 0.20049710485441535 31.68753824783774 0.2520377003105847 0.7185263104580911 0.22413744736254168 31.758893311421605 0.2947853371046982 0.9352163612291753 0.2577402310908106 31.47271975993688 0.2642813635409141 0.34971362332966227 0.06900286982371183 32.54071862281815 0.19551879280610804 0.5607617346802088 0.11336299849737182 32.02805407366013 0.19990472716017532 0.2668657682095152 0.07056536651518258 32.83426782771905 0.2547307087052081 -0.06031654176708369 0.08275804453775322 99.0 34.10547444921151 0.11765422427560634 0.08200758112663478 33.723481188078146 0.5742186726193419
-4 710.3242889701858 14.259777138086877 53.17151058505514 -27.805275444028442 25.0 1.2749753643104456 1.117371994707132 0.12361287442487268 -59.26178196559024 0.33737600483155716 2.6566836210797113 0.4371488133389892 30.33915040433974 0.1653923745984598 3.818279752499735 0.360557908564342 29.945330638706018 0.09796938884703618 3.9761821744276116 0.4246250023752303 29.901334315002583 0.110165165468641 3.5589744431503423 0.42659305165797895 30.02168782658959 0.12291324714108388 1.6962298219026282 0.12672768826931047 30.826288264009904 0.07822962940363362 1.590536535091481 0.16680910589172165 30.896140876425513 0.10828384762060109 1.9912255134558894 0.151127025768846 30.652198879435126 0.07942622592908809 1.9438353657449134 0.17889684257333507 30.67835130168316 0.09558932550457658 1.6253103136417588 0.17102441486844797 30.8726592718879 0.1086274373485027
-5 434.52931528855504 22.221938204336563 53.17410887486057 -27.80520894064138 268.0 3.954114371118456 2.6317387394125484 0.33443029401596747 -8.167334484702076 0.5358632947802063 48.21536384426303 1.7917279405059294 27.19203637900948 0.03961537507908405 54.180491712205686 1.365540854656955 27.065392644670535 0.027025255794697643 58.30054045382708 1.6237335342389887 26.98581854813561 0.029825500753549224 83.05102812663696 2.015269002596905 26.601637467123535 0.026031288898904284 133.15988061559287 1.0563434518773878 26.089066507204098 0.008579048595350228 133.46712655021906 1.2825865885346561 26.086564223686825 0.010383846972193137 144.03906284324478 1.2384188265720026 26.003799282319697 0.009295039598996599 161.60492000841137 1.4304450626852654 25.87886355352026 0.009568104243562612 148.3405102917476 1.5722804535154722 25.971850578368716 0.011447300801342226
-6 289.38802515014896 17.281765562153954 53.17547627056455 -27.805250009193262 17.0 1.2913044931147235 1.1978568863866517 0.07236682535090477 68.12270923149859 0.18041073594089005 1.1303554308347756 0.3821670960543562 31.266962436913506 0.3162170658541775 1.5011462606731298 0.28676161013445184 30.958942478071556 0.18980531870852316 1.045624005692517 0.28930296346025686 31.35156113668441 0.26520490437873934 1.955256158588051 0.38221513653203576 30.671990843785842 0.1938565595483074 1.188616449626284 0.12368244418243222 31.212395659255414 0.10747756611504046 1.7708471014756073 0.19746701583101797 30.77954733764033 0.11478335606840087 1.4921438342127515 0.15067991684808457 30.96547327829425 0.10445071085094704 1.1433927169620364 0.17563750503987802 31.25451144606716 0.15514831191999282 0.5926553032606401 0.13657056678097335 31.967994562614585 0.2251497308694742
-7 640.4863091995317 17.773429154661983 53.17216853452775 -27.805246129692247 21.0 1.5124916692884618 0.8803106550282112 0.41797322067741016 -64.72678377811528 0.257339933672325 1.7318562374159874 0.3544951964949517 30.80372040476935 0.20218906642550222 1.643429843026024 0.24985580694618062 30.86062207735413 0.15366243535885116 1.636102104727731 0.28406614648587186 30.865473991673777 0.17382220324021894 2.2295861313548446 0.3321415421916018 30.529439364296703 0.15077176392081712 1.0399598684843063 0.09617790287548722 31.357458548945587 0.09603604488615963 1.6537574517445193 0.1507209599380506 30.853820464729573 0.094699691326289 1.2604572236829945 0.11591912740405148 31.14867972112842 0.09552272603001738 0.40788132175057795 0.11575451167421515 32.37366545505972 0.27123885135203707 0.5688140707837224 0.10865005565010255 32.01257417244966 0.18978993015591245
-8 762.7604138509574 28.2981299719635 53.17101657158984 -27.805158481182374 201.0 3.160486625451918 2.3639871661119467 0.25201798132149345 37.84866003483639 0.5424978595419511 52.90258045317187 1.7914935315960525 27.091307859172854 0.036158543601744766 55.89021246540487 1.3413162730412038 27.031660598550253 0.025748965322108706 61.671458415942496 1.6305394839730292 26.92478945297725 0.028332995920166554 87.85194348648487 2.0332904975012602 26.540621566180963 0.024842449407777144 86.04008354445801 0.7878699856173026 26.563247941466912 0.009896854334870047 73.84294727616292 0.8942980843096469 26.729227444357107 0.013070161189289635 74.8225190478038 0.8372019588600241 26.71491918627661 0.012081025050606558 70.73942058751356 0.9010723240651843 26.775846254315468 0.013742667527438834 74.11117248879874 1.0396086825403072 26.725290789617205 0.015124537907185095
-9 801.0706722163886 32.58026118517374 53.17065564474934 -27.805122812753073 12.0 1.3349434908844906 0.6567170220834244 0.5080563135685205 -28.75519616047975 0.28793220448127643 1.1246036170169136 0.3004786436259075 31.272501310051688 0.257101145144837 1.2797476107076189 0.23055260117238813 31.13218918151494 0.17984738982032794 1.2734342232303713 0.2595936177065242 31.13755870689588 0.20143381199573665 1.3630620117794083 0.2799372864607707 31.063710964299986 0.20280440914679781 1.082787068323561 0.10030137862329397 31.313642349074232 0.0961853826328532 0.6781367101230981 0.1161012153749804 31.821706862430293 0.17158341526256438 0.5758891043153808 0.08989342817146666 31.99915284535117 0.15748383733187596 1.1076176036929608 0.13520585441853786 31.289025376253583 0.12504898101684045 1.113433002949251 0.1420534202367806 31.283339775099364 0.1303698266479056
-10 707.3760560806973 39.28937571152668 53.17153834753934 -27.805066862704358 82.0 3.1307940806826573 1.6124555790789692 0.48496913641558326 55.8923927860422 0.27559239091193805 10.320029621240023 0.8280084240889709 28.86579764041479 0.08379374585709001 11.089034514793784 0.61158993223814 28.787765661937875 0.05828826217154298 12.2321805913463 0.7376338187883861 28.681240289467137 0.06357469358808261 11.575204797587379 0.7530156078144226 28.74117829090995 0.06842926628135788 7.720035490573591 0.252221382763414 29.180951757798987 0.03490496683760254 5.038571438592023 0.2933627938516409 29.64423144870763 0.06144340846589908 5.174509545401452 0.24482649985590615 29.61532701893843 0.05019222350207672 4.692108713708783 0.29384965878495856 29.72157983515892 0.0659514558612371 3.979968869565824 0.2718794913443546 29.90030081217046 0.071745230494349
-11 81.06347574585027 39.57607196082029 53.17743889735022 -27.805064056923975 41.0 1.759652484012289 1.2832033093920074 0.2707632211184684 58.57556167321943 0.34890100100068466 7.321077513618291 0.8325255792554261 29.238562487319882 0.11693640412599153 8.14747959616596 0.629891105474265 29.12244179617626 0.08085289779208936 7.441630639018473 0.7032530093060814 29.220829724329953 0.0980419360420926 7.594125218910888 0.7495987189379812 29.198805615227293 0.10220543147833862 5.263108091146871 0.22753908936904527 29.596894276407223 0.04595312039292095 4.137488474532359 0.28403445846500064 29.858158007484047 0.07208771223610878 3.798608579505653 0.2255054358147708 29.950938637999705 0.06261433074552476 3.242322029007169 0.2655807929209611 30.12285963251322 0.08547851693569392 2.8455383491268726 0.24868666309393583 30.26458889264752 0.09096862372607398
+1 466.24461350033647 8.7975642602371 53.17381009103326 -27.805320830365776 101.0 3.121883592723396 1.687718238373556 0.4593910412587602 -44.478947493786606 0.3750841422808698 9.172811374136076 0.8464272435968172 28.993743842627527 0.09583064229371434 15.251750665804146 0.735186612920272 28.441700757864936 0.051113935624583086 18.356035098509803 0.907615566909567 28.240552801409102 0.052399286366677095 20.355880166244727 0.9951286984899145 28.128275286137136 0.05182128829099082 15.30541463181222 0.37242909913150146 28.437887251597694 0.026103079843123198 14.02083788279239 0.4536467684272995 28.533065080581018 0.03457285577386587 14.174014573163747 0.3999261081137788 28.52126781262446 0.030210306451640984 13.880611681957355 0.46501162852267625 28.543978488116917 0.035777045316298495 13.807578444079855 0.4986392632950047 28.54970620192208 0.038518276199781994
+2 104.80681791619065 18.0821294110356 53.17721522973072 -27.805243193448323 271.0 4.43307602055267 2.8904310038200527 0.34798523859744146 -26.549722105819686 0.4292034166747856 66.57967761225385 2.436255936703974 26.841645780216258 0.039019197405152646 67.80807330092654 1.7819304802085372 26.82179648873538 0.02816363896580966 70.39338412925109 2.1096858375971363 26.78117038947336 0.032061379743408516 77.74109040131492 2.318681567876357 26.6733734305523 0.031909302523638994 72.90069026757769 0.8318824113256227 26.743170898753043 0.012319367708500412 75.27250253951928 1.070603105909879 26.70840911249712 0.015333670289260427 71.48792896636016 0.9342131216075662 26.764418211087325 0.01409662645806182 61.42767389099904 0.9993087828855896 26.929089824977595 0.017520685942298195 57.2203760546637 1.051093157627436 27.00612323080047 0.019763151293857938
+3 15.04416396551755 13.21870964358083 53.178060898531776 -27.805283643045666 8.0 0.8501945455843772 0.6682678017840503 0.21398248759086125 -38.16122766424209 0.10521135944081007 0.30189458075047043 0.22003285638903267 32.700361707101834 0.5943870266742839 0.7673344575647303 0.20049710485441535 31.68753824783774 0.2520377003105847 0.7185263104580911 0.22413744736254168 31.758893311421605 0.2947853371046982 0.9352163612291753 0.2577402310908106 31.47271975993688 0.2642813635409141 0.34971362332966227 0.06900286982371183 32.54071862281815 0.19551879280610807 0.5607617346802088 0.11336299849737182 32.02805407366013 0.19990472716017532 0.2668657682095152 0.07056536651518258 32.83426782771905 0.25473070870520814 -0.06031654176708369 0.08275804453775322 99.0 34.10547444921151 0.11765422427560634 0.08200758112663478 33.723481188078146 0.574218672619342
 </pre>
               </div>
              </div>
@@ -7205,17 +7220,17 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Remove units (pixels) from area</span>
-<span class="n">tbl</span><span class="p">[</span><span class="s1">'area'</span><span class="p">]</span> <span class="o">=</span> <span class="n">tbl</span><span class="p">[</span><span class="s1">'area'</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+               <pre><span></span># Remove units (pixels) from area
+tbl['area'] = tbl['area'].value.astype(int)
 
-<span class="c1"># Replace sky_centroid with ra, dec</span>
-<span class="n">tbl</span><span class="p">[</span><span class="s1">'ra'</span><span class="p">]</span> <span class="o">=</span> <span class="n">tbl</span><span class="p">[</span><span class="s1">'sky_centroid'</span><span class="p">]</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">degree</span>
-<span class="n">tbl</span><span class="p">[</span><span class="s1">'dec'</span><span class="p">]</span> <span class="o">=</span> <span class="n">tbl</span><span class="p">[</span><span class="s1">'sky_centroid'</span><span class="p">]</span><span class="o">.</span><span class="n">dec</span><span class="o">.</span><span class="n">degree</span>
+# Replace sky_centroid with ra, dec
+tbl['ra'] = tbl['sky_centroid'].ra.degree
+tbl['dec'] = tbl['sky_centroid'].dec.degree
 
-<span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tbl</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-<span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'ra'</span><span class="p">,</span> <span class="s1">'dec'</span><span class="p">]</span> <span class="o">+</span> <span class="n">columns</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+columns = list(tbl.columns)
+columns = columns[:3] + ['ra', 'dec'] + columns[4:-2]
 
-<span class="n">tbl</span> <span class="o">=</span> <span class="n">tbl</span><span class="p">[</span><span class="n">columns</span><span class="p">]</span>
+tbl = tbl[columns]
 </pre>
               </div>
              </div>
@@ -7225,14 +7240,14 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
-    <span class="n">tbl</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">'.4f'</span>
+               <pre><span></span>for column in columns:
+    tbl[column].info.format = '.4f'
 
-<span class="n">tbl</span><span class="p">[</span><span class="s1">'ra'</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">'11.7f'</span>
-<span class="n">tbl</span><span class="p">[</span><span class="s1">'dec'</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">'11.7f'</span>
+tbl['ra'].info.format = '11.7f'
+tbl['dec'].info.format = '11.7f'
 
-<span class="n">tbl</span><span class="p">[</span><span class="s1">'label'</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">'d'</span>
-<span class="n">tbl</span><span class="p">[</span><span class="s1">'area'</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">'d'</span>
+tbl['label'].info.format = 'd'
+tbl['area'].info.format = 'd'
 </pre>
               </div>
              </div>
@@ -7242,7 +7257,7 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">tbl</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'JADESphotometry.cat'</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'ascii.fixed_width_two_line'</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">' '</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+               <pre><span></span>tbl.write('JADESphotometry.cat', format='ascii.fixed_width_two_line', delimiter=' ', overwrite=True)
 </pre>
               </div>
              </div>
@@ -7252,7 +7267,7 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="o">!</span>head -10 JADESphotometry.cat  # show the first <span class="m">10</span> lines
+               <pre><span></span>!head -10 JADESphotometry.cat  # show the first 10 lines
 </pre>
               </div>
              </div>
@@ -7295,19 +7310,19 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Catalog: ecsv format preserves units for loading in Python notebooks</span>
-<span class="n">tbl</span> <span class="o">=</span> <span class="n">QTable</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">'JADESphotometry.ecsv'</span><span class="p">)</span>
+               <pre><span></span># Catalog: ecsv format preserves units for loading in Python notebooks
+tbl = QTable.read('JADESphotometry.ecsv')
 
-<span class="c1"># Reconstitute filter list</span>
-<span class="n">filters</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">tbl</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">param</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">'_mag'</span><span class="p">:</span>
-        <span class="n">filters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span>
+# Reconstitute filter list
+filters = []
+for param in tbl.columns:
+    if param[-4:] == '_mag':
+        filters.append(param[:-4])
 
-<span class="c1"># Segmentation map</span>
-<span class="n">segmfile</span> <span class="o">=</span> <span class="s1">'JADES_detections_segm.fits'</span>
-<span class="n">segm</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">segmfile</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="n">segm</span> <span class="o">=</span> <span class="n">photutils</span><span class="o">.</span><span class="n">segmentation</span><span class="o">.</span><span class="n">SegmentationImage</span><span class="p">(</span><span class="n">segm</span><span class="p">)</span>
+# Segmentation map
+segmfile = 'JADES_detections_segm.fits'
+segm = fits.open(segmfile)[0].data
+segm = photutils.segmentation.SegmentationImage(segm)
 </pre>
               </div>
              </div>
@@ -7325,17 +7340,17 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+               <pre><span></span>fig = plt.figure(figsize=(8, 4))
 
-<span class="n">filt</span> <span class="o">=</span> <span class="s1">'F200W'</span>
-<span class="n">mag1</span> <span class="o">=</span> <span class="n">tbl</span><span class="p">[</span><span class="n">filt</span> <span class="o">+</span> <span class="s1">'_mag'</span><span class="p">]</span>
+filt = 'F200W'
+mag1 = tbl[filt + '_mag']
 
-<span class="n">mag1</span> <span class="o">=</span> <span class="n">mag1</span><span class="p">[(</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">mag1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">mag1</span> <span class="o">&lt;</span> <span class="mi">90</span><span class="p">)]</span>  <span class="c1"># detections only</span>
-<span class="n">n</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">mag1</span><span class="p">,</span> <span class="n">histtype</span><span class="o">=</span><span class="s1">'step'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">filt</span><span class="p">)</span>
+mag1 = mag1[(0 &lt; mag1) &amp; (mag1 &lt; 90)]  # detections only
+n = plt.hist(mag1, histtype='step', label=filt)
 
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'AB magnitude'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Number counts'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+plt.xlabel('AB magnitude')
+plt.ylabel('Number counts')
+plt.legend()
 </pre>
               </div>
              </div>
@@ -7343,7 +7358,7 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
             <div class="cell_output docutils container">
              <div class="output text_plain highlight-myst-ansi notranslate">
               <div class="highlight">
-               <pre><span></span>&lt;matplotlib.legend.Legend at 0x7fc25708f3a0&gt;
+               <pre><span></span>&lt;matplotlib.legend.Legend at 0x7fa7fccea5e0&gt;
 </pre>
               </div>
              </div>
@@ -7362,28 +7377,28 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1">#import mplcursors</span>
-<span class="c1"># Would love a better solution here!</span>
+               <pre><span></span>#import mplcursors
+# Would love a better solution here!
 
-<span class="n">mag1</span> <span class="o">=</span> <span class="n">tbl</span><span class="p">[</span><span class="s1">'F090W_mag'</span><span class="p">]</span>
-<span class="n">mag2</span> <span class="o">=</span> <span class="n">tbl</span><span class="p">[</span><span class="s1">'F200W_mag'</span><span class="p">]</span>
+mag1 = tbl['F090W_mag']
+mag2 = tbl['F200W_mag']
 
-<span class="c1"># Only plot detections in F200W</span>
-<span class="n">det2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">mag2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">mag2</span> <span class="o">&lt;</span> <span class="mi">90</span><span class="p">)</span>
+# Only plot detections in F200W
+det2 = (0 &lt; mag2) &amp; (mag2 &lt; 90)
 
-<span class="n">mag1</span> <span class="o">=</span> <span class="n">mag1</span><span class="p">[</span><span class="n">det2</span><span class="p">]</span>
-<span class="n">mag2</span> <span class="o">=</span> <span class="n">mag2</span><span class="p">[</span><span class="n">det2</span><span class="p">]</span>
-<span class="n">ids</span> <span class="o">=</span> <span class="n">tbl</span><span class="p">[</span><span class="s1">'label'</span><span class="p">][</span><span class="n">det2</span><span class="p">]</span>
+mag1 = mag1[det2]
+mag2 = mag2[det2]
+ids = tbl['label'][det2]
 
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+plt.figure(figsize=(8, 4))
 
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mag1</span><span class="p">,</span> <span class="n">mag2</span><span class="p">,</span> <span class="s1">'.'</span><span class="p">)</span>
+plt.plot(mag1, mag2, '.')
 
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mag1</span><span class="p">)):</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">mag1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">mag2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+for i in range(len(mag1)):
+    plt.text(mag1[i], mag2[i], ids[i])
 
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'F090W AB magnitude'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'F200W AB magnitude'</span><span class="p">)</span>
+plt.xlabel('F090W AB magnitude')
+plt.ylabel('F200W AB magnitude')
 </pre>
               </div>
              </div>
@@ -7410,13 +7425,13 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Could select object by position</span>
-<span class="c1">#x, y = 905, 276</span>
-<span class="c1">#id = segm.data[y,x]</span>
+               <pre><span></span># Could select object by position
+#x, y = 905, 276
+#id = segm.data[y,x]
 
-<span class="c1"># Select by ID number</span>
-<span class="nb">id</span> <span class="o">=</span> <span class="mi">261</span>  <span class="c1"># F090W dropout</span>
-<span class="n">obj</span> <span class="o">=</span> <span class="n">tbl</span><span class="p">[</span><span class="nb">id</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+# Select by ID number
+id = 261  # F090W dropout
+obj = tbl[id-1]
 </pre>
               </div>
              </div>
@@ -7426,7 +7441,7 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">obj</span>
+               <pre><span></span>obj
 </pre>
               </div>
              </div>
@@ -7436,7 +7451,7 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
               <i>
                Row index=260
               </i>
-              <table id="table140472660486848">
+              <table id="table140358506601824">
                <thead>
                 <tr>
                  <th>
@@ -7860,13 +7875,13 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
                  2.093686819569325
                 </td>
                 <td>
-                 1.79058244822613
+                 1.7905824482261299
                 </td>
                 <td>
-                 0.14477063546951296
+                 0.14477063546951308
                 </td>
                 <td>
-                 -19.69058730182542
+                 -19.690587301825413
                 </td>
                 <td>
                  0.45043886443149744
@@ -7878,7 +7893,7 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
                  2.065811084448465
                 </td>
                 <td>
-                 27.83069925037315
+                 27.830699250373154
                 </td>
                 <td>
                  0.08069661955128594
@@ -7902,7 +7917,7 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
                  2.108483008751378
                 </td>
                 <td>
-                 27.406485940197115
+                 27.40648594019712
                 </td>
                 <td>
                  0.05635962794717501
@@ -7941,7 +7956,7 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
                  27.893268087273935
                 </td>
                 <td>
-                 0.03511654568010062
+                 0.03511654568010063
                 </td>
                 <td>
                  26.943645179708977
@@ -7953,7 +7968,7 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
                  27.82385912339398
                 </td>
                 <td>
-                 0.03132328469405019
+                 0.0313232846940502
                 </td>
                 <td>
                  30.95946346003939
@@ -7988,7 +8003,7 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">obj</span><span class="p">[</span><span class="s1">'ellipticity'</span><span class="p">]</span>
+               <pre><span></span>obj['ellipticity']
 </pre>
               </div>
              </div>
@@ -8003,8 +8018,8 @@ label xcentroid ycentroid sky_centroid.ra sky_centroid.dec area a b ellipticity 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">segmobj</span> <span class="o">=</span> <span class="n">segm</span><span class="o">.</span><span class="n">segments</span><span class="p">[</span><span class="n">segm</span><span class="o">.</span><span class="n">get_index</span><span class="p">(</span><span class="nb">id</span><span class="p">)]</span>
-<span class="n">segmobj</span>
+               <pre><span></span>segmobj = segm.segments[segm.get_index(id)]
+segmobj
 </pre>
               </div>
              </div>
@@ -8033,34 +8048,34 @@ area: 84
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">filters</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+               <pre><span></span>fig, ax = plt.subplots(2, len(filters)+1, figsize=(9.5, 3.5), sharex=True, sharey=True)
 
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">rgb</span><span class="p">[</span><span class="n">segmobj</span><span class="o">.</span><span class="n">slices</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">segmobj</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">extent</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Color'</span><span class="p">)</span>
+ax[0, 0].imshow(rgb[segmobj.slices], origin='lower', extent=segmobj.bbox.extent)
+ax[0, 0].set_title('Color')
 
-<span class="n">cmap</span> <span class="o">=</span> <span class="n">segm</span><span class="o">.</span><span class="n">make_cmap</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>  <span class="c1"># ERROR</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">segm</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">segmobj</span><span class="o">.</span><span class="n">slices</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">segmobj</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">extent</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
-               <span class="n">interpolation</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Segment'</span><span class="p">)</span>
+cmap = segm.make_cmap(seed=12345)  # ERROR
+ax[1, 0].imshow(segm.data[segmobj.slices], origin='lower', extent=segmobj.bbox.extent, cmap=cmap,
+               interpolation='nearest')
+ax[1, 0].set_title('Segment')
 
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">filters</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-    <span class="n">filt</span> <span class="o">=</span> <span class="n">filters</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+for i in range(1, len(filters)+1):
+    filt = filters[i-1]
 
-    <span class="c1"># Show data on top row</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">imagefiles</span><span class="p">[</span><span class="n">filt</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">stamp</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">segmobj</span><span class="o">.</span><span class="n">slices</span><span class="p">]</span>
-    <span class="n">norm</span> <span class="o">=</span> <span class="n">ImageNormalize</span><span class="p">(</span><span class="n">stretch</span><span class="o">=</span><span class="n">SqrtStretch</span><span class="p">())</span>  <span class="c1"># scale each filter individually</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">stamp</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">segmobj</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">extent</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Greys_r'</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">filt</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+    # Show data on top row
+    data = fits.open(imagefiles[filt])[0].data
+    stamp = data[segmobj.slices]
+    norm = ImageNormalize(stretch=SqrtStretch())  # scale each filter individually
+    ax[0, i].imshow(stamp, extent=segmobj.bbox.extent, cmap='Greys_r', norm=norm, origin='lower')
+    ax[0, i].set_title(filt.upper())
 
-    <span class="c1"># Show weights on bottom row</span>
-    <span class="n">weight</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">weightfiles</span><span class="p">[</span><span class="n">filt</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">stamp</span> <span class="o">=</span> <span class="n">weight</span><span class="p">[</span><span class="n">segmobj</span><span class="o">.</span><span class="n">slices</span><span class="p">]</span>
-    <span class="c1"># set black to zero weight (no exposure time / bad pixel)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">stamp</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">segmobj</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">extent</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Greys_r'</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+    # Show weights on bottom row
+    weight = fits.open(weightfiles[filt])[0].data
+    stamp = weight[segmobj.slices]
+    # set black to zero weight (no exposure time / bad pixel)
+    ax[1, i].imshow(stamp, extent=segmobj.bbox.extent, vmin=0, cmap='Greys_r', origin='lower')
 
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Data'</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Weight'</span><span class="p">)</span>
+ax[0, 0].set_ylabel('Data')
+ax[1, 0].set_ylabel('Weight')
 </pre>
               </div>
              </div>
@@ -8087,41 +8102,41 @@ area: 84
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+               <pre><span></span>fig, ax = plt.subplots(figsize=(8, 6))
 
-<span class="k">for</span> <span class="n">filt</span> <span class="ow">in</span> <span class="n">filters</span><span class="p">:</span>
-    <span class="n">lam</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">filt</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span> <span class="n">obj</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_flux'</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">obj</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_fluxerr'</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'b'</span><span class="p">)</span>
+for filt in filters:
+    lam = int(filt[1:4]) / 100
+    plt.errorbar(lam, obj[filt+'_flux'].value, obj[filt+'_fluxerr'].value, marker='.', c='b')
 
-<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">':'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Wavelength ($\mu$m)'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Flux (nJy)'</span><span class="p">)</span>
+plt.axhline(0, c='k', ls=':')
+plt.xlim(0, 5)
+plt.xlabel('Wavelength ($\mu$m)')
+plt.ylabel('Flux (nJy)')
 
-<span class="n">mlim</span> <span class="o">=</span> <span class="mf">31.4</span>
-<span class="n">flim</span> <span class="o">=</span> <span class="n">mlim</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">ABmag</span>
-<span class="n">flim</span> <span class="o">=</span> <span class="n">flim</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">nJy</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+mlim = 31.4
+flim = mlim * u.ABmag
+flim = flim.to(u.nJy).value
 
-<span class="c1"># Add AB magnitudes as secondary x-axis at right</span>
-<span class="c1"># https://matplotlib.org/gallery/subplots_axes_and_figures/secondary_axis.html#sphx-glr-gallery-subplots-axes-and-figures-secondary-axis-py</span>
-<span class="k">def</span> <span class="nf">AB2nJy</span><span class="p">(</span><span class="n">mAB</span><span class="p">):</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">mAB</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">ABmag</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">nJy</span><span class="p">)</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">value</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">f</span> <span class="o">&gt;</span> <span class="n">flim</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">flim</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">f</span>
+# Add AB magnitudes as secondary x-axis at right
+# https://matplotlib.org/gallery/subplots_axes_and_figures/secondary_axis.html#sphx-glr-gallery-subplots-axes-and-figures-secondary-axis-py
+def AB2nJy(mAB):
+    m = mAB * u.ABmag
+    f = m.to(u.nJy)
+    f = f.value
+    f = np.where(f &gt; flim, f, flim)
+    return f
 
-<span class="k">def</span> <span class="nf">nJy2AB</span><span class="p">(</span><span class="n">F_nJy</span><span class="p">):</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="n">F_nJy</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">nJy</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">ABmag</span><span class="p">)</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">value</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">m</span> <span class="o">&lt;</span> <span class="n">mlim</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">mlim</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">m</span>
+def nJy2AB(F_nJy):
+    f = F_nJy * u.nJy
+    m = f.to(u.ABmag)
+    m = m.value
+    m = np.where(m &lt; mlim, m, mlim)
+    return m
     
-<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">flim</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+plt.ylim(flim, plt.ylim()[1])
 
-<span class="n">secax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">secondary_yaxis</span><span class="p">(</span><span class="s1">'right'</span><span class="p">,</span> <span class="n">functions</span><span class="o">=</span><span class="p">(</span><span class="n">nJy2AB</span><span class="p">,</span> <span class="n">AB2nJy</span><span class="p">))</span>
-<span class="n">secax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'magnitude (AB)'</span><span class="p">)</span>
+secax = ax.secondary_yaxis('right', functions=(nJy2AB, AB2nJy))
+secax.set_ylabel('magnitude (AB)')
 </pre>
               </div>
              </div>
@@ -8148,36 +8163,36 @@ area: 84
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+               <pre><span></span>fig, ax = plt.subplots(figsize=(8, 6))
 
-<span class="k">for</span> <span class="n">filt</span> <span class="ow">in</span> <span class="n">filters</span><span class="p">:</span>
-    <span class="n">lam</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">filt</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span> <span class="n">obj</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_flux'</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">obj</span><span class="p">[</span><span class="n">filt</span><span class="o">+</span><span class="s1">'_fluxerr'</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'b'</span><span class="p">)</span>
+for filt in filters:
+    lam = int(filt[1:4]) / 100
+    plt.errorbar(lam, obj[filt+'_flux'].value, obj[filt+'_fluxerr'].value, marker='.', c='b')
 
-<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">':'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Wavelength ($\mu$m)'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Flux (nJy)'</span><span class="p">)</span>
+plt.axhline(0, c='k', ls=':')
+plt.xlim(0, 5)
+plt.xlabel('Wavelength ($\mu$m)')
+plt.ylabel('Flux (nJy)')
 
-<span class="n">f0</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="mf">0.4</span> <span class="o">*</span> <span class="mf">31.4</span><span class="p">)</span>  <span class="c1"># flux [nJy] at zero magnitude</span>
-<span class="n">b0</span> <span class="o">=</span> <span class="mf">1.e-12</span>  <span class="c1"># this should be filter dependent</span>
+f0 = 10**(0.4 * 31.4)  # flux [nJy] at zero magnitude
+b0 = 1.e-12  # this should be filter dependent
 
-<span class="c1"># Add AB magnitudes as secondary x-axis at right</span>
-<span class="c1"># https://matplotlib.org/gallery/subplots_axes_and_figures/secondary_axis.html#sphx-glr-gallery-subplots-axes-and-figures-secondary-axis-py</span>
-<span class="k">def</span> <span class="nf">AB2nJy</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sinh</span><span class="p">(</span><span class="o">-</span><span class="mf">0.4</span> <span class="o">*</span> <span class="n">m</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">b0</span><span class="p">))</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">b0</span> <span class="o">*</span> <span class="n">f0</span>
-    <span class="k">return</span> <span class="n">f</span>
+# Add AB magnitudes as secondary x-axis at right
+# https://matplotlib.org/gallery/subplots_axes_and_figures/secondary_axis.html#sphx-glr-gallery-subplots-axes-and-figures-secondary-axis-py
+def AB2nJy(m):
+    f = np.sinh(-0.4 * m * np.log(10) - np.log(b0)) * 2 * b0 * f0
+    return f
 
-<span class="c1"># Luptitudes</span>
-<span class="c1"># https://www.sdss.org/dr12/algorithms/magnitudes/</span>
-<span class="k">def</span> <span class="nf">nJy2AB</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.5</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arcsinh</span><span class="p">((</span><span class="n">f</span> <span class="o">/</span> <span class="n">f0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">b0</span><span class="p">))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">b0</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">m</span>
+# Luptitudes
+# https://www.sdss.org/dr12/algorithms/magnitudes/
+def nJy2AB(f):
+    m = -2.5 / np.log(10) * (np.arcsinh((f / f0) / (2 * b0)) + np.log(b0))
+    return m
 
-<span class="c1">#plt.ylim(flim, plt.ylim()[1])</span>
+#plt.ylim(flim, plt.ylim()[1])
 
-<span class="n">secax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">secondary_yaxis</span><span class="p">(</span><span class="s1">'right'</span><span class="p">,</span> <span class="n">functions</span><span class="o">=</span><span class="p">(</span><span class="n">nJy2AB</span><span class="p">,</span> <span class="n">AB2nJy</span><span class="p">))</span>
-<span class="n">secax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'asinh magnitude (AB)'</span><span class="p">)</span>
+secax = ax.secondary_yaxis('right', functions=(nJy2AB, AB2nJy))
+secax.set_ylabel('asinh magnitude (AB)')
 </pre>
               </div>
              </div>

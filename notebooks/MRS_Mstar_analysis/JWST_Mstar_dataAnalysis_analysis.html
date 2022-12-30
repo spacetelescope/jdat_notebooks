@@ -926,19 +926,19 @@ W Per from Kraemer et al. (2002) and Sloan et al. (2003) to cover the MRS spectr
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Import useful python packages</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+               <pre><span></span># Import useful python packages
+import numpy as np
 
-<span class="c1"># Import packages to display images inline in the notebook</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>    
-<span class="o">%</span><span class="k">matplotlib</span> inline   
+# Import packages to display images inline in the notebook
+import matplotlib.pyplot as plt    
+%matplotlib inline   
 
-<span class="c1"># Set general plotting options</span>
-<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'legend.fontsize'</span><span class="p">:</span> <span class="s1">'18'</span><span class="p">,</span> <span class="s1">'axes.labelsize'</span><span class="p">:</span> <span class="s1">'18'</span><span class="p">,</span>
-          <span class="s1">'axes.titlesize'</span><span class="p">:</span> <span class="s1">'18'</span><span class="p">,</span> <span class="s1">'xtick.labelsize'</span><span class="p">:</span> <span class="s1">'18'</span><span class="p">,</span>
-          <span class="s1">'ytick.labelsize'</span><span class="p">:</span> <span class="s1">'18'</span><span class="p">,</span> <span class="s1">'lines.linewidth'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'axes.linewidth'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'animation.html'</span><span class="p">:</span> <span class="s1">'html5'</span><span class="p">}</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'figure.max_open_warning'</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+# Set general plotting options
+params = {'legend.fontsize': '18', 'axes.labelsize': '18',
+          'axes.titlesize': '18', 'xtick.labelsize': '18',
+          'ytick.labelsize': '18', 'lines.linewidth': 2, 'axes.linewidth': 2, 'animation.html': 'html5'}
+plt.rcParams.update(params)
+plt.rcParams.update({'figure.max_open_warning': 0})
 </pre>
               </div>
              </div>
@@ -948,125 +948,128 @@ W Per from Kraemer et al. (2002) and Sloan et al. (2003) to cover the MRS spectr
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Import astropy packages </span>
-<span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">units</span> <span class="k">as</span> <span class="n">u</span>
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">ascii</span>
-<span class="kn">from</span> <span class="nn">astropy.wcs</span> <span class="kn">import</span> <span class="n">WCS</span>
-<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span><span class="p">,</span> <span class="n">vstack</span>
-<span class="kn">from</span> <span class="nn">astropy.stats</span> <span class="kn">import</span> <span class="n">sigma_clipped_stats</span>
-<span class="kn">from</span> <span class="nn">astropy.nddata</span> <span class="kn">import</span> <span class="n">StdDevUncertainty</span>
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span> <span class="c1"># added by BAS on 8 April 2021</span>
-<span class="kn">from</span> <span class="nn">astropy.utils.data</span> <span class="kn">import</span> <span class="n">get_pkg_data_filename</span>
-<span class="kn">from</span> <span class="nn">astropy.utils.data</span> <span class="kn">import</span> <span class="n">download_file</span>
+               <pre><span></span># Import astropy packages 
+from astropy import units as u
+from astropy.io import ascii
+from astropy.wcs import WCS
+from astropy.table import Table, vstack
+from astropy.stats import sigma_clipped_stats
+from astropy.nddata import StdDevUncertainty
+from astropy.io import fits # added by BAS on 8 April 2021
+from astropy.utils.data import get_pkg_data_filename
+from astropy.utils.data import download_file
 
-<span class="c1"># To find stars in the MRS spectralcubes and do aperture photometry</span>
-<span class="kn">from</span> <span class="nn">photutils</span> <span class="kn">import</span> <span class="n">DAOStarFinder</span><span class="p">,</span> <span class="n">CircularAperture</span>
+# To find stars in the MRS spectralcubes and do aperture photometry
+from photutils import DAOStarFinder, CircularAperture
 
-<span class="c1"># To deal with 1D spectrum</span>
-<span class="kn">from</span> <span class="nn">specutils</span> <span class="kn">import</span> <span class="n">Spectrum1D</span>
-<span class="kn">from</span> <span class="nn">specutils.fitting</span> <span class="kn">import</span> <span class="n">fit_generic_continuum</span>
-<span class="kn">from</span> <span class="nn">specutils.manipulation</span> <span class="kn">import</span> <span class="n">box_smooth</span><span class="p">,</span> <span class="n">extract_region</span><span class="p">,</span> <span class="n">SplineInterpolatedResampler</span>
-<span class="kn">from</span> <span class="nn">specutils.analysis</span> <span class="kn">import</span> <span class="n">line_flux</span><span class="p">,</span> <span class="n">centroid</span><span class="p">,</span> <span class="n">equivalent_width</span>
-<span class="kn">from</span> <span class="nn">specutils.spectra</span> <span class="kn">import</span> <span class="n">SpectralRegion</span>
-<span class="kn">from</span> <span class="nn">specutils</span> <span class="kn">import</span> <span class="n">SpectrumList</span>
-<span class="kn">from</span> <span class="nn">jdaviz</span> <span class="kn">import</span> <span class="n">Specviz</span>
-<span class="kn">from</span> <span class="nn">jdaviz</span> <span class="kn">import</span> <span class="n">Cubeviz</span>
+# To deal with 1D spectrum
+from specutils import Spectrum1D
+from specutils.fitting import fit_generic_continuum
+from specutils.manipulation import box_smooth, extract_region, SplineInterpolatedResampler
+from specutils.analysis import line_flux, centroid, equivalent_width
+from specutils.spectra import SpectralRegion
+from specutils import SpectrumList
+from jdaviz import Specviz
+from jdaviz import Cubeviz
 
-<span class="c1"># To fit a curve to the data</span>
-<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+# To fit a curve to the data
+from scipy.optimize import curve_fit
 
-<span class="c1"># Display the video</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">YouTubeVideo</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Save and Load Objects Using Pickle</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-
-
-<span class="k">def</span> <span class="nf">save_obj</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
-
-        
-<span class="k">def</span> <span class="nf">load_obj</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="k">def</span> <span class="nf">checkKey</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-      
-    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"Present, "</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">" "</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"value ="</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
-        <span class="k">return</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"Not present"</span><span class="p">)</span>
-        <span class="k">return</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">'ignore'</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Check if Pipeline 3 Reduced data exists and, if not, download it</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">urllib.request</span>
-
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"combine_dithers_all_exposures_ch1-long_s3d.fits"</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"Pipeline 3 Data Exists"</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/reduced.tar.gz'</span>
-    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="s1">'./reduced.tar.gz'</span><span class="p">)</span>
-    <span class="c1"># Unzip Tar Files</span>
-
-    <span class="kn">import</span> <span class="nn">tarfile</span>
-
-    <span class="c1"># Unzip files if they haven't already been unzipped</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"reduced/"</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"Pipeline 3 Data Exists"</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">tar</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">'./reduced.tar.gz'</span><span class="p">,</span> <span class="s2">"r:gz"</span><span class="p">)</span>
-        <span class="n">tar</span><span class="o">.</span><span class="n">extractall</span><span class="p">()</span>
-        <span class="n">tar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        
-    <span class="c1"># Move Files </span>
-    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">'mv reduced/*fits .'</span><span class="p">)</span>
+# Display the video
+from IPython.display import HTML, YouTubeVideo
 </pre>
               </div>
              </div>
             </div>
             <div class="cell_output docutils container">
-             <div class="output stream highlight-myst-ansi notranslate">
+             <div class="output stderr highlight-myst-ansi notranslate">
               <div class="highlight">
-               <pre><span></span>Pipeline 3 Data Exists
+               <pre><span></span>/tmp/ipykernel_3050/2216538480.py:13: DeprecationWarning: `photutils.DAOStarFinder` is a deprecated alias for `photutils.detection.DAOStarFinder` and will be removed in the future. Instead, please use `from photutils.detection import DAOStarFinder` to silence this warning.
+  from photutils import DAOStarFinder, CircularAperture
+/tmp/ipykernel_3050/2216538480.py:13: DeprecationWarning: `photutils.CircularAperture` is a deprecated alias for `photutils.aperture.CircularAperture` and will be removed in the future. Instead, please use `from photutils.aperture import CircularAperture` to silence this warning.
+  from photutils import DAOStarFinder, CircularAperture
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span># Save and Load Objects Using Pickle
+import pickle
+
+
+def save_obj(obj, name):
+    with open(name, 'wb') as f:
+        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+
+        
+def load_obj(name):
+    with open(name, 'rb') as f:
+        return pickle.load(f)
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span>def checkKey(dict, key):
+      
+    if key in dict.keys():
+        print("Present, ", end=" ")
+        print("value =", dict[key])
+        return(True)
+    else:
+        print("Not present")
+        return(False)
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span>import warnings
+warnings.simplefilter('ignore')
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span># Check if Pipeline 3 Reduced data exists and, if not, download it
+import os
+import urllib.request
+
+if os.path.exists("combine_dithers_all_exposures_ch1-long_s3d.fits"):
+    print("Pipeline 3 Data Exists")
+else:
+    url = 'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/reduced.tar.gz'
+    urllib.request.urlretrieve(url, './reduced.tar.gz')
+    # Unzip Tar Files
+
+    import tarfile
+
+    # Unzip files if they haven't already been unzipped
+    if os.path.exists("reduced/"):
+        print("Pipeline 3 Data Exists")
+    else:
+        tar = tarfile.open('./reduced.tar.gz', "r:gz")
+        tar.extractall()
+        tar.close()
+        
+    # Move Files 
+    os.system('mv reduced/*fits .')
 </pre>
               </div>
              </div>
@@ -1084,29 +1087,29 @@ MIRI MRS data will typically have a separate 1D spectrum and 3D cube associated 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Read in all X1D spectra to a single spectrum list and combine into a single spectrum1d object</span>
+               <pre><span></span># Read in all X1D spectra to a single spectrum list and combine into a single spectrum1d object
 
-<span class="n">ddd</span> <span class="o">=</span> <span class="s1">'.'</span>
-<span class="n">splist</span> <span class="o">=</span> <span class="n">SpectrumList</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">ddd</span><span class="p">)</span>
+ddd = '.'
+splist = SpectrumList.read(ddd)
 
-<span class="n">wlallorig</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">fnuallorig</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">dfnuallorig</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">bndind</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">splist</span><span class="p">)):</span>
-    <span class="k">for</span> <span class="n">wlind</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">splist</span><span class="p">[</span><span class="n">bndind</span><span class="p">]</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">)):</span>
-        <span class="n">wlallorig</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">splist</span><span class="p">[</span><span class="n">bndind</span><span class="p">]</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">[</span><span class="n">wlind</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-        <span class="n">fnuallorig</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">splist</span><span class="p">[</span><span class="n">bndind</span><span class="p">]</span><span class="o">.</span><span class="n">flux</span><span class="p">[</span><span class="n">wlind</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-        <span class="n">dfnuallorig</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">splist</span><span class="p">[</span><span class="n">bndind</span><span class="p">]</span><span class="o">.</span><span class="n">uncertainty</span><span class="p">[</span><span class="n">wlind</span><span class="p">]</span><span class="o">.</span><span class="n">array</span><span class="p">)</span>
+wlallorig = []
+fnuallorig = []
+dfnuallorig = []
+for bndind in range(len(splist)):
+    for wlind in range(len(splist[bndind].spectral_axis)):
+        wlallorig.append(splist[bndind].spectral_axis[wlind].value)
+        fnuallorig.append(splist[bndind].flux[wlind].value)
+        dfnuallorig.append(splist[bndind].uncertainty[wlind].array)
 
-<span class="n">wlallarr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wlallorig</span><span class="p">)</span>
-<span class="n">fnuallarr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fnuallorig</span><span class="p">)</span>
-<span class="n">dfnuallarr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dfnuallorig</span><span class="p">)</span>
-<span class="n">srtind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">wlallarr</span><span class="p">)</span>
-<span class="n">wlall</span> <span class="o">=</span> <span class="n">wlallarr</span><span class="p">[</span><span class="n">srtind</span><span class="p">]</span>
-<span class="n">fnuall</span> <span class="o">=</span> <span class="n">fnuallarr</span><span class="p">[</span><span class="n">srtind</span><span class="p">]</span>
+wlallarr = np.array(wlallorig)
+fnuallarr = np.array(fnuallorig)
+dfnuallarr = np.array(dfnuallorig)
+srtind = np.argsort(wlallarr)
+wlall = wlallarr[srtind]
+fnuall = fnuallarr[srtind]
 
-<span class="c1"># Developer Note: We put in errors of 0.0001, but uncertainties need to be fixed</span>
-<span class="n">dfnuall</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0001</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fnuall</span><span class="p">))</span>
+# Developer Note: We put in errors of 0.0001, but uncertainties need to be fixed
+dfnuall = (0.0001)*np.ones(len(fnuall))
 </pre>
               </div>
              </div>
@@ -1138,8 +1141,8 @@ MIRI MRS data will typically have a separate 1D spectrum and 3D cube associated 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">vid</span> <span class="o">=</span> <span class="n">YouTubeVideo</span><span class="p">(</span><span class="s2">"zLyRnfG32Bo"</span><span class="p">)</span>
-<span class="n">display</span><span class="p">(</span><span class="n">vid</span><span class="p">)</span>
+               <pre><span></span>vid = YouTubeVideo("zLyRnfG32Bo")
+display(vid)
 </pre>
               </div>
              </div>
@@ -1162,16 +1165,16 @@ MIRI MRS data will typically have a separate 1D spectrum and 3D cube associated 
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># Open these spectra up in Specviz</span>
-<span class="n">specviz</span> <span class="o">=</span> <span class="n">Specviz</span><span class="p">()</span>
-<span class="n">specviz</span><span class="o">.</span><span class="n">app</span>
+                <pre><span></span># Open these spectra up in Specviz
+specviz = Specviz()
+specviz.app
 </pre>
                </div>
               </div>
              </div>
              <div class="cell_output docutils container">
               <script type="application/vnd.jupyter.widget-view+json">
-               {"version_major": 2, "version_minor": 0, "model_id": "eba106ea1704465485bc0aece8478585"}
+               {"version_major": 2, "version_minor": 0, "model_id": "fb07622dee994456b4f16a0bedeb4bf3"}
               </script>
               <img align=center height=auto width=50% src="../../jdaviz_placeholder_new.png">
               </img align=center height=auto width=50%>
@@ -1188,8 +1191,8 @@ MIRI MRS data will typically have a separate 1D spectrum and 3D cube associated 
               <div class="cell_input docutils container">
                <div class="highlight-ipython3 notranslate">
                 <div class="highlight">
-                 <pre><span></span><span class="c1"># Load in the spectrum list from above. </span>
-<span class="n">specviz</span><span class="o">.</span><span class="n">load_spectrum</span><span class="p">(</span><span class="n">splist</span><span class="p">)</span>
+                 <pre><span></span># Load in the spectrum list from above. 
+specviz.load_spectrum(splist)
 </pre>
                 </div>
                </div>
@@ -1223,8 +1226,8 @@ MIRI MRS data will typically have a separate 1D spectrum and 3D cube associated 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">vid</span> <span class="o">=</span> <span class="n">YouTubeVideo</span><span class="p">(</span><span class="s2">"HMSYwiH3Gl4"</span><span class="p">)</span>
-<span class="n">display</span><span class="p">(</span><span class="n">vid</span><span class="p">)</span>
+               <pre><span></span>vid = YouTubeVideo("HMSYwiH3Gl4")
+display(vid)
 </pre>
               </div>
              </div>
@@ -1240,15 +1243,15 @@ MIRI MRS data will typically have a separate 1D spectrum and 3D cube associated 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">cubeviz</span> <span class="o">=</span> <span class="n">Cubeviz</span><span class="p">()</span>
-<span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span>
+               <pre><span></span>cubeviz = Cubeviz()
+cubeviz.app
 </pre>
               </div>
              </div>
             </div>
             <div class="cell_output docutils container">
              <script type="application/vnd.jupyter.widget-view+json">
-              {"version_major": 2, "version_minor": 0, "model_id": "4275d38888da41e5a5cd4a1a886a3911"}
+              {"version_major": 2, "version_minor": 0, "model_id": "80f1084c801741949f9832daf18797ff"}
              </script>
              <img align=center height=auto width=50% src="../../jdaviz_placeholder_new.png">
              </img align=center height=auto width=50%>
@@ -1268,11 +1271,11 @@ MIRI MRS data will typically have a separate 1D spectrum and 3D cube associated 
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># Here, we load the data into the Cubeviz app for visual inspection.  </span>
-<span class="c1"># In this case, we're just looking at a single channel because, unlike Specviz, Cubeviz can only load a single cube at a time.</span>
+                <pre><span></span># Here, we load the data into the Cubeviz app for visual inspection.  
+# In this case, we're just looking at a single channel because, unlike Specviz, Cubeviz can only load a single cube at a time.
 
-<span class="n">ch1short_cubefile</span> <span class="o">=</span> <span class="s1">'combine_dithers_all_exposures_ch1-long_s3d.fits'</span>
-<span class="n">cubeviz</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">ch1short_cubefile</span><span class="p">)</span>
+ch1short_cubefile = 'combine_dithers_all_exposures_ch1-long_s3d.fits'
+cubeviz.load_data(ch1short_cubefile)
 </pre>
                </div>
               </div>
@@ -1297,8 +1300,8 @@ MIRI MRS data will typically have a separate 1D spectrum and 3D cube associated 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Video showing the selection of the star with a circular region of interest</span>
-<span class="n">HTML</span><span class="p">(</span><span class="s1">'&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/region_select.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;'</span><span class="p">)</span>
+               <pre><span></span># Video showing the selection of the star with a circular region of interest
+HTML('&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/region_select.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;')
 </pre>
               </div>
              </div>
@@ -1314,8 +1317,8 @@ MIRI MRS data will typically have a separate 1D spectrum and 3D cube associated 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Now extract spectrum from your spectral viewer</span>
-<span class="n">spec_agb</span> <span class="o">=</span> <span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get_data_from_viewer</span><span class="p">(</span><span class="s1">'spectrum-viewer'</span><span class="p">,</span> <span class="s1">'Subset 1'</span><span class="p">)</span> <span class="c1"># AGB star only</span>
+               <pre><span></span># Now extract spectrum from your spectral viewer
+spec_agb = cubeviz.app.get_data_from_viewer('spectrum-viewer', 'Subset 1') # AGB star only
 </pre>
               </div>
              </div>
@@ -1341,12 +1344,12 @@ MIRI MRS data will typically have a separate 1D spectrum and 3D cube associated 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">wav</span> <span class="o">=</span> <span class="n">wlall</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">micron</span> <span class="c1"># Wavelength: microns</span>
-<span class="n">fl</span> <span class="o">=</span> <span class="n">fnuall</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">Jy</span> <span class="c1"># Fnu:  Jy</span>
-<span class="n">efl</span> <span class="o">=</span> <span class="n">dfnuall</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">Jy</span> <span class="c1"># Error flux: Jy</span>
+               <pre><span></span>wav = wlall*u.micron # Wavelength: microns
+fl = fnuall*u.Jy # Fnu:  Jy
+efl = dfnuall*u.Jy # Error flux: Jy
 
-<span class="c1"># Make a 1D spectrum object</span>
-<span class="n">spec</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wav</span><span class="p">,</span> <span class="n">flux</span><span class="o">=</span><span class="n">fl</span><span class="p">,</span> <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">efl</span><span class="p">))</span>
+# Make a 1D spectrum object
+spec = Spectrum1D(spectral_axis=wav, flux=fl, uncertainty=StdDevUncertainty(efl))
 </pre>
               </div>
              </div>
@@ -1356,28 +1359,28 @@ MIRI MRS data will typically have a separate 1D spectrum and 3D cube associated 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Apply a 5 pixel boxcar smoothing to the spectrum</span>
-<span class="n">spec_bsmooth</span> <span class="o">=</span> <span class="n">box_smooth</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>   
+               <pre><span></span># Apply a 5 pixel boxcar smoothing to the spectrum
+spec_bsmooth = box_smooth(spec, width=5)   
 
-<span class="c1"># Plot the spectrum &amp; smoothed spectrum to inspect features </span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Source'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">spec_bsmooth</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Smoothed'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Wavelength (microns)'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Flux ({:latex})"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">)</span>
+# Plot the spectrum &amp; smoothed spectrum to inspect features 
+plt.figure(figsize=(8, 4))
+plt.plot(spec.spectral_axis, spec.flux, label='Source')
+plt.plot(spec.spectral_axis, spec_bsmooth.flux, label='Smoothed')
+plt.xlabel('Wavelength (microns)')
+plt.ylabel("Flux ({:latex})".format(spec.flux.unit))
+plt.ylim(-0.05, 0.15)
 
-<span class="c1"># Overplot the original input spectrum for comparison</span>
-<span class="n">origspecfile</span> <span class="o">=</span> <span class="n">fn</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/63702662.txt'</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">origdata</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">origspecfile</span><span class="p">)</span>
-<span class="n">wlorig</span> <span class="o">=</span> <span class="n">origdata</span><span class="p">[</span><span class="s1">'col1'</span><span class="p">]</span>
-<span class="n">fnujyorig</span> <span class="o">=</span> <span class="n">origdata</span><span class="p">[</span><span class="s1">'col2'</span><span class="p">]</span><span class="o">*</span><span class="mf">0.001</span> <span class="c1"># comes in as mJy, change to Jy to compare with pipeline output</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wlorig</span><span class="p">,</span> <span class="n">fnujyorig</span><span class="p">,</span> <span class="s1">'.'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'grey'</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Original Input'</span><span class="p">)</span>
+# Overplot the original input spectrum for comparison
+origspecfile = fn = download_file('https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/63702662.txt', cache=False)
+origdata = ascii.read(origspecfile)
+wlorig = origdata['col1']
+fnujyorig = origdata['col2']*0.001 # comes in as mJy, change to Jy to compare with pipeline output
+plt.plot(wlorig, fnujyorig, '.', color='grey', markersize=1, label='Original Input')
 
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">'medium'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+plt.legend(frameon=False, fontsize='medium')
+plt.tight_layout()
+plt.show()
+plt.close()
 </pre>
               </div>
              </div>
@@ -1390,7 +1393,7 @@ MIRI MRS data will typically have a separate 1D spectrum and 3D cube associated 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">spec_agb</span> <span class="o">=</span> <span class="n">spec</span>
+               <pre><span></span>spec_agb = spec
 </pre>
               </div>
              </div>
@@ -1411,16 +1414,16 @@ MIRI MRS data will typically have a separate 1D spectrum and 3D cube associated 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Open these spectra up in Specviz</span>
-<span class="n">specviz</span> <span class="o">=</span> <span class="n">Specviz</span><span class="p">()</span>
-<span class="n">specviz</span><span class="o">.</span><span class="n">app</span>
+               <pre><span></span># Open these spectra up in Specviz
+specviz = Specviz()
+specviz.app
 </pre>
               </div>
              </div>
             </div>
             <div class="cell_output docutils container">
              <script type="application/vnd.jupyter.widget-view+json">
-              {"version_major": 2, "version_minor": 0, "model_id": "bc96c833955b4170be0fa2e1358cd3cf"}
+              {"version_major": 2, "version_minor": 0, "model_id": "8ac81abd73634eb3b40ddbc68acedfc6"}
              </script>
              <img align=center height=auto width=50% src="../../jdaviz_placeholder_new.png">
              </img align=center height=auto width=50%>
@@ -1443,11 +1446,11 @@ MIRI MRS data will typically have a separate 1D spectrum and 3D cube associated 
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># For now, you must create your own spectrum1d object from your extracted cubeviz spectrum.  </span>
-<span class="n">flux</span> <span class="o">=</span> <span class="n">spec_agb</span><span class="o">.</span><span class="n">flux</span>
-<span class="n">wavelength</span> <span class="o">=</span> <span class="n">spec_agb</span><span class="o">.</span><span class="n">spectral_axis</span>
-<span class="n">spec1d</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">flux</span><span class="o">=</span><span class="n">flux</span><span class="p">)</span>
-<span class="n">specviz</span><span class="o">.</span><span class="n">load_spectrum</span><span class="p">(</span><span class="n">spec1d</span><span class="p">)</span>
+                <pre><span></span># For now, you must create your own spectrum1d object from your extracted cubeviz spectrum.  
+flux = spec_agb.flux
+wavelength = spec_agb.spectral_axis
+spec1d = Spectrum1D(spectral_axis=wavelength, flux=flux)
+specviz.load_spectrum(spec1d)
 </pre>
                </div>
               </div>
@@ -1469,8 +1472,8 @@ MIRI MRS data will typically have a separate 1D spectrum and 3D cube associated 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Video showing how to smooth a spectrum in Specviz</span>
-<span class="n">HTML</span><span class="p">(</span><span class="s1">'&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/smooth.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;'</span><span class="p">)</span>
+               <pre><span></span># Video showing how to smooth a spectrum in Specviz
+HTML('&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/smooth.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;')
 </pre>
               </div>
              </div>
@@ -1545,8 +1548,8 @@ interface with
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Video showing how to fit a blackbody </span>
-<span class="n">HTML</span><span class="p">(</span><span class="s1">'&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/blackbody_fit.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;'</span><span class="p">)</span>
+               <pre><span></span># Video showing how to fit a blackbody 
+HTML('&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/blackbody_fit.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;')
 </pre>
               </div>
              </div>
@@ -1562,16 +1565,16 @@ interface with
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">spectra</span> <span class="o">=</span> <span class="n">specviz</span><span class="o">.</span><span class="n">get_spectra</span><span class="p">()</span>
+               <pre><span></span>spectra = specviz.get_spectra()
    
-<span class="n">a</span> <span class="o">=</span> <span class="n">checkKey</span><span class="p">(</span><span class="n">spectra</span><span class="p">,</span> <span class="s2">"BB1"</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-    <span class="c1"># Extract Blackbody fit from Specviz</span>
-    <span class="n">blackbody</span> <span class="o">=</span> <span class="n">spectra</span><span class="p">[</span><span class="s2">"BB1"</span><span class="p">]</span>
-<span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"No Blackbody"</span><span class="p">)</span>
-    <span class="n">fn</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/blackbody.fits'</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">blackbody</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+a = checkKey(spectra, "BB1")
+if a is True:
+    # Extract Blackbody fit from Specviz
+    blackbody = spectra["BB1"]
+if a is False:
+    print("No Blackbody")
+    fn = download_file('https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/blackbody.fits', cache=False)
+    blackbody = Spectrum1D.read(fn)
 </pre>
               </div>
              </div>
@@ -1590,11 +1593,11 @@ No Blackbody
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Delete any existing output in current directory</span>
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"blackbody.fits"</span><span class="p">):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">"blackbody.fits"</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"The blackbody.fits file does not exist"</span><span class="p">)</span>
+               <pre><span></span># Delete any existing output in current directory
+if os.path.exists("blackbody.fits"):
+    os.remove("blackbody.fits")
+else:
+    print("The blackbody.fits file does not exist")
 </pre>
               </div>
              </div>
@@ -1612,8 +1615,8 @@ No Blackbody
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Save if you so desire. Keep commented otherwise.</span>
-<span class="c1"># blackbody.write('blackbody.fits')</span>
+               <pre><span></span># Save if you so desire. Keep commented otherwise.
+# blackbody.write('blackbody.fits')
 </pre>
               </div>
              </div>
@@ -1623,8 +1626,8 @@ No Blackbody
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Rename blackbody.flux as ybest</span>
-<span class="n">ybest</span> <span class="o">=</span> <span class="n">blackbody</span><span class="o">.</span><span class="n">flux</span>
+               <pre><span></span># Rename blackbody.flux as ybest
+ybest = blackbody.flux
 </pre>
               </div>
              </div>
@@ -1641,31 +1644,31 @@ No Blackbody
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># Plot the spectrum &amp; the model fit to the short wavelength region of the data.</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Source'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">ybest</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'BB'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Wavelength (microns)'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Flux ({:latex})"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Spectrum with blackbody fit"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">'medium'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <pre><span></span># Plot the spectrum &amp; the model fit to the short wavelength region of the data.
+plt.figure(figsize=(8, 4))
+plt.plot(spec.spectral_axis, spec.flux, label='Source')
+plt.plot(spec.spectral_axis, ybest, label='BB')
+plt.xlabel('Wavelength (microns)')
+plt.ylabel("Flux ({:latex})".format(spec.flux.unit))
+plt.title("Spectrum with blackbody fit")
+plt.legend(frameon=False, fontsize='medium')
+plt.tight_layout()
+plt.ylim(-0.05, 0.15)
+plt.show()
+plt.close()
 
-<span class="c1"># Now subtract the BB and plot the underlying dust continuum</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="n">ybest</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'purple'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Dust spectra'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'dashdot'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Wavelength (microns)'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Flux ({:latex})"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Continuum-subtracted spectrum"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">'medium'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+# Now subtract the BB and plot the underlying dust continuum
+plt.figure(figsize=(8, 4))
+plt.plot(spec.spectral_axis, spec.flux.value - ybest.value, color='purple', label='Dust spectra')
+plt.axhline(0, color='r', linestyle='dashdot', alpha=0.5)
+plt.xlabel('Wavelength (microns)')
+plt.ylabel("Flux ({:latex})".format(spec.flux.unit))
+plt.title("Continuum-subtracted spectrum")
+plt.legend(frameon=False, fontsize='medium')
+plt.tight_layout()
+plt.ylim(-0.05, 0.15)
+plt.show()
+plt.close()
 </pre>
                </div>
               </div>
@@ -1789,8 +1792,8 @@ line centroid with uncertainty, and the extracted equivalent width.
               <div class="cell_input docutils container">
                <div class="highlight-ipython3 notranslate">
                 <div class="highlight">
-                 <pre><span></span><span class="c1"># Subtract the continuum and plot in a new instance of specviz</span>
-<span class="n">bbsub_spectra</span> <span class="o">=</span> <span class="n">spec</span> <span class="o">-</span> <span class="n">ybest</span><span class="o">.</span><span class="n">value</span>     <span class="c1"># continuum subtracted spectra - Dust only</span>
+                 <pre><span></span># Subtract the continuum and plot in a new instance of specviz
+bbsub_spectra = spec - ybest.value     # continuum subtracted spectra - Dust only
 </pre>
                 </div>
                </div>
@@ -1800,15 +1803,15 @@ line centroid with uncertainty, and the extracted equivalent width.
               <div class="cell_input docutils container">
                <div class="highlight-ipython3 notranslate">
                 <div class="highlight">
-                 <pre><span></span><span class="n">specviz</span> <span class="o">=</span> <span class="n">Specviz</span><span class="p">()</span>
-<span class="n">specviz</span><span class="o">.</span><span class="n">app</span>
+                 <pre><span></span>specviz = Specviz()
+specviz.app
 </pre>
                 </div>
                </div>
               </div>
               <div class="cell_output docutils container">
                <script type="application/vnd.jupyter.widget-view+json">
-                {"version_major": 2, "version_minor": 0, "model_id": "924ddd1de4a447fc8f62683f5704397e"}
+                {"version_major": 2, "version_minor": 0, "model_id": "d6dd5feb1a73424fbf206cffbb7f1b40"}
                </script>
                <img align=center height=auto width=50% src="../../jdaviz_placeholder_new.png">
                </img align=center height=auto width=50%>
@@ -1818,7 +1821,7 @@ line centroid with uncertainty, and the extracted equivalent width.
               <div class="cell_input docutils container">
                <div class="highlight-ipython3 notranslate">
                 <div class="highlight">
-                 <pre><span></span><span class="n">specviz</span><span class="o">.</span><span class="n">load_spectrum</span><span class="p">(</span><span class="n">bbsub_spectra</span><span class="p">)</span>
+                 <pre><span></span>specviz.load_spectrum(bbsub_spectra)
 </pre>
                 </div>
                </div>
@@ -1841,8 +1844,8 @@ line centroid with uncertainty, and the extracted equivalent width.
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Video showing how to fit a polynomial to two separate spectral regions within a single subset</span>
-<span class="n">HTML</span><span class="p">(</span><span class="s1">'&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/poly_fit.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;'</span><span class="p">)</span>
+               <pre><span></span># Video showing how to fit a polynomial to two separate spectral regions within a single subset
+HTML('&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/poly_fit.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;')
 </pre>
               </div>
              </div>
@@ -1858,16 +1861,16 @@ line centroid with uncertainty, and the extracted equivalent width.
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">spectra</span> <span class="o">=</span> <span class="n">specviz</span><span class="o">.</span><span class="n">get_spectra</span><span class="p">()</span>
+               <pre><span></span>spectra = specviz.get_spectra()
    
-<span class="n">a</span> <span class="o">=</span> <span class="n">checkKey</span><span class="p">(</span><span class="n">spectra</span><span class="p">,</span> <span class="s2">"PolyFit"</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-    <span class="c1"># Extract Blackbody fit from Specviz</span>
-    <span class="n">blackbody</span> <span class="o">=</span> <span class="n">spectra</span><span class="p">[</span><span class="s2">"PolyFit"</span><span class="p">]</span>
-<span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"No Polyfit"</span><span class="p">)</span>
-    <span class="n">fn</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/poly.fits'</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">poly</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+a = checkKey(spectra, "PolyFit")
+if a is True:
+    # Extract Blackbody fit from Specviz
+    blackbody = spectra["PolyFit"]
+if a is False:
+    print("No Polyfit")
+    fn = download_file('https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/poly.fits', cache=False)
+    poly = Spectrum1D.read(fn)
 </pre>
               </div>
              </div>
@@ -1886,11 +1889,11 @@ No Polyfit
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Delete any existing output in current directory</span>
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"poly.fits"</span><span class="p">):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">"poly.fits"</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"The poly.fits file does not exist"</span><span class="p">)</span>
+               <pre><span></span># Delete any existing output in current directory
+if os.path.exists("poly.fits"):
+    os.remove("poly.fits")
+else:
+    print("The poly.fits file does not exist")
 </pre>
               </div>
              </div>
@@ -1908,8 +1911,8 @@ No Polyfit
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Save if you so desire. Keep commented otherwise.</span>
-<span class="c1"># poly.write('poly.fits')</span>
+               <pre><span></span># Save if you so desire. Keep commented otherwise.
+# poly.write('poly.fits')
 </pre>
               </div>
              </div>
@@ -1919,58 +1922,58 @@ No Polyfit
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Fit a local continuum between the flux densities at: 8.0 - 8.1 &amp; 14.9 - 15.0 microns</span>
-<span class="c1"># (i.e. excluding the line itself)</span>
+               <pre><span></span># Fit a local continuum between the flux densities at: 8.0 - 8.1 &amp; 14.9 - 15.0 microns
+# (i.e. excluding the line itself)
 
-<span class="n">sw_region</span> <span class="o">=</span> <span class="mf">8.0</span>   <span class="c1"># lam0</span>
-<span class="n">sw_line</span> <span class="o">=</span> <span class="mf">8.1</span>     <span class="c1"># lam1</span>
-<span class="n">lw_line</span> <span class="o">=</span> <span class="mf">14.9</span>    <span class="c1"># lam2</span>
-<span class="n">lw_region</span> <span class="o">=</span> <span class="mf">15.0</span>  <span class="c1"># lam3</span>
+sw_region = 8.0   # lam0
+sw_line = 8.1     # lam1
+lw_line = 14.9    # lam2
+lw_region = 15.0  # lam3
 
-<span class="c1"># Zoom in on the line complex &amp; extract</span>
-<span class="n">line_reg_10</span> <span class="o">=</span> <span class="n">SpectralRegion</span><span class="p">([(</span><span class="n">sw_region</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span> <span class="n">lw_region</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)])</span>
-<span class="n">line_spec</span> <span class="o">=</span> <span class="n">extract_region</span><span class="p">(</span><span class="n">bbsub_spectra</span><span class="p">,</span> <span class="n">line_reg_10</span><span class="p">)</span>
-<span class="n">polysub</span> <span class="o">=</span> <span class="n">extract_region</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">line_reg_10</span><span class="p">)</span>
-<span class="n">line_y_continuum</span> <span class="o">=</span> <span class="n">polysub</span><span class="o">.</span><span class="n">flux</span>
+# Zoom in on the line complex &amp; extract
+line_reg_10 = SpectralRegion([(sw_region*u.um, lw_region*u.um)])
+line_spec = extract_region(bbsub_spectra, line_reg_10)
+polysub = extract_region(poly, line_reg_10)
+line_y_continuum = polysub.flux
 
-<span class="c1"># -----------------------------------------------------------------</span>
-<span class="c1"># Generate a continuum subtracted and continuum normalised spectra</span>
+# -----------------------------------------------------------------
+# Generate a continuum subtracted and continuum normalised spectra
 
-<span class="n">line_spec_norm</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">line_spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">flux</span><span class="o">=</span><span class="n">line_spec</span><span class="o">.</span><span class="n">flux</span><span class="o">/</span><span class="n">line_y_continuum</span><span class="p">,</span> <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">line_spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">))))</span>
-<span class="n">line_spec_consub</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">line_spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">flux</span><span class="o">=</span><span class="n">line_spec</span><span class="o">.</span><span class="n">flux</span> <span class="o">-</span> <span class="n">line_y_continuum</span><span class="p">,</span> <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">line_spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">))))</span>
+line_spec_norm = Spectrum1D(spectral_axis=line_spec.spectral_axis, flux=line_spec.flux/line_y_continuum, uncertainty=StdDevUncertainty(np.zeros(len(line_spec.spectral_axis))))
+line_spec_consub = Spectrum1D(spectral_axis=line_spec.spectral_axis, flux=line_spec.flux - line_y_continuum, uncertainty=StdDevUncertainty(np.zeros(len(line_spec.spectral_axis))))
 
-<span class="c1"># -----------------------------------------------------------------</span>
-<span class="c1"># Plot the dust feature &amp; continuum fit to the region</span>
+# -----------------------------------------------------------------
+# Plot the dust feature &amp; continuum fit to the region
 
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+plt.figure(figsize=(8, 4))
 
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">line_spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">line_spec</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-         <span class="n">label</span><span class="o">=</span><span class="s1">'Dust spectra 10 micron region'</span><span class="p">)</span>
+plt.plot(line_spec.spectral_axis, line_spec.flux.value,
+         label='Dust spectra 10 micron region')
 
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">line_spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">line_y_continuum</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Local continuum'</span><span class="p">)</span>
+plt.plot(line_spec.spectral_axis, line_y_continuum, label='Local continuum')
 
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Wavelength (microns)'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Flux ({:latex})"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"10$\mu$m feature plus local continuum"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">'medium'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+plt.xlabel('Wavelength (microns)')
+plt.ylabel("Flux ({:latex})".format(spec.flux.unit))
+plt.title("10$\mu$m feature plus local continuum")
+plt.legend(frameon=False, fontsize='medium')
+plt.tight_layout()
+plt.show()
+plt.close()
 
-<span class="c1"># -----------------------------------------------------------------</span>
-<span class="c1"># Plot the continuum subtracted 10 micron feature</span>
+# -----------------------------------------------------------------
+# Plot the continuum subtracted 10 micron feature
 
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+plt.figure(figsize=(8, 4))
 
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">line_spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">line_spec_consub</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'green'</span><span class="p">,</span>
-         <span class="n">label</span><span class="o">=</span><span class="s1">'continuum subtracted'</span><span class="p">)</span>
+plt.plot(line_spec.spectral_axis, line_spec_consub.flux, color='green',
+         label='continuum subtracted')
 
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Wavelength (microns)'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Flux ({:latex})"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Continuum subtracted 10$\mu$m feature"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+plt.xlabel('Wavelength (microns)')
+plt.ylabel("Flux ({:latex})".format(spec.flux.unit))
+plt.title("Continuum subtracted 10$\mu$m feature")
+plt.tight_layout()
+plt.show()
+plt.close()
 </pre>
               </div>
              </div>
@@ -1984,16 +1987,16 @@ No Polyfit
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Load 10 um feature back into specviz and calculate the Line flux; Line Centroid; Equivalent width</span>
-<span class="n">specviz</span> <span class="o">=</span> <span class="n">Specviz</span><span class="p">()</span>
-<span class="n">specviz</span><span class="o">.</span><span class="n">app</span>
+               <pre><span></span># Load 10 um feature back into specviz and calculate the Line flux; Line Centroid; Equivalent width
+specviz = Specviz()
+specviz.app
 </pre>
               </div>
              </div>
             </div>
             <div class="cell_output docutils container">
              <script type="application/vnd.jupyter.widget-view+json">
-              {"version_major": 2, "version_minor": 0, "model_id": "52a08a7a16c94881bff2f5073c92cfb7"}
+              {"version_major": 2, "version_minor": 0, "model_id": "defffbae08fd4afb9033c5da17a8ef69"}
              </script>
              <img align=center height=auto width=50% src="../../jdaviz_placeholder_new.png">
              </img align=center height=auto width=50%>
@@ -2003,8 +2006,8 @@ No Polyfit
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">specviz</span><span class="o">.</span><span class="n">load_spectrum</span><span class="p">(</span><span class="n">line_spec_consub</span><span class="p">,</span> <span class="n">data_label</span><span class="o">=</span><span class="s1">'Continuum Subtraction'</span><span class="p">)</span>
-<span class="n">specviz</span><span class="o">.</span><span class="n">load_spectrum</span><span class="p">(</span><span class="n">line_spec_norm</span><span class="p">,</span> <span class="n">data_label</span><span class="o">=</span><span class="s1">'Normalized'</span><span class="p">)</span>
+               <pre><span></span>specviz.load_spectrum(line_spec_consub, data_label='Continuum Subtraction')
+specviz.load_spectrum(line_spec_norm, data_label='Normalized')
 </pre>
               </div>
              </div>
@@ -2030,8 +2033,8 @@ No Polyfit
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Video showing how to measure lines within specviz</span>
-<span class="n">HTML</span><span class="p">(</span><span class="s1">'&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/line_analysis_plugin.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;'</span><span class="p">)</span>
+               <pre><span></span># Video showing how to measure lines within specviz
+HTML('&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MRS_Mstar_analysis/line_analysis_plugin.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;')
 </pre>
               </div>
              </div>
@@ -2047,21 +2050,21 @@ No Polyfit
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Alternative method to analyze the 10um line within the notebook. Calculate the Line flux; Line Centroid; Equivalent width</span>
+               <pre><span></span># Alternative method to analyze the 10um line within the notebook. Calculate the Line flux; Line Centroid; Equivalent width
 
-<span class="n">line_centroid</span> <span class="o">=</span> <span class="n">centroid</span><span class="p">(</span><span class="n">line_spec_consub</span><span class="p">,</span> <span class="n">SpectralRegion</span><span class="p">(</span><span class="n">sw_line</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span> <span class="n">lw_line</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">))</span>
-<span class="n">line_flux_val</span> <span class="o">=</span> <span class="n">line_flux</span><span class="p">(</span><span class="n">line_spec_consub</span><span class="p">,</span> <span class="n">SpectralRegion</span><span class="p">(</span><span class="n">sw_line</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span> <span class="n">lw_line</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">))</span>
+line_centroid = centroid(line_spec_consub, SpectralRegion(sw_line*u.um, lw_line*u.um))
+line_flux_val = line_flux(line_spec_consub, SpectralRegion(sw_line*u.um, lw_line*u.um))
 
-<span class="n">equivalent_width_val</span> <span class="o">=</span> <span class="n">equivalent_width</span><span class="p">(</span><span class="n">line_spec_norm</span><span class="p">)</span>
+equivalent_width_val = equivalent_width(line_spec_norm)
 
-<span class="c1"># Hack to convert the line flux value into more conventional units</span>
-<span class="c1"># Necessary as spectra has mixed units: f_nu+lambda</span>
-<span class="n">line_flux_val</span> <span class="o">=</span> <span class="p">(</span><span class="n">line_flux_val</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">micron</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">W</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">micron</span><span class="p">,</span>
-                                              <span class="n">u</span><span class="o">.</span><span class="n">spectral_density</span><span class="p">(</span><span class="n">line_centroid</span><span class="p">))</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">micron</span>
+# Hack to convert the line flux value into more conventional units
+# Necessary as spectra has mixed units: f_nu+lambda
+line_flux_val = (line_flux_val * u.micron).to(u.W * u.m**-2 * u.micron,
+                                              u.spectral_density(line_centroid)) / u.micron
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Line_centroid: </span><span class="si">{:.6}</span><span class="s2"> "</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">line_centroid</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Integrated line_flux: </span><span class="si">{:.6}</span><span class="s2"> "</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">line_flux_val</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Equivalent width: </span><span class="si">{:.6}</span><span class="s2"> "</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">equivalent_width_val</span><span class="p">))</span>
+print("Line_centroid: {:.6} ".format(line_centroid))
+print("Integrated line_flux: {:.6} ".format(line_flux_val))
+print("Equivalent width: {:.6} ".format(equivalent_width_val))
 </pre>
               </div>
              </div>
@@ -2069,9 +2072,9 @@ No Polyfit
             <div class="cell_output docutils container">
              <div class="output stream highlight-myst-ansi notranslate">
               <div class="highlight">
-               <pre><span></span>Line_centroid: 10.9847 micron 
-Integrated line_flux: 1.69988e-11 W / m2 
-Equivalent width: -45152.7 micron 
+               <pre><span></span>Line_centroid: 10.7569 micron 
+Integrated line_flux: 6.65227e-15 W / m2 
+Equivalent width: -15.0066 micron 
 </pre>
               </div>
              </div>
@@ -2081,11 +2084,11 @@ Equivalent width: -45152.7 micron
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Compute the optical depth of the 10 micron feature</span>
+               <pre><span></span># Compute the optical depth of the 10 micron feature
 
-<span class="n">tau</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">line_spec</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="n">line_y_continuum</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
-<span class="n">optdepth_spec</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">line_spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span>
-                           <span class="n">flux</span><span class="o">=</span><span class="n">tau</span><span class="o">*</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">Jy</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">Jy</span><span class="p">))</span>
+tau = -(np.log(line_spec.flux.value / line_y_continuum.value))
+optdepth_spec = Spectrum1D(spectral_axis=line_spec.spectral_axis,
+                           flux=tau*(u.Jy/u.Jy))
         
 </pre>
               </div>
@@ -2096,14 +2099,14 @@ Equivalent width: -45152.7 micron
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Plot the optical depth of the 10 micron region vs wavelength</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">optdepth_spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">optdepth_spec</span><span class="o">.</span><span class="n">flux</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Wavelength ({:latex})"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Tau'</span><span class="p">)</span> 
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+               <pre><span></span># Plot the optical depth of the 10 micron region vs wavelength
+plt.figure(figsize=(10, 6))
+plt.plot(optdepth_spec.spectral_axis, optdepth_spec.flux)
+plt.xlabel("Wavelength ({:latex})".format(spec.spectral_axis.unit))
+plt.ylabel('Tau') 
+plt.tight_layout()
+plt.show()
+plt.close()
 </pre>
               </div>
              </div>

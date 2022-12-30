@@ -641,7 +641,7 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+               <pre><span></span>%matplotlib inline
 </pre>
               </div>
              </div>
@@ -651,23 +651,23 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">simps</span>
-<span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlretrieve</span>
-<span class="kn">import</span> <span class="nn">tarfile</span>
+               <pre><span></span>import os
+import numpy as np
+from scipy.integrate import simps
+from urllib.request import urlretrieve
+import tarfile
 
-<span class="kn">from</span> <span class="nn">astropy.convolution</span> <span class="kn">import</span> <span class="n">Gaussian2DKernel</span>
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
-<span class="kn">from</span> <span class="nn">astropy.stats</span> <span class="kn">import</span> <span class="n">gaussian_fwhm_to_sigma</span>
-<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">QTable</span>
-<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
-<span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">make_lupton_rgb</span><span class="p">,</span> <span class="n">SqrtStretch</span><span class="p">,</span> <span class="n">ImageNormalize</span><span class="p">,</span> <span class="n">simple_norm</span>
-<span class="kn">import</span> <span class="nn">astropy.wcs</span> <span class="k">as</span> <span class="nn">wcs</span>
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">ascii</span>
+from astropy.convolution import Gaussian2DKernel
+from astropy.io import fits
+from astropy.stats import gaussian_fwhm_to_sigma
+from astropy.table import QTable
+import astropy.units as u
+from astropy.visualization import make_lupton_rgb, SqrtStretch, ImageNormalize, simple_norm
+import astropy.wcs as wcs
+from astropy.io import ascii
 
-<span class="kn">import</span> <span class="nn">astropy</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'astropy'</span><span class="p">,</span> <span class="n">astropy</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+import astropy
+print('astropy', astropy.__version__)
 </pre>
               </div>
              </div>
@@ -675,7 +675,7 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_output docutils container">
              <div class="output stream highlight-myst-ansi notranslate">
               <div class="highlight">
-               <pre><span></span>astropy 5.1.1
+               <pre><span></span>astropy 5.2
 </pre>
               </div>
              </div>
@@ -685,15 +685,15 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+               <pre><span></span>import matplotlib.pyplot as plt
+import matplotlib as mpl
 
-<span class="c1"># These gymnastics are needed to make the sizes of the figures</span>
-<span class="c1"># be the same in both the inline and notebook versions</span>
-<span class="o">%</span><span class="k">config</span> InlineBackend.print_figure_kwargs = {'bbox_inches': None}
+# These gymnastics are needed to make the sizes of the figures
+# be the same in both the inline and notebook versions
+%config InlineBackend.print_figure_kwargs = {'bbox_inches': None}
 
-<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'savefig.dpi'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
-<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'figure.dpi'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
+mpl.rcParams['savefig.dpi'] = 80
+mpl.rcParams['figure.dpi'] = 80
 </pre>
               </div>
              </div>
@@ -703,12 +703,12 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="kn">import</span> <span class="nn">specutils</span>
-<span class="kn">from</span> <span class="nn">specutils.fitting</span> <span class="kn">import</span> <span class="n">continuum</span> <span class="c1">#, find_lines_threshold, find_lines_derivative</span>
-<span class="kn">from</span> <span class="nn">specutils.spectra.spectrum1d</span> <span class="kn">import</span> <span class="n">Spectrum1D</span>
-<span class="kn">from</span> <span class="nn">astropy.nddata</span> <span class="kn">import</span> <span class="n">StdDevUncertainty</span>
+               <pre><span></span>import specutils
+from specutils.fitting import continuum #, find_lines_threshold, find_lines_derivative
+from specutils.spectra.spectrum1d import Spectrum1D
+from astropy.nddata import StdDevUncertainty
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Specutils: "</span><span class="p">,</span><span class="n">specutils</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+print("Specutils: ",specutils.__version__)
 </pre>
               </div>
              </div>
@@ -716,7 +716,7 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_output docutils container">
              <div class="output stream highlight-myst-ansi notranslate">
               <div class="highlight">
-               <pre><span></span>Specutils:  1.9.0
+               <pre><span></span>Specutils:  1.9.1
 </pre>
               </div>
              </div>
@@ -736,16 +736,16 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">'./output'</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">zipfile</span>
-    <span class="kn">import</span> <span class="nn">urllib.request</span>
-    <span class="n">boxlink</span> <span class="o">=</span> <span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/NIRISS_lensing_cluster/output.zip'</span>
-    <span class="n">boxfile</span> <span class="o">=</span> <span class="s1">'./output.zip'</span>
-    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
-    <span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
-    <span class="n">zf</span><span class="o">.</span><span class="n">extractall</span><span class="p">()</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">'Already exists'</span><span class="p">)</span>
+                <pre><span></span>if not os.path.exists('./output'):
+    import zipfile
+    import urllib.request
+    boxlink = 'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/NIRISS_lensing_cluster/output.zip'
+    boxfile = './output.zip'
+    urllib.request.urlretrieve(boxlink, boxfile)
+    zf = zipfile.ZipFile(boxfile, 'r')
+    zf.extractall()
+else:
+    print('Already exists')
 </pre>
                </div>
               </div>
@@ -763,12 +763,12 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># Which data set?;</span>
-<span class="n">DIR_OUT</span> <span class="o">=</span> <span class="s1">'./output/'</span>
-<span class="n">filt</span> <span class="o">=</span> <span class="s1">'f200w'</span>
-<span class="n">grism</span> <span class="o">=</span> <span class="s1">'G150C'</span>
-<span class="nb">id</span>  <span class="o">=</span> <span class="s1">'00004'</span>
-<span class="n">ndither</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># Number of dithering positions.</span>
+                <pre><span></span># Which data set?;
+DIR_OUT = './output/'
+filt = 'f200w'
+grism = 'G150C'
+id  = '00004'
+ndither = 2 # Number of dithering positions.
 </pre>
                </div>
               </div>
@@ -786,23 +786,23 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">dithers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">ndither</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">dither</span> <span class="ow">in</span> <span class="n">dithers</span><span class="p">:</span>
-    <span class="n">file_1d</span> <span class="o">=</span> <span class="s1">'</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_ndither</span><span class="si">%d</span><span class="s1">_1d_opt.fits'</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">dither</span><span class="p">)</span>
-    <span class="n">fd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="k">if</span> <span class="n">dither</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">wave</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'wavelength'</span><span class="p">]</span>
-        <span class="n">flux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ndither</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)),</span><span class="s1">'float'</span><span class="p">)</span>
-        <span class="n">flux_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ndither</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)),</span><span class="s1">'float'</span><span class="p">)</span>
-        <span class="n">flux</span><span class="p">[</span><span class="n">dither</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'flux'</span><span class="p">]</span>
-        <span class="n">flux_err</span><span class="p">[</span><span class="n">dither</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'uncertainty'</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">wave_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'wavelength'</span><span class="p">]</span>
-        <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'flux'</span><span class="p">]</span>
-        <span class="n">flux_err_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'uncertainty'</span><span class="p">]</span>
+                <pre><span></span>dithers = np.arange(0,ndither,1)
+for dither in dithers:
+    file_1d = '%sl3_nis_%s_%s_s%s_ndither%d_1d_opt.fits'%(DIR_OUT, filt, grism, id, dither)
+    fd = fits.open(file_1d)[1].data
+    if dither == 0:
+        wave = fd['wavelength']
+        flux = np.zeros((ndither,len(wave)),'float')
+        flux_err = np.zeros((ndither,len(wave)),'float')
+        flux[dither,:] = fd['flux']
+        flux_err[dither,:] = fd['uncertainty']
+    else:
+        wave_tmp = fd['wavelength']
+        flux_tmp = fd['flux']
+        flux_err_tmp = fd['uncertainty']
         
-        <span class="n">flux</span><span class="p">[</span><span class="n">dither</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">wave_tmp</span><span class="p">,</span> <span class="n">flux_tmp</span><span class="p">)</span>
-        <span class="n">flux_err</span><span class="p">[</span><span class="n">dither</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">wave_tmp</span><span class="p">,</span> <span class="n">flux_err_tmp</span><span class="p">[:]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+        flux[dither,:] = np.interp(wave, wave_tmp, flux_tmp)
+        flux_err[dither,:] = np.sqrt(np.interp(wave, wave_tmp, flux_err_tmp[:]**2))
 </pre>
                </div>
               </div>
@@ -812,9 +812,9 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">flux</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'dither1'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">flux</span><span class="p">[</span><span class="mi">1</span><span class="p">,:],</span> <span class="n">color</span><span class="o">=</span><span class="s1">'b'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'dither2'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                <pre><span></span>plt.plot(wave, flux[0,:], color='r', label='dither1')
+plt.plot(wave, flux[1,:], color='b', label='dither2')
+plt.legend(loc=2)
 </pre>
                </div>
               </div>
@@ -822,7 +822,7 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_output docutils container">
               <div class="output text_plain highlight-myst-ansi notranslate">
                <div class="highlight">
-                <pre><span></span>&lt;matplotlib.legend.Legend at 0x7fe4758be280&gt;
+                <pre><span></span>&lt;matplotlib.legend.Legend at 0x7f71709a6f70&gt;
 </pre>
                </div>
               </div>
@@ -841,17 +841,17 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">flux_combine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">),</span><span class="s1">'float'</span><span class="p">)</span>
-<span class="n">flux_err_combine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">),</span><span class="s1">'float'</span><span class="p">)</span>
+                <pre><span></span>flux_combine = np.zeros(len(wave),'float')
+flux_err_combine = np.zeros(len(wave),'float')
 
-<span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)):</span>
-    <span class="n">flux_combine</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">flux</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">flux_err</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">flux_err</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> 
-    <span class="n">flux_err_combine</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">flux_err</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">flux_err</span><span class="p">[:,</span><span class="n">ii</span><span class="p">])</span>
+for ii in range(len(wave)):
+    flux_combine[ii] = np.sum(flux[:,ii] * 1 / flux_err[:,ii]**2) / np.sum(1 / flux_err[:,ii]**2) 
+    flux_err_combine[ii] = np.sqrt(np.sum(flux_err[:,ii]**2)) / len(flux_err[:,ii])
 
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">flux</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span> <span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'dither1'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">flux</span><span class="p">[</span><span class="mi">1</span><span class="p">,:],</span> <span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'dither2'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">flux_combine</span><span class="p">[:],</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Combined'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+plt.plot(wave, flux[0,:], color='gray', label='dither1')
+plt.plot(wave, flux[1,:], color='gray', label='dither2')
+plt.plot(wave, flux_combine[:], color='r', label='Combined')
+plt.legend(loc=2)
 </pre>
                </div>
               </div>
@@ -859,7 +859,7 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_output docutils container">
               <div class="output text_plain highlight-myst-ansi notranslate">
                <div class="highlight">
-                <pre><span></span>&lt;matplotlib.legend.Legend at 0x7fe489d15d90&gt;
+                <pre><span></span>&lt;matplotlib.legend.Legend at 0x7f714232ffd0&gt;
 </pre>
                </div>
               </div>
@@ -881,16 +881,16 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># Open broadband flux catalog from Notebook 01a;</span>
+                <pre><span></span># Open broadband flux catalog from Notebook 01a;
 
-<span class="c1"># Flux are already in Fnu, with magzp = 25.0;</span>
-<span class="n">file</span> <span class="o">=</span> <span class="n">DIR_OUT</span><span class="o">+</span><span class="s1">'l3_nis_flux.cat'</span>
+# Flux are already in Fnu, with magzp = 25.0;
+file = DIR_OUT+'l3_nis_flux.cat'
 
-<span class="n">fd_cat</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-<span class="n">id_cat</span> <span class="o">=</span> <span class="n">fd_cat</span><span class="p">[</span><span class="s1">'id'</span><span class="p">]</span>
-<span class="n">magzp</span> <span class="o">=</span> <span class="mf">25.0</span>
+fd_cat = ascii.read(file)
+id_cat = fd_cat['id']
+magzp = 25.0
 
-<span class="n">fd_cat</span>
+fd_cat
 </pre>
                </div>
               </div>
@@ -901,7 +901,7 @@ const thebe_selector_output = ".output, .cell_output"
                 <i>
                  Table length=7
                 </i>
-                <table class="table-striped table-bordered table-condensed" id="table140619201784512">
+                <table class="table-striped table-bordered table-condensed" id="table140124418524160">
                  <thead>
                   <tr>
                    <th>
@@ -1554,13 +1554,13 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># Retrieve filter curves for NIRISS images;</span>
-<span class="n">url</span> <span class="o">=</span> <span class="s1">'https://jwst-docs.stsci.edu/files/97978948/97978953/1/1596073225227/NIRISS_Filters_2017May.tar.gz'</span>
+                <pre><span></span># Retrieve filter curves for NIRISS images;
+url = 'https://jwst-docs.stsci.edu/files/97978948/97978953/1/1596073225227/NIRISS_Filters_2017May.tar.gz'
 
-<span class="n">filename</span> <span class="o">=</span> <span class="s1">'tmp.tar.gz'</span>
-<span class="n">urlretrieve</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-<span class="n">my_tar</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-<span class="n">my_tar</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="s1">'./'</span><span class="p">)</span>
+filename = 'tmp.tar.gz'
+urlretrieve(url, filename)
+my_tar = tarfile.open(filename)
+my_tar.extractall('./')
 </pre>
                </div>
               </div>
@@ -1570,22 +1570,22 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># Load fiter response:</span>
-<span class="n">DIR_FIL</span> <span class="o">=</span> <span class="s1">'./NIRISS_Filters/DATA/'</span>
+                <pre><span></span># Load fiter response:
+DIR_FIL = './NIRISS_Filters/DATA/'
 
-<span class="c1"># The number corresponds to F200W in EAZY filter response;</span>
-<span class="n">eazy_filt</span> <span class="o">=</span> <span class="mi">311</span>
+# The number corresponds to F200W in EAZY filter response;
+eazy_filt = 311
 
-<span class="c1"># Read transmission data;</span>
-<span class="n">filt_data</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">'</span><span class="si">%s</span><span class="s1">/NIRISS_</span><span class="si">%s</span><span class="s1">.txt'</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_FIL</span><span class="p">,</span> <span class="n">filt</span><span class="o">.</span><span class="n">upper</span><span class="p">()))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">filt_data</span><span class="p">)</span>
-<span class="n">wave_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">'Wavelength'</span><span class="p">]</span>
-<span class="n">flux_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">'FilterTrans'</span><span class="p">]</span>
+# Read transmission data;
+filt_data = ascii.read('%s/NIRISS_%s.txt'%(DIR_FIL, filt.upper()))
+print(filt_data)
+wave_filt = filt_data['Wavelength']
+flux_filt = filt_data['FilterTrans']
 
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave_filt</span><span class="p">,</span> <span class="n">flux_filt</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'NIRISS </span><span class="si">%s</span><span class="s1">'</span><span class="o">%</span><span class="k">filt</span>.upper())
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'wavelength'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'response'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+plt.plot(wave_filt, flux_filt, ls='-', label='NIRISS %s'%filt.upper())
+plt.xlabel('wavelength')
+plt.ylabel('response')
+plt.legend(loc=1)
 </pre>
                </div>
               </div>
@@ -1623,7 +1623,7 @@ Length = 5001 rows
               </div>
               <div class="output text_plain highlight-myst-ansi notranslate">
                <div class="highlight">
-                <pre><span></span>&lt;matplotlib.legend.Legend at 0x7fe475741c40&gt;
+                <pre><span></span>&lt;matplotlib.legend.Legend at 0x7f7144428a60&gt;
 </pre>
                </div>
               </div>
@@ -1634,43 +1634,43 @@ Length = 5001 rows
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># Define a small function for flux convolution with filters;</span>
-<span class="k">def</span> <span class="nf">filconv</span><span class="p">(</span><span class="n">lfil</span><span class="p">,</span> <span class="n">ffil</span><span class="p">,</span> <span class="n">l0</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="n">DIR</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">3e18</span><span class="p">):</span>
-    <span class="sd">'''</span>
-<span class="sd">    lfil : Wave array for filter response curve.</span>
-<span class="sd">    ffil : Flux array for filter response curve.</span>
+                <pre><span></span># Define a small function for flux convolution with filters;
+def filconv(lfil, ffil, l0, f0, DIR='', c=3e18):
+    '''
+    lfil : Wave array for filter response curve.
+    ffil : Flux array for filter response curve.
 
-<span class="sd">    l0 : Wave array for spectrum, in f_nu, not f_lam</span>
-<span class="sd">    f0 : Flux array for spectrum, in f_nu, not f_lam</span>
+    l0 : Wave array for spectrum, in f_nu, not f_lam
+    f0 : Flux array for spectrum, in f_nu, not f_lam
 
-<span class="sd">    '''</span>
+    '''
 
-    <span class="n">lmin</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">lfil</span><span class="p">)</span>
-    <span class="n">lmax</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">lfil</span><span class="p">)</span>
-    <span class="n">imin</span>  <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">imax</span>  <span class="o">=</span> <span class="mi">0</span>
+    lmin  = np.min(lfil)
+    lmax  = np.max(lfil)
+    imin  = 0
+    imax  = 0
 
-    <span class="n">fhalf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ffil</span><span class="p">)</span><span class="o">/</span><span class="mf">2.0</span>
-    <span class="n">con</span> <span class="o">=</span> <span class="p">(</span><span class="n">ffil</span><span class="o">&gt;</span><span class="n">fhalf</span><span class="p">)</span>
-    <span class="n">lfwhml</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">lfil</span><span class="p">[</span><span class="n">con</span><span class="p">])</span>
-    <span class="n">lfwhmr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">lfil</span><span class="p">[</span><span class="n">con</span><span class="p">])</span>
-    <span class="n">lcen</span> <span class="o">=</span> <span class="p">(</span><span class="n">lfwhmr</span><span class="o">+</span><span class="n">lfwhml</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span>
+    fhalf = np.max(ffil)/2.0
+    con = (ffil&gt;fhalf)
+    lfwhml = np.min(lfil[con])
+    lfwhmr = np.max(lfil[con])
+    lcen = (lfwhmr+lfwhml)/2.
 
-    <span class="n">lamS</span><span class="p">,</span><span class="n">spec</span> <span class="o">=</span> <span class="n">l0</span><span class="p">,</span> <span class="n">f0</span>  <span class="c1"># Two columns with wavelength and flux density</span>
-    <span class="n">lamF</span><span class="p">,</span><span class="n">filt</span> <span class="o">=</span> <span class="n">lfil</span><span class="p">,</span> <span class="n">ffil</span>  <span class="c1"># Two columns with wavelength and response in the range [0,1]</span>
-    <span class="n">filt_int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">lamS</span><span class="p">,</span> <span class="n">lamF</span><span class="p">,</span> <span class="n">filt</span><span class="p">)</span>  <span class="c1"># Interpolate Filter to common(spectra) wavelength axis</span>
-    <span class="n">wht</span> <span class="o">=</span> <span class="mf">1.</span>
+    lamS,spec = l0, f0  # Two columns with wavelength and flux density
+    lamF,filt = lfil, ffil  # Two columns with wavelength and response in the range [0,1]
+    filt_int = np.interp(lamS, lamF, filt)  # Interpolate Filter to common(spectra) wavelength axis
+    wht = 1.
 
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lamS</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-        <span class="n">I1</span> <span class="o">=</span> <span class="n">simps</span><span class="p">(</span><span class="n">spec</span> <span class="o">/</span> <span class="n">lamS</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">filt_int</span> <span class="o">*</span> <span class="n">lamS</span><span class="p">,</span> <span class="n">lamS</span><span class="p">)</span>  <span class="c1"># Denominator for Fnu</span>
-        <span class="n">I2</span> <span class="o">=</span> <span class="n">simps</span><span class="p">(</span><span class="n">filt_int</span><span class="o">/</span><span class="n">lamS</span><span class="p">,</span> <span class="n">lamS</span><span class="p">)</span> <span class="c1"># Numerator</span>
-        <span class="n">fnu</span> <span class="o">=</span> <span class="n">I1</span><span class="o">/</span><span class="n">I2</span><span class="o">/</span><span class="n">c</span> <span class="c1"># Average flux density</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">I1</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">I2</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">fnu</span> <span class="o">=</span> <span class="mi">0</span>
+    if len(lamS)&gt;0:
+        I1 = simps(spec / lamS**2 * c * filt_int * lamS, lamS)  # Denominator for Fnu
+        I2 = simps(filt_int/lamS, lamS) # Numerator
+        fnu = I1/I2/c # Average flux density
+    else:
+        I1 = 0
+        I2 = 0
+        fnu = 0
 
-    <span class="k">return</span> <span class="n">lcen</span><span class="p">,</span> <span class="n">fnu</span>
+    return lcen, fnu
 </pre>
                </div>
               </div>
@@ -1680,13 +1680,13 @@ Length = 5001 rows
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># Convolve observed spectrum with the filter response.</span>
-<span class="c1"># The input flux need to be in Fnu with magzp=25;</span>
+                <pre><span></span># Convolve observed spectrum with the filter response.
+# The input flux need to be in Fnu with magzp=25;
 
-<span class="c1"># Cut edge of observed flux;</span>
-<span class="n">con</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&gt;</span> <span class="mf">1.75</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&lt;</span> <span class="mf">2.25</span><span class="p">)</span>
-<span class="n">lcen</span><span class="p">,</span> <span class="n">fnu</span> <span class="o">=</span> <span class="n">filconv</span><span class="p">(</span><span class="n">wave_filt</span><span class="p">,</span> <span class="n">flux_filt</span><span class="p">,</span> <span class="n">wave</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">flux_combine</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">DIR</span><span class="o">=</span><span class="s1">'./'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'Central wavelength and total flux are ;'</span><span class="p">,</span> <span class="n">lcen</span><span class="p">,</span> <span class="n">fnu</span><span class="p">)</span>
+# Cut edge of observed flux;
+con = (wave &gt; 1.75) &amp; (wave &lt; 2.25)
+lcen, fnu = filconv(wave_filt, flux_filt, wave[con], flux_combine[con], DIR='./')
+print('Central wavelength and total flux are ;', lcen, fnu)
 </pre>
                </div>
               </div>
@@ -1704,10 +1704,10 @@ Length = 5001 rows
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># Get normalization factor;</span>
-<span class="n">iix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">id_cat</span><span class="p">[:]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
-<span class="n">Cnorm</span> <span class="o">=</span> <span class="n">fd_cat</span><span class="p">[</span><span class="s1">'F</span><span class="si">%d</span><span class="s1">'</span><span class="o">%</span><span class="p">(</span><span class="n">eazy_filt</span><span class="p">)][</span><span class="n">iix</span><span class="p">]</span> <span class="o">/</span> <span class="n">fnu</span>
-<span class="n">Cnorm</span>
+                <pre><span></span># Get normalization factor;
+iix = np.where(id_cat[:] == int(id))
+Cnorm = fd_cat['F%d'%(eazy_filt)][iix] / fnu
+Cnorm
 </pre>
                </div>
               </div>
@@ -1729,14 +1729,14 @@ Length = 5001 rows
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># Wirte the normalized spectrum:</span>
-<span class="c1"># Make it into a Spectrum1D instance.</span>
-<span class="n">file_1d</span> <span class="o">=</span> <span class="s1">'</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_combine_1d_opt.fits'</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+                <pre><span></span># Wirte the normalized spectrum:
+# Make it into a Spectrum1D instance.
+file_1d = '%sl3_nis_%s_%s_s%s_combine_1d_opt.fits'%(DIR_OUT, filt, grism, id)
 
-<span class="n">obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span>
-                 <span class="n">flux</span><span class="o">=</span><span class="n">flux_combine</span> <span class="o">*</span> <span class="n">Cnorm</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">dimensionless_unscaled</span><span class="p">,</span>
-                 <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">flux_err_combine</span> <span class="o">*</span> <span class="n">Cnorm</span><span class="p">),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
-<span class="n">obs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_1d</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'tabular-fits'</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+obs = Spectrum1D(spectral_axis=wave*u.um,
+                 flux=flux_combine * Cnorm * u.dimensionless_unscaled,
+                 uncertainty=StdDevUncertainty(flux_err_combine * Cnorm), unit='')
+obs.write(file_1d, format='tabular-fits', overwrite=True)
 </pre>
                </div>
               </div>
@@ -1754,59 +1754,59 @@ Length = 5001 rows
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">DIR_FIL</span> <span class="o">=</span> <span class="s1">'./NIRISS_Filters/DATA/'</span>
-<span class="n">filts</span>  <span class="o">=</span> <span class="p">[</span><span class="s1">'f115w'</span><span class="p">,</span> <span class="s1">'f150w'</span><span class="p">,</span> <span class="s1">'f200w'</span><span class="p">]</span>
-<span class="c1"># The number corresponds to NIRISS filters in EAZY filter response;</span>
-<span class="n">eazy_filts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">309</span><span class="p">,</span> <span class="mi">310</span><span class="p">,</span> <span class="mi">311</span><span class="p">]</span>
+                <pre><span></span>DIR_FIL = './NIRISS_Filters/DATA/'
+filts  = ['f115w', 'f150w', 'f200w']
+# The number corresponds to NIRISS filters in EAZY filter response;
+eazy_filts = [309, 310, 311]
 
-<span class="c1"># Masks for problematic flux at edge;</span>
-<span class="n">mask_lw</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.35</span><span class="p">,</span> <span class="mf">1.75</span><span class="p">]</span>
-<span class="n">mask_uw</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.65</span><span class="p">,</span> <span class="mf">2.23</span><span class="p">]</span>
+# Masks for problematic flux at edge;
+mask_lw = [1.05, 1.35, 1.75]
+mask_uw = [1.25, 1.65, 2.23]
 
-<span class="k">for</span> <span class="n">ff</span><span class="p">,</span><span class="n">filt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">filts</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">dither</span> <span class="ow">in</span> <span class="n">dithers</span><span class="p">:</span>
-        <span class="n">file_1d</span> <span class="o">=</span> <span class="s1">'</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_ndither</span><span class="si">%d</span><span class="s1">_1d_opt.fits'</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">dither</span><span class="p">)</span>
-        <span class="n">fd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-        <span class="k">if</span> <span class="n">dither</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">wave</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'wavelength'</span><span class="p">]</span>
-            <span class="n">flux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ndither</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)),</span> <span class="s1">'float'</span><span class="p">)</span>
-            <span class="n">flux_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ndither</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)),</span> <span class="s1">'float'</span><span class="p">)</span>
+for ff,filt in enumerate(filts):
+    for dither in dithers:
+        file_1d = '%sl3_nis_%s_%s_s%s_ndither%d_1d_opt.fits'%(DIR_OUT, filt, grism, id, dither)
+        fd = fits.open(file_1d)[1].data
+        if dither == 0:
+            wave = fd['wavelength']
+            flux = np.zeros((ndither, len(wave)), 'float')
+            flux_err = np.zeros((ndither, len(wave)), 'float')
 
-            <span class="n">flux</span><span class="p">[</span><span class="n">dither</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'flux'</span><span class="p">]</span>
-            <span class="n">flux_err</span><span class="p">[</span><span class="n">dither</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'uncertainty'</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">wave_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'wavelength'</span><span class="p">]</span>
-            <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'flux'</span><span class="p">]</span>
-            <span class="n">flux_err_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'uncertainty'</span><span class="p">]</span>
+            flux[dither,:] = fd['flux']
+            flux_err[dither,:] = fd['uncertainty']
+        else:
+            wave_tmp = fd['wavelength']
+            flux_tmp = fd['flux']
+            flux_err_tmp = fd['uncertainty']
 
-            <span class="n">flux</span><span class="p">[</span><span class="n">dither</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">wave_tmp</span><span class="p">,</span> <span class="n">flux_tmp</span><span class="p">)</span>
-            <span class="n">flux_err</span><span class="p">[</span><span class="n">dither</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">wave_tmp</span><span class="p">,</span> <span class="n">flux_err_tmp</span><span class="p">[:]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+            flux[dither,:] = np.interp(wave, wave_tmp, flux_tmp)
+            flux_err[dither,:] = np.sqrt(np.interp(wave, wave_tmp, flux_err_tmp[:]**2))
 
-    <span class="c1"># Combine;</span>
-    <span class="n">flux_combine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">),</span> <span class="s1">'float'</span><span class="p">)</span>
-    <span class="n">flux_err_combine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">),</span> <span class="s1">'float'</span><span class="p">)</span>
+    # Combine;
+    flux_combine = np.zeros(len(wave), 'float')
+    flux_err_combine = np.zeros(len(wave), 'float')
 
-    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)):</span>
-        <span class="n">flux_combine</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">flux</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">flux_err</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">flux_err</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> 
-        <span class="n">flux_err_combine</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">flux_err</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">flux_err</span><span class="p">[:,</span><span class="n">ii</span><span class="p">])</span>
+    for ii in range(len(wave)):
+        flux_combine[ii] = np.sum(flux[:,ii] * 1 / flux_err[:,ii]**2) / np.sum(1 / flux_err[:,ii]**2) 
+        flux_err_combine[ii] = np.sqrt(np.sum(flux_err[:,ii]**2)) / len(flux_err[:,ii])
 
-    <span class="c1"># Normalize;</span>
-    <span class="n">filt_data</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">'</span><span class="si">%s</span><span class="s1">/NIRISS_</span><span class="si">%s</span><span class="s1">.txt'</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_FIL</span><span class="p">,</span> <span class="n">filt</span><span class="o">.</span><span class="n">upper</span><span class="p">()))</span>
-    <span class="n">wave_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">'Wavelength'</span><span class="p">]</span>
-    <span class="n">flux_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">'FilterTrans'</span><span class="p">]</span>
+    # Normalize;
+    filt_data = ascii.read('%s/NIRISS_%s.txt'%(DIR_FIL, filt.upper()))
+    wave_filt = filt_data['Wavelength']
+    flux_filt = filt_data['FilterTrans']
 
-    <span class="n">con</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&gt;</span> <span class="n">mask_lw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&lt;</span> <span class="n">mask_uw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span>
-    <span class="n">lcen</span><span class="p">,</span> <span class="n">fnu</span> <span class="o">=</span> <span class="n">filconv</span><span class="p">(</span><span class="n">wave_filt</span><span class="p">,</span> <span class="n">flux_filt</span><span class="p">,</span> <span class="n">wave</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">flux_combine</span><span class="p">[</span><span class="n">con</span><span class="p">])</span>
-    <span class="n">iix</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">id_cat</span><span class="p">[:]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
-    <span class="n">Cnorm</span> <span class="o">=</span> <span class="n">fd_cat</span><span class="p">[</span><span class="s1">'F</span><span class="si">%d</span><span class="s1">'</span><span class="o">%</span><span class="p">(</span><span class="n">eazy_filts</span><span class="p">[</span><span class="n">ff</span><span class="p">])][</span><span class="n">iix</span><span class="p">]</span> <span class="o">/</span> <span class="n">fnu</span>
+    con = (wave &gt; mask_lw[ff]) &amp; (wave &lt; mask_uw[ff])
+    lcen, fnu = filconv(wave_filt, flux_filt, wave[con], flux_combine[con])
+    iix   = np.where(id_cat[:] == int(id))
+    Cnorm = fd_cat['F%d'%(eazy_filts[ff])][iix] / fnu
 
-    <span class="c1"># Wirte:</span>
-    <span class="n">file_1d</span> <span class="o">=</span> <span class="s1">'</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_combine_1d_opt.fits'</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    # Wirte:
+    file_1d = '%sl3_nis_%s_%s_s%s_combine_1d_opt.fits'%(DIR_OUT, filt, grism, id)
 
-    <span class="n">obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span>
-                     <span class="n">flux</span><span class="o">=</span><span class="n">flux_combine</span> <span class="o">*</span> <span class="n">Cnorm</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">dimensionless_unscaled</span><span class="p">,</span>
-                     <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">flux_err_combine</span> <span class="o">*</span> <span class="n">Cnorm</span><span class="p">),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
-    <span class="n">obs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_1d</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'tabular-fits'</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    obs = Spectrum1D(spectral_axis=wave*u.um,
+                     flux=flux_combine * Cnorm * u.dimensionless_unscaled,
+                     uncertainty=StdDevUncertainty(flux_err_combine * Cnorm), unit='')
+    obs.write(file_1d, format='tabular-fits', overwrite=True)
     
 </pre>
                </div>
@@ -1828,33 +1828,33 @@ Length = 5001 rows
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">filts</span>  <span class="o">=</span> <span class="p">[</span><span class="s1">'f115w'</span><span class="p">,</span> <span class="s1">'f150w'</span><span class="p">,</span> <span class="s1">'f200w'</span><span class="p">]</span>
-<span class="n">cols</span>   <span class="o">=</span> <span class="p">[</span><span class="s1">'lightblue'</span><span class="p">,</span> <span class="s1">'orange'</span><span class="p">,</span> <span class="s1">'purple'</span><span class="p">]</span>
+                <pre><span></span>filts  = ['f115w', 'f150w', 'f200w']
+cols   = ['lightblue', 'orange', 'purple']
 
-<span class="k">for</span> <span class="n">ff</span><span class="p">,</span><span class="n">filt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">filts</span><span class="p">):</span>
-    <span class="n">file_1d</span> <span class="o">=</span> <span class="s1">'</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_combine_1d_opt.fits'</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
-    <span class="n">fd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">wave</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'wavelength'</span><span class="p">]</span>
-    <span class="n">flux</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'flux'</span><span class="p">]</span>
-    <span class="n">flux_err</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'uncertainty'</span><span class="p">]</span>
+for ff,filt in enumerate(filts):
+    file_1d = '%sl3_nis_%s_%s_s%s_combine_1d_opt.fits'%(DIR_OUT, filt, grism, id)
+    fd = fits.open(file_1d)[1].data
+    wave = fd['wavelength']
+    flux = fd['flux']
+    flux_err = fd['uncertainty']
 
-    <span class="n">con</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&gt;</span> <span class="n">mask_lw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&lt;</span> <span class="n">mask_uw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">flux</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">'</span><span class="o">%</span><span class="p">(</span><span class="n">grism</span><span class="p">,</span> <span class="n">filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span>
+    con = (wave &gt; mask_lw[ff]) &amp; (wave &lt; mask_uw[ff])
+    plt.plot(wave[con], flux[con], ls='-', label='%s %s'%(grism, filts[ff]), color=cols[ff])
 
-    <span class="n">filt_data</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">'</span><span class="si">%s</span><span class="s1">/NIRISS_</span><span class="si">%s</span><span class="s1">.txt'</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_FIL</span><span class="p">,</span> <span class="n">filt</span><span class="o">.</span><span class="n">upper</span><span class="p">()))</span>
-    <span class="n">wave_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">'Wavelength'</span><span class="p">]</span>
-    <span class="n">flux_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">'FilterTrans'</span><span class="p">]</span>
+    filt_data = ascii.read('%s/NIRISS_%s.txt'%(DIR_FIL, filt.upper()))
+    wave_filt = filt_data['Wavelength']
+    flux_filt = filt_data['FilterTrans']
 
-    <span class="n">con</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&gt;</span> <span class="n">mask_lw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&lt;</span> <span class="n">mask_uw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span>
-    <span class="n">lcen</span><span class="p">,</span> <span class="n">fnu</span> <span class="o">=</span> <span class="n">filconv</span><span class="p">(</span><span class="n">wave_filt</span><span class="p">,</span> <span class="n">flux_filt</span><span class="p">,</span> <span class="n">wave</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">flux</span><span class="p">[</span><span class="n">con</span><span class="p">])</span>
-    <span class="n">iix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">id_cat</span><span class="p">[:]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">lcen</span><span class="p">,</span> <span class="n">fd_cat</span><span class="p">[</span><span class="s1">'F</span><span class="si">%d</span><span class="s1">'</span><span class="o">%</span><span class="p">(</span><span class="n">eazy_filts</span><span class="p">[</span><span class="n">ff</span><span class="p">])][</span><span class="n">iix</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'s'</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="n">ff</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">'BB </span><span class="si">%s</span><span class="s1">'</span><span class="o">%</span><span class="k">filts</span>[ff])
+    con = (wave &gt; mask_lw[ff]) &amp; (wave &lt; mask_uw[ff])
+    lcen, fnu = filconv(wave_filt, flux_filt, wave[con], flux[con])
+    iix = np.where(id_cat[:] == int(id))
+    plt.scatter(lcen, fd_cat['F%d'%(eazy_filts[ff])][iix], marker='s', s=50, edgecolor='k', color=cols[ff], label='BB %s'%filts[ff])
 
 
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'wavelength'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'flux'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+plt.xlabel('wavelength')
+plt.ylabel('flux')
+plt.ylim(0, 60)
+plt.legend(loc=0)
 </pre>
                </div>
               </div>
@@ -1862,7 +1862,7 @@ Length = 5001 rows
              <div class="cell_output docutils container">
               <div class="output text_plain highlight-myst-ansi notranslate">
                <div class="highlight">
-                <pre><span></span>&lt;matplotlib.legend.Legend at 0x7fe47577ed90&gt;
+                <pre><span></span>&lt;matplotlib.legend.Legend at 0x7f7142273bb0&gt;
 </pre>
                </div>
               </div>
@@ -1881,61 +1881,61 @@ Length = 5001 rows
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="nb">id</span> <span class="o">=</span> <span class="s1">'00003'</span>
+                <pre><span></span>id = '00003'
 
-<span class="n">filts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'f115w'</span><span class="p">,</span> <span class="s1">'f150w'</span><span class="p">,</span> <span class="s1">'f200w'</span><span class="p">]</span>
-<span class="n">eazy_filts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">309</span><span class="p">,</span> <span class="mi">310</span><span class="p">,</span> <span class="mi">311</span><span class="p">]</span>
-<span class="n">DIR_FIL</span> <span class="o">=</span> <span class="s1">'./NIRISS_Filters/DATA/'</span>
+filts = ['f115w', 'f150w', 'f200w']
+eazy_filts = [309, 310, 311]
+DIR_FIL = './NIRISS_Filters/DATA/'
 
-<span class="c1"># Masks for problematic flux at edge;</span>
-<span class="n">mask_lw</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.35</span><span class="p">,</span> <span class="mf">1.75</span><span class="p">]</span>
-<span class="n">mask_uw</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.65</span><span class="p">,</span> <span class="mf">2.23</span><span class="p">]</span>
+# Masks for problematic flux at edge;
+mask_lw = [1.05, 1.35, 1.75]
+mask_uw = [1.25, 1.65, 2.23]
 
-<span class="k">for</span> <span class="n">ff</span><span class="p">,</span> <span class="n">filt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">filts</span><span class="p">):</span>
+for ff, filt in enumerate(filts):
         
-    <span class="k">for</span> <span class="n">dither</span> <span class="ow">in</span> <span class="n">dithers</span><span class="p">:</span>
-        <span class="n">file_1d</span> <span class="o">=</span> <span class="s1">'</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_ndither</span><span class="si">%d</span><span class="s1">_1d_opt.fits'</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">dither</span><span class="p">)</span>
-        <span class="n">fd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-        <span class="k">if</span> <span class="n">dither</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">wave</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'wavelength'</span><span class="p">]</span>
-            <span class="n">flux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ndither</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)),</span><span class="s1">'float'</span><span class="p">)</span>
-            <span class="n">flux_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ndither</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)),</span><span class="s1">'float'</span><span class="p">)</span>
+    for dither in dithers:
+        file_1d = '%sl3_nis_%s_%s_s%s_ndither%d_1d_opt.fits'%(DIR_OUT, filt, grism, id, dither)
+        fd = fits.open(file_1d)[1].data
+        if dither == 0:
+            wave = fd['wavelength']
+            flux = np.zeros((ndither, len(wave)),'float')
+            flux_err = np.zeros((ndither, len(wave)),'float')
 
-            <span class="n">flux</span><span class="p">[</span><span class="n">dither</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'flux'</span><span class="p">]</span>
-            <span class="n">flux_err</span><span class="p">[</span><span class="n">dither</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'uncertainty'</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">wave_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'wavelength'</span><span class="p">]</span>
-            <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'flux'</span><span class="p">]</span>
-            <span class="n">flux_err_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'uncertainty'</span><span class="p">]</span>
+            flux[dither,:] = fd['flux']
+            flux_err[dither,:] = fd['uncertainty']
+        else:
+            wave_tmp = fd['wavelength']
+            flux_tmp = fd['flux']
+            flux_err_tmp = fd['uncertainty']
 
-            <span class="n">flux</span><span class="p">[</span><span class="n">dither</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">wave_tmp</span><span class="p">,</span> <span class="n">flux_tmp</span><span class="p">)</span>
-            <span class="n">flux_err</span><span class="p">[</span><span class="n">dither</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">wave_tmp</span><span class="p">,</span> <span class="n">flux_err_tmp</span><span class="p">[:]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+            flux[dither,:] = np.interp(wave, wave_tmp, flux_tmp)
+            flux_err[dither,:] = np.sqrt(np.interp(wave, wave_tmp, flux_err_tmp[:]**2))
 
-    <span class="c1"># Combine;</span>
-    <span class="n">flux_combine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">),</span> <span class="s1">'float'</span><span class="p">)</span>
-    <span class="n">flux_err_combine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">),</span> <span class="s1">'float'</span><span class="p">)</span>
+    # Combine;
+    flux_combine = np.zeros(len(wave), 'float')
+    flux_err_combine = np.zeros(len(wave), 'float')
 
-    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)):</span>
-        <span class="n">flux_combine</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">flux</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">flux_err</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">flux_err</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> 
-        <span class="n">flux_err_combine</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">flux_err</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">flux_err</span><span class="p">[:,</span><span class="n">ii</span><span class="p">])</span>
+    for ii in range(len(wave)):
+        flux_combine[ii] = np.sum(flux[:,ii] * 1 / flux_err[:,ii]**2) / np.sum(1 / flux_err[:,ii]**2) 
+        flux_err_combine[ii] = np.sqrt(np.sum(flux_err[:,ii]**2)) / len(flux_err[:,ii])
 
-    <span class="c1"># Normalize;</span>
-    <span class="n">filt_data</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">'</span><span class="si">%s</span><span class="s1">/NIRISS_</span><span class="si">%s</span><span class="s1">.txt'</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_FIL</span><span class="p">,</span> <span class="n">filt</span><span class="o">.</span><span class="n">upper</span><span class="p">()))</span>
-    <span class="n">wave_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">'Wavelength'</span><span class="p">]</span>
-    <span class="n">flux_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">'FilterTrans'</span><span class="p">]</span>
+    # Normalize;
+    filt_data = ascii.read('%s/NIRISS_%s.txt'%(DIR_FIL, filt.upper()))
+    wave_filt = filt_data['Wavelength']
+    flux_filt = filt_data['FilterTrans']
 
-    <span class="n">con</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&gt;</span> <span class="n">mask_lw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&lt;</span> <span class="n">mask_uw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span>
-    <span class="n">lcen</span><span class="p">,</span> <span class="n">fnu</span> <span class="o">=</span> <span class="n">filconv</span><span class="p">(</span><span class="n">wave_filt</span><span class="p">,</span> <span class="n">flux_filt</span><span class="p">,</span> <span class="n">wave</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">flux_combine</span><span class="p">[</span><span class="n">con</span><span class="p">])</span>
-    <span class="n">iix</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">id_cat</span><span class="p">[:]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
-    <span class="n">Cnorm</span> <span class="o">=</span> <span class="n">fd_cat</span><span class="p">[</span><span class="s1">'F</span><span class="si">%d</span><span class="s1">'</span><span class="o">%</span><span class="p">(</span><span class="n">eazy_filts</span><span class="p">[</span><span class="n">ff</span><span class="p">])][</span><span class="n">iix</span><span class="p">]</span> <span class="o">/</span> <span class="n">fnu</span>
+    con = (wave &gt; mask_lw[ff]) &amp; (wave &lt; mask_uw[ff])
+    lcen, fnu = filconv(wave_filt, flux_filt, wave[con], flux_combine[con])
+    iix   = np.where(id_cat[:] == int(id))
+    Cnorm = fd_cat['F%d'%(eazy_filts[ff])][iix] / fnu
         
-    <span class="c1"># Wirte:</span>
-    <span class="n">file_1d</span> <span class="o">=</span> <span class="s1">'</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_combine_1d_opt.fits'</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    # Wirte:
+    file_1d = '%sl3_nis_%s_%s_s%s_combine_1d_opt.fits'%(DIR_OUT, filt, grism, id)
 
-    <span class="n">obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span>
-                     <span class="n">flux</span><span class="o">=</span><span class="n">flux_combine</span> <span class="o">*</span> <span class="n">Cnorm</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">dimensionless_unscaled</span><span class="p">,</span>
-                     <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">flux_err_combine</span> <span class="o">*</span> <span class="n">Cnorm</span><span class="p">),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
-    <span class="n">obs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_1d</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'tabular-fits'</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    obs = Spectrum1D(spectral_axis=wave*u.um,
+                     flux=flux_combine * Cnorm * u.dimensionless_unscaled,
+                     uncertainty=StdDevUncertainty(flux_err_combine * Cnorm), unit='')
+    obs.write(file_1d, format='tabular-fits', overwrite=True)
     
 </pre>
                </div>
@@ -1946,33 +1946,33 @@ Length = 5001 rows
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">filts</span>  <span class="o">=</span> <span class="p">[</span><span class="s1">'f115w'</span><span class="p">,</span> <span class="s1">'f150w'</span><span class="p">,</span> <span class="s1">'f200w'</span><span class="p">]</span>
-<span class="n">cols</span>   <span class="o">=</span> <span class="p">[</span><span class="s1">'lightblue'</span><span class="p">,</span> <span class="s1">'orange'</span><span class="p">,</span> <span class="s1">'purple'</span><span class="p">]</span>
+                <pre><span></span>filts  = ['f115w', 'f150w', 'f200w']
+cols   = ['lightblue', 'orange', 'purple']
 
-<span class="k">for</span> <span class="n">ff</span><span class="p">,</span><span class="n">filt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">filts</span><span class="p">):</span>
-    <span class="n">file_1d</span> <span class="o">=</span> <span class="s1">'</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_combine_1d_opt.fits'</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
-    <span class="n">fd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">wave</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'wavelength'</span><span class="p">]</span>
-    <span class="n">flux</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'flux'</span><span class="p">]</span>
-    <span class="n">flux_err</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">'uncertainty'</span><span class="p">]</span>
+for ff,filt in enumerate(filts):
+    file_1d = '%sl3_nis_%s_%s_s%s_combine_1d_opt.fits'%(DIR_OUT, filt, grism, id)
+    fd = fits.open(file_1d)[1].data
+    wave = fd['wavelength']
+    flux = fd['flux']
+    flux_err = fd['uncertainty']
 
-    <span class="n">con</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&gt;</span> <span class="n">mask_lw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&lt;</span> <span class="n">mask_uw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">flux</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">'</span><span class="o">%</span><span class="p">(</span><span class="n">grism</span><span class="p">,</span> <span class="n">filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span>
+    con = (wave &gt; mask_lw[ff]) &amp; (wave &lt; mask_uw[ff])
+    plt.plot(wave[con], flux[con], ls='-', label='%s %s'%(grism, filts[ff]), color=cols[ff])
 
-    <span class="n">filt_data</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">'</span><span class="si">%s</span><span class="s1">/NIRISS_</span><span class="si">%s</span><span class="s1">.txt'</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_FIL</span><span class="p">,</span> <span class="n">filt</span><span class="o">.</span><span class="n">upper</span><span class="p">()))</span>
-    <span class="n">wave_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">'Wavelength'</span><span class="p">]</span>
-    <span class="n">flux_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">'FilterTrans'</span><span class="p">]</span>
+    filt_data = ascii.read('%s/NIRISS_%s.txt'%(DIR_FIL, filt.upper()))
+    wave_filt = filt_data['Wavelength']
+    flux_filt = filt_data['FilterTrans']
 
-    <span class="n">con</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&gt;</span> <span class="n">mask_lw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&lt;</span> <span class="n">mask_uw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span>
-    <span class="n">lcen</span><span class="p">,</span> <span class="n">fnu</span> <span class="o">=</span> <span class="n">filconv</span><span class="p">(</span><span class="n">wave_filt</span><span class="p">,</span> <span class="n">flux_filt</span><span class="p">,</span> <span class="n">wave</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">flux</span><span class="p">[</span><span class="n">con</span><span class="p">])</span>
-    <span class="n">iix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">id_cat</span><span class="p">[:]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">lcen</span><span class="p">,</span> <span class="n">fd_cat</span><span class="p">[</span><span class="s1">'F</span><span class="si">%d</span><span class="s1">'</span><span class="o">%</span><span class="p">(</span><span class="n">eazy_filts</span><span class="p">[</span><span class="n">ff</span><span class="p">])][</span><span class="n">iix</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'s'</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="n">ff</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">'BB </span><span class="si">%s</span><span class="s1">'</span><span class="o">%</span><span class="k">filts</span>[ff])
+    con = (wave &gt; mask_lw[ff]) &amp; (wave &lt; mask_uw[ff])
+    lcen, fnu = filconv(wave_filt, flux_filt, wave[con], flux[con])
+    iix = np.where(id_cat[:] == int(id))
+    plt.scatter(lcen, fd_cat['F%d'%(eazy_filts[ff])][iix], marker='s', s=50, edgecolor='k', color=cols[ff], label='BB %s'%filts[ff])
 
 
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'wavelength'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'flux'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+plt.xlabel('wavelength')
+plt.ylabel('flux')
+plt.ylim(0, 60)
+plt.legend(loc=0)
 </pre>
                </div>
               </div>
@@ -1980,7 +1980,7 @@ Length = 5001 rows
              <div class="cell_output docutils container">
               <div class="output text_plain highlight-myst-ansi notranslate">
                <div class="highlight">
-                <pre><span></span>&lt;matplotlib.legend.Legend at 0x7fe4753bee50&gt;
+                <pre><span></span>&lt;matplotlib.legend.Legend at 0x7f714225be20&gt;
 </pre>
                </div>
               </div>

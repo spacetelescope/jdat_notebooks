@@ -899,14 +899,14 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">specutils</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">astropy.modeling.fitting</span> <span class="k">as</span> <span class="nn">fitting</span>
-<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span><span class="p">,</span> <span class="n">QTable</span>
-<span class="kn">from</span> <span class="nn">astropy.nddata</span> <span class="kn">import</span> <span class="n">StdDevUncertainty</span>
-<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
-<span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">quantity_support</span>
+                <pre><span></span>import numpy as np
+import specutils
+import time
+import astropy.modeling.fitting as fitting
+from astropy.table import Table, QTable
+from astropy.nddata import StdDevUncertainty
+import astropy.units as u
+from astropy.visualization import quantity_support
 </pre>
                </div>
               </div>
@@ -916,12 +916,12 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># import astropy</span>
-<span class="c1"># import matplotlib</span>
-<span class="c1"># print("Astropy Version: ",astropy.__version__)</span>
-<span class="c1"># print("Numpy Version: ",np.__version__)</span>
-<span class="c1"># print("Specutils Version: ",specutils.__version__)</span>
-<span class="c1"># print("Matplotlib Version: ",matplotlib.__version__)</span>
+                <pre><span></span># import astropy
+# import matplotlib
+# print("Astropy Version: ",astropy.__version__)
+# print("Numpy Version: ",np.__version__)
+# print("Specutils Version: ",specutils.__version__)
+# print("Matplotlib Version: ",matplotlib.__version__)
 </pre>
                </div>
               </div>
@@ -963,11 +963,11 @@ const thebe_selector_output = ".output, .cell_output"
               <div class="cell_input docutils container">
                <div class="highlight-ipython3 notranslate">
                 <div class="highlight">
-                 <pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="c1"># inline -- noninteractive cells, notebook -- interactive cells </span>
-<span class="o">%</span><span class="k">matplotlib</span> inline 
-<span class="c1"># %matplotlib notebook</span>
-<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format ='retina' # Mackbook optimization
+                 <pre><span></span>import matplotlib.pyplot as plt
+# inline -- noninteractive cells, notebook -- interactive cells 
+%matplotlib inline 
+# %matplotlib notebook
+%config InlineBackend.figure_format ='retina' # Mackbook optimization
 </pre>
                 </div>
                </div>
@@ -1016,8 +1016,8 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">datafile</span> <span class="o">=</span> <span class="s2">"./n5548_mean_g130mb4.ecsv"</span>
-<span class="n">regionsfile</span> <span class="o">=</span> <span class="s2">"./n5548_lyalpha_sample.dat"</span>
+                <pre><span></span>datafile = "./n5548_mean_g130mb4.ecsv"
+regionsfile = "./n5548_lyalpha_sample.dat"
 </pre>
                </div>
               </div>
@@ -1064,8 +1064,8 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">QTable</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">datafile</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'ascii.ecsv'</span><span class="p">)</span>
-<span class="n">data</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+                <pre><span></span>data = QTable.read(datafile, format='ascii.ecsv')
+data[:3]
 </pre>
                </div>
               </div>
@@ -1117,10 +1117,10 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">uncertainty</span> <span class="o">=</span> <span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'uncertainty'</span><span class="p">])</span>
-<span class="n">spectrum</span> <span class="o">=</span> <span class="n">specutils</span><span class="o">.</span><span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">'wavelength'</span><span class="p">],</span>
-                                <span class="n">flux</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">'flux'</span><span class="p">],</span> <span class="n">uncertainty</span><span class="o">=</span><span class="n">uncertainty</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">spectrum</span><span class="p">)</span>
+                <pre><span></span>uncertainty = StdDevUncertainty(data['uncertainty'])
+spectrum = specutils.Spectrum1D(spectral_axis=data['wavelength'],
+                                flux=data['flux'], uncertainty=uncertainty)
+print(spectrum)
 </pre>
                </div>
               </div>
@@ -1142,12 +1142,12 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">regionstab</span> <span class="o">=</span> <span class="n">QTable</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">regionsfile</span><span class="p">,</span><span class="nb">format</span><span class="o">=</span><span class="s1">'ascii'</span><span class="p">)</span>
-<span class="n">subregions</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">x0</span><span class="p">,</span><span class="n">x1</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">regionstab</span><span class="p">[</span><span class="s1">'col1'</span><span class="p">],</span><span class="n">regionstab</span><span class="p">[</span><span class="s1">'col2'</span><span class="p">]):</span>
-    <span class="n">subregions</span> <span class="o">+=</span> <span class="p">[(</span><span class="n">x0</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">AA</span><span class="p">,</span> <span class="n">x1</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">AA</span><span class="p">)]</span>
-<span class="n">regions</span><span class="o">=</span><span class="n">specutils</span><span class="o">.</span><span class="n">SpectralRegion</span><span class="p">(</span><span class="n">subregions</span><span class="p">)</span>
-<span class="n">regions</span>
+               <pre><span></span>regionstab = QTable.read(regionsfile,format='ascii')
+subregions = []
+for x0,x1 in zip(regionstab['col1'],regionstab['col2']):
+    subregions += [(x0*u.AA, x1*u.AA)]
+regions=specutils.SpectralRegion(subregions)
+regions
 </pre>
               </div>
              </div>
@@ -1175,12 +1175,12 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="k">def</span> <span class="nf">mask_from_regions</span><span class="p">(</span><span class="n">spectrum</span><span class="p">,</span><span class="n">regions</span><span class="p">):</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">spectrum</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">:</span>
-        <span class="n">submask</span> <span class="o">=</span> <span class="p">(</span><span class="n">spectrum</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">&gt;</span><span class="n">r</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">spectrum</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">&lt;=</span><span class="n">r</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span> <span class="o">|</span> <span class="n">submask</span>
-    <span class="n">spectrum</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span>
+                <pre><span></span>def mask_from_regions(spectrum,regions):
+    mask = np.zeros(spectrum.spectral_axis.shape,dtype=np.bool)
+    for r in regions:
+        submask = (spectrum.spectral_axis&gt;r.lower) &amp; (spectrum.spectral_axis&lt;=r.upper)
+        mask = mask | submask
+    spectrum.mask = mask
 </pre>
                </div>
               </div>
@@ -1190,8 +1190,8 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">mask_from_regions</span><span class="p">(</span><span class="n">spectrum</span><span class="p">,</span><span class="n">regions</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">spectrum</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+                <pre><span></span>mask_from_regions(spectrum,regions)
+print(spectrum.mask.min(), spectrum.mask.max())
 </pre>
                </div>
               </div>
@@ -1265,20 +1265,20 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="k">def</span> <span class="nf">plot_spectrum</span><span class="p">(</span><span class="n">spectrum</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">'b'</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span>
-                  <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">plot_mask</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                  <span class="n">mask_color</span><span class="o">=</span><span class="s1">'g'</span><span class="p">,</span><span class="n">mask_alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="k">with</span> <span class="n">quantity_support</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">spectrum</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span><span class="n">spectrum</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">plot_mask</span><span class="p">:</span> 
-            <span class="k">if</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">spectrum</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">spectrum</span><span class="o">.</span><span class="n">flux</span><span class="o">*</span><span class="n">spectrum</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span>
-                        <span class="n">alpha</span><span class="o">=</span><span class="n">mask_alpha</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">mask_color</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Wavelength ("</span> <span class="o">+</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlabel</span><span class="p">()</span> <span class="o">+</span> <span class="s2">")"</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Flux ("</span> <span class="o">+</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylabel</span><span class="p">()</span> <span class="o">+</span> <span class="s2">")"</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">ax</span>
+                <pre><span></span>def plot_spectrum(spectrum,color='b',alpha=0.5,figsize=(15,6),
+                  label=None,ax=None,plot_mask=True,
+                  mask_color='g',mask_alpha=0.1,title=None):
+    with quantity_support():
+        if ax is None:
+            fig, ax = plt.subplots(figsize=figsize)
+        ax.plot(spectrum.spectral_axis,spectrum.flux,color=color,alpha=alpha,label=label)
+        if plot_mask: 
+            if spectrum.mask is not None:
+                ax.fill_between(spectrum.spectral_axis,0,spectrum.flux*spectrum.mask,
+                        alpha=mask_alpha,color=mask_color)
+    ax.set_xlabel(r"Wavelength (" + ax.get_xlabel() + ")")
+    ax.set_ylabel(r"Flux (" + ax.get_ylabel() + ")")
+    return ax
 </pre>
                </div>
               </div>
@@ -1288,8 +1288,8 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plot_spectrum</span><span class="p">(</span><span class="n">spectrum</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'NGC 5548 spectrum and mask to be used for fitting the model'</span><span class="p">);</span>
+                <pre><span></span>ax = plot_spectrum(spectrum)
+ax.set_title('NGC 5548 spectrum and mask to be used for fitting the model');
 </pre>
                </div>
               </div>
@@ -1305,7 +1305,7 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="kn">import</span> <span class="nn">n5548_models</span> <span class="k">as</span> <span class="nn">models</span>
+                <pre><span></span>import n5548_models as models
 </pre>
                </div>
               </div>
@@ -1369,7 +1369,7 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">compound_model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">model1</span>
+                <pre><span></span>compound_model = models.model1
 </pre>
                </div>
               </div>
@@ -1427,7 +1427,7 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">compound_model</span><span class="p">)</span>
+                <pre><span></span>print(compound_model)
 </pre>
                </div>
               </div>
@@ -1437,10 +1437,10 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plot_spectrum</span><span class="p">(</span><span class="n">spectrum</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'data'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">spectrum</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">compound_model</span><span class="p">(</span><span class="n">spectrum</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="s1">'r'</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'initial model'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Data and initial model"</span><span class="p">);</span>
+                <pre><span></span>ax = plot_spectrum(spectrum,label='data')
+ax.plot(spectrum.spectral_axis, compound_model(spectrum.spectral_axis.value), 'r',label='initial model')
+ax.legend()
+ax.set_title("Data and initial model");
 </pre>
                </div>
               </div>
@@ -1469,7 +1469,7 @@ const thebe_selector_output = ".output, .cell_output"
            <div class="cell_input docutils container">
             <div class="highlight-ipython3 notranslate">
              <div class="highlight">
-              <pre><span></span><span class="n">fitter</span> <span class="o">=</span> <span class="n">fitting</span><span class="o">.</span><span class="n">LevMarLSQFitter</span><span class="p">()</span>
+              <pre><span></span>fitter = fitting.LevMarLSQFitter()
 </pre>
              </div>
             </div>
@@ -1556,9 +1556,9 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">value</span>
-<span class="n">flux</span> <span class="o">=</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">value</span>
-<span class="n">inverse_sigma</span> <span class="o">=</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">mask</span><span class="o">/</span><span class="n">spectrum</span><span class="o">.</span><span class="n">uncertainty</span><span class="o">.</span><span class="n">array</span>
+               <pre><span></span>wavelength = spectrum.spectral_axis.value
+flux = spectrum.flux.value
+inverse_sigma = spectrum.mask/spectrum.uncertainty.array
 </pre>
               </div>
              </div>
@@ -1571,10 +1571,10 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="n">fit_result</span> <span class="o">=</span> <span class="n">fitter</span><span class="p">(</span><span class="n">compound_model</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">,</span> <span class="n">flux</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">inverse_sigma</span><span class="p">,</span> <span class="n">acc</span><span class="o">=</span><span class="mf">1.E-30</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">6000</span><span class="p">)</span>
-<span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Elapsed time: "</span><span class="p">,</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+               <pre><span></span>start_time = time.time()
+fit_result = fitter(compound_model, wavelength, flux, weights=inverse_sigma, acc=1.E-30, maxiter=6000)
+end_time = time.time()
+print("Elapsed time: ", end_time - start_time)
 </pre>
               </div>
              </div>
@@ -1605,7 +1605,7 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">fitter</span><span class="o">.</span><span class="n">fit_info</span><span class="p">[</span><span class="s1">'message'</span><span class="p">])</span>
+               <pre><span></span>print(fitter.fit_info['message'])
 </pre>
               </div>
              </div>
@@ -1618,7 +1618,7 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">fit_result</span><span class="p">)</span>
+               <pre><span></span>print(fit_result)
 </pre>
               </div>
              </div>
@@ -1643,11 +1643,11 @@ const thebe_selector_output = ".output, .cell_output"
            <div class="cell_input docutils container">
             <div class="highlight-ipython3 notranslate">
              <div class="highlight">
-              <pre><span></span><span class="k">def</span> <span class="nf">chisq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">nfree</span><span class="p">):</span>
-    <span class="n">chisq</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">err</span><span class="o">**</span><span class="mi">2</span>
-    <span class="n">chisq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">chisq</span> <span class="o">*</span> <span class="n">mask</span><span class="p">)</span>
-    <span class="n">npoints</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">chisq</span> <span class="o">/</span> <span class="p">(</span><span class="n">npoints</span> <span class="o">-</span> <span class="n">nfree</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> 
+              <pre><span></span>def chisq(x, y, err, mask, model, nfree):
+    chisq = (y - model(x))**2 / err**2
+    chisq = np.sum(chisq * mask)
+    npoints = np.sum(mask)
+    return np.sqrt(chisq / (npoints - nfree - 1)) 
 </pre>
              </div>
             </div>
@@ -1680,19 +1680,19 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="k">if</span> <span class="s1">'fixed'</span> <span class="ow">in</span> <span class="n">fit_result</span><span class="o">.</span><span class="n">parameter_constraints</span><span class="p">:</span>
-    <span class="n">fix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">fit_result</span><span class="o">.</span><span class="n">fixed</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-    <span class="n">n_fixed_parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">fix</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">n_fixed_parameters</span> <span class="o">=</span> <span class="mi">0</span>
+               <pre><span></span>if 'fixed' in fit_result.parameter_constraints:
+    fix = np.asarray(fit_result.fixed.values())
+    n_fixed_parameters = np.sum(np.where(fix, 1, 0))
+else:
+    n_fixed_parameters = 0
 
-<span class="k">if</span> <span class="s1">'tied'</span> <span class="ow">in</span> <span class="n">fit_result</span><span class="o">.</span><span class="n">parameter_constraints</span><span class="p">:</span>
-    <span class="n">tie</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">fit_result</span><span class="o">.</span><span class="n">tied</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-    <span class="n">n_tied_parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">tie</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">n_tied_parameters</span> <span class="o">=</span> <span class="mi">0</span>
+if 'tied' in fit_result.parameter_constraints:
+    tie = np.asarray(fit_result.tied.values())
+    n_tied_parameters = np.sum(np.where(tie, 1, 0))
+else:
+    n_tied_parameters = 0
     
-<span class="n">n_free_par</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fit_result</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_fixed_parameters</span> <span class="o">-</span> <span class="n">n_tied_parameters</span>
+n_free_par = len(fit_result.parameters) - n_fixed_parameters - n_tied_parameters
 </pre>
               </div>
              </div>
@@ -1724,15 +1724,15 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">chisq_in</span> <span class="o">=</span> <span class="n">chisq</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">flux</span><span class="p">,</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">uncertainty</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">compound_model</span><span class="p">,</span> <span class="n">n_free_par</span><span class="p">)</span>
-<span class="n">chisq_out</span> <span class="o">=</span> <span class="n">chisq</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">flux</span><span class="p">,</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">uncertainty</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">fit_result</span><span class="p">,</span> <span class="n">n_free_par</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"chisq from input model:  </span><span class="si">%f</span><span class="s2">"</span> <span class="o">%</span> <span class="n">chisq_in</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"chisq from output model: </span><span class="si">%f</span><span class="s2">"</span> <span class="o">%</span> <span class="n">chisq_out</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Total data points: </span><span class="si">%d</span><span class="s2">"</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">wavelength</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Data points in wavelength ranges: </span><span class="si">%d</span><span class="s2">"</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">spectrum</span><span class="o">.</span><span class="n">mask</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Number of free parameters: </span><span class="si">%d</span><span class="s2">"</span> <span class="o">%</span> <span class="n">n_free_par</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Number of iterations: </span><span class="si">%d</span><span class="s2">"</span> <span class="o">%</span> <span class="n">fitter</span><span class="o">.</span><span class="n">fit_info</span><span class="p">[</span><span class="s1">'nfev'</span><span class="p">])</span>
-<span class="nb">print</span> <span class="p">(</span><span class="s2">"Fit engine took </span><span class="si">%d</span><span class="s2"> elapsed seconds."</span> <span class="o">%</span> <span class="p">(</span><span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+               <pre><span></span>chisq_in = chisq(wavelength, flux, spectrum.uncertainty.array, spectrum.mask, compound_model, n_free_par)
+chisq_out = chisq(wavelength, flux, spectrum.uncertainty.array, spectrum.mask, fit_result, n_free_par)
+print("chisq from input model:  %f" % chisq_in)
+print("chisq from output model: %f" % chisq_out)
+print("Total data points: %d" % len(wavelength))
+print("Data points in wavelength ranges: %d" % np.sum(spectrum.mask))
+print("Number of free parameters: %d" % n_free_par)
+print("Number of iterations: %d" % fitter.fit_info['nfev'])
+print ("Fit engine took %d elapsed seconds." % (end_time - start_time))
 </pre>
               </div>
              </div>
@@ -1765,27 +1765,27 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">cov</span> <span class="o">=</span> <span class="n">fitter</span><span class="o">.</span><span class="n">fit_info</span><span class="p">[</span><span class="s1">'param_cov'</span><span class="p">]</span>
+               <pre><span></span>cov = fitter.fit_info['param_cov']
 
-<span class="n">param_errors</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">if</span> <span class="n">cov</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="c1"># extract variances from covariance matrix</span>
-    <span class="n">fit_errors</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">param_name</span> <span class="ow">in</span> <span class="n">fit_result</span><span class="o">.</span><span class="n">param_names</span><span class="p">:</span>
-        <span class="n">fixed</span> <span class="o">=</span> <span class="n">fit_result</span><span class="o">.</span><span class="n">fixed</span><span class="p">[</span><span class="n">param_name</span><span class="p">]</span>
-        <span class="n">tied</span> <span class="o">=</span> <span class="n">fit_result</span><span class="o">.</span><span class="n">tied</span><span class="p">[</span><span class="n">param_name</span><span class="p">]</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">fixed</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">tied</span><span class="p">:</span>
-            <span class="n">fit_errors</span><span class="p">[</span><span class="n">param_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cov</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">])</span>
-            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+param_errors = {}
+i = 0
+if cov is not None:
+    # extract variances from covariance matrix
+    fit_errors = {}
+    for param_name in fit_result.param_names:
+        fixed = fit_result.fixed[param_name]
+        tied = fit_result.tied[param_name]
+        if not fixed and not tied:
+            fit_errors[param_name] = math.sqrt(cov[i,i])
+            i += 1
             
-    <span class="c1"># map errors to input model's components and parameters.</span>
-    <span class="k">for</span> <span class="n">param_name</span> <span class="ow">in</span> <span class="n">fit_errors</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">index</span><span class="p">,</span> <span class="n">target_param_name</span> <span class="o">=</span> <span class="n">fit_result</span><span class="o">.</span><span class="n">_param_map</span><span class="p">[</span><span class="n">param_name</span><span class="p">]</span>
-        <span class="n">component_name</span> <span class="o">=</span> <span class="n">fit_result</span><span class="o">.</span><span class="n">_submodels_names</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-        <span class="n">param_errors</span><span class="p">[(</span><span class="n">component_name</span><span class="p">,</span> <span class="n">target_param_name</span><span class="p">)]</span> <span class="o">=</span> <span class="n">fit_errors</span><span class="p">[</span><span class="n">param_name</span><span class="p">]</span>
+    # map errors to input model's components and parameters.
+    for param_name in fit_errors.keys():
+        index, target_param_name = fit_result._param_map[param_name]
+        component_name = fit_result._submodels_names[index]
+        param_errors[(component_name, target_param_name)] = fit_errors[param_name]
 
-<span class="nb">print</span><span class="p">(</span><span class="n">param_errors</span><span class="p">)</span>
+print(param_errors)
 </pre>
               </div>
              </div>
@@ -1863,13 +1863,13 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plot_spectrum</span><span class="p">(</span><span class="n">spectrum</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'data'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">compound_model</span><span class="p">(</span><span class="n">wavelength</span><span class="p">),</span> <span class="s1">'r'</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'initial model'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">fit_result</span><span class="p">(</span><span class="n">wavelength</span><span class="p">),</span> <span class="s1">'g'</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'fitted model'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">((</span><span class="mi">1200</span><span class="p">,</span><span class="mi">1275</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mf">7e-13</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Data and models"</span><span class="p">);</span>
+                <pre><span></span>ax = plot_spectrum(spectrum,label='data')
+ax.plot(wavelength, compound_model(wavelength), 'r',label='initial model')
+ax.plot(wavelength, fit_result(wavelength), 'g',label='fitted model')
+ax.set_xlim((1200,1275))
+ax.set_ylim((0,7e-13))
+ax.legend()
+ax.set_title("Data and models");
 </pre>
                </div>
               </div>
@@ -1891,18 +1891,18 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">ylim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">2.e-13</span><span class="p">,</span> <span class="mf">2.e-13</span><span class="p">)</span>
-<span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span><span class="n">flux</span><span class="o">-</span><span class="n">compound_model</span><span class="p">(</span><span class="n">wavelength</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s1">'original'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span><span class="n">flux</span><span class="o">-</span><span class="n">fit_result</span><span class="p">(</span><span class="n">wavelength</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s1">'original'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span><span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">spectrum</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span><span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">spectrum</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span>
-                        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">'g'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">((</span><span class="mf">1185.</span><span class="p">,</span> <span class="mf">1270.</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">'Wavelength ($\rm \AA$)'</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="s1">'large'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">'Flux ($\rm erg\, cm^{-2}\, s^{-1}\, \AA^{-1}$)'</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="s1">'large'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Residuals'</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="s1">'large'</span><span class="p">);</span>
+               <pre><span></span>ylim = (-2.e-13, 2.e-13)
+fig,ax = plt.subplots(figsize=(15,6))
+ax.plot(wavelength,flux-compound_model(wavelength),label='original')
+ax.plot(wavelength,flux-fit_result(wavelength),label='original')
+ax.fill_between(wavelength,ylim[0]*spectrum.mask,ylim[1]*spectrum.mask,
+                        alpha=0.1,color='g')
+ax.set_xlim((1185., 1270.))
+ax.set_ylim(ylim)
+ax.legend()
+ax.set_xlabel(r'Wavelength ($\rm \AA$)',fontsize='large')
+ax.set_ylabel(r'Flux ($\rm erg\, cm^{-2}\, s^{-1}\, \AA^{-1}$)',fontsize='large')
+ax.set_title('Residuals',fontsize='large');
 </pre>
               </div>
              </div>
@@ -1943,17 +1943,17 @@ const thebe_selector_output = ".output, .cell_output"
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plot_spectrum</span><span class="p">(</span><span class="n">spectrum</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'data'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">fit_result</span><span class="p">(</span><span class="n">wavelength</span><span class="p">),</span> <span class="s1">'g'</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'fitted model'</span><span class="p">)</span>
-<span class="n">plext</span> <span class="o">=</span> <span class="n">fit_result</span><span class="p">[</span><span class="s1">'powerlaw1'</span><span class="p">]</span> <span class="o">*</span> <span class="n">fit_result</span><span class="p">[</span><span class="s1">'extinction'</span><span class="p">]</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span><span class="n">plext</span><span class="p">(</span><span class="n">wavelength</span><span class="p">),</span><span class="s1">'--'</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">"powerlaw + extinction"</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">fit_result</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">component</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">'powerlaw1'</span> <span class="ow">and</span> <span class="n">component</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">'extinction'</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,(</span><span class="n">plext</span><span class="o">+</span><span class="n">component</span><span class="p">)(</span><span class="n">wavelength</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="n">component</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">((</span><span class="mi">1200</span><span class="p">,</span><span class="mi">1275</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mf">9e-13</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">'upper right'</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="s1">'small'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Data and models"</span><span class="p">);</span>
+                <pre><span></span>ax = plot_spectrum(spectrum,label='data')
+ax.plot(wavelength, fit_result(wavelength), 'g',label='fitted model')
+plext = fit_result['powerlaw1'] * fit_result['extinction']
+ax.plot(wavelength,plext(wavelength),'--',alpha=0.5,linewidth=5,label="powerlaw + extinction")
+for component in fit_result:
+    if component.name != 'powerlaw1' and component.name != 'extinction':
+        ax.plot(wavelength,(plext+component)(wavelength),label=component.name,alpha=0.5)
+ax.set_xlim((1200,1275))
+ax.set_ylim((0,9e-13))
+ax.legend(loc='upper right',fontsize='small')
+ax.set_title("Data and models");
 </pre>
                </div>
               </div>

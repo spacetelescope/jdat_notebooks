@@ -765,24 +765,24 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># load important packages</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">YouTubeVideo</span>
+               <pre><span></span># load important packages
+import time
+import os
+from copy import copy
+from IPython.display import HTML, YouTubeVideo
 
-<span class="kn">import</span> <span class="nn">astropy</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span><span class="p">,</span> <span class="n">ascii</span>
-<span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">units</span> <span class="k">as</span> <span class="n">u</span>
-<span class="kn">from</span> <span class="nn">astropy.modeling</span> <span class="kn">import</span> <span class="n">models</span>
-<span class="kn">from</span> <span class="nn">astropy.utils.data</span> <span class="kn">import</span> <span class="n">download_file</span>
-<span class="kn">from</span> <span class="nn">specutils.fitting</span> <span class="kn">import</span> <span class="n">fit_lines</span>
-<span class="kn">from</span> <span class="nn">specutils</span> <span class="kn">import</span> <span class="n">Spectrum1D</span>
-<span class="kn">from</span> <span class="nn">jdaviz</span> <span class="kn">import</span> <span class="n">Cubeviz</span>
-<span class="kn">from</span> <span class="nn">jdaviz.app</span> <span class="kn">import</span> <span class="n">Application</span>
-<span class="kn">from</span> <span class="nn">specutils.manipulation</span> <span class="kn">import</span> <span class="n">extract_region</span>
-<span class="kn">from</span> <span class="nn">specutils.spectra</span> <span class="kn">import</span> <span class="n">SpectralRegion</span>
+import astropy
+import numpy as np
+from astropy.io import fits, ascii
+from astropy import units as u
+from astropy.modeling import models
+from astropy.utils.data import download_file
+from specutils.fitting import fit_lines
+from specutils import Spectrum1D
+from jdaviz import Cubeviz
+from jdaviz.app import Application
+from specutils.manipulation import extract_region
+from specutils.spectra import SpectralRegion
 </pre>
               </div>
              </div>
@@ -792,10 +792,10 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># load and configure matplotlib</span>
-<span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'figure.max_open_warning'</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+               <pre><span></span># load and configure matplotlib
+%matplotlib inline
+import matplotlib.pyplot as plt
+plt.rcParams.update({'figure.max_open_warning': 0})
 </pre>
               </div>
              </div>
@@ -805,18 +805,18 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Save and Load Objects Using Pickle</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
+               <pre><span></span># Save and Load Objects Using Pickle
+import pickle
 
 
-<span class="k">def</span> <span class="nf">save_obj</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
+def save_obj(obj, name):
+    with open(name, 'wb') as f:
+        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
-<span class="k">def</span> <span class="nf">load_obj</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+def load_obj(name):
+    with open(name, 'rb') as f:
+        return pickle.load(f)
 </pre>
               </div>
              </div>
@@ -826,34 +826,34 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># This cell accesses the datacube file, defines the wavelength grid from header information and then plots a simple</span>
-<span class="c1"># 1-D collapsed spectrum of the IFU data.</span>
+               <pre><span></span># This cell accesses the datacube file, defines the wavelength grid from header information and then plots a simple
+# 1-D collapsed spectrum of the IFU data.
 
-<span class="c1"># Read in a 3-D IFU datacube of interest, and header.</span>
-<span class="n">cube_file</span> <span class="o">=</span> <span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/NGC4151_Hband.fits'</span>
-<span class="n">fn</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/NGC4151_Hband.fits'</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">cube</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">cube_file</span><span class="p">)</span>
-<span class="n">header_cube</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">cube_file</span><span class="p">)</span>
+# Read in a 3-D IFU datacube of interest, and header.
+cube_file = 'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/NGC4151_Hband.fits'
+fn = download_file('https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/NGC4151_Hband.fits', cache=True)
+cube = fits.getdata(cube_file)
+header_cube = fits.getheader(cube_file)
 
-<span class="c1"># grab data information and wavelength definitions.</span>
-<span class="n">nz</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nx</span> <span class="o">=</span> <span class="n">cube</span><span class="o">.</span><span class="n">shape</span>
-<span class="n">crdelt3</span> <span class="o">=</span> <span class="n">header_cube</span><span class="p">[</span><span class="s1">'CDELT3'</span><span class="p">]</span>
-<span class="n">crval3</span> <span class="o">=</span> <span class="n">header_cube</span><span class="p">[</span><span class="s1">'CRVAL3'</span><span class="p">]</span>
+# grab data information and wavelength definitions.
+nz, ny, nx = cube.shape
+crdelt3 = header_cube['CDELT3']
+crval3 = header_cube['CRVAL3']
 
-<span class="c1"># define the wavelength grid (microns) from the header (Angstroms)</span>
-<span class="c1"># and the AGN redshift and the emission line of interest.</span>
-<span class="n">wave</span> <span class="o">=</span> <span class="p">((</span><span class="n">crdelt3</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="o">+</span> <span class="n">crval3</span><span class="p">)</span><span class="o">/</span><span class="mf">10000.0</span>
-<span class="n">redshift</span> <span class="o">=</span> <span class="mf">0.00332</span>
-<span class="n">emission_line</span> <span class="o">=</span> <span class="mf">1.64400</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">redshift</span><span class="p">)</span>
-<span class="n">emission_line_index</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">wave</span><span class="o">-</span><span class="n">emission_line</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+# define the wavelength grid (microns) from the header (Angstroms)
+# and the AGN redshift and the emission line of interest.
+wave = ((crdelt3 * (np.arange(0, nz, 1))) + crval3)/10000.0
+redshift = 0.00332
+emission_line = 1.64400*(1 + redshift)
+emission_line_index = (np.abs(wave-emission_line)).argmin()
 
-<span class="c1"># make a simple summed 1d spectrum of the full cube</span>
-<span class="n">flux1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+# make a simple summed 1d spectrum of the full cube
+flux1 = np.sum(cube, axis=(1, 2))
 
-<span class="c1"># plot the full 1-D spectrum.</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">flux1</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+# plot the full 1-D spectrum.
+plt.figure(0)
+plt.plot(wave, flux1)
+plt.show()
 </pre>
               </div>
              </div>
@@ -882,43 +882,43 @@ a more expanded spectral region that encompasses the emission..
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># This cell defines the wavelength regions of interest: around the emission line, and the location</span>
-<span class="c1"># where you want to fit and remove the continuum very accurately.  Make a plot that shows the regions.</span>
+               <pre><span></span># This cell defines the wavelength regions of interest: around the emission line, and the location
+# where you want to fit and remove the continuum very accurately.  Make a plot that shows the regions.
 
-<span class="c1"># Here we select a region that includes the emission line</span>
-<span class="c1"># wavelength plus a small range of continuum around it.  </span>
-<span class="c1"># Determine these limits by investigating the flux in the above plot.  Read</span>
-<span class="c1"># the wavelength values off of the plot information at the lower right.</span>
+# Here we select a region that includes the emission line
+# wavelength plus a small range of continuum around it.  
+# Determine these limits by investigating the flux in the above plot.  Read
+# the wavelength values off of the plot information at the lower right.
 
-<span class="n">wave_emission_limit1</span> <span class="o">=</span> <span class="mf">1.630</span>
-<span class="n">wave_emission_limit2</span> <span class="o">=</span> <span class="mf">1.665</span>
+wave_emission_limit1 = 1.630
+wave_emission_limit2 = 1.665
 
-<span class="c1"># Here we define a spectral range where we will use the</span>
-<span class="c1"># flux to generate a continuum model.  The flux shape in this</span>
-<span class="c1"># AGN is quite linear around the redward emission, so we will use only a </span>
-<span class="c1"># short segment of the spectrum on the red side of the emission </span>
-<span class="c1"># feature.</span>
-<span class="c1"># We again determine these values by investigating the wavelengths in the</span>
-<span class="c1"># above plot window.</span>
+# Here we define a spectral range where we will use the
+# flux to generate a continuum model.  The flux shape in this
+# AGN is quite linear around the redward emission, so we will use only a 
+# short segment of the spectrum on the red side of the emission 
+# feature.
+# We again determine these values by investigating the wavelengths in the
+# above plot window.
 
-<span class="n">continuum_limit1</span> <span class="o">=</span> <span class="mf">1.656</span>
-<span class="n">continuum_limit2</span> <span class="o">=</span> <span class="mf">1.673</span>
+continuum_limit1 = 1.656
+continuum_limit2 = 1.673
   
-<span class="c1"># Define the wavelength region around the emission - indices</span>
-<span class="n">wavemin</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">wave</span><span class="o">-</span><span class="n">wave_emission_limit1</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
-<span class="n">wavemax</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">wave</span><span class="o">-</span><span class="n">wave_emission_limit2</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+# Define the wavelength region around the emission - indices
+wavemin = (np.abs(wave-wave_emission_limit1)).argmin()
+wavemax = (np.abs(wave-wave_emission_limit2)).argmin()
 
-<span class="c1"># Define the wavelength region used to fit the continuum flux level  - indices.</span>
-<span class="n">continuummin</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">wave</span><span class="o">-</span><span class="n">continuum_limit1</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
-<span class="n">continuummax</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">wave</span><span class="o">-</span><span class="n">continuum_limit2</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+# Define the wavelength region used to fit the continuum flux level  - indices.
+continuummin = (np.abs(wave-continuum_limit1)).argmin()
+continuummax = (np.abs(wave-continuum_limit2)).argmin()
 
-<span class="c1"># Show the region used for the emission line and continuum fit.  Alter the wavelengths </span>
-<span class="c1"># above if this doesn't look good.  </span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">flux1</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">[</span><span class="n">wavemin</span><span class="p">:</span><span class="n">wavemax</span><span class="p">],</span> <span class="n">flux1</span><span class="p">[</span><span class="n">wavemin</span><span class="p">:</span><span class="n">wavemax</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">[</span><span class="n">continuummin</span><span class="p">:</span><span class="n">continuummax</span><span class="p">],</span> <span class="n">flux1</span><span class="p">[</span><span class="n">continuummin</span><span class="p">:</span><span class="n">continuummax</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+# Show the region used for the emission line and continuum fit.  Alter the wavelengths 
+# above if this doesn't look good.  
+plt.figure(1)
+plt.plot(wave, flux1)
+plt.plot(wave[wavemin:wavemax], flux1[wavemin:wavemax])
+plt.plot(wave[continuummin:continuummax], flux1[continuummin:continuummax], color='r')
+plt.show()
 </pre>
               </div>
              </div>
@@ -955,8 +955,8 @@ a more expanded spectral region that encompasses the emission..
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">vid</span> <span class="o">=</span> <span class="n">YouTubeVideo</span><span class="p">(</span><span class="s2">"HMSYwiH3Gl4"</span><span class="p">)</span>
-<span class="n">display</span><span class="p">(</span><span class="n">vid</span><span class="p">)</span>
+                <pre><span></span>vid = YouTubeVideo("HMSYwiH3Gl4")
+display(vid)
 </pre>
                </div>
               </div>
@@ -972,15 +972,15 @@ a more expanded spectral region that encompasses the emission..
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">cubeviz</span> <span class="o">=</span> <span class="n">Cubeviz</span><span class="p">()</span>
-<span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span>
+                <pre><span></span>cubeviz = Cubeviz()
+cubeviz.app
 </pre>
                </div>
               </div>
              </div>
              <div class="cell_output docutils container">
               <script type="application/vnd.jupyter.widget-view+json">
-               {"version_major": 2, "version_minor": 0, "model_id": "32960b67364a470e96ed0ed33107bd02"}
+               {"version_major": 2, "version_minor": 0, "model_id": "3e4e28b94723422d820bb75c8c0a86f0"}
               </script>
               <img align=center height=auto width=50% src="../../jdaviz_placeholder_new.png">
               </img align=center height=auto width=50%>
@@ -990,8 +990,8 @@ a more expanded spectral region that encompasses the emission..
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># Here, we load the data into the Cubeviz app.</span>
-<span class="n">cubeviz</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> 
+                <pre><span></span># Here, we load the data into the Cubeviz app.
+cubeviz.load_data(fn) 
 </pre>
                </div>
               </div>
@@ -1084,7 +1084,7 @@ WARNING:astroquery:UnitsWarning: The unit 'Angstrom' has been deprecated in the 
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="s1">'&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/cubeviz1.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;'</span><span class="p">)</span>
+                <pre><span></span>HTML('&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/cubeviz1.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;')
 </pre>
                </div>
               </div>
@@ -1118,8 +1118,8 @@ WARNING:astroquery:UnitsWarning: The unit 'Angstrom' has been deprecated in the 
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># PART 1</span>
-<span class="n">HTML</span><span class="p">(</span><span class="s1">'&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/cubeviz2_1.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;'</span><span class="p">)</span>
+                <pre><span></span># PART 1
+HTML('&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/cubeviz2_1.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;')
 </pre>
                </div>
               </div>
@@ -1135,8 +1135,8 @@ WARNING:astroquery:UnitsWarning: The unit 'Angstrom' has been deprecated in the 
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># PART 2</span>
-<span class="n">HTML</span><span class="p">(</span><span class="s1">'&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/cubeviz2_2.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;'</span><span class="p">)</span>
+                <pre><span></span># PART 2
+HTML('&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/cubeviz2_2.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;')
 </pre>
                </div>
               </div>
@@ -1165,11 +1165,11 @@ WARNING:astroquery:UnitsWarning: The unit 'Angstrom' has been deprecated in the 
            <div class="cell_input docutils container">
             <div class="highlight-ipython3 notranslate">
              <div class="highlight">
-              <pre><span></span><span class="c1"># Extract spectra corresponding to the colored regions in cubeviz</span>
-<span class="n">spectrum1</span> <span class="o">=</span> <span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get_data_from_viewer</span><span class="p">(</span><span class="s1">'spectrum-viewer'</span><span class="p">,</span> <span class="s1">'Subset 1'</span><span class="p">)</span> <span class="c1"># AGN Center</span>
-<span class="n">spectrum2</span> <span class="o">=</span> <span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get_data_from_viewer</span><span class="p">(</span><span class="s1">'spectrum-viewer'</span><span class="p">,</span> <span class="s1">'Subset 2'</span><span class="p">)</span> <span class="c1"># Red shifted component</span>
-<span class="n">spectrum3</span> <span class="o">=</span> <span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get_data_from_viewer</span><span class="p">(</span><span class="s1">'spectrum-viewer'</span><span class="p">,</span> <span class="s1">'Subset 3'</span><span class="p">)</span> <span class="c1"># Blue shifted component</span>
-<span class="n">spectrum1</span>
+              <pre><span></span># Extract spectra corresponding to the colored regions in cubeviz
+spectrum1 = cubeviz.app.get_data_from_viewer('spectrum-viewer', 'Subset 1') # AGN Center
+spectrum2 = cubeviz.app.get_data_from_viewer('spectrum-viewer', 'Subset 2') # Red shifted component
+spectrum3 = cubeviz.app.get_data_from_viewer('spectrum-viewer', 'Subset 3') # Blue shifted component
+spectrum1
 </pre>
              </div>
             </div>
@@ -1179,13 +1179,13 @@ WARNING:astroquery:UnitsWarning: The unit 'Angstrom' has been deprecated in the 
            <div class="cell_input docutils container">
             <div class="highlight-ipython3 notranslate">
              <div class="highlight">
-              <pre><span></span><span class="c1"># Extract the line region defined in the spectral viewer</span>
-<span class="n">regions</span> <span class="o">=</span> <span class="n">cubeviz</span><span class="o">.</span><span class="n">specviz</span><span class="o">.</span><span class="n">get_spectral_regions</span><span class="p">()</span>
+              <pre><span></span># Extract the line region defined in the spectral viewer
+regions = cubeviz.specviz.get_spectral_regions()
         
-<span class="k">if</span> <span class="n">regions</span> <span class="ow">and</span> <span class="s2">"Subset 4"</span> <span class="ow">in</span> <span class="n">regions</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-    <span class="n">line_region</span> <span class="o">=</span> <span class="n">regions</span><span class="p">[</span><span class="s2">"Subset 4"</span><span class="p">]</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">line_region</span> <span class="o">=</span> <span class="n">SpectralRegion</span><span class="p">(</span><span class="mf">1.630</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span> <span class="mf">1.665</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
+if regions and "Subset 4" in regions.keys():
+    line_region = regions["Subset 4"]
+else:
+    line_region = SpectralRegion(1.630*u.um, 1.665*u.um)
 </pre>
              </div>
             </div>
@@ -1195,11 +1195,11 @@ WARNING:astroquery:UnitsWarning: The unit 'Angstrom' has been deprecated in the 
            <div class="cell_input docutils container">
             <div class="highlight-ipython3 notranslate">
              <div class="highlight">
-              <pre><span></span><span class="c1"># Extract the continuum region defined in the spectral viewer</span>
-<span class="k">if</span> <span class="n">regions</span> <span class="ow">and</span> <span class="s2">"Subset 5"</span> <span class="ow">in</span> <span class="n">regions</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-    <span class="n">continuum_region</span> <span class="o">=</span> <span class="n">regions</span><span class="p">[</span><span class="s2">"Subset 5"</span><span class="p">]</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">continuum_region</span> <span class="o">=</span> <span class="n">SpectralRegion</span><span class="p">(</span><span class="mf">1.656</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span> <span class="mf">1.673</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
+              <pre><span></span># Extract the continuum region defined in the spectral viewer
+if regions and "Subset 5" in regions.keys():
+    continuum_region = regions["Subset 5"]
+else:
+    continuum_region = SpectralRegion(1.656*u.um, 1.673*u.um)
 </pre>
              </div>
             </div>
@@ -1209,34 +1209,34 @@ WARNING:astroquery:UnitsWarning: The unit 'Angstrom' has been deprecated in the 
            <div class="cell_input docutils container">
             <div class="highlight-ipython3 notranslate">
              <div class="highlight">
-              <pre><span></span><span class="c1"># Apply the spectral region</span>
-<span class="c1"># (creates new collapsed spectra if user did not in jdaviz)</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">spectrum1</span><span class="p">:</span>
-    <span class="n">flux_agn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cube</span><span class="p">[:,</span> <span class="p">(</span><span class="n">ny</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">3</span><span class="p">:(</span><span class="n">ny</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="n">nx</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">3</span><span class="p">:(</span><span class="n">nx</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mi">3</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-    <span class="n">tmpspec</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">flux</span><span class="o">=</span><span class="n">flux_agn</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="s1">'count'</span><span class="p">),</span> <span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">micron</span><span class="p">)</span> 
-    <span class="n">spec_agn</span> <span class="o">=</span> <span class="n">extract_region</span><span class="p">(</span><span class="n">tmpspec</span><span class="p">,</span> <span class="n">line_region</span><span class="p">)</span>
-    <span class="n">spec_agn_continuum</span> <span class="o">=</span> <span class="n">extract_region</span><span class="p">(</span><span class="n">tmpspec</span><span class="p">,</span> <span class="n">continuum_region</span><span class="p">)</span>    
-<span class="k">else</span><span class="p">:</span> 
-    <span class="n">spec_agn</span> <span class="o">=</span> <span class="n">extract_region</span><span class="p">(</span><span class="n">spectrum1</span><span class="p">,</span> <span class="n">line_region</span><span class="p">)</span>
-    <span class="n">spec_agn_continuum</span> <span class="o">=</span> <span class="n">extract_region</span><span class="p">(</span><span class="n">spectrum1</span><span class="p">,</span> <span class="n">continuum_region</span><span class="p">)</span>
+              <pre><span></span># Apply the spectral region
+# (creates new collapsed spectra if user did not in jdaviz)
+if not spectrum1:
+    flux_agn = np.sum(cube[:, (ny//2)-3:(ny//2)+3, (nx//2)-3:(nx//2)+3], axis=(1, 2))
+    tmpspec = Spectrum1D(flux=flux_agn*u.Unit('count'), spectral_axis=wave*u.micron) 
+    spec_agn = extract_region(tmpspec, line_region)
+    spec_agn_continuum = extract_region(tmpspec, continuum_region)    
+else: 
+    spec_agn = extract_region(spectrum1, line_region)
+    spec_agn_continuum = extract_region(spectrum1, continuum_region)
 
-<span class="k">if</span> <span class="ow">not</span> <span class="n">spectrum2</span><span class="p">:</span>
-    <span class="n">flux_feii_red</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cube</span><span class="p">[:,</span> <span class="p">(</span><span class="mi">36</span><span class="p">)</span><span class="o">-</span><span class="mi">3</span><span class="p">:(</span><span class="mi">36</span><span class="p">)</span><span class="o">+</span><span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">-</span><span class="mi">3</span><span class="p">:(</span><span class="mi">12</span><span class="p">)</span><span class="o">+</span><span class="mi">3</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-    <span class="n">tmpspec</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">flux</span><span class="o">=</span><span class="n">flux_feii_red</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="s1">'count'</span><span class="p">),</span> <span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">micron</span><span class="p">)</span> 
-    <span class="n">spec_feii_red</span> <span class="o">=</span> <span class="n">extract_region</span><span class="p">(</span><span class="n">tmpspec</span><span class="p">,</span> <span class="n">line_region</span><span class="p">)</span>
-    <span class="n">spec_feii_red_continuum</span> <span class="o">=</span> <span class="n">extract_region</span><span class="p">(</span><span class="n">tmpspec</span><span class="p">,</span> <span class="n">continuum_region</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>    
-    <span class="n">spec_feii_red</span> <span class="o">=</span> <span class="n">extract_region</span><span class="p">(</span><span class="n">spectrum2</span><span class="p">,</span> <span class="n">line_region</span><span class="p">)</span>
-    <span class="n">spec_feii_red_continuum</span> <span class="o">=</span> <span class="n">extract_region</span><span class="p">(</span><span class="n">spectrum2</span><span class="p">,</span> <span class="n">continuum_region</span><span class="p">)</span>
+if not spectrum2:
+    flux_feii_red = np.sum(cube[:, (36)-3:(36)+3, (12)-3:(12)+3], axis=(1, 2))
+    tmpspec = Spectrum1D(flux=flux_feii_red*u.Unit('count'), spectral_axis=wave*u.micron) 
+    spec_feii_red = extract_region(tmpspec, line_region)
+    spec_feii_red_continuum = extract_region(tmpspec, continuum_region)
+else:    
+    spec_feii_red = extract_region(spectrum2, line_region)
+    spec_feii_red_continuum = extract_region(spectrum2, continuum_region)
 
-<span class="k">if</span> <span class="ow">not</span> <span class="n">spectrum3</span><span class="p">:</span>
-    <span class="n">flux_feii_blue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cube</span><span class="p">[:,</span> <span class="p">(</span><span class="mi">28</span><span class="p">)</span><span class="o">-</span><span class="mi">3</span><span class="p">:(</span><span class="mi">28</span><span class="p">)</span><span class="o">+</span><span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="o">-</span><span class="mi">3</span><span class="p">:(</span><span class="mi">50</span><span class="p">)</span><span class="o">+</span><span class="mi">3</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-    <span class="n">tmpspec</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">flux</span><span class="o">=</span><span class="n">flux_feii_blue</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="s1">'count'</span><span class="p">),</span> <span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">micron</span><span class="p">)</span> 
-    <span class="n">spec_feii_blue</span> <span class="o">=</span> <span class="n">extract_region</span><span class="p">(</span><span class="n">tmpspec</span><span class="p">,</span> <span class="n">line_region</span><span class="p">)</span>
-    <span class="n">spec_feii_blue_continuum</span> <span class="o">=</span> <span class="n">extract_region</span><span class="p">(</span><span class="n">tmpspec</span><span class="p">,</span> <span class="n">continuum_region</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>     
-    <span class="n">spec_feii_blue</span> <span class="o">=</span> <span class="n">extract_region</span><span class="p">(</span><span class="n">spectrum3</span><span class="p">,</span> <span class="n">line_region</span><span class="p">)</span>
-    <span class="n">spec_feii_blue_continuum</span> <span class="o">=</span> <span class="n">extract_region</span><span class="p">(</span><span class="n">spectrum3</span><span class="p">,</span> <span class="n">continuum_region</span><span class="p">)</span>
+if not spectrum3:
+    flux_feii_blue = np.sum(cube[:, (28)-3:(28)+3, (50)-3:(50)+3], axis=(1, 2))
+    tmpspec = Spectrum1D(flux=flux_feii_blue*u.Unit('count'), spectral_axis=wave*u.micron) 
+    spec_feii_blue = extract_region(tmpspec, line_region)
+    spec_feii_blue_continuum = extract_region(tmpspec, continuum_region)
+else:     
+    spec_feii_blue = extract_region(spectrum3, line_region)
+    spec_feii_blue_continuum = extract_region(spectrum3, continuum_region)
 </pre>
              </div>
             </div>
@@ -1246,9 +1246,9 @@ WARNING:astroquery:UnitsWarning: The unit 'Angstrom' has been deprecated in the 
            <div class="cell_input docutils container">
             <div class="highlight-ipython3 notranslate">
              <div class="highlight">
-              <pre><span></span><span class="c1"># Visualize new subsets</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">spec_agn</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">spec_agn</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">)</span>
+              <pre><span></span># Visualize new subsets
+plt.figure()
+plt.plot(spec_agn.spectral_axis, spec_agn.flux, color='black')
 </pre>
              </div>
             </div>
@@ -1256,7 +1256,7 @@ WARNING:astroquery:UnitsWarning: The unit 'Angstrom' has been deprecated in the 
            <div class="cell_output docutils container">
             <div class="output text_plain highlight-myst-ansi notranslate">
              <div class="highlight">
-              <pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fcad45190a0&gt;]
+              <pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f740abafe50&gt;]
 </pre>
              </div>
             </div>
@@ -1267,10 +1267,10 @@ WARNING:astroquery:UnitsWarning: The unit 'Angstrom' has been deprecated in the 
            <div class="cell_input docutils container">
             <div class="highlight-ipython3 notranslate">
              <div class="highlight">
-              <pre><span></span><span class="c1"># Visualize new subsets</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">spec_feii_blue</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">spec_feii_blue</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'b'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">spec_feii_red</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">spec_feii_red</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">)</span>
+              <pre><span></span># Visualize new subsets
+plt.figure()
+plt.plot(spec_feii_blue.spectral_axis, spec_feii_blue.flux, color='b')
+plt.plot(spec_feii_red.spectral_axis, spec_feii_red.flux, color='r')
 </pre>
              </div>
             </div>
@@ -1278,7 +1278,7 @@ WARNING:astroquery:UnitsWarning: The unit 'Angstrom' has been deprecated in the 
            <div class="cell_output docutils container">
             <div class="output text_plain highlight-myst-ansi notranslate">
              <div class="highlight">
-              <pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fcad4496e20&gt;]
+              <pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f740ab46070&gt;]
 </pre>
              </div>
             </div>
@@ -1335,9 +1335,9 @@ WARNING:astroquery:UnitsWarning: The unit 'Angstrom' has been deprecated in the 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># VIDEO OF CONTINUUM FITTING</span>
-<span class="c1"># PART 1</span>
-<span class="n">HTML</span><span class="p">(</span><span class="s1">'&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/bestfitcube_p1.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;'</span><span class="p">)</span>
+               <pre><span></span># VIDEO OF CONTINUUM FITTING
+# PART 1
+HTML('&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/bestfitcube_p1.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;')
 </pre>
               </div>
              </div>
@@ -1353,8 +1353,8 @@ WARNING:astroquery:UnitsWarning: The unit 'Angstrom' has been deprecated in the 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># PART 2</span>
-<span class="n">HTML</span><span class="p">(</span><span class="s1">'&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/bestfitcube_p2.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;'</span><span class="p">)</span>
+               <pre><span></span># PART 2
+HTML('&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/bestfitcube_p2.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;')
 </pre>
               </div>
              </div>
@@ -1392,9 +1392,9 @@ WARNING:astroquery:UnitsWarning: The unit 'Angstrom' has been deprecated in the 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># List data from viewer</span>
-<span class="n">regions</span> <span class="o">=</span> <span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get_data_from_viewer</span><span class="p">(</span><span class="s2">"uncert-viewer"</span><span class="p">)</span>
-<span class="n">regions</span>
+               <pre><span></span># List data from viewer
+regions = cubeviz.app.get_data_from_viewer("uncert-viewer")
+regions
 </pre>
               </div>
              </div>
@@ -1412,8 +1412,8 @@ WARNING:astroquery:UnitsWarning: The unit 'Angstrom' has been deprecated in the 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Extract continuum model from Cubeviz above</span>
-<span class="n">cont_psf_cube</span> <span class="o">=</span> <span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get_data_from_viewer</span><span class="p">(</span><span class="s2">"uncert-viewer"</span><span class="p">,</span> <span class="s2">"LinFitCont [Cube] 1"</span><span class="p">)</span>
+               <pre><span></span># Extract continuum model from Cubeviz above
+cont_psf_cube = cubeviz.app.get_data_from_viewer("uncert-viewer", "LinFitCont [Cube] 1")
 </pre>
               </div>
              </div>
@@ -1431,16 +1431,16 @@ WARNING:astroquery:UnitsWarning: The unit 'Angstrom' has been deprecated in the 
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Delete any existing output in current directory</span>
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"NGC4151_Hband_ContinuumSubtract.fits"</span><span class="p">):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">"NGC4151_Hband_ContinuumSubtract.fits"</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"The file does not exist"</span><span class="p">)</span>
+               <pre><span></span># Delete any existing output in current directory
+if os.path.exists("NGC4151_Hband_ContinuumSubtract.fits"):
+    os.remove("NGC4151_Hband_ContinuumSubtract.fits")
+else:
+    print("The file does not exist")
 
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"NGC4151_Hband_ContinuumPSF.fits"</span><span class="p">):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">"NGC4151_Hband_ContinuumPSF.fits"</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"The file does not exist"</span><span class="p">)</span>
+if os.path.exists("NGC4151_Hband_ContinuumPSF.fits"):
+    os.remove("NGC4151_Hband_ContinuumPSF.fits")
+else:
+    print("The file does not exist")
 </pre>
               </div>
              </div>
@@ -1459,46 +1459,46 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Subtract Continuum</span>
+               <pre><span></span># Subtract Continuum
 
-<span class="c1"># Re-read in original IFU cube for manipulation</span>
-<span class="n">cube_file</span> <span class="o">=</span> <span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/NGC4151_Hband.fits'</span>
-<span class="n">newfn</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/NGC4151_Hband.fits'</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">newheader_cube</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">cube_file</span><span class="p">)</span>
+# Re-read in original IFU cube for manipulation
+cube_file = 'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/NGC4151_Hband.fits'
+newfn = download_file('https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/NGC4151_Hband.fits', cache=True)
+newheader_cube = fits.getheader(cube_file)
 
-<span class="c1"># Check to see if user made a continuum fit in Cubeviz, make continuum subtraction, and save output</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">cont_psf_cube</span><span class="p">:</span>
-    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+# Check to see if user made a continuum fit in Cubeviz, make continuum subtraction, and save output
+if not cont_psf_cube:
+    start_time = time.time()
 
-    <span class="n">cont_sub_cube</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">nz</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nx</span><span class="p">])</span>
-    <span class="n">cont_psf_cube</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">nz</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nx</span><span class="p">])</span>
+    cont_sub_cube = np.zeros([nz, ny, nx])
+    cont_psf_cube = np.zeros([nz, ny, nx])
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span><span class="o">-</span><span class="mi">2</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ny</span><span class="o">-</span><span class="mi">2</span><span class="p">):</span>
-            <span class="n">flux1</span> <span class="o">=</span> <span class="n">cube</span><span class="p">[:,</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>      
-            <span class="n">cont_fit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">wave</span><span class="p">[</span><span class="n">continuummin</span><span class="p">:</span><span class="n">continuummax</span><span class="p">],</span> <span class="n">flux1</span><span class="p">[</span><span class="n">continuummin</span><span class="p">:</span><span class="n">continuummax</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">fitval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">cont_fit</span><span class="p">)</span>
-            <span class="n">continuum</span> <span class="o">=</span> <span class="n">fitval</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>        
-            <span class="n">cont_sub_cube</span><span class="p">[:,</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">flux1</span> <span class="o">-</span> <span class="n">continuum</span>
-            <span class="n">cont_psf_cube</span><span class="p">[:,</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">continuum</span> 
+    for i in range(1, nx-2):
+        for j in range(1, ny-2):
+            flux1 = cube[:, j, i]      
+            cont_fit = np.polyfit(wave[continuummin:continuummax], flux1[continuummin:continuummax], 1)
+            fitval = np.poly1d(cont_fit)
+            continuum = fitval(wave)        
+            cont_sub_cube[:, j, i] = flux1 - continuum
+            cont_psf_cube[:, j, i] = continuum 
 
-    <span class="k">del</span> <span class="n">newheader_cube</span><span class="p">[</span><span class="s1">'MODE'</span><span class="p">]</span>
-    <span class="n">fits</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="s1">'NGC4151_Hband_ContinuumSubtract.fits'</span><span class="p">,</span> <span class="n">cont_sub_cube</span><span class="p">,</span> <span class="n">newheader_cube</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">fits</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="s1">'NGC4151_Hband_ContinuumPSF.fits'</span><span class="p">,</span> <span class="n">cont_psf_cube</span><span class="p">,</span> <span class="n">newheader_cube</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">'Continuum subtracted cube saved. PSF continuum cube saved.'</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">newfn</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">cont_sub_cube</span><span class="p">:</span>
-        <span class="n">sci</span> <span class="o">=</span> <span class="n">cont_sub_cube</span><span class="p">[</span><span class="s1">'SCI'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    del newheader_cube['MODE']
+    fits.writeto('NGC4151_Hband_ContinuumSubtract.fits', cont_sub_cube, newheader_cube, overwrite=True)
+    fits.writeto('NGC4151_Hband_ContinuumPSF.fits', cont_psf_cube, newheader_cube, overwrite=True)
+    print('Continuum subtracted cube saved. PSF continuum cube saved.')
+else:
+    with fits.open(newfn, memmap=False) as cont_sub_cube:
+        sci = cont_sub_cube['SCI'].data
 
-        <span class="c1"># Get List of different viewers</span>
-        <span class="n">continuumflux</span> <span class="o">=</span> <span class="n">cont_psf_cube</span><span class="p">[</span><span class="s2">"flux"</span><span class="p">]</span>
+        # Get List of different viewers
+        continuumflux = cont_psf_cube["flux"]
 
-        <span class="n">sci_contsub</span> <span class="o">=</span> <span class="n">sci</span><span class="o">-</span><span class="n">continuumflux</span>
-        <span class="n">cont_sub_cube</span><span class="p">[</span><span class="s1">'SCI'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">sci_contsub</span> 
-        <span class="k">del</span> <span class="n">cont_sub_cube</span><span class="p">[</span><span class="s1">'PRIMARY'</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">'MODE'</span><span class="p">]</span>
-        <span class="n">cont_sub_cube</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="s1">'NGC4151_Hband_ContinuumSubtract.fits'</span><span class="p">)</span>
-        <span class="k">del</span> <span class="n">newheader_cube</span><span class="p">[</span><span class="s1">'MODE'</span><span class="p">]</span>
-        <span class="n">fits</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="s1">'NGC4151_Hband_ContinuumPSF.fits'</span><span class="p">,</span> <span class="n">continuumflux</span><span class="p">,</span> <span class="n">newheader_cube</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        sci_contsub = sci-continuumflux
+        cont_sub_cube['SCI'].data = sci_contsub 
+        del cont_sub_cube['PRIMARY'].header['MODE']
+        cont_sub_cube.writeto('NGC4151_Hband_ContinuumSubtract.fits')
+        del newheader_cube['MODE']
+        fits.writeto('NGC4151_Hband_ContinuumPSF.fits', continuumflux, newheader_cube, overwrite=True)
 </pre>
               </div>
              </div>
@@ -1516,9 +1516,9 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># You can also read out your model fit parameters </span>
-<span class="n">params</span> <span class="o">=</span> <span class="n">cubeviz</span><span class="o">.</span><span class="n">get_model_parameters</span><span class="p">(</span><span class="n">model_label</span><span class="o">=</span><span class="s2">"LinFitCont"</span><span class="p">)</span>
-<span class="n">params</span>
+               <pre><span></span># You can also read out your model fit parameters 
+params = cubeviz.get_model_parameters(model_label="LinFitCont")
+params
 </pre>
               </div>
              </div>
@@ -1541,16 +1541,16 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Open up a new instance of Cubeviz to visualize continuum subtracted data</span>
-<span class="n">cubeviz2</span> <span class="o">=</span> <span class="n">Cubeviz</span><span class="p">()</span>
-<span class="n">cubeviz2</span><span class="o">.</span><span class="n">app</span>
+               <pre><span></span># Open up a new instance of Cubeviz to visualize continuum subtracted data
+cubeviz2 = Cubeviz()
+cubeviz2.app
 </pre>
               </div>
              </div>
             </div>
             <div class="cell_output docutils container">
              <script type="application/vnd.jupyter.widget-view+json">
-              {"version_major": 2, "version_minor": 0, "model_id": "dbf7d3529b774c439f293fe1cd800d40"}
+              {"version_major": 2, "version_minor": 0, "model_id": "04c1d7cc39ad4f01815a350706af42f1"}
              </script>
              <img align=center height=auto width=50% src="../../jdaviz_placeholder_new.png">
              </img align=center height=auto width=50%>
@@ -1560,8 +1560,8 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">cont_sub_cube</span> <span class="o">=</span> <span class="s1">'NGC4151_Hband_ContinuumSubtract.fits'</span>
-<span class="n">cubeviz2</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">cont_sub_cube</span><span class="p">,</span> <span class="n">data_label</span><span class="o">=</span><span class="s1">'Continuum Subtracted'</span><span class="p">)</span>
+               <pre><span></span>cont_sub_cube = 'NGC4151_Hband_ContinuumSubtract.fits'
+cubeviz2.app.load_data(cont_sub_cube, data_label='Continuum Subtracted')
 </pre>
               </div>
              </div>
@@ -1637,8 +1637,8 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># VIDEO PART1</span>
-<span class="n">HTML</span><span class="p">(</span><span class="s1">'&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/multifit_p1.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;'</span><span class="p">)</span>
+               <pre><span></span># VIDEO PART1
+HTML('&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/multifit_p1.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;')
 </pre>
               </div>
              </div>
@@ -1654,8 +1654,8 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># VIDEO PART2</span>
-<span class="n">HTML</span><span class="p">(</span><span class="s1">'&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/multifit_p2.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;'</span><span class="p">)</span>
+               <pre><span></span># VIDEO PART2
+HTML('&lt;iframe width="700" height="500" src="https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/multifit_p2.mov" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;')
 </pre>
               </div>
              </div>
@@ -1677,13 +1677,13 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Extract the spectral regions defined in the spectral viewer</span>
-<span class="n">regions</span> <span class="o">=</span> <span class="n">cubeviz2</span><span class="o">.</span><span class="n">specviz</span><span class="o">.</span><span class="n">get_spectral_regions</span><span class="p">()</span>
+               <pre><span></span># Extract the spectral regions defined in the spectral viewer
+regions = cubeviz2.specviz.get_spectral_regions()
 
-<span class="k">if</span> <span class="n">regions</span> <span class="ow">and</span> <span class="s2">"Subset 1"</span> <span class="ow">in</span> <span class="n">regions</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-    <span class="n">line_region</span> <span class="o">=</span> <span class="n">regions</span><span class="p">[</span><span class="s2">"Subset 1"</span><span class="p">]</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">line_region</span> <span class="o">=</span> <span class="n">SpectralRegion</span><span class="p">(</span><span class="mf">1.6322</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span> <span class="mf">1.6563</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
+if regions and "Subset 1" in regions.keys():
+    line_region = regions["Subset 1"]
+else:
+    line_region = SpectralRegion(1.6322*u.um, 1.6563*u.um)
 </pre>
               </div>
              </div>
@@ -1693,9 +1693,9 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># List spectra available in spectrum-viewer</span>
-<span class="n">spec</span> <span class="o">=</span> <span class="n">cubeviz2</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get_data_from_viewer</span><span class="p">(</span><span class="s1">'spectrum-viewer'</span><span class="p">)</span> 
-<span class="n">spec</span>
+               <pre><span></span># List spectra available in spectrum-viewer
+spec = cubeviz2.app.get_data_from_viewer('spectrum-viewer') 
+spec
 </pre>
               </div>
              </div>
@@ -1713,10 +1713,10 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Get gauss model spectrum and model cube</span>
-<span class="n">all_spec</span> <span class="o">=</span> <span class="n">cubeviz2</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get_data_from_viewer</span><span class="p">(</span><span class="s1">'spectrum-viewer'</span><span class="p">,</span> <span class="s1">'Continuum Subtracted[SCI]'</span><span class="p">)</span> <span class="c1"># AGN Center Data Cube</span>
-<span class="n">gauss_spec</span> <span class="o">=</span> <span class="n">cubeviz2</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get_data_from_viewer</span><span class="p">(</span><span class="s1">'spectrum-viewer'</span><span class="p">,</span> <span class="s1">'GaussAll'</span><span class="p">)</span> <span class="c1"># AGN Center Model Spec</span>
-<span class="n">gauss_cube</span> <span class="o">=</span> <span class="n">cubeviz2</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get_data_from_viewer</span><span class="p">(</span><span class="s2">"uncert-viewer"</span><span class="p">,</span> <span class="s2">"GaussAll [Cube] 1"</span><span class="p">)</span> <span class="c1"># AGN Center Model Cube</span>
+               <pre><span></span># Get gauss model spectrum and model cube
+all_spec = cubeviz2.app.get_data_from_viewer('spectrum-viewer', 'Continuum Subtracted[SCI]') # AGN Center Data Cube
+gauss_spec = cubeviz2.app.get_data_from_viewer('spectrum-viewer', 'GaussAll') # AGN Center Model Spec
+gauss_cube = cubeviz2.app.get_data_from_viewer("uncert-viewer", "GaussAll [Cube] 1") # AGN Center Model Cube
 </pre>
               </div>
              </div>
@@ -1726,20 +1726,20 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Check to see if user used Cubeviz (above), and, if not, read in premade data</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">gauss_cube</span><span class="p">:</span>
-    <span class="n">fn</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/gauss_model_cube.fits'</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">gauss_cube</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">gauss_cube</span> <span class="o">=</span> <span class="n">gauss_cube</span><span class="p">[</span><span class="s2">"flux"</span><span class="p">]</span>
+               <pre><span></span># Check to see if user used Cubeviz (above), and, if not, read in premade data
+if not gauss_cube:
+    fn = download_file('https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/gauss_model_cube.fits', cache=False)
+    gauss_cube = fits.getdata(fn)
+else:
+    gauss_cube = gauss_cube["flux"]
     
-<span class="k">if</span> <span class="ow">not</span> <span class="n">all_spec</span><span class="p">:</span>
-    <span class="n">fn</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/all_spec.fits'</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">all_spec</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+if not all_spec:
+    fn = download_file('https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/all_spec.fits', cache=False)
+    all_spec = Spectrum1D.read(fn)
     
-<span class="k">if</span> <span class="ow">not</span> <span class="n">gauss_spec</span><span class="p">:</span>
-    <span class="n">fn</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/gauss_spec.fits'</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">gauss_spec</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+if not gauss_spec:
+    fn = download_file('https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/gauss_spec.fits', cache=False)
+    gauss_spec = Spectrum1D.read(fn)
 </pre>
               </div>
              </div>
@@ -1749,15 +1749,15 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Save your gauss model cube if necessary</span>
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"gauss_model_cube.fits"</span><span class="p">):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">"gauss_model_cube.fits"</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"The file does not already exist"</span><span class="p">)</span>
+               <pre><span></span># Save your gauss model cube if necessary
+if os.path.exists("gauss_model_cube.fits"):
+    os.remove("gauss_model_cube.fits")
+else:
+    print("The file does not already exist")
 
-<span class="n">fits</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="s1">'gauss_model_cube.fits'</span><span class="p">,</span> <span class="n">gauss_cube</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">gauss_cube</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">all_spec</span><span class="o">.</span><span class="n">flux</span><span class="p">))</span>
+fits.writeto('gauss_model_cube.fits', gauss_cube, overwrite=True)
+print(type(gauss_cube))
+print(type(all_spec.flux))
 </pre>
               </div>
              </div>
@@ -1782,9 +1782,9 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># You can also read out your model fit parameters </span>
-<span class="n">params</span> <span class="o">=</span> <span class="n">cubeviz2</span><span class="o">.</span><span class="n">get_model_parameters</span><span class="p">(</span><span class="n">model_label</span><span class="o">=</span><span class="s2">"GaussAll"</span><span class="p">)</span>
-<span class="n">params</span>
+               <pre><span></span># You can also read out your model fit parameters 
+params = cubeviz2.get_model_parameters(model_label="GaussAll")
+params
 </pre>
               </div>
              </div>
@@ -1802,9 +1802,9 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Save parameters as a pickle file if necessary</span>
-<span class="n">save_obj</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="s2">"gauss_params.pkl"</span><span class="p">)</span>
-<span class="n">params</span> <span class="o">=</span> <span class="n">load_obj</span><span class="p">(</span><span class="s2">"gauss_params.pkl"</span><span class="p">)</span>
+               <pre><span></span># Save parameters as a pickle file if necessary
+save_obj(params, "gauss_params.pkl")
+params = load_obj("gauss_params.pkl")
 </pre>
               </div>
              </div>
@@ -1814,11 +1814,11 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Check to see if user used Cubeviz (above), and, if not, read in premade data</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">params</span><span class="p">:</span>
-    <span class="n">fn</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/gauss_params.pkl'</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">params</span> <span class="o">=</span> <span class="n">load_obj</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"Loaded"</span><span class="p">)</span>
+               <pre><span></span># Check to see if user used Cubeviz (above), and, if not, read in premade data
+if not params:
+    fn = download_file('https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/gauss_params.pkl', cache=True)
+    params = load_obj(fn)
+    print("Loaded")
 </pre>
               </div>
              </div>
@@ -1836,21 +1836,21 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Overwrite gauss model with only 2 of the components of interest</span>
-<span class="n">gauss_cube_2component</span> <span class="o">=</span> <span class="n">gauss_cube</span><span class="o">*</span><span class="mi">0</span>
+               <pre><span></span># Overwrite gauss model with only 2 of the components of interest
+gauss_cube_2component = gauss_cube*0
 
-<span class="n">nz</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nx</span> <span class="o">=</span> <span class="n">gauss_cube_2component</span><span class="o">.</span><span class="n">shape</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nx</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ny</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">amp1</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'GaussAll_3d'</span><span class="p">][</span><span class="s1">'amplitude_0'</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">amp2</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'GaussAll_3d'</span><span class="p">][</span><span class="s1">'amplitude_2'</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">m1</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'GaussAll_3d'</span><span class="p">][</span><span class="s1">'mean_0'</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">m2</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'GaussAll_3d'</span><span class="p">][</span><span class="s1">'mean_2'</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">stdev1</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'GaussAll_3d'</span><span class="p">][</span><span class="s1">'stddev_0'</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">stdev2</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'GaussAll_3d'</span><span class="p">][</span><span class="s1">'stddev_2'</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">g1</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Gaussian1D</span><span class="p">(</span><span class="n">amplitude</span><span class="o">=</span><span class="n">amp1</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="s1">'count'</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="n">m1</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">stdev1</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span>
-        <span class="n">g2</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Gaussian1D</span><span class="p">(</span><span class="n">amplitude</span><span class="o">=</span><span class="n">amp2</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="s1">'count'</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="n">m2</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">stdev2</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span>
-        <span class="n">gauss_cube_2component</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">g1</span><span class="p">(</span><span class="n">all_spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">)</span><span class="o">+</span><span class="n">g2</span><span class="p">(</span><span class="n">all_spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">)</span>
+nz, ny, nx = gauss_cube_2component.shape
+for i in range(0, nx-1):
+    for j in range(0, ny-1):
+        amp1 = params['GaussAll_3d']['amplitude_0'][i][j]
+        amp2 = params['GaussAll_3d']['amplitude_2'][i][j]
+        m1 = params['GaussAll_3d']['mean_0'][i][j]
+        m2 = params['GaussAll_3d']['mean_2'][i][j]
+        stdev1 = params['GaussAll_3d']['stddev_0'][i][j]
+        stdev2 = params['GaussAll_3d']['stddev_2'][i][j]
+        g1 = models.Gaussian1D(amplitude=amp1*u.Unit('count'), mean=m1*u.m, stddev=stdev1*u.m)
+        g2 = models.Gaussian1D(amplitude=amp2*u.Unit('count'), mean=m2*u.m, stddev=stdev2*u.m)
+        gauss_cube_2component[:, i, j] = g1(all_spec.spectral_axis)+g2(all_spec.spectral_axis)
 </pre>
               </div>
              </div>
@@ -1860,13 +1860,13 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Add the continuum cube to the new model cube</span>
-<span class="n">continuum_file</span> <span class="o">=</span> <span class="s1">'NGC4151_Hband_ContinuumPSF.fits'</span>
-<span class="n">newfull_header</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">continuum_file</span><span class="p">)</span>
+               <pre><span></span># Add the continuum cube to the new model cube
+continuum_file = 'NGC4151_Hband_ContinuumPSF.fits'
+newfull_header = fits.getheader(continuum_file)
 
-<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">continuum_file</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">continuum_cube</span><span class="p">:</span> 
-    <span class="n">continuum_data</span> <span class="o">=</span> <span class="n">continuum_cube</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">full_model</span> <span class="o">=</span> <span class="n">gauss_cube_2component</span><span class="o">+</span><span class="n">continuum_data</span>
+with fits.open(continuum_file, memmap=False) as continuum_cube: 
+    continuum_data = continuum_cube[0].data
+    full_model = gauss_cube_2component+continuum_data
 </pre>
               </div>
              </div>
@@ -1876,14 +1876,14 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Subtract the model to create the final cube where the [Fe II] emission is isolated.</span>
-<span class="c1"># Re-read in original IFU cube for manipulation</span>
-<span class="n">cube_file</span> <span class="o">=</span> <span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/NGC4151_Hband.fits'</span>
-<span class="n">newfinalsub_header</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">cube_file</span><span class="p">)</span>
+               <pre><span></span># Subtract the model to create the final cube where the [Fe II] emission is isolated.
+# Re-read in original IFU cube for manipulation
+cube_file = 'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_cube_continuum_fit/NGC4151_Hband.fits'
+newfinalsub_header = fits.getheader(cube_file)
 
-<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">cube_file</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">original_cube</span><span class="p">:</span>
-    <span class="n">original_data</span> <span class="o">=</span> <span class="n">original_cube</span><span class="p">[</span><span class="s1">'SCI'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">final_sub_cube</span> <span class="o">=</span> <span class="n">original_data</span> <span class="o">-</span> <span class="n">full_model</span>
+with fits.open(cube_file, memmap=False) as original_cube:
+    original_data = original_cube['SCI'].data
+    final_sub_cube = original_data - full_model
 </pre>
               </div>
              </div>
@@ -1893,16 +1893,16 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Delete any existing output in current directory</span>
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"NGC4151_Hband_FinalSubtract.fits"</span><span class="p">):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">"NGC4151_Hband_FinalSubtract.fits"</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"The file does not exist"</span><span class="p">)</span>
+               <pre><span></span># Delete any existing output in current directory
+if os.path.exists("NGC4151_Hband_FinalSubtract.fits"):
+    os.remove("NGC4151_Hband_FinalSubtract.fits")
+else:
+    print("The file does not exist")
 
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"NGC4151_Hband_ContinuumandBrackettModel.fits"</span><span class="p">):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">"NGC4151_Hband_ContinuumandBrackettModel.fits"</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"The file does not exist"</span><span class="p">)</span>
+if os.path.exists("NGC4151_Hband_ContinuumandBrackettModel.fits"):
+    os.remove("NGC4151_Hband_ContinuumandBrackettModel.fits")
+else:
+    print("The file does not exist")
 </pre>
               </div>
              </div>
@@ -1921,11 +1921,11 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="k">del</span> <span class="n">newfinalsub_header</span><span class="p">[</span><span class="s1">'MODE'</span><span class="p">]</span>
+               <pre><span></span>del newfinalsub_header['MODE']
 
-<span class="n">fits</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="s1">'NGC4151_Hband_ContinuumandBrackettModel.fits'</span><span class="p">,</span> <span class="n">full_model</span><span class="p">,</span> <span class="n">newfull_header</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">fits</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="s1">'NGC4151_Hband_FinalSubtract.fits'</span><span class="p">,</span> <span class="n">final_sub_cube</span><span class="p">,</span> <span class="n">newfinalsub_header</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'Continuum subtracted cube saved. PSF continuum cube saved.'</span><span class="p">)</span>
+fits.writeto('NGC4151_Hband_ContinuumandBrackettModel.fits', full_model, newfull_header, overwrite=True)
+fits.writeto('NGC4151_Hband_FinalSubtract.fits', final_sub_cube, newfinalsub_header, overwrite=True)
+print('Continuum subtracted cube saved. PSF continuum cube saved.')
 </pre>
               </div>
              </div>
@@ -1943,16 +1943,16 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Make the final plots to illustrate the original spectrum, model fits, and final continuum+gassian subtracted cube</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="mf">1.630E-6</span><span class="p">,</span> <span class="mf">1.665E-6</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mi">600</span><span class="p">,</span> <span class="mi">900</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">all_spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">continuum_data</span><span class="p">[:,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Continuum'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">all_spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">original_data</span><span class="p">[:,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Original Data'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">all_spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">full_model</span><span class="p">[:,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">'2 Component Model'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">all_spec</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">final_sub_cube</span><span class="p">[:,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">]</span><span class="o">+</span><span class="mi">700</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Model Subtraction+Offset'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+               <pre><span></span># Make the final plots to illustrate the original spectrum, model fits, and final continuum+gassian subtracted cube
+plt.figure()
+plt.xlim([1.630E-6, 1.665E-6])
+plt.ylim([600, 900])
+plt.plot(all_spec.spectral_axis, continuum_data[:, 30, 30], label='Continuum')
+plt.plot(all_spec.spectral_axis, original_data[:, 30, 30], label='Original Data')
+plt.plot(all_spec.spectral_axis, full_model[:, 30, 30], label='2 Component Model')
+plt.plot(all_spec.spectral_axis, final_sub_cube[:, 30, 30]+700, label='Model Subtraction+Offset')
+plt.legend()
+plt.show()
 </pre>
               </div>
              </div>
@@ -1965,16 +1965,16 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Open up a new instance of Cubeviz to visualize continuum subtracted data</span>
-<span class="n">cubeviz3</span> <span class="o">=</span> <span class="n">Cubeviz</span><span class="p">()</span>
-<span class="n">cubeviz3</span><span class="o">.</span><span class="n">app</span>
+               <pre><span></span># Open up a new instance of Cubeviz to visualize continuum subtracted data
+cubeviz3 = Cubeviz()
+cubeviz3.app
 </pre>
               </div>
              </div>
             </div>
             <div class="cell_output docutils container">
              <script type="application/vnd.jupyter.widget-view+json">
-              {"version_major": 2, "version_minor": 0, "model_id": "ded7acf02c674a00b07a7be7e7a8108b"}
+              {"version_major": 2, "version_minor": 0, "model_id": "98836f376ec347db98b9d895c529a958"}
              </script>
              <img align=center height=auto width=50% src="../../jdaviz_placeholder_new.png">
              </img align=center height=auto width=50%>
@@ -1984,8 +1984,8 @@ The file does not exist
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">cont_sub_cube</span> <span class="o">=</span> <span class="s1">'NGC4151_Hband_FinalSubtract.fits'</span>
-<span class="n">cubeviz3</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">cont_sub_cube</span><span class="p">,</span> <span class="n">data_label</span><span class="o">=</span><span class="s1">'Red/Blue Shift'</span><span class="p">)</span>
+               <pre><span></span>cont_sub_cube = 'NGC4151_Hband_FinalSubtract.fits'
+cubeviz3.app.load_data(cont_sub_cube, data_label='Red/Blue Shift')
 </pre>
               </div>
              </div>

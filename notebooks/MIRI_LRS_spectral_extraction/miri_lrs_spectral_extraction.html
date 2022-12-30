@@ -775,17 +775,17 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="o">%</span><span class="k">matplotlib</span> inline
+               <pre><span></span>import matplotlib.pyplot as plt
+import matplotlib as mpl
+%matplotlib inline
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+import numpy as np
 
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
-<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
-<span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">simple_norm</span>
+from astropy.io import fits
+from astropy.table import Table
+from astropy.visualization import simple_norm
 
-<span class="kn">from</span> <span class="nn">jwst</span> <span class="kn">import</span> <span class="n">datamodels</span>
+from jwst import datamodels
 </pre>
               </div>
              </div>
@@ -795,153 +795,153 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># useful function that work for boxcar, boxcar scaled with wavelength,</span>
-<span class="c1"># and psf-weighted extractions</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">gwcs.wcstools</span> <span class="kn">import</span> <span class="n">grid_from_bounding_box</span>
+               <pre><span></span># useful function that work for boxcar, boxcar scaled with wavelength,
+# and psf-weighted extractions
+import numpy as np
+from gwcs.wcstools import grid_from_bounding_box
 
 
-<span class="k">def</span> <span class="nf">get_boxcar_weights</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">hwidth</span><span class="p">,</span> <span class="n">npix</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    Compute the weights given an aperture center, half widths, and number of pixels</span>
-<span class="sd">    """</span>
-    <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">npix</span><span class="p">))</span>
-    <span class="c1"># pixels with full weight</span>
-    <span class="n">fullpixels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">center</span> <span class="o">-</span> <span class="n">hwidth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)),</span> <span class="nb">min</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">center</span> <span class="o">+</span> <span class="n">hwidth</span><span class="p">),</span> <span class="n">npix</span><span class="p">)]</span>
-    <span class="n">weights</span><span class="p">[</span><span class="n">fullpixels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">fullpixels</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">1.0</span>
+def get_boxcar_weights(center, hwidth, npix):
+    """
+    Compute the weights given an aperture center, half widths, and number of pixels
+    """
+    weights = np.zeros((npix))
+    # pixels with full weight
+    fullpixels = [max(0, int(center - hwidth + 1)), min(int(center + hwidth), npix)]
+    weights[fullpixels[0] : fullpixels[1]] = 1.0
 
-    <span class="c1"># pixels at the edges of the boxcar with partial weight</span>
-    <span class="k">if</span> <span class="n">fullpixels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">weights</span><span class="p">[</span><span class="n">fullpixels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">hwidth</span> <span class="o">-</span> <span class="p">(</span><span class="n">center</span> <span class="o">-</span> <span class="n">fullpixels</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">if</span> <span class="n">fullpixels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">npix</span><span class="p">:</span>
-        <span class="n">weights</span><span class="p">[</span><span class="n">fullpixels</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">hwidth</span> <span class="o">-</span> <span class="p">(</span><span class="n">fullpixels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">center</span><span class="p">)</span>
+    # pixels at the edges of the boxcar with partial weight
+    if fullpixels[0] &gt; 0:
+        weights[fullpixels[0] - 1] = hwidth - (center - fullpixels[0])
+    if fullpixels[1] &lt; npix:
+        weights[fullpixels[1]] = hwidth - (fullpixels[1] - center)
 
-    <span class="k">return</span> <span class="n">weights</span>
-
-
-<span class="k">def</span> <span class="nf">ap_weight_images</span><span class="p">(</span>
-    <span class="n">center</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">bkg_offset</span><span class="p">,</span> <span class="n">bkg_width</span><span class="p">,</span> <span class="n">image_size</span><span class="p">,</span> <span class="n">waves</span><span class="p">,</span> <span class="n">wavescale</span><span class="o">=</span><span class="kc">None</span>
-<span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    Create a weight image that defines the desired extraction aperture</span>
-<span class="sd">    and the weight image for the requested background regions</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    center : float</span>
-<span class="sd">        center of aperture in pixels</span>
-<span class="sd">    width : float</span>
-<span class="sd">        width of apeture in pixels</span>
-<span class="sd">    bkg_offset : float</span>
-<span class="sd">        offset from the extaction edge for the background</span>
-<span class="sd">        never scaled for wavelength</span>
-<span class="sd">    bkg_width : float</span>
-<span class="sd">        width of background region</span>
-<span class="sd">        never scaled with wavelength</span>
-<span class="sd">    image_size : tuple with 2 elements</span>
-<span class="sd">        size of image</span>
-<span class="sd">    waves : array</span>
-<span class="sd">        wavelegth values</span>
-<span class="sd">    wavescale : float</span>
-<span class="sd">        scale the width with wavelength (default=None)</span>
-<span class="sd">        wavescale gives the reference wavelenth for the width value</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    wimage, bkg_wimage : (2D image, 2D image)</span>
-<span class="sd">        wimage is the weight image defining the aperature</span>
-<span class="sd">        bkg_image is the weight image defining the background regions</span>
-<span class="sd">    """</span>
-    <span class="n">wimage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">image_size</span><span class="p">)</span>
-    <span class="n">bkg_wimage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">image_size</span><span class="p">)</span>
-    <span class="n">hwidth</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">width</span>
-    <span class="c1"># loop in dispersion direction and compute weights</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">image_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
-        <span class="k">if</span> <span class="n">wavescale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">hwidth</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="p">(</span><span class="n">waves</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">wavescale</span><span class="p">)</span>
-
-        <span class="n">wimage</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_boxcar_weights</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">hwidth</span><span class="p">,</span> <span class="n">image_size</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-
-        <span class="c1"># bkg regions</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">bkg_width</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">bkg_offset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="n">bkg_wimage</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_boxcar_weights</span><span class="p">(</span>
-                <span class="n">center</span> <span class="o">-</span> <span class="n">hwidth</span> <span class="o">-</span> <span class="n">bkg_offset</span><span class="p">,</span> <span class="n">bkg_width</span><span class="p">,</span> <span class="n">image_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="p">)</span>
-            <span class="n">bkg_wimage</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">get_boxcar_weights</span><span class="p">(</span>
-                <span class="n">center</span> <span class="o">+</span> <span class="n">hwidth</span> <span class="o">+</span> <span class="n">bkg_offset</span><span class="p">,</span> <span class="n">bkg_width</span><span class="p">,</span> <span class="n">image_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">bkg_wimage</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">return</span> <span class="p">(</span><span class="n">wimage</span><span class="p">,</span> <span class="n">bkg_wimage</span><span class="p">)</span>
+    return weights
 
 
-<span class="k">def</span> <span class="nf">extract_1dspec</span><span class="p">(</span><span class="n">jdatamodel</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">bkg_offset</span><span class="p">,</span> <span class="n">bkg_width</span><span class="p">,</span> <span class="n">wavescale</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    Extract the 1D spectrum using the boxcar method.</span>
-<span class="sd">    Does a background subtraction as part of the extraction.</span>
+def ap_weight_images(
+    center, width, bkg_offset, bkg_width, image_size, waves, wavescale=None
+):
+    """
+    Create a weight image that defines the desired extraction aperture
+    and the weight image for the requested background regions
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    jdatamodel : jwst.DataModel</span>
-<span class="sd">        jwst datamodel with the 2d spectral image</span>
-<span class="sd">    center : float</span>
-<span class="sd">        center of aperture in pixels</span>
-<span class="sd">    width : float</span>
-<span class="sd">        width of apeture in pixels</span>
-<span class="sd">    bkg_offset : float</span>
-<span class="sd">        offset from the extaction edge for the background</span>
-<span class="sd">        never scaled for wavelength</span>
-<span class="sd">    bkg_width : float</span>
-<span class="sd">        width of background region</span>
-<span class="sd">        never scaled with wavelength</span>
-<span class="sd">    wavescale : float</span>
-<span class="sd">        scale the width with wavelength (default=None)</span>
-<span class="sd">        wavescale gives the reference wavelenth for the width value</span>
+    Parameters
+    ----------
+    center : float
+        center of aperture in pixels
+    width : float
+        width of apeture in pixels
+    bkg_offset : float
+        offset from the extaction edge for the background
+        never scaled for wavelength
+    bkg_width : float
+        width of background region
+        never scaled with wavelength
+    image_size : tuple with 2 elements
+        size of image
+    waves : array
+        wavelegth values
+    wavescale : float
+        scale the width with wavelength (default=None)
+        wavescale gives the reference wavelenth for the width value
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    waves, ext1d : (ndarray, ndarray)</span>
-<span class="sd">        2D `float` array with wavelengths</span>
-<span class="sd">        1D `float` array with extracted 1d spectrum in Jy</span>
-<span class="sd">    """</span>
-    <span class="c1"># should be determined from the gWCS in cal.fits</span>
-    <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">jdatamodel</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-    <span class="n">grid</span> <span class="o">=</span> <span class="n">grid_from_bounding_box</span><span class="p">(</span><span class="n">jdatamodel</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">wcs</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">)</span>
-    <span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="p">,</span> <span class="n">lam</span> <span class="o">=</span> <span class="n">jdatamodel</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">wcs</span><span class="p">(</span><span class="o">*</span><span class="n">grid</span><span class="p">)</span>
-    <span class="n">lam_image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span>
+    Returns
+    -------
+    wimage, bkg_wimage : (2D image, 2D image)
+        wimage is the weight image defining the aperature
+        bkg_image is the weight image defining the background regions
+    """
+    wimage = np.zeros(image_size)
+    bkg_wimage = np.zeros(image_size)
+    hwidth = 0.5 * width
+    # loop in dispersion direction and compute weights
+    for i in range(image_size[1]):
+        if wavescale is not None:
+            hwidth = 0.5 * width * (waves[i] / wavescale)
 
-    <span class="c1"># compute a "rough" wavelength scale to allow for aperture to scale with wavelength</span>
-    <span class="n">rough_waves</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">lam_image</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        wimage[:, i] = get_boxcar_weights(center, hwidth, image_size[0])
 
-    <span class="c1"># images to use for extraction</span>
-    <span class="n">wimage</span><span class="p">,</span> <span class="n">bkg_wimage</span> <span class="o">=</span> <span class="n">ap_weight_images</span><span class="p">(</span>
-        <span class="n">center</span><span class="p">,</span>
-        <span class="n">width</span><span class="p">,</span>
-        <span class="n">bkg_width</span><span class="p">,</span>
-        <span class="n">bkg_offset</span><span class="p">,</span>
-        <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
-        <span class="n">rough_waves</span><span class="p">,</span>
-        <span class="n">wavescale</span><span class="o">=</span><span class="n">wavescale</span><span class="p">,</span>
-    <span class="p">)</span>
+        # bkg regions
+        if (bkg_width is not None) &amp; (bkg_offset is not None):
+            bkg_wimage[:, i] = get_boxcar_weights(
+                center - hwidth - bkg_offset, bkg_width, image_size[0]
+            )
+            bkg_wimage[:, i] += get_boxcar_weights(
+                center + hwidth + bkg_offset, bkg_width, image_size[0]
+            )
+        else:
+            bkg_wimage = None
 
-    <span class="c1"># extract the spectrum using the weight image</span>
-    <span class="k">if</span> <span class="n">bkg_wimage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ext1d_boxcar_bkg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">bkg_wimage</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">data_bkgsub</span> <span class="o">=</span> <span class="n">image</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">ext1d_boxcar_bkg</span><span class="p">,</span> <span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">data_bkgsub</span> <span class="o">=</span> <span class="n">image</span>
+    return (wimage, bkg_wimage)
 
-    <span class="n">ext1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data_bkgsub</span> <span class="o">*</span> <span class="n">wimage</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="c1"># convert from MJy/sr to Jy</span>
-    <span class="n">ext1d</span> <span class="o">*=</span> <span class="mf">1e6</span> <span class="o">*</span> <span class="n">jdatamodel</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">photometry</span><span class="o">.</span><span class="n">pixelarea_steradians</span>
 
-    <span class="c1"># compute the average wavelength for each column using the weight image</span>
-    <span class="c1"># this should correspond directly with the extracted spectrum</span>
-    <span class="c1">#   wavelengths account for any tiled spectra this way</span>
-    <span class="n">waves</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">lam_image</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">wimage</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+def extract_1dspec(jdatamodel, center, width, bkg_offset, bkg_width, wavescale=None):
+    """
+    Extract the 1D spectrum using the boxcar method.
+    Does a background subtraction as part of the extraction.
 
-    <span class="k">return</span> <span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">ext1d</span><span class="p">,</span> <span class="n">data_bkgsub</span><span class="p">)</span>
+    Parameters
+    ----------
+    jdatamodel : jwst.DataModel
+        jwst datamodel with the 2d spectral image
+    center : float
+        center of aperture in pixels
+    width : float
+        width of apeture in pixels
+    bkg_offset : float
+        offset from the extaction edge for the background
+        never scaled for wavelength
+    bkg_width : float
+        width of background region
+        never scaled with wavelength
+    wavescale : float
+        scale the width with wavelength (default=None)
+        wavescale gives the reference wavelenth for the width value
+
+    Returns
+    -------
+    waves, ext1d : (ndarray, ndarray)
+        2D `float` array with wavelengths
+        1D `float` array with extracted 1d spectrum in Jy
+    """
+    # should be determined from the gWCS in cal.fits
+    image = np.transpose(jdatamodel.data)
+    grid = grid_from_bounding_box(jdatamodel.meta.wcs.bounding_box)
+    ra, dec, lam = jdatamodel.meta.wcs(*grid)
+    lam_image = np.transpose(lam)
+
+    # compute a "rough" wavelength scale to allow for aperture to scale with wavelength
+    rough_waves = np.average(lam_image, axis=0)
+
+    # images to use for extraction
+    wimage, bkg_wimage = ap_weight_images(
+        center,
+        width,
+        bkg_width,
+        bkg_offset,
+        image.shape,
+        rough_waves,
+        wavescale=wavescale,
+    )
+
+    # extract the spectrum using the weight image
+    if bkg_wimage is not None:
+        ext1d_boxcar_bkg = np.average(image, weights=bkg_wimage, axis=0)
+        data_bkgsub = image - np.tile(ext1d_boxcar_bkg, (image.shape[0], 1))
+    else:
+        data_bkgsub = image
+
+    ext1d = np.sum(data_bkgsub * wimage, axis=0)
+    # convert from MJy/sr to Jy
+    ext1d *= 1e6 * jdatamodel.meta.photometry.pixelarea_steradians
+
+    # compute the average wavelength for each column using the weight image
+    # this should correspond directly with the extracted spectrum
+    #   wavelengths account for any tiled spectra this way
+    waves = np.average(lam_image, weights=wimage, axis=0)
+
+    return (waves, ext1d, data_bkgsub)
 </pre>
               </div>
              </div>
@@ -983,18 +983,18 @@ Help to determine how to use the JWST pipeline code instead of the custom code f
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="kn">from</span> <span class="nn">astropy.utils.data</span> <span class="kn">import</span> <span class="n">download_file</span>
+               <pre><span></span>from astropy.utils.data import download_file
 
-<span class="n">calfilename</span> <span class="o">=</span> <span class="s2">"det_image_seq5_MIRIMAGE_P750Lexp1_cal.fits"</span>
-<span class="n">s2dfilename</span> <span class="o">=</span> <span class="s2">"det_image_seq5_MIRIMAGE_P750Lexp1_s2d.fits"</span>
-<span class="n">x1dfilename</span> <span class="o">=</span> <span class="s2">"det_image_seq5_MIRIMAGE_P750Lexp1_x1d.fits"</span>
-<span class="n">spatialprofilefilename</span> <span class="o">=</span> <span class="s2">"det_image_seq1_MIRIMAGE_P750Lexp1_s2d.fits"</span>
-<span class="n">mainurl</span> <span class="o">=</span> <span class="s2">"https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MIRI_LRS_notebook/"</span>
+calfilename = "det_image_seq5_MIRIMAGE_P750Lexp1_cal.fits"
+s2dfilename = "det_image_seq5_MIRIMAGE_P750Lexp1_s2d.fits"
+x1dfilename = "det_image_seq5_MIRIMAGE_P750Lexp1_x1d.fits"
+spatialprofilefilename = "det_image_seq1_MIRIMAGE_P750Lexp1_s2d.fits"
+mainurl = "https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MIRI_LRS_notebook/"
 
-<span class="n">calfile_dld</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="n">mainurl</span> <span class="o">+</span> <span class="n">calfilename</span><span class="p">)</span>
-<span class="n">s2dfile_dld</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="n">mainurl</span> <span class="o">+</span> <span class="n">s2dfilename</span><span class="p">)</span>
-<span class="n">x1dfile_dld</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="n">mainurl</span> <span class="o">+</span> <span class="n">x1dfilename</span><span class="p">)</span>
-<span class="n">spatialprofilefile_dld</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="n">mainurl</span> <span class="o">+</span> <span class="n">spatialprofilefilename</span><span class="p">)</span>
+calfile_dld = download_file(mainurl + calfilename)
+s2dfile_dld = download_file(mainurl + s2dfilename)
+x1dfile_dld = download_file(mainurl + x1dfilename)
+spatialprofilefile_dld = download_file(mainurl + spatialprofilefilename)
 </pre>
               </div>
              </div>
@@ -1004,17 +1004,17 @@ Help to determine how to use the JWST pipeline code instead of the custom code f
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># rename files so that they have the right extensions</span>
-<span class="c1"># required for the jwst datamodels to work</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="n">calfile</span> <span class="o">=</span> <span class="n">calfile_dld</span> <span class="o">+</span> <span class="s1">'_cal.fits'</span>
-<span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">calfile_dld</span><span class="p">,</span> <span class="n">calfile</span><span class="p">)</span>
-<span class="n">s2dfile</span> <span class="o">=</span> <span class="n">s2dfile_dld</span> <span class="o">+</span> <span class="s1">'_s2d.fits'</span>
-<span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">s2dfile_dld</span><span class="p">,</span> <span class="n">s2dfile</span><span class="p">)</span>
-<span class="n">x1dfile</span> <span class="o">=</span> <span class="n">x1dfile_dld</span> <span class="o">+</span> <span class="s1">'_x1d.fits'</span>
-<span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">x1dfile_dld</span><span class="p">,</span> <span class="n">x1dfile</span><span class="p">)</span>
-<span class="n">spatialprofilefile</span> <span class="o">=</span> <span class="n">spatialprofilefile_dld</span> <span class="o">+</span> <span class="s1">'_s2d.fits'</span>
-<span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">spatialprofilefile_dld</span><span class="p">,</span> <span class="n">spatialprofilefile</span><span class="p">)</span>
+               <pre><span></span># rename files so that they have the right extensions
+# required for the jwst datamodels to work
+import os
+calfile = calfile_dld + '_cal.fits'
+os.rename(calfile_dld, calfile)
+s2dfile = s2dfile_dld + '_s2d.fits'
+os.rename(s2dfile_dld, s2dfile)
+x1dfile = x1dfile_dld + '_x1d.fits'
+os.rename(x1dfile_dld, x1dfile)
+spatialprofilefile = spatialprofilefile_dld + '_s2d.fits'
+os.rename(spatialprofilefile_dld, spatialprofilefile)
 </pre>
               </div>
              </div>
@@ -1114,9 +1114,9 @@ The simulated exposure was reduced using the JWST pipeline (v0.16.1) through the
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># use a jwst datamodel to provide a good interface to the data and wcs info</span>
-<span class="n">cal</span> <span class="o">=</span> <span class="n">datamodels</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">calfile</span><span class="p">)</span>
-<span class="n">s2d</span> <span class="o">=</span> <span class="n">datamodels</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">s2dfile</span><span class="p">)</span>
+               <pre><span></span># use a jwst datamodel to provide a good interface to the data and wcs info
+cal = datamodels.open(calfile)
+s2d = datamodels.open(s2dfile)
 </pre>
               </div>
              </div>
@@ -1129,14 +1129,14 @@ The simulated exposure was reduced using the JWST pipeline (v0.16.1) through the
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"cal image"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">cal</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">cal</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">cal</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">cal</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"s2d image"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">s2d</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">s2d</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">s2d</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">s2d</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+               <pre><span></span>print("cal image")
+print(cal.data.shape)
+print(np.mean(cal.data))
+print(np.amin(cal.data), np.amax(cal.data))
+print("s2d image")
+print(s2d.data.shape)
+print(np.mean(s2d.data))
+print(np.amin(s2d.data), np.amax(s2d.data))
 </pre>
               </div>
              </div>
@@ -1164,10 +1164,10 @@ s2d image
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">cal</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="s1">'sqrt'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cal</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"The full image from the MIRI IMAGER detector"</span><span class="p">)</span>
+               <pre><span></span>norm_data = simple_norm(cal.data, 'sqrt')
+plt.figure(figsize=(6, 6))
+plt.imshow(cal.data, norm=norm_data, origin="lower")
+plt.title("The full image from the MIRI IMAGER detector")
 </pre>
               </div>
              </div>
@@ -1189,12 +1189,12 @@ s2d image
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># transpose to make it display better</span>
-<span class="n">data_lrs_reg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">s2d</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-<span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">data_lrs_reg</span><span class="p">,</span> <span class="s2">"sqrt"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data_lrs_reg</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"The LRS region"</span><span class="p">)</span>
+               <pre><span></span># transpose to make it display better
+data_lrs_reg = np.transpose(s2d.data)
+norm_data = simple_norm(data_lrs_reg, "sqrt")
+plt.figure(figsize=(10, 3))
+plt.imshow(data_lrs_reg, norm=norm_data, origin="lower")
+plt.title("The LRS region")
 </pre>
               </div>
              </div>
@@ -1216,16 +1216,16 @@ s2d image
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># for reference read in the JWST pipeline extracted spectrum</span>
-<span class="n">jpipe_x1d</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">x1dfile</span><span class="p">,</span> <span class="n">hdu</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">jpipe_x1d</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-<span class="c1"># plot</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">jpipe_x1d</span><span class="p">[</span><span class="s1">'WAVELENGTH'</span><span class="p">],</span> <span class="n">jpipe_x1d</span><span class="p">[</span><span class="s1">'FLUX'</span><span class="p">],</span> <span class="s1">'k-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"jpipe_x1d"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"JWST Pipeline x1d extracted spectrum"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"wavelength"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Flux Density [Jy]"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
+               <pre><span></span># for reference read in the JWST pipeline extracted spectrum
+jpipe_x1d = Table.read(x1dfile, hdu=1)
+print(jpipe_x1d.columns)
+# plot
+fig, ax = plt.subplots(figsize=(6, 6))
+ax.plot(jpipe_x1d['WAVELENGTH'], jpipe_x1d['FLUX'], 'k-', label="jpipe_x1d")
+ax.set_title("JWST Pipeline x1d extracted spectrum")
+ax.set_xlabel("wavelength")
+ax.set_ylabel("Flux Density [Jy]")
+ax.set_yscale("log")
 </pre>
               </div>
              </div>
@@ -1268,10 +1268,10 @@ s2d image
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">ext_center</span> <span class="o">=</span> <span class="mi">30</span>
-<span class="n">ext_width</span> <span class="o">=</span> <span class="mi">8</span>
-<span class="n">bkg_offset</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="n">bkg_width</span> <span class="o">=</span> <span class="mi">2</span>
+                <pre><span></span>ext_center = 30
+ext_width = 8
+bkg_offset = 4
+bkg_width = 2
 </pre>
                </div>
               </div>
@@ -1284,15 +1284,15 @@ s2d image
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data_lrs_reg</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">data_lrs_reg</span><span class="p">[:,</span><span class="mi">300</span><span class="p">],</span> <span class="s1">'k-'</span><span class="p">)</span>
-<span class="n">mm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">ext_center</span><span class="p">,</span> <span class="n">ext_center</span><span class="p">])</span>
-<span class="n">mm_y</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mm</span><span class="p">,</span> <span class="n">mm_y</span><span class="p">,</span> <span class="s1">'b--'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mm</span> <span class="o">-</span> <span class="n">ext_width</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">mm_y</span><span class="p">,</span> <span class="s1">'g:'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mm</span> <span class="o">+</span> <span class="n">ext_width</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">mm_y</span><span class="p">,</span> <span class="s1">'g:'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Cross-dispersion Cut at Pixel=300"</span><span class="p">)</span>
+                <pre><span></span>fig, ax = plt.subplots(figsize=(6, 6))
+y = np.arange(data_lrs_reg.shape[0])
+ax.plot(y, data_lrs_reg[:,300], 'k-')
+mm = np.array([ext_center, ext_center])
+mm_y = ax.get_ylim()
+ax.plot(mm, mm_y, 'b--')
+ax.plot(mm - ext_width/2., mm_y, 'g:')
+ax.plot(mm + ext_width/2., mm_y, 'g:')
+ax.set_title("Cross-dispersion Cut at Pixel=300")
 </pre>
                </div>
               </div>
@@ -1314,19 +1314,19 @@ s2d image
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># visualize the weight images used in the fixed boxcar extraction </span>
-<span class="n">wimage_fixedboxcar</span><span class="p">,</span> <span class="n">wimage_fb_bkg</span> <span class="o">=</span> <span class="n">ap_weight_images</span><span class="p">(</span><span class="n">ext_center</span><span class="p">,</span> <span class="n">ext_width</span><span class="p">,</span> <span class="n">bkg_offset</span><span class="p">,</span> 
-                                                     <span class="n">bkg_width</span><span class="p">,</span> <span class="n">data_lrs_reg</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <pre><span></span># visualize the weight images used in the fixed boxcar extraction 
+wimage_fixedboxcar, wimage_fb_bkg = ap_weight_images(ext_center, ext_width, bkg_offset, 
+                                                     bkg_width, data_lrs_reg.shape, None)
 
-<span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">wimage_fixedboxcar</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wimage_fixedboxcar</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Fixed boxcar weight image"</span><span class="p">)</span>
+norm_data = simple_norm(wimage_fixedboxcar)
+plt.figure(figsize=(10, 3))
+plt.imshow(wimage_fixedboxcar, norm=norm_data, origin="lower")
+plt.title("Fixed boxcar weight image")
 
-<span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">wimage_fb_bkg</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wimage_fb_bkg</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Fixed boxcar backgound weight image"</span><span class="p">)</span>
+norm_data = simple_norm(wimage_fb_bkg)
+plt.figure(figsize=(10, 3))
+plt.imshow(wimage_fb_bkg, norm=norm_data, origin="lower")
+plt.title("Fixed boxcar backgound weight image")
 </pre>
                </div>
               </div>
@@ -1346,26 +1346,26 @@ s2d image
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># extract the spectrum using the weight images</span>
+                <pre><span></span># extract the spectrum using the weight images
 
-<span class="c1"># without background subtraction</span>
-<span class="n">waves_boxcar</span><span class="p">,</span> <span class="n">ext1d_boxcar</span><span class="p">,</span> <span class="n">tmpval</span> <span class="o">=</span> <span class="n">extract_1dspec</span><span class="p">(</span><span class="n">s2d</span><span class="p">,</span> <span class="n">ext_center</span><span class="p">,</span> <span class="n">ext_width</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+# without background subtraction
+waves_boxcar, ext1d_boxcar, tmpval = extract_1dspec(s2d, ext_center, ext_width, None, None)
 
-<span class="c1"># with background subtraction</span>
-<span class="n">waves_boxcar_bkgsub</span><span class="p">,</span> <span class="n">ext1d_boxcar_bkgsub</span><span class="p">,</span> <span class="n">tmpval</span> <span class="o">=</span> <span class="n">extract_1dspec</span><span class="p">(</span><span class="n">s2d</span><span class="p">,</span> <span class="n">ext_center</span><span class="p">,</span> <span class="n">ext_width</span><span class="p">,</span> 
-                                                                  <span class="n">bkg_offset</span><span class="p">,</span> <span class="n">bkg_width</span><span class="p">)</span>
+# with background subtraction
+waves_boxcar_bkgsub, ext1d_boxcar_bkgsub, tmpval = extract_1dspec(s2d, ext_center, ext_width, 
+                                                                  bkg_offset, bkg_width)
 
-<span class="c1"># plot</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">gpts</span> <span class="o">=</span> <span class="n">ext1d_boxcar_bkgsub</span> <span class="o">&gt;</span> <span class="mf">0.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_boxcar</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"boxcar"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k:'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"boxcar (bkgsub)"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">jpipe_x1d</span><span class="p">[</span><span class="s1">'WAVELENGTH'</span><span class="p">],</span> <span class="n">jpipe_x1d</span><span class="p">[</span><span class="s1">'FLUX'</span><span class="p">],</span> <span class="s1">'k-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"jpipe_x1d"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Fixed boxcar 1D extracted spectrum"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"wavelength [$\mu$m]"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Flux Density [Jy]"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+# plot
+fig, ax = plt.subplots(figsize=(6, 6))
+gpts = ext1d_boxcar_bkgsub &gt; 0.
+ax.plot(waves_boxcar[gpts], ext1d_boxcar[gpts], 'k-', label="boxcar")
+ax.plot(waves_boxcar_bkgsub[gpts], ext1d_boxcar_bkgsub[gpts], 'k:', label="boxcar (bkgsub)")
+ax.plot(jpipe_x1d['WAVELENGTH'], jpipe_x1d['FLUX'], 'k-', label="jpipe_x1d")
+ax.set_title("Fixed boxcar 1D extracted spectrum")
+ax.set_xlabel(r"wavelength [$\mu$m]")
+ax.set_ylabel("Flux Density [Jy]")
+ax.set_yscale("log")
+ax.legend()
 </pre>
                </div>
               </div>
@@ -1373,7 +1373,7 @@ s2d image
              <div class="cell_output docutils container">
               <div class="output text_plain highlight-myst-ansi notranslate">
                <div class="highlight">
-                <pre><span></span>&lt;matplotlib.legend.Legend at 0x7fbb3934e880&gt;
+                <pre><span></span>&lt;matplotlib.legend.Legend at 0x7f8184b16190&gt;
 </pre>
                </div>
               </div>
@@ -1395,19 +1395,19 @@ s2d image
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># visualize the weight images used in the scaled boxcar extraction </span>
-<span class="n">wimage_scaledboxcar</span><span class="p">,</span> <span class="n">wimage_sb_bkg</span> <span class="o">=</span> <span class="n">ap_weight_images</span><span class="p">(</span><span class="n">ext_center</span><span class="p">,</span> <span class="n">ext_width</span><span class="p">,</span> <span class="n">bkg_offset</span><span class="p">,</span> <span class="n">bkg_width</span><span class="p">,</span> 
-                                                      <span class="n">data_lrs_reg</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">waves_boxcar</span><span class="p">,</span> <span class="n">wavescale</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
+                <pre><span></span># visualize the weight images used in the scaled boxcar extraction 
+wimage_scaledboxcar, wimage_sb_bkg = ap_weight_images(ext_center, ext_width, bkg_offset, bkg_width, 
+                                                      data_lrs_reg.shape, waves_boxcar, wavescale=10.0)
 
-<span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">wimage_scaledboxcar</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wimage_scaledboxcar</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Scaled boxcar weight image"</span><span class="p">)</span>
+norm_data = simple_norm(wimage_scaledboxcar)
+plt.figure(figsize=(10, 3))
+plt.imshow(wimage_scaledboxcar, norm=norm_data, origin="lower")
+plt.title("Scaled boxcar weight image")
 
-<span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">wimage_sb_bkg</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wimage_sb_bkg</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Scaled boxcar backgound weight image"</span><span class="p">)</span>
+norm_data = simple_norm(wimage_sb_bkg)
+plt.figure(figsize=(10, 3))
+plt.imshow(wimage_sb_bkg, norm=norm_data, origin="lower")
+plt.title("Scaled boxcar backgound weight image")
 </pre>
                </div>
               </div>
@@ -1427,25 +1427,25 @@ s2d image
              <div class="cell_input docutils container">
               <div class="highlight-ipython3 notranslate">
                <div class="highlight">
-                <pre><span></span><span class="c1"># extract the spectrum using the weight image</span>
+                <pre><span></span># extract the spectrum using the weight image
 
-<span class="c1"># with background subtraction</span>
-<span class="n">waves_sboxcar_bkgsub</span><span class="p">,</span> <span class="n">ext1d_sboxcar_bkgsub</span><span class="p">,</span> <span class="n">sboxcar_bkgsub_image</span> <span class="o">=</span> <span class="n">extract_1dspec</span><span class="p">(</span><span class="n">s2d</span><span class="p">,</span> <span class="n">ext_center</span><span class="p">,</span> 
-                                                                                  <span class="n">ext_width</span><span class="p">,</span> <span class="n">bkg_offset</span><span class="p">,</span> 
-                                                                                  <span class="n">bkg_width</span><span class="p">,</span> <span class="n">wavescale</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+# with background subtraction
+waves_sboxcar_bkgsub, ext1d_sboxcar_bkgsub, sboxcar_bkgsub_image = extract_1dspec(s2d, ext_center, 
+                                                                                  ext_width, bkg_offset, 
+                                                                                  bkg_width, wavescale=10)
 
-<span class="c1"># plot</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">gpts</span> <span class="o">=</span> <span class="n">ext1d_boxcar_bkgsub</span> <span class="o">&gt;</span> <span class="mf">0.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k:'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"fixed boxcar (bkgsub)"</span><span class="p">)</span>
-<span class="n">gpts</span> <span class="o">=</span> <span class="n">ext1d_sboxcar_bkgsub</span> <span class="o">&gt;</span> <span class="mf">0.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"scaled boxcar (bkgsub)"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Scaled boxcar 1D extracted spectrum"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"wavelength [$\mu$m]"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Flux Density [Jy]"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+# plot
+fig, ax = plt.subplots(figsize=(6, 6))
+gpts = ext1d_boxcar_bkgsub &gt; 0.
+ax.plot(waves_boxcar_bkgsub[gpts], ext1d_boxcar_bkgsub[gpts], 'k:', label="fixed boxcar (bkgsub)")
+gpts = ext1d_sboxcar_bkgsub &gt; 0.
+ax.plot(waves_sboxcar_bkgsub[gpts], ext1d_sboxcar_bkgsub[gpts], 'k-', label="scaled boxcar (bkgsub)")
+ax.set_title("Scaled boxcar 1D extracted spectrum")
+ax.set_xlabel("wavelength [$\mu$m]")
+ax.set_ylabel("Flux Density [Jy]")
+ax.set_yscale("log")
+ax.set_ylim(1e-3, 1e-1)
+ax.legend()
 </pre>
                </div>
               </div>
@@ -1453,7 +1453,7 @@ s2d image
              <div class="cell_output docutils container">
               <div class="output text_plain highlight-myst-ansi notranslate">
                <div class="highlight">
-                <pre><span></span>&lt;matplotlib.legend.Legend at 0x7fbb39028490&gt;
+                <pre><span></span>&lt;matplotlib.legend.Legend at 0x7f818484cf40&gt;
 </pre>
                </div>
               </div>
@@ -1526,15 +1526,15 @@ s2d image
               <div class="cell_input docutils container">
                <div class="highlight-ipython3 notranslate">
                 <div class="highlight">
-                 <pre><span></span><span class="c1"># lrs spatial profile (PSF) as a function of wavelength</span>
-<span class="c1"># currently, this is just a "high" S/N observation of a flat spectrum source at the same slit position</span>
-<span class="n">psf</span> <span class="o">=</span> <span class="n">datamodels</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">spatialprofilefile</span><span class="p">)</span>
-<span class="c1"># transpose to make it display better</span>
-<span class="n">lrspsf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">psf</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-<span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">lrspsf</span><span class="p">,</span> <span class="s2">"sqrt"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">lrspsf</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"The LRS Spatial Profile (PSF) Observation"</span><span class="p">)</span>
+                 <pre><span></span># lrs spatial profile (PSF) as a function of wavelength
+# currently, this is just a "high" S/N observation of a flat spectrum source at the same slit position
+psf = datamodels.open(spatialprofilefile)
+# transpose to make it display better
+lrspsf = np.transpose(psf.data)
+norm_data = simple_norm(lrspsf, "sqrt")
+plt.figure(figsize=(10, 3))
+plt.imshow(lrspsf, norm=norm_data, origin="lower")
+plt.title("The LRS Spatial Profile (PSF) Observation")
 </pre>
                 </div>
                </div>
@@ -1553,29 +1553,29 @@ s2d image
               <div class="cell_input docutils container">
                <div class="highlight-ipython3 notranslate">
                 <div class="highlight">
-                 <pre><span></span><span class="c1"># Mock a LRS spectral profile reference file</span>
-<span class="c1"># Sum along the spatial direction and normalize to 1</span>
-<span class="c1"># assume there is no background (none was included in the MIRISim for the flat spectrum source observation)</span>
-<span class="c1"># ignore regions far from the source using a scaled boxcar weight image</span>
-<span class="c1">#   the aperture (psf_width) used in the scaled boxcar weight image could be varied</span>
-<span class="n">psf_width</span> <span class="o">=</span> <span class="mf">12.0</span>
-<span class="p">(</span><span class="n">wimage_scaledboxcar</span><span class="p">,</span> <span class="n">tmpvar</span><span class="p">)</span> <span class="o">=</span> <span class="n">ap_weight_images</span><span class="p">(</span><span class="n">ext_center</span><span class="p">,</span> <span class="n">psf_width</span><span class="p">,</span> <span class="n">bkg_offset</span><span class="p">,</span> <span class="n">bkg_width</span><span class="p">,</span> <span class="n">data_lrs_reg</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">waves_boxcar</span><span class="p">,</span> <span class="n">wavescale</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
+                 <pre><span></span># Mock a LRS spectral profile reference file
+# Sum along the spatial direction and normalize to 1
+# assume there is no background (none was included in the MIRISim for the flat spectrum source observation)
+# ignore regions far from the source using a scaled boxcar weight image
+#   the aperture (psf_width) used in the scaled boxcar weight image could be varied
+psf_width = 12.0
+(wimage_scaledboxcar, tmpvar) = ap_weight_images(ext_center, psf_width, bkg_offset, bkg_width, data_lrs_reg.shape, waves_boxcar, wavescale=10.0)
 
-<span class="n">psf_weightimage</span> <span class="o">=</span> <span class="n">lrspsf</span><span class="o">*</span><span class="n">wimage_scaledboxcar</span>
+psf_weightimage = lrspsf*wimage_scaledboxcar
 
-<span class="c1"># generate a 2D image of the column sums for division</span>
-<span class="n">max_psf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">psf_weightimage</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">div_image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">max_psf</span><span class="p">,</span> <span class="p">(</span><span class="n">psf_weightimage</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
-<span class="n">div_image</span><span class="p">[</span><span class="n">div_image</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># avoid divide by zero issues</span>
+# generate a 2D image of the column sums for division
+max_psf = np.max(psf_weightimage, axis=0)
+div_image = np.tile(max_psf, (psf_weightimage.shape[0], 1))
+div_image[div_image == 0.0] = 1.0  # avoid divide by zero issues
 
-<span class="c1"># normalize </span>
-<span class="n">psf_weightimage</span> <span class="o">/=</span> <span class="n">div_image</span>
+# normalize 
+psf_weightimage /= div_image
 
-<span class="c1"># display</span>
-<span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">psf_weightimage</span><span class="p">,</span> <span class="s2">"sqrt"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf_weightimage</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"The LRS Spatial Profile Reference Image (Normalized)"</span><span class="p">)</span>
+# display
+norm_data = simple_norm(psf_weightimage, "sqrt")
+plt.figure(figsize=(10, 3))
+plt.imshow(psf_weightimage, norm=norm_data, origin="lower")
+plt.title("The LRS Spatial Profile Reference Image (Normalized)")
 </pre>
                 </div>
                </div>
@@ -1594,15 +1594,15 @@ s2d image
               <div class="cell_input docutils container">
                <div class="highlight-ipython3 notranslate">
                 <div class="highlight">
-                 <pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">psf_weightimage</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">psf_weightimage</span><span class="p">[:,</span><span class="mi">150</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"pixel=150"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">psf_weightimage</span><span class="p">[:,</span><span class="mi">225</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"pixel=225"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">psf_weightimage</span><span class="p">[:,</span><span class="mi">300</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"pixel=300"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">psf_weightimage</span><span class="p">[:,</span><span class="mi">370</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"pixel=370"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Cross-dispersion Cuts"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">ext_center</span><span class="o">-</span><span class="n">psf_width</span><span class="p">,</span> <span class="n">ext_center</span><span class="o">+</span><span class="n">psf_width</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+                 <pre><span></span>fig, ax = plt.subplots(figsize=(6, 6))
+y = np.arange(psf_weightimage.shape[0])
+ax.plot(y, psf_weightimage[:,150], label="pixel=150")
+ax.plot(y, psf_weightimage[:,225], label="pixel=225")
+ax.plot(y, psf_weightimage[:,300], label="pixel=300")
+ax.plot(y, psf_weightimage[:,370], label="pixel=370")
+ax.set_title("Cross-dispersion Cuts")
+ax.set_xlim(ext_center-psf_width, ext_center+psf_width)
+ax.legend()
 </pre>
                 </div>
                </div>
@@ -1610,7 +1610,7 @@ s2d image
               <div class="cell_output docutils container">
                <div class="output text_plain highlight-myst-ansi notranslate">
                 <div class="highlight">
-                 <pre><span></span>&lt;matplotlib.legend.Legend at 0x7fbb38fc8d00&gt;
+                 <pre><span></span>&lt;matplotlib.legend.Legend at 0x7f81844c0df0&gt;
 </pre>
                 </div>
                </div>
@@ -1632,23 +1632,23 @@ s2d image
               <div class="cell_input docutils container">
                <div class="highlight-ipython3 notranslate">
                 <div class="highlight">
-                 <pre><span></span><span class="c1"># use the normalized PSF weight image to extract the specrum</span>
-<span class="c1"># use the background subtracted image from the scaled boxcar extraction</span>
-<span class="n">ext1d_psfweight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sboxcar_bkgsub_image</span> <span class="o">*</span> <span class="n">psf_weightimage</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">ext1d_psfweight</span> <span class="o">*=</span> <span class="mf">1e6</span> <span class="o">*</span> <span class="n">s2d</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">photometry</span><span class="o">.</span><span class="n">pixelarea_steradians</span>
+                 <pre><span></span># use the normalized PSF weight image to extract the specrum
+# use the background subtracted image from the scaled boxcar extraction
+ext1d_psfweight = np.sum(sboxcar_bkgsub_image * psf_weightimage, axis=0)
+ext1d_psfweight *= 1e6 * s2d.meta.photometry.pixelarea_steradians
 
-<span class="c1"># plot</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">gpts</span> <span class="o">=</span> <span class="n">ext1d_psfweight</span> <span class="o">&gt;</span> <span class="mf">0.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_psfweight</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"psf weighted (bkgsub)"</span><span class="p">)</span>
-<span class="n">gpts</span> <span class="o">=</span> <span class="n">ext1d_sboxcar_bkgsub</span> <span class="o">&gt;</span> <span class="mf">0.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k:'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"scaled boxcar (bkgsub)"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"PSF weigthed extracted spectrum"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"wavelength [$\mu$m]"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Flux Density [Jy]"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+# plot
+fig, ax = plt.subplots(figsize=(6, 6))
+gpts = ext1d_psfweight &gt; 0.
+ax.plot(waves_boxcar_bkgsub[gpts], ext1d_psfweight[gpts], 'k-', label="psf weighted (bkgsub)")
+gpts = ext1d_sboxcar_bkgsub &gt; 0.
+ax.plot(waves_sboxcar_bkgsub[gpts], ext1d_sboxcar_bkgsub[gpts], 'k:', label="scaled boxcar (bkgsub)")
+ax.set_title("PSF weigthed extracted spectrum")
+ax.set_xlabel("wavelength [$\mu$m]")
+ax.set_ylabel("Flux Density [Jy]")
+ax.set_yscale("log")
+ax.set_ylim(1e-3, 1e-1)
+ax.legend()
 </pre>
                 </div>
                </div>
@@ -1656,7 +1656,7 @@ s2d image
               <div class="cell_output docutils container">
                <div class="output text_plain highlight-myst-ansi notranslate">
                 <div class="highlight">
-                 <pre><span></span>&lt;matplotlib.legend.Legend at 0x7fbb38f4eee0&gt;
+                 <pre><span></span>&lt;matplotlib.legend.Legend at 0x7f8184433550&gt;
 </pre>
                 </div>
                </div>
@@ -1684,20 +1684,20 @@ s2d image
               <div class="cell_input docutils container">
                <div class="highlight-ipython3 notranslate">
                 <div class="highlight">
-                 <pre><span></span><span class="c1"># Rayleigh-Jeans plot</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">gpts</span> <span class="o">=</span> <span class="n">ext1d_psfweight</span> <span class="o">&gt;</span> <span class="mf">0.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">]</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span><span class="o">*</span><span class="n">ext1d_psfweight</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"psf weighted (bkgsub)"</span><span class="p">)</span>
-<span class="n">gpts</span> <span class="o">=</span> <span class="n">ext1d_sboxcar_bkgsub</span> <span class="o">&gt;</span> <span class="mf">0.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="p">(</span><span class="n">waves_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">]</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span><span class="o">*</span><span class="n">ext1d_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k:'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"scaled boxcar (bkgsub)"</span><span class="p">)</span>
-<span class="n">gpts</span> <span class="o">=</span> <span class="n">ext1d_boxcar_bkgsub</span> <span class="o">&gt;</span> <span class="mf">0.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">]</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span><span class="o">*</span><span class="n">ext1d_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k--'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"fixed boxcar (bkgsub)"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Rayleigh-Jeans plot for all extractions"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"wavelength [$\mu$m]"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Rayleigh-Jeans Flux Density [$\mu$m$^4$ Jy]"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+                 <pre><span></span># Rayleigh-Jeans plot
+fig, ax = plt.subplots(figsize=(6, 6))
+gpts = ext1d_psfweight &gt; 0.
+ax.plot(waves_boxcar_bkgsub[gpts], (waves_boxcar_bkgsub[gpts]**4)*ext1d_psfweight[gpts], 'k-', label="psf weighted (bkgsub)")
+gpts = ext1d_sboxcar_bkgsub &gt; 0.
+ax.plot(waves_sboxcar_bkgsub[gpts], (waves_sboxcar_bkgsub[gpts]**4)*ext1d_sboxcar_bkgsub[gpts], 'k:', label="scaled boxcar (bkgsub)")
+gpts = ext1d_boxcar_bkgsub &gt; 0.
+ax.plot(waves_boxcar_bkgsub[gpts], (waves_boxcar_bkgsub[gpts]**4)*ext1d_boxcar_bkgsub[gpts], 'k--', label="fixed boxcar (bkgsub)")
+ax.set_title("Rayleigh-Jeans plot for all extractions")
+ax.set_xlabel("wavelength [$\mu$m]")
+ax.set_ylabel("Rayleigh-Jeans Flux Density [$\mu$m$^4$ Jy]")
+ax.set_yscale("log")
+ax.set_ylim(10, 100)
+ax.legend()
 </pre>
                 </div>
                </div>
@@ -1705,7 +1705,7 @@ s2d image
               <div class="cell_output docutils container">
                <div class="output text_plain highlight-myst-ansi notranslate">
                 <div class="highlight">
-                 <pre><span></span>&lt;matplotlib.legend.Legend at 0x7fbb38db8730&gt;
+                 <pre><span></span>&lt;matplotlib.legend.Legend at 0x7f8184a5ed90&gt;
 </pre>
                 </div>
                </div>

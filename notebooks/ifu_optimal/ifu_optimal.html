@@ -788,26 +788,39 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+               <pre><span></span>import time
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+import numpy as np
 
-<span class="kn">import</span> <span class="nn">scipy</span>
+import scipy
 
-<span class="kn">import</span> <span class="nn">specutils</span>
-<span class="kn">from</span> <span class="nn">specutils</span> <span class="kn">import</span> <span class="n">Spectrum1D</span>
+import specutils
+from specutils import Spectrum1D
 
-<span class="kn">from</span> <span class="nn">jdaviz</span> <span class="kn">import</span> <span class="n">Cubeviz</span>
+from jdaviz import Cubeviz
 
-<span class="kn">from</span> <span class="nn">regions</span> <span class="kn">import</span> <span class="n">CircleSkyRegion</span>
+from regions import CircleSkyRegion
 
-<span class="kn">from</span> <span class="nn">photutils</span> <span class="kn">import</span> <span class="n">CircularAperture</span><span class="p">,</span> <span class="n">SkyCircularAperture</span><span class="p">,</span> <span class="n">aperture_photometry</span> 
+from photutils import CircularAperture, SkyCircularAperture, aperture_photometry 
 
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
-<span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">wcs</span>
-<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
-<span class="kn">from</span> <span class="nn">astropy.stats</span> <span class="kn">import</span> <span class="n">sigma_clip</span>
-<span class="kn">from</span> <span class="nn">astropy.utils.data</span> <span class="kn">import</span> <span class="n">download_file</span>
+from astropy.io import fits
+from astropy import wcs
+import astropy.units as u
+from astropy.stats import sigma_clip
+from astropy.utils.data import download_file
+</pre>
+              </div>
+             </div>
+            </div>
+            <div class="cell_output docutils container">
+             <div class="output stderr highlight-myst-ansi notranslate">
+              <div class="highlight">
+               <pre><span></span>/tmp/ipykernel_4203/1640329960.py:14: DeprecationWarning: `photutils.CircularAperture` is a deprecated alias for `photutils.aperture.CircularAperture` and will be removed in the future. Instead, please use `from photutils.aperture import CircularAperture` to silence this warning.
+  from photutils import CircularAperture, SkyCircularAperture, aperture_photometry
+/tmp/ipykernel_4203/1640329960.py:14: DeprecationWarning: `photutils.SkyCircularAperture` is a deprecated alias for `photutils.aperture.SkyCircularAperture` and will be removed in the future. Instead, please use `from photutils.aperture import SkyCircularAperture` to silence this warning.
+  from photutils import CircularAperture, SkyCircularAperture, aperture_photometry
+/tmp/ipykernel_4203/1640329960.py:14: DeprecationWarning: `photutils.aperture_photometry` is a deprecated alias for `photutils.aperture.aperture_photometry` and will be removed in the future. Instead, please use `from photutils.aperture import aperture_photometry` to silence this warning.
+  from photutils import CircularAperture, SkyCircularAperture, aperture_photometry
 </pre>
               </div>
              </div>
@@ -817,9 +830,9 @@ const thebe_selector_output = ".output, .cell_output"
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
+               <pre><span></span>%matplotlib inline
+import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm
 </pre>
               </div>
              </div>
@@ -855,42 +868,42 @@ demonstrate a number of regular extraction techniques, including subset extracti
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># NIRSpec IFU science data cube</span>
-<span class="n">BoxPath</span> <span class="o">=</span> <span class="s2">"https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_optimal_extraction/"</span>
-<span class="n">filename</span> <span class="o">=</span> <span class="n">BoxPath</span> <span class="o">+</span> <span class="s2">"NRS00001-faintQSO-F100LP-G140H-01_1_491_SE_2020-08-25T12h15m00_s3d.fits"</span>
+               <pre><span></span># NIRSpec IFU science data cube
+BoxPath = "https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_optimal_extraction/"
+filename = BoxPath + "NRS00001-faintQSO-F100LP-G140H-01_1_491_SE_2020-08-25T12h15m00_s3d.fits"
 
-<span class="c1"># Open and inspect the file and WCS</span>
-<span class="c1"># Load with astropy.fits.open</span>
-<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdulist</span><span class="p">:</span>
-    <span class="n">sci</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">'SCI'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">err</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">'ERR'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">w</span> <span class="o">=</span> <span class="n">wcs</span><span class="o">.</span><span class="n">WCS</span><span class="p">(</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
-    <span class="n">hdr</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
-    <span class="n">hdulist</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+# Open and inspect the file and WCS
+# Load with astropy.fits.open
+with fits.open(filename, memmap=False) as hdulist:
+    sci = hdulist['SCI'].data
+    err = hdulist['ERR'].data
+    w = wcs.WCS(hdulist[1].header)
+    hdr = hdulist[1].header
+    hdulist.info()
+    print(w)
     
-<span class="c1"># Load with Spectrum1D    </span>
-<span class="n">spec1d</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+# Load with Spectrum1D    
+spec1d = Spectrum1D.read(filename)
 
-<span class="c1"># Wavelengths</span>
-<span class="n">wavelength</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">spec1d</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span>
+# Wavelengths
+wavelength = np.array(spec1d.spectral_axis.value)
+print(wavelength)
 
-<span class="c1"># Sum over spaxels</span>
-<span class="n">fnu_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">spec1d</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+# Sum over spaxels
+fnu_sum = np.sum(spec1d.flux, axis=(0, 1))
 
-<span class="c1"># List of cube slices for aperture photometry</span>
-<span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">var</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">spec1d_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec1d</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">spec1d_len</span><span class="p">):</span> 
-    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sci</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span>
-    <span class="n">var</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">err</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span>  <span class="c1"># variance = err, not variance = err**2.  Squaring the err gives noisy results. </span>
+# List of cube slices for aperture photometry
+data = []
+var = []
+spec1d_len = len(spec1d.spectral_axis.value)
+for idx in range(spec1d_len): 
+    data.append(sci[idx, :, :])
+    var.append(err[idx, :, :])  # variance = err, not variance = err**2.  Squaring the err gives noisy results. 
 
-<span class="c1"># Window data and variance (and replace NaNs)</span>
-<span class="c1"># The existing JWST pipeline window is overgenerous (39x33 instead of the nominal 30x30 pixels)</span>
-<span class="n">data_win</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)[:,</span> <span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">:])</span>
-<span class="n">data_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">var</span><span class="p">)[:,</span> <span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">:])</span> 
+# Window data and variance (and replace NaNs)
+# The existing JWST pipeline window is overgenerous (39x33 instead of the nominal 30x30 pixels)
+data_win = np.nan_to_num(np.array(data)[:, 5:-4, 3:])
+data_var = np.nan_to_num(np.array(var)[:, 5:-4, 3:]) 
 </pre>
               </div>
              </div>
@@ -963,15 +976,15 @@ NAXIS : 33  39  2059
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">cubeviz</span> <span class="o">=</span> <span class="n">Cubeviz</span><span class="p">()</span>
-<span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span>
+               <pre><span></span>cubeviz = Cubeviz()
+cubeviz.app
 </pre>
               </div>
              </div>
             </div>
             <div class="cell_output docutils container">
              <script type="application/vnd.jupyter.widget-view+json">
-              {"version_major": 2, "version_minor": 0, "model_id": "688511bbe4c34309a4552fecbb314677"}
+              {"version_major": 2, "version_minor": 0, "model_id": "74123b2a38a448f4b6d82cbffdaa0be6"}
              </script>
              <img align=center height=auto width=50% src="../../jdaviz_placeholder_new.png">
              </img align=center height=auto width=50%>
@@ -1062,14 +1075,14 @@ NAXIS : 33  39  2059
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Data from local directory</span>
-<span class="c1"># cubeviz.app.load_data(filename)</span>
+               <pre><span></span># Data from local directory
+# cubeviz.app.load_data(filename)
 
-<span class="c1"># Data from url:</span>
-<span class="n">url</span> <span class="o">=</span> <span class="n">filename</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># Sleep to avoid glue-jupyter timing issue</span>
-<span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+# Data from url:
+url = filename
+df = download_file(url)
+time.sleep(2)  # Sleep to avoid glue-jupyter timing issue
+cubeviz.app.load_data(df)
 </pre>
               </div>
              </div>
@@ -1109,14 +1122,14 @@ for each FITS extension.
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">cubeviz_data</span> <span class="o">=</span> <span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">data_collection</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">region1</span> <span class="o">=</span> <span class="n">cubeviz_data</span><span class="o">.</span><span class="n">get_selection_definition</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">'astropy-regions'</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">region1</span><span class="p">)</span>
-    <span class="n">region1_exists</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"There are no regions selected in the cube viewer."</span><span class="p">)</span>
-    <span class="n">region1_exists</span> <span class="o">=</span> <span class="kc">False</span>
+               <pre><span></span>cubeviz_data = cubeviz.app.data_collection[0]
+try:
+    region1 = cubeviz_data.get_selection_definition(format='astropy-regions')
+    print(region1)
+    region1_exists = True
+except Exception:
+    print("There are no regions selected in the cube viewer.")
+    region1_exists = False
 </pre>
               </div>
              </div>
@@ -1145,11 +1158,11 @@ for each FITS extension.
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="k">try</span><span class="p">:</span>
-    <span class="n">spectrum_subset1</span> <span class="o">=</span> <span class="n">cubeviz</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get_data_from_viewer</span><span class="p">(</span><span class="s1">'spectrum-viewer'</span><span class="p">)[</span><span class="s1">'Subset 1'</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">spectrum_subset1</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"There are no subsets selected in the spectrum viewer."</span><span class="p">)</span>
+               <pre><span></span>try:
+    spectrum_subset1 = cubeviz.app.get_data_from_viewer('spectrum-viewer')['Subset 1']
+    print(spectrum_subset1)
+except Exception:
+    print("There are no subsets selected in the spectrum viewer.")
 </pre>
               </div>
              </div>
@@ -1184,21 +1197,21 @@ for each FITS extension.
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Sum over wavelength</span>
-<span class="n">cube_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data_win</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+               <pre><span></span># Sum over wavelength
+cube_sum = np.sum(data_win, axis=0)
 
-<span class="c1"># Plots</span>
-<span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span> 
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">fnu_sum</span><span class="p">)</span> 
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Spaxel sums"</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Wavelength (um)"</span><span class="p">)</span>  
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"SCA491 Flux Density"</span><span class="p">)</span>
+# Plots
+f, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5)) 
+ax1.plot(wavelength, fnu_sum) 
+ax1.set_xlim(0.95, 1.5)
+ax1.set_title("Spaxel sums")
+ax1.set_xlabel("Wavelength (um)")  
+ax1.set_ylabel("SCA491 Flux Density")
 
-<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube_sum</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Slice sums"</span><span class="p">)</span>
+ax2.imshow(cube_sum, norm=LogNorm())
+ax2.set_title("Slice sums")
 
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+plt.show()
 </pre>
               </div>
              </div>
@@ -1222,24 +1235,24 @@ for each FITS extension.
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># IFU pixel scale</span>
-<span class="n">pixelscale</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># arcsec/pixel</span>
+               <pre><span></span># IFU pixel scale
+pixelscale = 0.1  # arcsec/pixel
 
-<span class="c1"># CircularAperture uses xy pixels</span>
-<span class="n">center_xy</span> <span class="o">=</span> <span class="p">[</span><span class="mf">17.1</span><span class="p">,</span> <span class="mf">20.</span><span class="p">]</span>
-<span class="n">r_pix</span> <span class="o">=</span> <span class="mf">5.92</span>
-<span class="k">if</span> <span class="n">region1_exists</span><span class="p">:</span>
-    <span class="n">center_xy</span> <span class="o">=</span> <span class="p">[</span><span class="n">region1</span><span class="o">.</span><span class="n">center</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">region1</span><span class="o">.</span><span class="n">center</span><span class="o">.</span><span class="n">y</span><span class="p">]</span>   
-    <span class="n">r_pix</span> <span class="o">=</span> <span class="n">region1</span><span class="o">.</span><span class="n">radius</span>
+# CircularAperture uses xy pixels
+center_xy = [17.1, 20.]
+r_pix = 5.92
+if region1_exists:
+    center_xy = [region1.center.x, region1.center.y]   
+    r_pix = region1.radius
 
-<span class="n">aperture</span> <span class="o">=</span> <span class="n">CircularAperture</span><span class="p">(</span><span class="n">center_xy</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">r_pix</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">aperture</span><span class="p">)</span>
+aperture = CircularAperture(center_xy, r=r_pix)
+print(aperture)
 
-<span class="n">cylinder_sum</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">slice2d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-    <span class="n">phot_table</span> <span class="o">=</span> <span class="n">aperture_photometry</span><span class="p">(</span><span class="n">slice2d</span><span class="p">,</span> <span class="n">aperture</span><span class="p">,</span> <span class="n">wcs</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">celestial</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'exact'</span><span class="p">)</span>
-    <span class="n">phot_table</span> <span class="o">=</span> <span class="n">aperture_photometry</span><span class="p">(</span><span class="n">slice2d</span><span class="p">,</span> <span class="n">aperture</span><span class="p">)</span>
-    <span class="n">cylinder_sum</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phot_table</span><span class="p">[</span><span class="s1">'aperture_sum'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+cylinder_sum = []
+for slice2d in data:
+    phot_table = aperture_photometry(slice2d, aperture, wcs=w.celestial, method='exact')
+    phot_table = aperture_photometry(slice2d, aperture)
+    cylinder_sum.append(phot_table['aperture_sum'][0])
 </pre>
               </div>
              </div>
@@ -1276,18 +1289,18 @@ r: 5.92
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Reference wavelength for expanding aperture</span>
-<span class="n">lambda0</span> <span class="o">=</span> <span class="n">wavelength</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'Reference wavelength:'</span><span class="p">,</span> <span class="n">lambda0</span><span class="p">)</span>
+               <pre><span></span># Reference wavelength for expanding aperture
+lambda0 = wavelength[0]
+print('Reference wavelength:', lambda0)
 
-<span class="n">cone_sum</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-<span class="k">for</span> <span class="p">(</span><span class="n">slice2d</span><span class="p">,</span> <span class="n">wave</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">):</span>
-    <span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span>
-    <span class="n">r_cone</span> <span class="o">=</span> <span class="n">r_pix</span> <span class="o">*</span> <span class="n">wave</span> <span class="o">/</span> <span class="n">lambda0</span>
-    <span class="n">aperture_cone</span> <span class="o">=</span> <span class="n">CircularAperture</span><span class="p">(</span><span class="n">center_xy</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">r_cone</span><span class="p">)</span>
-    <span class="n">phot_table</span> <span class="o">=</span> <span class="n">aperture_photometry</span><span class="p">(</span><span class="n">slice2d</span><span class="p">,</span> <span class="n">aperture_cone</span><span class="p">,</span> <span class="n">wcs</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">celestial</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'exact'</span><span class="p">)</span>
-    <span class="n">cone_sum</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phot_table</span><span class="p">[</span><span class="s1">'aperture_sum'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+cone_sum = []
+idx = -1
+for (slice2d, wave) in zip(data, wavelength):
+    idx = idx + 1
+    r_cone = r_pix * wave / lambda0
+    aperture_cone = CircularAperture(center_xy, r=r_cone)
+    phot_table = aperture_photometry(slice2d, aperture_cone, wcs=w.celestial, method='exact')
+    cone_sum.append(phot_table['aperture_sum'][0])
 </pre>
               </div>
              </div>
@@ -1316,22 +1329,22 @@ r: 5.92
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span> 
+               <pre><span></span>f, (ax1) = plt.subplots(1, 1, figsize=(15, 5)) 
 
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Non-optimal spectral extractions"</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Observed Wavelength (microns)"</span><span class="p">)</span>  
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Flux Density"</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cylinder_sum</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Cylinder"</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'b'</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cone_sum</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Cone"</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'darkorange'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum_subset1</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Subset1"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"There is no Cubeviz Subset1 spectrum to plot."</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+ax1.set_title("Non-optimal spectral extractions")
+ax1.set_xlabel("Observed Wavelength (microns)")  
+ax1.set_ylabel("Flux Density")
+ax1.set_xlim(0.95, 1.5)
+ax1.set_ylim(0, 0.6)
+ax1.plot(wavelength, np.array(cylinder_sum), label="Cylinder", c='b')
+ax1.plot(wavelength, np.array(cone_sum), label="Cone", c='darkorange', alpha=0.5)
+try:
+    ax1.plot(wavelength, spectrum_subset1.flux.value, c='r', label="Subset1", alpha=0.4)
+except Exception:
+    print("There is no Cubeviz Subset1 spectrum to plot.")
+ax1.legend()
 
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+plt.show()
 </pre>
               </div>
              </div>
@@ -1369,18 +1382,18 @@ Red-shifted Broad H-beta and narrow [O III] lines  are visible in the quasar spe
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="sd">'''</span>
-<span class="sd">#WebbPSF imports</span>
-<span class="sd">%pylab inline</span>
-<span class="sd">import webbpsf</span>
+               <pre><span></span>'''
+#WebbPSF imports
+%pylab inline
+import webbpsf
 
-<span class="sd">#WebbPSF commands used to create PSF model cube</span>
-<span class="sd">ns.image_mask = "IFU"  # Sets to 3x3 arcsec square mask</span>
-<span class="sd">ns = webbpsf.NIRSpec()</span>
-<span class="sd">wavelengths = wavelength*1.0E-6</span>
-<span class="sd">psfcube = ns.calc_datacube(wavelengths, fov_pixels=30, oversample=4,  add_distortion=True)</span>
-<span class="sd">psfcube.writeto("Webbpsf_ifucube.fits")</span>
-<span class="sd">'''</span>
+#WebbPSF commands used to create PSF model cube
+ns.image_mask = "IFU"  # Sets to 3x3 arcsec square mask
+ns = webbpsf.NIRSpec()
+wavelengths = wavelength*1.0E-6
+psfcube = ns.calc_datacube(wavelengths, fov_pixels=30, oversample=4,  add_distortion=True)
+psfcube.writeto("Webbpsf_ifucube.fits")
+'''
 </pre>
               </div>
              </div>
@@ -1398,21 +1411,21 @@ Red-shifted Broad H-beta and narrow [O III] lines  are visible in the quasar spe
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">BoxPath</span> <span class="o">=</span> <span class="s2">"https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_optimal_extraction/"</span>
-<span class="n">psf_filename</span> <span class="o">=</span> <span class="n">BoxPath</span><span class="o">+</span><span class="s2">"Webbpsf_ifucube.fits"</span>
+               <pre><span></span>BoxPath = "https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_optimal_extraction/"
+psf_filename = BoxPath+"Webbpsf_ifucube.fits"
 
-<span class="c1"># Load with astropy.fits.open</span>
-<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">psf_filename</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdulist</span><span class="p">:</span>
-    <span class="n">psf_model</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">'DET_SAMP'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">psf_hdr</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">'DET_SAMP'</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
-    <span class="n">hdulist</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>    
-<span class="nb">print</span><span class="p">(</span><span class="n">psf_model</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+# Load with astropy.fits.open
+with fits.open(psf_filename, memmap=False) as hdulist:
+    psf_model = hdulist['DET_SAMP'].data
+    psf_hdr = hdulist['DET_SAMP'].header
+    hdulist.info()    
+print(psf_model.shape)
 
-<span class="c1"># Sum over wavelength</span>
-<span class="n">psf_model_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psf_model</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+# Sum over wavelength
+psf_model_sum = np.sum(psf_model, axis=0)
 
-<span class="c1"># Sum over spaxels</span>
-<span class="n">psf_model_fnusum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psf_model</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+# Sum over spaxels
+psf_model_fnusum = np.sum(psf_model, axis=(1, 2))
 </pre>
               </div>
              </div>
@@ -1465,58 +1478,58 @@ It might behoove the user to download it to a local directory and retrieve it fr
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Flip model PSF left-right.  For some unknown reason, WebbPSF is flipped with respect to the IPS simulation.</span>
-<span class="n">psf_model_fliplr</span> <span class="o">=</span> <span class="n">psf_model</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+               <pre><span></span># Flip model PSF left-right.  For some unknown reason, WebbPSF is flipped with respect to the IPS simulation.
+psf_model_fliplr = psf_model[:, ::-1, :]
 
-<span class="c1"># Smooth model</span>
-<span class="c1"># EMSM smoothing for G140H grating</span>
-<span class="n">scalerad</span> <span class="o">=</span> <span class="mf">0.046</span>  <span class="c1"># sigma (arcsec)</span>
-<span class="n">pixelscale</span> <span class="o">=</span> <span class="mf">0.1</span>
-<span class="n">scalerad_pix</span> <span class="o">=</span> <span class="n">scalerad</span> <span class="o">/</span> <span class="n">pixelscale</span>
-<span class="n">psf_model_smoothed</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">ndimage</span><span class="o">.</span><span class="n">filters</span><span class="o">.</span><span class="n">gaussian_filter</span><span class="p">(</span><span class="n">psf_model_fliplr</span><span class="p">,</span> 
-                                                           <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scalerad_pix</span><span class="p">,</span> <span class="n">scalerad_pix</span><span class="p">),</span> 
-                                                           <span class="n">order</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'reflect'</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>  
-                                                           <span class="n">truncate</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
+# Smooth model
+# EMSM smoothing for G140H grating
+scalerad = 0.046  # sigma (arcsec)
+pixelscale = 0.1
+scalerad_pix = scalerad / pixelscale
+psf_model_smoothed = scipy.ndimage.filters.gaussian_filter(psf_model_fliplr, 
+                                                           (0.0, scalerad_pix, scalerad_pix), 
+                                                           order=0, mode='reflect', cval=0.0,  
+                                                           truncate=10.0)
 
-<span class="c1"># Empirically (chi-by-eye) determined shift</span>
-<span class="n">shiftx</span> <span class="o">=</span> <span class="mf">1.75</span>    
-<span class="n">shifty</span> <span class="o">=</span> <span class="mf">0.</span>
+# Empirically (chi-by-eye) determined shift
+shiftx = 1.75    
+shifty = 0.
 
-<span class="c1"># Shift model PSF using linear interpolation</span>
-<span class="n">psf_model_aligned</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">ndimage</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">psf_model_smoothed</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">shiftx</span><span class="p">,</span> <span class="n">shifty</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> 
-                                        <span class="n">mode</span><span class="o">=</span><span class="s1">'constant'</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">prefilter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+# Shift model PSF using linear interpolation
+psf_model_aligned = scipy.ndimage.shift(psf_model_smoothed, (0.0, shiftx, shifty), order=1, 
+                                        mode='constant', cval=0.0, prefilter=True)
 
-<span class="c1"># Sum over wavelength</span>
-<span class="n">psf_model_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psf_model_aligned</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+# Sum over wavelength
+psf_model_sum = np.sum(psf_model_aligned, axis=0)
 
-<span class="c1"># Scale factor for PSF subtraction</span>
-<span class="n">psf_sum_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">psf_model_sum</span><span class="p">)</span>
-<span class="n">psf_sum_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">psf_model_sum</span><span class="p">)</span>
-<span class="n">scalefactor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">cube_sum</span><span class="p">)</span> <span class="o">/</span> <span class="n">psf_sum_max</span>
+# Scale factor for PSF subtraction
+psf_sum_min = np.amin(psf_model_sum)
+psf_sum_max = np.amax(psf_model_sum)
+scalefactor = np.amax(cube_sum) / psf_sum_max
 
-<span class="c1"># Plots</span>
-<span class="n">f</span><span class="p">,</span> <span class="p">([</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">],</span> <span class="p">[</span><span class="n">ax4</span><span class="p">,</span> <span class="n">ax5</span><span class="p">,</span> <span class="n">ax6</span><span class="p">])</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> 
+# Plots
+f, ([ax1, ax2, ax3], [ax4, ax5, ax6]) = plt.subplots(2, 3, figsize=(10, 10)) 
 
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"PSF slice sum"</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf_model_sum</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
+ax1.set_title("PSF slice sum")
+ax1.imshow(psf_model_sum, norm=LogNorm())
 
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Science Data slice sum"</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube_sum</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span> 
+ax2.set_title("Science Data slice sum")
+ax2.imshow(cube_sum, norm=LogNorm()) 
 
-<span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Data / PSF Ratio"</span><span class="p">)</span>
-<span class="n">ax3</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube_sum</span> <span class="o">/</span> <span class="n">psf_model_sum</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
+ax3.set_title("Data / PSF Ratio")
+ax3.imshow(cube_sum / psf_model_sum, norm=LogNorm())
 
-<span class="n">ax4</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"PSF Model integrated flux"</span><span class="p">)</span>
-<span class="n">ax4</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">psf_model_fnusum</span><span class="p">)</span>
+ax4.set_title("PSF Model integrated flux")
+ax4.plot(psf_model_fnusum)
 
-<span class="n">ax5</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Data - PSF"</span><span class="p">)</span>
-<span class="n">ax5</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube_sum</span> <span class="o">-</span> <span class="n">scalefactor</span> <span class="o">*</span> <span class="n">psf_model_sum</span><span class="p">)</span>
+ax5.set_title("Data - PSF")
+ax5.imshow(cube_sum - scalefactor * psf_model_sum)
 
-<span class="n">im6</span> <span class="o">=</span> <span class="n">ax6</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">cube_sum</span> <span class="o">-</span> <span class="n">scalefactor</span> <span class="o">*</span> <span class="n">psf_model_sum</span><span class="p">)))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im6</span><span class="p">)</span>
-<span class="n">ax6</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"log abs(Data - PSF)"</span><span class="p">)</span>
+im6 = ax6.imshow(np.log10(np.absolute(cube_sum - scalefactor * psf_model_sum)))
+plt.colorbar(im6)
+ax6.set_title("log abs(Data - PSF)")
 
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+plt.show()
 </pre>
               </div>
              </div>
@@ -1524,7 +1537,7 @@ It might behoove the user to download it to a local directory and retrieve it fr
             <div class="cell_output docutils container">
              <div class="output stderr highlight-myst-ansi notranslate">
               <div class="highlight">
-               <pre><span></span>2022-11-17 23:44:16,816 - stpipe - WARNING - /tmp/ipykernel_5762/206052846.py:9: DeprecationWarning: Please use `gaussian_filter` from the `scipy.ndimage` namespace, the `scipy.ndimage.filters` namespace is deprecated.
+               <pre><span></span>2022-12-30 17:03:01,428 - stpipe - WARNING - /tmp/ipykernel_4203/206052846.py:9: DeprecationWarning: Please use `gaussian_filter` from the `scipy.ndimage` namespace, the `scipy.ndimage.filters` namespace is deprecated.
   psf_model_smoothed = scipy.ndimage.filters.gaussian_filter(psf_model_fliplr,
 </pre>
               </div>
@@ -1563,38 +1576,38 @@ Differences (center, right) between the model PSF and IPS-simulated PSF will tra
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Window PSF model (and replace NaNs)</span>
-<span class="n">profile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">psf_model_aligned</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2059</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span> 
+               <pre><span></span># Window PSF model (and replace NaNs)
+profile = np.nan_to_num(psf_model_aligned[0:2059, :, :]) 
 
-<span class="c1"># Divide data by PSF model</span>
-<span class="n">data_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">data_win</span> <span class="o">/</span> <span class="n">profile</span><span class="p">)</span>
-<span class="n">data_norm_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data_norm</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> 
+# Divide data by PSF model
+data_norm = np.nan_to_num(data_win / profile)
+data_norm_sum = np.sum(data_norm, axis=0) 
 
-<span class="c1"># Mask out bad data using 3-sigma clipping in each slice</span>
-<span class="n">data_norm_clipped</span> <span class="o">=</span> <span class="n">sigma_clip</span><span class="p">(</span><span class="n">data_norm</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">maxiters</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="n">data_norm_clipped_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data_norm_clipped</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>   
-<span class="n">badvoxel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data_norm_clipped</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-<span class="n">data_clean</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">data_win</span>
-<span class="n">data_clean</span><span class="p">[</span><span class="n">badvoxel</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+# Mask out bad data using 3-sigma clipping in each slice
+data_norm_clipped = sigma_clip(data_norm, sigma=3.0, maxiters=5, axis=(1, 2))
+data_norm_clipped_sum = np.sum(data_norm_clipped, axis=0)   
+badvoxel = np.where(data_norm_clipped == 0)
+data_clean = 1.0 * data_win
+data_clean[badvoxel] = 0.0
 
-<span class="c1"># Optimal extraction, using model profile weight and variance cube from the simulated data</span>
-<span class="n">optimal_weight</span> <span class="o">=</span> <span class="n">profile</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">data_var</span>
-<span class="n">optimal_weight_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">optimal_weight</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="n">spectrum_optimal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">profile</span> <span class="o">*</span> <span class="n">data_clean</span> <span class="o">/</span> <span class="n">data_var</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="n">optimal_weight_norm</span>
+# Optimal extraction, using model profile weight and variance cube from the simulated data
+optimal_weight = profile ** 2 / data_var
+optimal_weight_norm = np.sum(optimal_weight, axis=(1, 2))
+spectrum_optimal = np.sum(profile * data_clean / data_var, axis=(1, 2)) / optimal_weight_norm
 
-<span class="n">opt_scalefactor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">cone_sum</span> <span class="o">/</span> <span class="n">spectrum_optimal</span><span class="p">))</span>  <span class="c1"># = 1.33, not ~1.0 because PSF model isn't perfect</span>
+opt_scalefactor = np.median(np.nan_to_num(cone_sum / spectrum_optimal))  # = 1.33, not ~1.0 because PSF model isn't perfect
 
-<span class="c1"># Plots</span>
-<span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span> 
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Optimal Extraction Comparison"</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Observed Wavelength (microns)"</span><span class="p">)</span> 
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Flux Density"</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">cone_sum</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Conical Extraction"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum_optimal</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Optimal"</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+# Plots
+f, (ax1) = plt.subplots(1, 1, figsize=(12, 6)) 
+ax1.set_title("Optimal Extraction Comparison")
+ax1.set_xlabel("Observed Wavelength (microns)") 
+ax1.set_ylabel("Flux Density")
+ax1.set_ylim(0, 0.5)
+ax1.plot(wavelength, cone_sum, label="Conical Extraction", alpha=0.5)
+ax1.plot(wavelength, spectrum_optimal, label="Optimal")
+ax1.legend()
 
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+plt.show()
 </pre>
               </div>
              </div>
@@ -1621,72 +1634,72 @@ Differences (center, right) between the model PSF and IPS-simulated PSF will tra
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="n">BoxPath</span> <span class="o">=</span> <span class="s2">"https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_optimal_extraction/"</span>
-<span class="n">filename_star</span> <span class="o">=</span> <span class="n">BoxPath</span> <span class="o">+</span> <span class="s2">"NRS00001-brightQSO-F100LP-G140H-01_1_491_SE_2020-08-26T12h15m00_s3d.fits"</span>
+               <pre><span></span>BoxPath = "https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/IFU_optimal_extraction/"
+filename_star = BoxPath + "NRS00001-brightQSO-F100LP-G140H-01_1_491_SE_2020-08-26T12h15m00_s3d.fits"
 
-<span class="c1"># Open and inspect the file and WCS</span>
-<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename_star</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdulist</span><span class="p">:</span>
-    <span class="n">sci_star</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">'SCI'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">err_star</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="s1">'ERR'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">w_star</span> <span class="o">=</span> <span class="n">wcs</span><span class="o">.</span><span class="n">WCS</span><span class="p">(</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
-    <span class="n">hdr_star</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
-    <span class="n">hdulist</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">w_star</span><span class="p">)</span>
+# Open and inspect the file and WCS
+with fits.open(filename_star, memmap=False) as hdulist:
+    sci_star = hdulist['SCI'].data
+    err_star = hdulist['ERR'].data
+    w_star = wcs.WCS(hdulist[1].header)
+    hdr_star = hdulist[1].header
+    hdulist.info()
+    print(w_star)
     
-<span class="c1"># Load with Spectrum1D    </span>
-<span class="n">spec1d_star</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename_star</span><span class="p">)</span>
+# Load with Spectrum1D    
+spec1d_star = Spectrum1D.read(filename_star)
 
-<span class="c1"># Wavelengths</span>
-<span class="n">wavelength_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">spec1d_star</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+# Wavelengths
+wavelength_star = np.array(spec1d_star.spectral_axis.value)
 
-<span class="c1"># Window reference star to match science data (and replace NaNs)</span>
-<span class="n">ref_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">sci_star</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">:])</span>
+# Window reference star to match science data (and replace NaNs)
+ref_star = np.nan_to_num(sci_star[:, 5:-4, 3:])
 
-<span class="c1"># Sum over spaxels</span>
-<span class="n">ref_star_fnusum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ref_star</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+# Sum over spaxels
+ref_star_fnusum = np.sum(ref_star, axis=(1, 2))
 
-<span class="c1"># Normalize PSF star profile to unity. (The flux will still be slightly off. Please see Developer's Note below.)</span>
-<span class="n">ref_star_norm</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">norm</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wavelength_star</span><span class="p">)),</span> <span class="n">ref_star_fnusum</span><span class="p">):</span>
-    <span class="n">ref_star_norm</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ref_star</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">norm</span><span class="p">)</span>
-<span class="n">profile_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ref_star_norm</span><span class="p">)</span>
+# Normalize PSF star profile to unity. (The flux will still be slightly off. Please see Developer's Note below.)
+ref_star_norm = []
+for idx, norm in zip(range(len(wavelength_star)), ref_star_fnusum):
+    ref_star_norm.append(ref_star[idx] / norm)
+profile_star = np.array(ref_star_norm)
     
-<span class="c1"># Sum over spaxels </span>
-<span class="n">profile_star_fnusum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">profile_star</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+# Sum over spaxels 
+profile_star_fnusum = np.sum(profile_star, axis=(1, 2))
 
-<span class="c1"># Sum over wavelength</span>
-<span class="n">profile_star_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">profile_star</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+# Sum over wavelength
+profile_star_sum = np.sum(profile_star, axis=0)
 
-<span class="c1"># Scale factor for PSF subtraction</span>
-<span class="n">profile_star_sum_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">profile_star_sum</span><span class="p">)</span>
-<span class="n">star_scalefactor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">cube_sum</span><span class="p">)</span> <span class="o">/</span> <span class="n">profile_star_sum_max</span>
+# Scale factor for PSF subtraction
+profile_star_sum_max = np.amax(profile_star_sum)
+star_scalefactor = np.amax(cube_sum) / profile_star_sum_max
 
-<span class="c1"># Make slight adjustment to scale factor</span>
-<span class="n">star_scalefactor</span> <span class="o">=</span> <span class="mf">0.175</span>
+# Make slight adjustment to scale factor
+star_scalefactor = 0.175
 
-<span class="c1"># Plots</span>
-<span class="n">f</span><span class="p">,</span> <span class="p">([</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">],</span> <span class="p">[</span><span class="n">ax4</span><span class="p">,</span> <span class="n">ax5</span><span class="p">,</span> <span class="n">ax6</span><span class="p">])</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> 
+# Plots
+f, ([ax1, ax2, ax3], [ax4, ax5, ax6]) = plt.subplots(2, 3, figsize=(10, 10)) 
 
-<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">profile_star_sum</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"PSF Star Slice sum"</span><span class="p">)</span>
+ax1.imshow(profile_star_sum, norm=LogNorm())
+ax1.set_title("PSF Star Slice sum")
 
-<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube_sum</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span> 
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Science Data Slice sum"</span><span class="p">)</span>
+ax2.imshow(cube_sum, norm=LogNorm()) 
+ax2.set_title("Science Data Slice sum")
 
-<span class="n">ax3</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube_sum</span> <span class="o">/</span> <span class="n">profile_star_sum</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
-<span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Data/Star_PSF Ratio"</span><span class="p">)</span>
+ax3.imshow(cube_sum / profile_star_sum, norm=LogNorm())
+ax3.set_title("Data/Star_PSF Ratio")
 
-<span class="n">star_model_ratio</span> <span class="o">=</span> <span class="n">profile_star_sum</span> <span class="o">/</span> <span class="n">psf_model_sum</span>
-<span class="n">ax4</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">star_model_ratio</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
-<span class="n">ax4</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Star PSF/WebbPSF"</span><span class="p">)</span>
+star_model_ratio = profile_star_sum / psf_model_sum
+ax4.imshow(star_model_ratio, norm=LogNorm())
+ax4.set_title("Star PSF/WebbPSF")
 
-<span class="n">ax5</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube_sum</span> <span class="o">-</span> <span class="n">star_scalefactor</span> <span class="o">*</span> <span class="n">profile_star_sum</span><span class="p">)</span>
-<span class="n">ax5</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Data - Star PSF"</span><span class="p">)</span>
+ax5.imshow(cube_sum - star_scalefactor * profile_star_sum)
+ax5.set_title("Data - Star PSF")
 
-<span class="n">ax6</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">cube_sum</span> <span class="o">-</span> <span class="n">star_scalefactor</span> <span class="o">*</span> <span class="n">profile_star_sum</span><span class="p">)))</span>
-<span class="n">ax6</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"log abs(Data - Star PSF)"</span><span class="p">)</span>
+ax6.imshow(np.log10(np.absolute(cube_sum - star_scalefactor * profile_star_sum)))
+ax6.set_title("log abs(Data - Star PSF)")
 
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+plt.show()
 </pre>
               </div>
              </div>
@@ -1742,32 +1755,32 @@ Difference of PSF star from science data shows they are well matched, with a sca
             <div class="cell_input docutils container">
              <div class="highlight-ipython3 notranslate">
               <div class="highlight">
-               <pre><span></span><span class="c1"># Mask out bad data using 3-sigma clipping in each slice</span>
-<span class="n">data_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">data_win</span> <span class="o">/</span> <span class="n">profile_star</span><span class="p">)</span>
-<span class="n">data_norm_clipped</span> <span class="o">=</span> <span class="n">sigma_clip</span><span class="p">(</span><span class="n">data_norm</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">maxiters</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="n">data_norm_clipped_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data_norm_clipped</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>   
-<span class="n">badvoxel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data_norm_clipped</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">data_clean</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">data_win</span>
-<span class="n">data_clean</span><span class="p">[</span><span class="n">badvoxel</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+               <pre><span></span># Mask out bad data using 3-sigma clipping in each slice
+data_norm = np.nan_to_num(data_win / profile_star)
+data_norm_clipped = sigma_clip(data_norm, sigma=3.0, maxiters=5, axis=(1, 2))
+data_norm_clipped_sum = np.sum(data_norm_clipped, axis=0)   
+badvoxel = np.where(data_norm_clipped == 0)[0]
+data_clean = 1.0 * data_win
+data_clean[badvoxel] = 0.0
 
-<span class="c1"># Optimal extraction, using model profile weight and variance cube from the simulated data</span>
-<span class="n">optimal_weight</span> <span class="o">=</span> <span class="n">profile_star</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">data_var</span>
-<span class="n">optimal_weight_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">optimal_weight</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="n">spectrum_optimal_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">profile_star</span> <span class="o">*</span> <span class="n">data_clean</span> <span class="o">/</span> <span class="n">data_var</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="n">optimal_weight_norm</span>
+# Optimal extraction, using model profile weight and variance cube from the simulated data
+optimal_weight = profile_star**2 / data_var
+optimal_weight_norm = np.sum(optimal_weight, axis=(1, 2))
+spectrum_optimal_star = np.sum(profile_star * data_clean / data_var, axis=(1, 2)) / optimal_weight_norm
 
-<span class="c1"># Plots</span>
-<span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span> 
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Optimal Extraction Comparison"</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Observed Wavelength (microns)"</span><span class="p">)</span> 
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Flux Density"</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+# Plots
+f, (ax1) = plt.subplots(1, 1, figsize=(12, 6)) 
+ax1.set_title("Optimal Extraction Comparison")
+ax1.set_xlabel("Observed Wavelength (microns)") 
+ax1.set_ylabel("Flux Density")
+ax1.set_ylim(0, 0.5)
 
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">cone_sum</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Conical Extraction"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum_optimal</span> <span class="o">*</span> <span class="n">opt_scalefactor</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"1.3 * Optimal with WebbPSF model"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum_optimal_star</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Optimal with ref. star"</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+ax1.plot(wavelength, cone_sum, label="Conical Extraction", alpha=0.5)
+ax1.plot(wavelength, spectrum_optimal * opt_scalefactor, label="1.3 * Optimal with WebbPSF model", alpha=0.5)
+ax1.plot(wavelength, spectrum_optimal_star, label="Optimal with ref. star")
+ax1.legend()
 
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+plt.show()
 </pre>
               </div>
              </div>
