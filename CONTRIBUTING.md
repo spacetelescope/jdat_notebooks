@@ -102,7 +102,7 @@ so that reviewers can view it. Reviewers can then comment on the notebook in Git
 the bar is still relatively low for review - primarily things like ensuring the notebook does run from
 beginning-to-end and that data files or the like were not accidentally committed to the repository.
 
-Finally, there are three important technicalities for notebooks that become relevant at this stage
+Finally, there are four important technicalities for notebooks that become relevant at this stage
 (and continue for future stages):
 
 1. The output cells of a notebook should *always* be cleared before a git commit is made.
@@ -120,6 +120,12 @@ but in that case it is critical that the notebook state prominently that it must
 These versions should be placed in a `requirements` file in the same directory as the notebook itself. An example of this file
 is in the``example_notebook`` folder.
 That will ensure reviewers/testers can be sure that if they encounter problems, it is not due to software version mis-matches.
+4. A notebook should not take more than a few minutes to run from beginning to end. These notebooks are intended as scientific
+workflows and as examples for people to build their own workflows. If a notebook takes more than five minutes to run, we suggest
+a few techniques to speed it up, without impacting the science case: a) if the notebook runs on many datasets, limit the run to
+one dataset and include the other datasets in an `if` statement that by default is set to `False`; b) if the notebook uses large images,
+limit the run to a small section of one image, again including the option to run the analysis on the full dataset; c) if a) and b) are not
+valid options, please discuss other strategies with the maintainers of this repository.
 
 The notebook will undergo a scientific and a technical review, which might also yield additional developer notes.  It will then
 be merged into the repository once the review comments have been addressed. This concludes the Baseline Stage.
