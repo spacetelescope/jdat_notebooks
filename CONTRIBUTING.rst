@@ -2,10 +2,9 @@
 Contribute to JDAT Notebooks
 ============================
 
-This document outlines the process for contributing code to the jdat notebooks by following the JWST Data Analysis Tools (JDAT) Approach to
-"Notebook-Driven Development". The procedures here outline the process for
-getting a notebook through successive development stages to become something
-that can be "live" on the spacetelescope notebooks repository.
+This document outlines the process for contributing code to the Data Analysis Tools Ecosystem by following the JWST Data Analysis Tools (JDAT) Approach to "Notebook-Driven Development". The procedures here outline the process for
+getting a notebook through successive development stages to become something that can be "live" on the spacetelescope notebooks repository.
+
 
 These notebooks can have many varied science cases, but follow a relatively
 standard workflow
@@ -246,8 +245,8 @@ of your notebook (see above).
 
 9. Now you can create a Pull Request from the ``spacetelescope/jdat_notebooks`` repository. You do that
 by clicking on ``New pull request`` on the webpage, then the link ``compare across forks``. Then set the base repository
-to ``spacetelescope/jdat_notebooks`` and branch ``master`` and the head fork to
+to ``spacetelescope/jdat_notebooks`` and branch ``main`` and the head fork to
 the branch on your personal fork, so repository ``username/jdat_notebooks`` and branch ``new_notebook_branch_name``. You
 set a title and you click on ``Create pull request``.
 
-One of the team members can then merge your Pull Request.
+After the submission of the PR, the request undergoes various stages of scientific and technical review. Upon successful completion of these stages, the PR can be merged.
