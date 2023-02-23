@@ -199,7 +199,7 @@ Procedure to submit a notebook as a Pull Request
 ------------------------------------------------
 
 Submission of a new notebook follows the Github Pull Request workflow.  All details are in the
-`STScI git workflow style guide <https://github.com/spacetelescope/style-guides/blob/master/guides/git-workflow.md>`.
+`STScI git workflow style guide <https://github.com/spacetelescope/style-guides/blob/master/guides/git-workflow.md>`_.
 Here we give a "cookbook" procedure,
 but do not hesitate to reach out for help from other members of the team if you are stuck or are not sure how
 it is supposed to work!
@@ -212,7 +212,7 @@ Note also that these steps are slightly different for if you update a notebook a
 2. Clone the repository locally on your machine
 ::
 
-   git clone git@github.com:username/jdat_notebooks.git
+    git clone git@github.com:username/jdat_notebooks.git
 
 3. While this sets up ``origin`` to point to your fork, there is currently no connection to the main ``spacetelescope`` "upstream" repository.  So you can point your local clone to the right repository by doing:
 ::
@@ -229,6 +229,7 @@ Note also that these steps are slightly different for if you update a notebook a
     mkdir new_notebook_name
 
 6. Now start building your notebook (new_notebook_name.ipynb)!
+::
 
 7. At any point in the development, save your work and push it up to your forked repository. (Important: you must clear the outputs on your notebook using the Jupyter interface before doing an ``add/commit`` like this.)
 ::

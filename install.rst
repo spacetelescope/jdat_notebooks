@@ -32,7 +32,7 @@ You may want to consider installing your notebooks in a new virtual or conda env
 to avoid version conflicts with other packages you may have installed, for example::
 
     conda create -n jdat-nb python=3.8.10
-    conda activate jdaviz-nb
+    conda activate jdat-nb
     git clone https://github.com/spacetelescope/jdat_notebooks.git
 
 Pip Install Notebook Requirements
