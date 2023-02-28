@@ -1,6 +1,6 @@
-#####################
-Development Procedure
-#####################
+#############################
+Notebook development workflow
+#############################
 
 This document is a description of the JWST Data Analysis Tools (JDAT) approach to
 "Notebook-Driven Development".  The procedures here outline the process for
