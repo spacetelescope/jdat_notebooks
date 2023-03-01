@@ -16,7 +16,7 @@ making a pull request (PR) in the ``STSCI jdat_notebooks`` repository
 2. :ref:`Jupyter Notebooks` (Upload to :ref:`GitHub <GitHub Submissions>`).
 3. :ref:`Requirements File` (Upload to :ref:`GitHub <GitHub Submissions>`).
 
-
+|
 Check List
 **********
 
@@ -60,7 +60,7 @@ GitHub Submissions
 
 :ref:`Science Notebooks <Jupyter Notebooks>` and :ref:`requirements files <Requirements File>` files should be submitted
 by making a pull request against the `main` branch of the STScI `jdat_notebooks`_  repository. For instructions on
-how to crate a GitHub pull request, please see the GitHub Guidelines.
+how to create a GitHub pull request, please see the :ref:`GitHub Guidelines <GitHub PR>`.
 
  important::
 
@@ -80,7 +80,7 @@ The folder name ("short title") should be:
 - All small letters.
 - Using underscores instead of spaces. For example "spectral fitting" -> "spectral_fitting"
 
-
+|
 Review Process
 **************
 
