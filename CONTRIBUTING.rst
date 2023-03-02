@@ -29,7 +29,7 @@ These guidelines are in place to make review steps easier.
 
 .. important::
 
-    Please note that all JDAT related code is written `Python 3`; `Python 2` is not supported.
+    Please note that all JDAT related code should be written in `Python 3`; `Python 2` is not supported.
 
 Draft Stage
 -----------
