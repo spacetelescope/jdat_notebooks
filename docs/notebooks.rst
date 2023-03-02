@@ -19,8 +19,10 @@ For instructions on how to install Jupyter notebooks, please visit the
 `Jupyter Installation page <https://jupyter.org/install>`_.
 
 
-We also strongly recommend using `Conda <https://docs.conda.io/projects/conda/en/latest/index.html>`_ for
-managing environments. If you need instructions on how to setup Conda, please see the Conda's
+We also strongly recommend using an environment managing tool for keeping track of dependencies and
+preventing conflicts.  Options include the `venv` package and `pip` tools in the python standard library, or the 
+ `Conda <https://docs.conda.io/projects/conda/en/latest/index.html>`_ tool combined with the `conda-forge`
+ package index. If you need instructions on how to setup Conda, please see the Conda's
 `Getting Started <https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html>`_ documentation.
 
 .. important::
