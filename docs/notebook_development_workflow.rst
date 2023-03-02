@@ -14,8 +14,7 @@ standard workflow:
 2. `Baseline Stage`_
 3. `Notebook-driven development`_
 4. `Advanced Stage`_
-5. `Final Notebook - Maintenance Stage`_
-6. `Revision based on Community feedback`_
+5. `Revision based on Community feedback`_
 
 These stages and the process for moving from one to the other are described below.
 
@@ -31,7 +30,7 @@ These guidelines are in place to make review steps easier.
 
 .. important::
 
-    Please note that all JDAT related code is written `Python 3`; `Python 2` is not supported.
+    Please note that all JDAT related code should be written `Python 3`; `Python 2` is not supported.
 
 .. _draft stage:
 
@@ -178,20 +177,6 @@ Once the notebook authors (original author and developer/reviewer) have agreed i
 the Pull Request workflow as described above, but with the notebook title now changed to be just
 the title itself (no "Draft:" or Baseline:"). The Pull Request is then reviewed by one of the project scientists, and merged when
 everyone is satisfied with the notebook.
-
-Final Notebook - Maintenance Stage
-**********************************
-
-The final stage for the notebook is release on the
-`official STScI notebook repository <https://github.com/spacetelescope/notebooks>`_.
-Specific documentation for this last stage is given in the repository itself.  However, that repository and the
-working repository here have very similar structure, so it is in principle simply a matter of copying the advanced
-notebook over to a form of the release repository and doing one final Pull Request.  Note, however, that other
-STScI reviewers may comment on this stage.  It is also important for the authors to do an additional check over
-the notebook to ensure that it uses *released* (not developer) versions of requirements where possible. It is also
-a good opportunity to fill in the scientific context of a given notebook - e.g. add a motivation section, or a final
-plot at the bottom that shows the final science result.  Once this is done, and the Pull Request merged, the notebook
-can be declared complete.
 
 Revision Based on Community Feedback
 ************************************
