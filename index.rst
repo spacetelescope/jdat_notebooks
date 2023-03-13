@@ -172,13 +172,9 @@ Contributing
 Contributions are welcome from both the scientist and developer
 community. If you wish to contribute fixes or clarifications to existing
 notebooks, feel free to do so directly to this repository. If you wish
-to contribute new notebooks or major reworks of existing notebooks, we
-refer you to
-`dat\_pyinthesky <https://github.com/spacetelescope/dat_pyinthesky/tree/master/jdat_notebooks>`_.
-
-For details on how to provide such contributions, see the `contributing
-instructions <https://github.com/spacetelescope/jdat_jdat_>`__. The
-notebooks attempt to utilize a number of software packages supported by
+to contribute new notebooks or major reworks of existing notebooks, see the `contributing
+instructions <https://github.com/spacetelescope/jdat_notebooks/blob/main/CONTRIBUTING.rst/>`__. 
+The notebooks attempt to utilize a number of software packages supported by
 STScI, including `Astropy <https://www.astropy.org>`__,
 `glue <http://docs.glueviz.org/en/stable/index.html>`__,
 `ginga <https://ginga.readthedocs.io/en/latest/>`__,
