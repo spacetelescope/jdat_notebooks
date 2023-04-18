@@ -1,0 +1,69 @@
+on:
+  workflow_call:
+  
+jobs:
+  gather-notebooks:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - uses: actions/checkout@v3
+    ## routine to gather only the changed notebook files and supply them to the matrix
+    - name: changed-files
+      id: get-changed-files
+      uses: tj-actions/changed-files@v35
+      with:
+        separator: ","
+        files: |
+          **/*.ipynb
+    ## convert the list of files to an array and push them into the matrix as a json object      
+    - name: set-matrix
+      id: set-matrix
+      run: |
+        IFS=',' read -r -a array <<< "${{steps.get-changed-files.outputs.all_changed_files}}"
+        echo "{$array}"
+        echo "matrix=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${array[@]}")" >> $GITHUB_OUTPUT
+  html-generation:
+    needs: gather-notebooks
+    environment: ci_env
+    runs-on: ubuntu-latest
+    strategy:
+        fail-fast: false
+        matrix:
+            notebooks: ${{ fromJson(needs.gather-notebooks.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v3  
+      - name: Set up Python 3.8.12
+        uses: actions/setup-python@v4 ## needed for caching
+        with:
+          python-version: 3.8.12
+          cache: 'pip'
+      - name: Add conda to system path
+        run: |
+          # $CONDA is an environment variable pointing to the root of the miniconda directory
+          echo $CONDA/bin >> $GITHUB_PATH
+      - name: Install dependencies
+        run: |
+          ## Install the local requirements file
+          sudo apt-get install python3-pip
+          pip install -r $(dirname "${{ matrix.notebooks }}")/requirements.txt
+          pip install ghp-import
+          pip install jupyter-book
+          pip install myst-nb
+          pip install nbval
+          ## work-around to bypass the jupyter-book lower version
+          pip install jsonschema==4.6.0
+          PATH="${PATH}:${HOME}/.local/bin"
+      - name: Build HTML
+        run: | 
+          jupyter-book build "${{ matrix.notebooks }}"
+  deploy-html:
+    needs: html-generation
+    environment: ci_env
+    runs-on: ubuntu-latest
+    # Push the book's HTML to github-pages
+    - name: GitHub Pages action
+      uses: peaceiris/actions-gh-pages@v3.6.1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./_build/html
