@@ -14,31 +14,23 @@ on:
     paths:
       - 'notebooks/**.ipynb'
 
-env: 
+env:
+  ARCH_ON_CI: "normal"
+  IS_CRON: "true"
   WEBBPSF_PATH: $HOME/data/webbpsf-data
   PYSYN_CDBS: $PWD/grp/redcat/trds/
+  
 jobs:
   gather-notebooks:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-    - uses: actions/checkout@v3
-    ## routine to gather only the changed notebook files and supply them to the matrix
-    - name: changed-files
-      id: get-changed-files
-      uses: tj-actions/changed-files@v35
-      with:
-        separator: ","
-        files: |
-          **/*.ipynb
-    ## convert the list of files to an array and push them into the matrix as a json object      
-    - name: set-matrix
-      id: set-matrix
-      run: |
-        IFS=',' read -r -a array <<< "${{steps.get-changed-files.outputs.all_changed_files}}"
-        echo "{$array}"
-        echo "matrix=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${array[@]}")" >> $GITHUB_OUTPUT
+      - uses: actions/checkout@v3
+      - id: set-matrix
+        #run: echo "::set-output name=matrix::$(find notebooks -name "*.ipynb" | jq -cnR '[inputs | select(length>0)]')"
+        run: echo "matrix=$(find notebooks -name "*.ipynb" | jq -cnR '[inputs | select(length>0)]')" >> $GITHUB_OUTPUT
+        
   html-generation:
     needs: gather-notebooks
     environment: ci_env
