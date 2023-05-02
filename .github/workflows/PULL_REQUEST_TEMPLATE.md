@@ -15,6 +15,11 @@ Its purpose is to serve as a guide for both the notebook author and the technica
 - [ ] The author(s) and affiliation(s) (if relevant).
 - [ ] A table of contents in an ordered list (`1., 2.,` etc. in Markdown).
 
+### The Rest of the Cells
+
+- [ ] There is only one H1 (`#` in Markdown) used in the notebook.
+- [ ] The notebook uses other [heading tags](https://www.markdownguide.org/basic-syntax/#headings) in order (meaning it does not skip numbers). 
+
 ## Text
 
 - [ ] All link text is descriptive. It tells users where they will be taken if they open the link.
