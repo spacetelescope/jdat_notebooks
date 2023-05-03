@@ -5,15 +5,11 @@ Its purpose is to serve as a guide for both the notebook author and the technica
 
 - [ ] The title of the notebook in a first-level heading (eg. `<h1>` or `# in markdown`).
 - [ ] A brief description of the notebook.
-- [ ] A title in the form of a H1 (`#` in Markdown).
-- [ ] A brief summary of the notebook.
 - [ ] A table of contents in an [ordered list](https://www.markdownguide.org/basic-syntax/#ordered-lists) (`1., 2.,` etc. in Markdown).
 - [ ] The author(s) and affiliation(s) (if relevant).
 - [ ] The date first published.
 - [ ] The date last edited (if relevant).
 - [ ] A link to the notebook's source(s) (if relevant).
-- [ ] The author(s) and affiliation(s) (if relevant).
-- [ ] A table of contents in an ordered list (`1., 2.,` etc. in Markdown).
 
 ### The Rest of the Cells
 
@@ -52,11 +48,6 @@ Its purpose is to serve as a guide for both the notebook author and the technica
     - [ ] Axis labels and range
     - [ ] Key or legend
     - [ ] An explanation of the visualization's significance to the notebook (like the trend, an outlier in the data, what the author learned from it, etc.)
-
-- [ ] All visualizations have the following labels
-    - [ ] Title
-    - [ ] Labels on all axes
-    - [ ] Key or legend (if relevant)
 
 - [ ] All visualizations and their parts have [enough color contrast](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html) ([color contrast checker](https://webaim.org/resources/contrastchecker/)) to be legible. Remember that transparent colors have lower contrast than their opaque versions.
 - [ ] All visualizations [convey information with more visual cues than color coding](https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html). Use text labels, patterns, or icons alongside color to achieve this.
