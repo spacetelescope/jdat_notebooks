@@ -167,7 +167,11 @@ location of the notebooks for you to :ref:`download <install>`.
        - **Data:** Simulated NIRSpec data from ground-based campaign.
        - **Tools:**
        - **Cross-instrument:**
-
+   * - `Redshift and Template Fitting <https://github.com/spacetelescope/jdat_notebooks/tree/main/notebooks/galaxy_redshift>`_
+     - - **Use case:** Measure the redshift of a galaxy from its spectrum using 2 different methods.
+       - **Data:** JWST/NIRSpec spectrum from program 2736.
+       - **Tools:**  jdaviz, specutils.
+       - **Cross-instrument:** NIRISS, NIRCam.
 Help
 ====
 
