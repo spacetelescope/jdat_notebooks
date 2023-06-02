@@ -69,8 +69,6 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/optimal_extraction/Spectral_Extraction-static';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -530,7 +528,7 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="mos-optimal-spectral-extraction">
+  <section id="mos-optimal-spectral-extraction">
 <h1>MOS Optimal Spectral Extraction<a class="headerlink" href="#mos-optimal-spectral-extraction" title="Permalink to this heading">#</a></h1>
 <p><font color="red">This notebook currently fails to execute, use as reference only</font></p>
 <p><strong>NOTE:</strong> This is a static version of the notebook for web rendering. The full, interactive version is available <a class="reference external" href="https://github.com/spacetelescope/dat_pyinthesky/blob/master/jdat_notebooks/optimal_extraction/Spectral%20Extraction.ipynb">here</a>.</p>
@@ -956,7 +954,7 @@ document.write(`
 <p>We calculate the final 1D spectrum as a weighted sum in the cross-dispersion direction the 2D spectrum, using our composite model (the extraction kernel centered on the trace) for the weights. We also need to incorporate the variance for each pixel, which we’ll estimate from the <code class="docutils literal notranslate"><span class="pre">WHT</span></code> extension output by the resample step.</p>
 <section id="create-a-variance-image">
 <h4>Create a variance image<a class="headerlink" href="#create-a-variance-image" title="Permalink to this heading">#</a></h4>
-<p>Horne’s algorithm requires the variance for each pixel. Errors are not currently propagated through the resample step; however, as per the <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/scientific-community/software/drizzlepac/_documents/drizzlepac-handbook.pdf">DrizzlePac Handbook</a>, we can estimate the variance from the drizzle weights image: <span class="math notranslate nohighlight">\( Var \approx 1 / (W \times s^4) \)</span>, where <span class="math notranslate nohighlight">\(s\)</span> is the pixel scale. Currently, the NIRSpec drizzle parameters are set to <code class="docutils literal notranslate"><span class="pre">PIXFRAC</span> <span class="pre">=</span> <span class="pre">1.0</span></code>.</p>
+<p>Horne’s algorithm requires the variance for each pixel. Errors are not currently propagated through the resample step; however, as per the <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/scientific-community/software/drizzlepac/_documents/drizzlepac-handbook.pdf">DrizzlePac Handbook</a>, we can estimate the variance from the drizzle weights image: $ Var \approx 1 / (W \times s^4) $, where $s$ is the pixel scale. Currently, the NIRSpec drizzle parameters are set to <code class="docutils literal notranslate"><span class="pre">PIXFRAC</span> <span class="pre">=</span> <span class="pre">1.0</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># adjust this if and when the NIRSpec PIXFRAC changes</span>
@@ -990,9 +988,9 @@ document.write(`
 <section id="generate-the-1d-spectrum">
 <h2>Generate the 1D spectrum<a class="headerlink" href="#generate-the-1d-spectrum" title="Permalink to this heading">#</a></h2>
 <p>Now, we finally calculate our 1D spectrum, summing over cross-dispersed columns:
-$<span class="math notranslate nohighlight">\(S_x = \frac{1}{G_x}\sum_{y} \frac{I_{xy}\cdot K_y(x)}{V_{xy}}\)</span><span class="math notranslate nohighlight">\(
-where \)</span>I<span class="math notranslate nohighlight">\( is the pixel value in the 2D resampled image, \)</span>K<span class="math notranslate nohighlight">\( is our extraction kernel set to the column's trace center, \)</span>V<span class="math notranslate nohighlight">\( is the pixel value in the variance image, and \)</span>G<span class="math notranslate nohighlight">\( is the kernel normalization given by:
-\)</span><span class="math notranslate nohighlight">\(G_x = \sum_y \frac{K_y^2(x)}{V_{xy}}\)</span>$</p>
+$$S_x = \frac{1}{G_x}\sum_{y} \frac{I_{xy}\cdot K_y(x)}{V_{xy}}$$
+where $I$ is the pixel value in the 2D resampled image, $K$ is our extraction kernel set to the column’s trace center, $V$ is the pixel value in the variance image, and $G$ is the kernel normalization given by:
+$$G_x = \sum_y \frac{K_y^2(x)}{V_{xy}}$$</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">er_nx</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="c1">#initialize our spectrum with zeros</span>
@@ -1463,7 +1461,7 @@ where \)</span>I<span class="math notranslate nohighlight">\( is the pixel value
 <p>WebbPSF has a number of data files which are required to run, so we’ll begin by verifying that they can be accessed (and downloading them if necessary).</p>
 <p>Note that you will see a big red error message if you have not yet downloaded the data files. Don’t worry, as long as you see “Downloading WebbPSF data files.” everything is still proceeding as expected.</p>
 <p><em>Developer Note:</em></p>
-<p>WebbPSF should be updated so that the red error doesn’t appear.  See <a class="github reference external" href="https://github.com/spacetelescope/webbpsf/issues/380">spacetelescope/webbpsf#380</a></p>
+<p>WebbPSF should be updated so that the red error doesn’t appear.  See https://github.com/spacetelescope/webbpsf/issues/380</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
@@ -1704,7 +1702,7 @@ where \)</span>I<span class="math notranslate nohighlight">\( is the pixel value
 <p>Optimal extraction algorithm adapted from <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1986PASP...98..609H/">Horne (1986)</a>.</p>
 <hr class="docutils" />
 <p><span class="xref myst">Top of Page</span>
-<img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/></p>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
 </section>
 </section>
 
