@@ -1,7 +1,7 @@
 #
 <html>
     <head>
-        <title> Spacetelescope dat_pyinthesky Index </title>
+        <title> Spacetelescope jdat_notebooks Index </title>
 <meta http-equiv="content-type" content="text.html"; charset=utf-8">
 
 <!-- Custom Style -->
@@ -273,7 +273,7 @@ Star</td>
 <p>If you uncover any issues or bugs, you can open a GitHub ticket.  For faster responses, however, we encourage you to submit a JWST Help Desk Ticket: jwsthelp.stsci.edu</p>
 <a name="user-content-contributing"></a>
 <h2><a id="user-content-contributing" class="anchor" aria-hidden="true" href="#contributing"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Contributing</h2>
-<p>Contributions are welcome from both the scientist and developer community.  If you wish to contribute fixes or clarifications to existing notebooks, feel free to do so directly to this repository.  If you wish to contribute new notebooks or major reworks of existing notebooks, we refer you to <a href="https://github.com/spacetelescope/dat_pyinthesky/tree/master/jdat_notebooks">dat_pyinthesky</a>.  For details on how to provide such contributions, see the <a href="https://github.com/spacetelescope/jdat_jdat_"jdat_notebooks/blob/main/CONTRIBUTING.md">contributing instructions</a>.</p>
+<p>Contributions are welcome from both the scientist and developer community.  If you wish to contribute fixes or clarifications to existing notebooks, feel free to do so directly to this repository.  If you wish to contribute new notebooks or major reworks of existing notebooks, we refer you to <a href="https://github.com/spacetelescope/jdat_notebooks">jdat_notebooks</a>.  For details on how to provide such contributions, see the <a href="https://github.com/spacetelescope/jdat_notebooks/blob/main/CONTRIBUTING.rst">contributing instructions</a>.</p>
 <p>The notebooks attempt to utilize a number of software packages supported by STScI, including <a href="https://www.astropy.org" rel="nofollow">Astropy</a>, <a href="http://docs.glueviz.org/en/stable/index.html" rel="nofollow">glue</a>, <a href="https://ginga.readthedocs.io/en/latest/" rel="nofollow">ginga</a>, <a href="https://photutils.readthedocs.io" rel="nofollow">photutils</a>, <a href="https://specutils.readthedocs.io/en/stable/" rel="nofollow">specutils</a>, <a href="http://astroimtools.readthedocs.io" rel="nofollow">astroimtools</a>, <a href="http://imexam.readthedocs.io" rel="nofollow">imexam</a>, <a href="https://jdaviz.readthedocs.io/en/latest/" rel="nofollow">jdaviz</a>, <a href="http://asdf.readthedocs.io/en/latest/" rel="nofollow">asdf</a>, <a href="https://gwcs.readthedocs.io/en/latest/" rel="nofollow">gwcs</a>, and <a href="http://synphot.readthedocs.io/en/latest/index.html" rel="nofollow">synphot</a>.  Note jdaviz is STScI's JWST Data Analysis Visualization Tool, designed to be used with spectra, IFU cubes, and multi-object spectroscopy (MOS).</p>
   </body>
 <html>

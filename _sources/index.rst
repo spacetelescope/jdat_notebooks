@@ -49,6 +49,11 @@ location of the notebooks for you to :ref:`download <install>`.
        - **Data:**
        - **Tools:** mast, astroquery
        - **Cross-instrument:** All.
+   * - `RGB images with Imviz <https://github.com/spacetelescope/jdat_notebooks/tree/main/notebooks/rgb_imviz>`_
+     - - **Use case:** create RGB images using Imviz programmatically.
+       - **Data:** Carina Nebula, NIRCam observations
+       - **Tools:** jdaviz
+       - **Cross-instrument:** Any imager.
    * - `Specviz GUI <https://github.com/spacetelescope/jdat_notebooks/tree/main/notebooks/specviz_notebookGUI_interaction>`_
      - - **Use case:** How to inspect and export spectra in Specviz GUI.
        - **Data:** NIRISS simulation generated with MIRAGE.
@@ -152,6 +157,11 @@ location of the notebooks for you to :ref:`download <install>`.
        - **Data:** Simulated NIRSpec MOS data; point sources.
        - **Tools:** jwst pipeline
        - **Cross-instrument:**
+   * - `MOS Spectroscopy of Extragalactic Field <https://github.com/spacetelescope/jdat_notebooks/tree/main/notebooks/mos_spectroscopy_advanced>`_
+     - - **Use case:** emission-line measurements and template matching on 1D spectra.
+       - **Data:** CEERS NIRSpec observations.
+       - **Tools:** specutils, astropy, matplotlib, jdaviz
+       - **Cross-instrument:**  
    * - `BOTS Transiting Exoplanet <https://github.com/spacetelescope/jdat_notebooks/tree/main/notebooks/transit_spectroscopy_notebook>`_
      - - **Use case:** Primary transit of an exoplanet.
        - **Data:** Simulated NIRSpec data from ground-based campaign.
@@ -172,13 +182,9 @@ Contributing
 Contributions are welcome from both the scientist and developer
 community. If you wish to contribute fixes or clarifications to existing
 notebooks, feel free to do so directly to this repository. If you wish
-to contribute new notebooks or major reworks of existing notebooks, we
-refer you to
-`dat\_pyinthesky <https://github.com/spacetelescope/dat_pyinthesky/tree/master/jdat_notebooks>`_.
-
-For details on how to provide such contributions, see the `contributing
-instructions <https://github.com/spacetelescope/jdat_jdat_>`__. The
-notebooks attempt to utilize a number of software packages supported by
+to contribute new notebooks or major reworks of existing notebooks, see the `contributing
+instructions <https://github.com/spacetelescope/jdat_notebooks/blob/main/CONTRIBUTING.rst/>`__. 
+The notebooks attempt to utilize a number of software packages supported by
 STScI, including `Astropy <https://www.astropy.org>`__,
 `glue <http://docs.glueviz.org/en/stable/index.html>`__,
 `ginga <https://ginga.readthedocs.io/en/latest/>`__,

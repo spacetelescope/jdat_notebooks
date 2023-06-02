@@ -17,7 +17,7 @@ but it is not as straight forward or recommended, so we do not provide details h
 Most notebooks have additional associated files in their folder,
 including a requirements document that lists packages necessary to run the notebooks.
 These packages can be installed using `pip <https://pip.pypa.io/en/stable/>`_. The version dependencies are listed in the environment.yaml
-and in the requirements file in each notebook folder. You will need python version 3.8.10.
+and in the requirements file in each notebook folder. You will need Python version 3.9 or higher.
 
 Create Your Local Environment and Clone the Repo
 ------------------------------------------------
@@ -31,8 +31,8 @@ with most modern shells, except CSH/TCSH.
 You may want to consider installing your notebooks in a new virtual or conda environment
 to avoid version conflicts with other packages you may have installed, for example::
 
-    conda create -n jdat-nb python=3.8.10
-    conda activate jdaviz-nb
+    conda create -n jdat-nb python=3.9
+    conda activate jdat-nb
     git clone https://github.com/spacetelescope/jdat_notebooks.git
 
 Pip Install Notebook Requirements
