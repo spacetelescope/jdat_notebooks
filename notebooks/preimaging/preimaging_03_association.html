@@ -1,509 +1,633 @@
-
-
 <!DOCTYPE html>
-
-
-<html lang="en" >
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
-    <title>NIRCam Preimaging: Pipeline Stage 3 &#8212; STScI JDAT Notebooks</title>
-  
-  
-  
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="Docutils 0.18.1: http://docutils.sourceforge.net/" name="generator"/>
+  <title>
+   NIRCam Preimaging: Pipeline Stage 3 — STScI JDAT Notebooks
+  </title>
   <script data-cfasync="false">
-    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+   document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
-  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-
-  
-  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/main.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
-  
+  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet"/>
+  <link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet"/>
+  <link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet"/>
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet"/>
+  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
+  <link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/togglebutton.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/copybutton.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/sphinx-thebe.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/main.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" rel="stylesheet" type="text/css"/>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
-
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../../_static/design-tabs.js"></script>
-    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
-    <script>
-                window.dataLayer = window.dataLayer || [];
+  <link as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" rel="preload"/>
+  <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" rel="preload"/>
+  <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js">
+  </script>
+  <script src="../../_static/jquery.js">
+  </script>
+  <script src="../../_static/underscore.js">
+  </script>
+  <script src="../../_static/_sphinx_javascript_frameworks_compat.js">
+  </script>
+  <script src="../../_static/doctools.js">
+  </script>
+  <script src="../../_static/clipboard.min.js">
+  </script>
+  <script src="../../_static/copybutton.js">
+  </script>
+  <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824">
+  </script>
+  <script>
+   let toggleHintShow = 'Click to show';
+  </script>
+  <script>
+   let toggleHintHide = 'Click to hide';
+  </script>
+  <script>
+   let toggleOpenOnPrint = 'true';
+  </script>
+  <script src="../../_static/togglebutton.js">
+  </script>
+  <script>
+   var togglebuttonSelector = '.toggle, .admonition.dropdown';
+  </script>
+  <script src="../../_static/design-tabs.js">
+  </script>
+  <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3">
+  </script>
+  <script>
+   window.dataLayer = window.dataLayer || [];
                 function gtag(){ dataLayer.push(arguments); }
                 gtag('js', new Date());
                 gtag('config', 'G-D46G4HKJY3');
-            </script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+  </script>
+  <script>
+   const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/preimaging/preimaging_03_association';</script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
-  
-  
-  <a class="skip-link" href="#main-content">Skip to main content</a>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
-  
+  </script>
+  <script async="async" src="../../_static/sphinx-thebe.js">
+  </script>
+  <script>
+   DOCUMENTATION_OPTIONS.pagename = 'notebooks/preimaging/preimaging_03_association';
+  </script>
+  <link href="../../genindex.html" rel="index" title="Index"/>
+  <link href="../../search.html" rel="search" title="Search"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="en" name="docsearch:language"/>
+ </head>
+ <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+  <a class="skip-link" href="#main-content">
+   Skip to main content
+  </a>
+  <input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
+  <label class="overlay overlay-primary" for="__primary">
+  </label>
+  <input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
+  <label class="overlay overlay-secondary" for="__secondary">
+  </label>
   <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
-<form class="bd-search d-flex align-items-center"
-      action="../../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         id="search-input"
-         placeholder="Search this book..."
-         aria-label="Search this book..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
+   <div class="search-button__overlay">
+   </div>
+   <div class="search-button__search-container">
+    <form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
+     <i class="fa-solid fa-magnifying-glass">
+     </i>
+     <input aria-label="Search this book..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search this book..." spellcheck="false" type="search"/>
+     <span class="search-button__kbd-shortcut">
+      <kbd class="kbd-shortcut__modifier">
+       Ctrl
+      </kbd>
+      +
+      <kbd>
+       K
+      </kbd>
+     </span>
+    </form>
+   </div>
   </div>
-  
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
-  
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+  </nav>
   <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
-      
-      <div class="bd-sidebar-primary bd-sidebar">
-        
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-    
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-  
-
-<a class="navbar-brand logo" href="../../intro.html">
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../../_static/stsci_logo2.png" class="logo__image only-light" alt="Logo image"/>
-    <script>document.write(`<img src="../../_static/stsci_logo2.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
-  
-  
-</a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item navbar-nav active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="../../intro.html">
-                    
-                </a>
-            </li>
-        </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/notebook_development_workflow.html">Notebook Development Workflow</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../docs/submitting_notebooks.html">Submitting Notebooks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/requirements.html">Requirements file</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/notebooks.html">Jupyter Notebooks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/data_files.html">Data Files</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">GitHub Guidelines</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../docs/github_setup.html">GitHub Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/github_workflow.html">GitHub Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/github_pr.html">GitHub PR</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cross-Instrument</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../asdf_example/asdf_example.html">ASDF Example</a></li>
-
-<li class="toctree-l1"><a class="reference internal" href="../background_estimation_imaging/Imaging_Sky_Background_Estimation.html">Complex 2D Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">Composite Model Spectral Fitting</a></li>
-
-
-<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">MAST Query</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../rgb_imviz/imviz_rgb_carina.html">RGB images with Imviz</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">Specviz Simple Demo</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">MIRI</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">MRS Mstar - Run Pipeline</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">MRS Detector Based Extraction</a></li>
-
-
-
-
-<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">MRS Mstar - Data Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">IFU of YSOs in LMC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../MIRI_LRS_spectral_extraction/miri_lrs_spectral_extraction.html">LRS Optimal Spectral Extraction</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRCam</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">Point Source Aperture Photometry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../NIRCam_photometry/NIRCam_multiband_photometry.html">Extended Aperture Photometry</a></li>
-
-
-<li class="toctree-l1"><a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">Cross-Filter PSF Matching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">PSF Photometry</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRISS</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">WFSS Spectra - Optimal Extraction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">WFSS Spectra - Combine and Normalize 1D Spectra</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">WFSS Spectra - Cross-Correlation Template</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">WFSS Spectra - Emission Line Map</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRSpec</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">IFU Cube Fitting</a></li>
-
-<li class="toctree-l1"><a class="reference internal" href="../ifu_optimal/ifu_optimal.html">IFU Optimal Spectral Extraction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../optimal_extraction/Spectral_Extraction-static.html">MOS Optimal Extraction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../mos_spectroscopy_advanced/MOSspec_advanced.html">MOS Spectroscopy of Extragalactic Field</a></li>
-
-<li class="toctree-l1"><a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">BOTS Time Series Observations</a></li>
-
-
-
-
-
-
-
-
-</ul>
-
-    </div>
-</nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-  </div>
-  
-  <div id="rtd-footer-container"></div>
-
-
+   <div class="bd-container__inner bd-page-width">
+    <div class="bd-sidebar-primary bd-sidebar">
+     <div class="sidebar-header-items sidebar-primary__section">
+     </div>
+     <div class="sidebar-primary-items__start sidebar-primary__section">
+      <div class="sidebar-primary-item">
+       <a class="navbar-brand logo" href="../../intro.html">
+        <img alt="Logo image" class="logo__image only-light" src="../../_static/stsci_logo2.png"/>
+        <script>
+         document.write(`<img src="../../_static/stsci_logo2.png" class="logo__image only-dark" alt="Logo image"/>`);
+        </script>
+       </a>
       </div>
-      
-      <main id="main-content" class="bd-main">
-        
-        
-
-<div class="sbt-scroll-pixel-helper"></div>
-
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article">
-<div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <span class="fa-solid fa-bars"></span>
-</label></div>
-      
+      <div class="sidebar-primary-item">
+       <nav aria-label="Main" class="bd-links" id="bd-docs-nav">
+        <div class="bd-toc-item navbar-nav active">
+         <ul class="nav bd-sidenav bd-sidenav__home-link">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../intro.html">
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           General
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../index.html">
+            Home
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../install.html">
+            Installation
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../docs/notebook_development_workflow.html">
+            Notebook Development Workflow
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           Development
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../docs/submitting_notebooks.html">
+            Submitting Notebooks
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../docs/requirements.html">
+            Requirements file
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../docs/notebooks.html">
+            Jupyter Notebooks
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../docs/data_files.html">
+            Data Files
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           GitHub Guidelines
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../docs/github_setup.html">
+            GitHub Setup
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../docs/github_workflow.html">
+            GitHub Workflow
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../docs/github_pr.html">
+            GitHub PR
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           Cross-Instrument
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../asdf_example/asdf_example.html">
+            ASDF Example
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../background_estimation_imaging/Imaging_Sky_Background_Estimation.html">
+            Complex 2D Background
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">
+            Composite Model Spectral Fitting
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">
+            MAST Query
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../rgb_imviz/imviz_rgb_carina.html">
+            RGB images with Imviz
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">
+            Specviz Simple Demo
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           MIRI
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">
+            MRS Mstar - Run Pipeline
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">
+            MRS Detector Based Extraction
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">
+            MRS Mstar - Data Analysis
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">
+            IFU of YSOs in LMC
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../MIRI_LRS_spectral_extraction/miri_lrs_spectral_extraction.html">
+            LRS Optimal Spectral Extraction
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           NIRCam
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">
+            Point Source Aperture Photometry
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRCam_photometry/NIRCam_multiband_photometry.html">
+            Extended Aperture Photometry
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">
+            Cross-Filter PSF Matching
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">
+            PSF Photometry
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           NIRISS
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">
+            WFSS Spectra - Optimal Extraction
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">
+            WFSS Spectra - Combine and Normalize 1D Spectra
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">
+            WFSS Spectra - Cross-Correlation Template
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">
+            WFSS Spectra - Emission Line Map
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           NIRSpec
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">
+            IFU Cube Fitting
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../ifu_optimal/ifu_optimal.html">
+            IFU Optimal Spectral Extraction
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../optimal_extraction/Spectral_Extraction-static.html">
+            MOS Optimal Extraction
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../mos_spectroscopy_advanced/MOSspec_advanced.html">
+            MOS Spectroscopy of Extragalactic Field
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">
+            BOTS Time Series Observations
+           </a>
+          </li>
+         </ul>
+        </div>
+       </nav>
+      </div>
+     </div>
+     <div class="sidebar-primary-items__end sidebar-primary__section">
+     </div>
+     <div id="rtd-footer-container">
+     </div>
     </div>
-  
-  
-    <div class="header-article-items__end">
-      
-        <div class="header-article-item">
-
-<div class="article-header-buttons">
-
-
-
-
-
-<div class="dropdown dropdown-launch-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
-    <i class="fas fa-rocket"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li>
-<button onclick="initThebeSBT()"
-  class="btn btn-sm btn-launch-thebe dropdown-item"
-  title="Launch Thebe"
-  data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-play"></i>
-  </span>
-<span class="btn__text-container">Live Code</span>
-</button>
-</li>
-      
-  </ul>
-</div>
-
-
-
-
-
-
-<div class="dropdown dropdown-source-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
-    <i class="fab fa-github"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="https://github.com/spacetelescope/jdat_notebooks" target="_blank"
-   class="btn btn-sm btn-source-repository-button dropdown-item"
-   title="Source repository"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="btn__text-container">Repository</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/preimaging/preimaging_03_association.html&body=Your%20issue%20content%20here." target="_blank"
-   class="btn btn-sm btn-source-issues-button dropdown-item"
-   title="Open an issue"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="btn__text-container">Open issue</span>
-</a>
-</li>
-      
-  </ul>
-</div>
-
-
-
-
-
-
-<div class="dropdown dropdown-download-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
-    <i class="fas fa-download"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="../../_sources/notebooks/preimaging/preimaging_03_association.ipynb" target="_blank"
-   class="btn btn-sm btn-download-source-button dropdown-item"
-   title="Download source file"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="btn__text-container">.ipynb</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li>
-<button onclick="window.print()"
-  class="btn btn-sm btn-download-pdf-button dropdown-item"
-  title="Print to PDF"
-  data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="btn__text-container">.pdf</span>
-</button>
-</li>
-      
-  </ul>
-</div>
-
-
-
-
-<button onclick="toggleFullScreen()"
-  class="btn btn-sm btn-fullscreen-button"
-  title="Fullscreen mode"
-  data-bs-placement="bottom" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-expand"></i>
-  </span>
-
-</button>
-
-
-<script>
-document.write(`
+    <main class="bd-main" id="main-content">
+     <div class="sbt-scroll-pixel-helper">
+     </div>
+     <div class="bd-content">
+      <div class="bd-article-container">
+       <div class="bd-header-article">
+        <div class="header-article-items header-article__inner">
+         <div class="header-article-items__start">
+          <div class="header-article-item">
+           <label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+            <span class="fa-solid fa-bars">
+            </span>
+           </label>
+          </div>
+         </div>
+         <div class="header-article-items__end">
+          <div class="header-article-item">
+           <div class="article-header-buttons">
+            <div class="dropdown dropdown-launch-buttons">
+             <button aria-expanded="false" aria-label="Launch interactive content" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+              <i class="fas fa-rocket">
+              </i>
+             </button>
+             <ul class="dropdown-menu">
+              <li>
+               <button class="btn btn-sm btn-launch-thebe dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" onclick="initThebeSBT()" title="Launch Thebe">
+                <span class="btn__icon-container">
+                 <i class="fas fa-play">
+                 </i>
+                </span>
+                <span class="btn__text-container">
+                 Live Code
+                </span>
+               </button>
+              </li>
+             </ul>
+            </div>
+            <div class="dropdown dropdown-source-buttons">
+             <button aria-expanded="false" aria-label="Source repositories" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+              <i class="fab fa-github">
+              </i>
+             </button>
+             <ul class="dropdown-menu">
+              <li>
+               <a class="btn btn-sm btn-source-repository-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="https://github.com/spacetelescope/jdat_notebooks" target="_blank" title="Source repository">
+                <span class="btn__icon-container">
+                 <i class="fab fa-github">
+                 </i>
+                </span>
+                <span class="btn__text-container">
+                 Repository
+                </span>
+               </a>
+              </li>
+              <li>
+               <a class="btn btn-sm btn-source-issues-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/preimaging/preimaging_03_association.html&amp;body=Your%20issue%20content%20here." target="_blank" title="Open an issue">
+                <span class="btn__icon-container">
+                 <i class="fas fa-lightbulb">
+                 </i>
+                </span>
+                <span class="btn__text-container">
+                 Open issue
+                </span>
+               </a>
+              </li>
+             </ul>
+            </div>
+            <div class="dropdown dropdown-download-buttons">
+             <button aria-expanded="false" aria-label="Download this page" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+              <i class="fas fa-download">
+              </i>
+             </button>
+             <ul class="dropdown-menu">
+              <li>
+               <a class="btn btn-sm btn-download-source-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="../../_sources/notebooks/preimaging/preimaging_03_association.ipynb" target="_blank" title="Download source file">
+                <span class="btn__icon-container">
+                 <i class="fas fa-file">
+                 </i>
+                </span>
+                <span class="btn__text-container">
+                 .ipynb
+                </span>
+               </a>
+              </li>
+              <li>
+               <button class="btn btn-sm btn-download-pdf-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" onclick="window.print()" title="Print to PDF">
+                <span class="btn__icon-container">
+                 <i class="fas fa-file-pdf">
+                 </i>
+                </span>
+                <span class="btn__text-container">
+                 .pdf
+                </span>
+               </button>
+              </li>
+             </ul>
+            </div>
+            <button class="btn btn-sm btn-fullscreen-button" data-bs-placement="bottom" data-bs-toggle="tooltip" onclick="toggleFullScreen()" title="Fullscreen mode">
+             <span class="btn__icon-container">
+              <i class="fas fa-expand">
+              </i>
+             </span>
+            </button>
+            <script>
+             document.write(`
   <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
     <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
     <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
   </button>
 `);
-</script>
-
-<script>
-document.write(`
+            </script>
+            <script>
+             document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass"></i>
   </button>
 `);
-</script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</label>
-</div></div>
-      
-    </div>
-  
-</div>
-</div>
-              
-              
-
-<div id="jb-print-docs-body" class="onlyprint">
-    <h1>NIRCam Preimaging: Pipeline Stage 3</h1>
-    <!-- Table of contents -->
-    <div id="print-main-content">
-        <div id="jb-print-toc">
-            
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">NIRCam Preimaging: Pipeline Stage 3</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-things-up">Setting things up</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#this-next-cell-only-needs-to-be-executed-for-this-version-of-the-notebook-which-only-runs-the-pipeline-for-one-pointing-due-to-file-size-limitations-you-can-comment-out-with-more-than-one-pointing-or-set-of-exposures">This next cell only needs to be executed for this version of the notebook, which only runs the pipeline for one pointing due to file size limitations. You can comment out with more than one pointing or set of exposures.</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#save-detector-list-to-an-association-json-file">Save Detector List to an Association (JSON file)</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#execute-the-third-stage-of-the-nircam-pipeline">Execute the third stage of the NIRCam pipeline</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data-into-imviz">Load data into Imviz</a></li>
-</ul>
-</li>
-</ul>
-
-            </nav>
+            </script>
+            <label class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__secondary" title="Toggle secondary sidebar">
+             <span class="fa-solid fa-list">
+             </span>
+            </label>
+           </div>
+          </div>
+         </div>
         </div>
-    </div>
-</div>
-
-              
-                
-<div id="searchbox"></div>
-                <article class="bd-article" role="main">
-                  
-  <section id="nircam-preimaging-pipeline-stage-3">
-<h1>NIRCam Preimaging: Pipeline Stage 3<a class="headerlink" href="#nircam-preimaging-pipeline-stage-3" title="Permalink to this heading">#</a></h1>
-<p><strong>Use case:</strong> Running JWST Pipeline on NIRCam Preimaging Simulations.<br>
-<strong>Data:</strong> JWST simulated NIRCam data from MIRAGE; LMC.<br>
-<strong>Tools:</strong>  jwst.<br>
-<strong>Cross-intrument:</strong> NIRCam. <br>
-<strong>Documentation:</strong> This notebook is part of a STScI’s larger <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis">post-pipeline Data Analysis Tools Ecosystem</a>.<br></p>
-<section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
-<p>In this Notebook we show how to create the association needed to execute calwebb_image3 and how to run calwebb_image3.</p>
-<p><font color="red">This notebook currently fails to execute, use as reference only</font></p>
-</section>
-<section id="setting-things-up">
-<h2>Setting things up<a class="headerlink" href="#setting-things-up" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+       </div>
+       <div class="onlyprint" id="jb-print-docs-body">
+        <h1>
+         NIRCam Preimaging: Pipeline Stage 3
+        </h1>
+        <!-- Table of contents -->
+        <div id="print-main-content">
+         <div id="jb-print-toc">
+          <div>
+           <h2>
+            Contents
+           </h2>
+          </div>
+          <nav aria-label="Page">
+           <ul class="visible nav section-nav flex-column">
+            <li class="toc-h1 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#">
+              NIRCam Preimaging: Pipeline Stage 3
+             </a>
+             <ul class="visible nav section-nav flex-column">
+              <li class="toc-h2 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#introduction">
+                Introduction
+               </a>
+              </li>
+              <li class="toc-h2 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#setting-things-up">
+                Setting things up
+               </a>
+               <ul class="nav section-nav flex-column">
+                <li class="toc-h3 nav-item toc-entry">
+                 <a class="reference internal nav-link" href="#this-next-cell-only-needs-to-be-executed-for-this-version-of-the-notebook-which-only-runs-the-pipeline-for-one-pointing-due-to-file-size-limitations-you-can-comment-out-with-more-than-one-pointing-or-set-of-exposures">
+                  This next cell only needs to be executed for this version of the notebook, which only runs the pipeline for one pointing due to file size limitations. You can comment out with more than one pointing or set of exposures.
+                 </a>
+                </li>
+                <li class="toc-h3 nav-item toc-entry">
+                 <a class="reference internal nav-link" href="#save-detector-list-to-an-association-json-file">
+                  Save Detector List to an Association (JSON file)
+                 </a>
+                </li>
+               </ul>
+              </li>
+             </ul>
+            </li>
+            <li class="toc-h1 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#execute-the-third-stage-of-the-nircam-pipeline">
+              Execute the third stage of the NIRCam pipeline
+             </a>
+             <ul class="visible nav section-nav flex-column">
+              <li class="toc-h2 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#load-data-into-imviz">
+                Load data into Imviz
+               </a>
+              </li>
+             </ul>
+            </li>
+           </ul>
+          </nav>
+         </div>
+        </div>
+       </div>
+       <div id="searchbox">
+       </div>
+       <article class="bd-article" role="main">
+        <section id="nircam-preimaging-pipeline-stage-3">
+         <h1>
+          NIRCam Preimaging: Pipeline Stage 3
+          <a class="headerlink" href="#nircam-preimaging-pipeline-stage-3" title="Permalink to this heading">
+           #
+          </a>
+         </h1>
+         <p>
+          <strong>
+           Use case:
+          </strong>
+          Running JWST Pipeline on NIRCam Preimaging Simulations.
+          <br/>
+          <strong>
+           Data:
+          </strong>
+          JWST simulated NIRCam data from MIRAGE; LMC.
+          <br/>
+          <strong>
+           Tools:
+          </strong>
+          jwst.
+          <br/>
+          <strong>
+           Cross-intrument:
+          </strong>
+          NIRCam.
+          <br/>
+          <strong>
+           Documentation:
+          </strong>
+          This notebook is part of a STScI’s larger
+          <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis">
+           post-pipeline Data Analysis Tools Ecosystem
+          </a>
+          .
+          <br/>
+         </p>
+         <section id="introduction">
+          <h2>
+           Introduction
+           <a class="headerlink" href="#introduction" title="Permalink to this heading">
+            #
+           </a>
+          </h2>
+          <p>
+           In this Notebook we show how to create the association needed to execute calwebb_image3 and how to run calwebb_image3.
+          </p>
+         </section>
+         <section id="setting-things-up">
+          <h2>
+           Setting things up
+           <a class="headerlink" href="#setting-things-up" title="Permalink to this heading">
+            #
+           </a>
+          </h2>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
 <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
 <span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">wcs</span>
@@ -520,64 +644,87 @@ document.write(`
 <span class="kn">import</span> <span class="nn">shapely.ops</span> <span class="k">as</span> <span class="nn">so</span>
 
 <span class="kn">from</span> <span class="nn">jwst.pipeline</span> <span class="kn">import</span> <span class="n">Image3Pipeline</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Polygon</span> <span class="k">as</span> <span class="n">leopolygon</span>
 <span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="kn">import</span> <span class="n">PatchCollection</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./.&#39;</span> <span class="c1"># This is the working directory.</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="n">path</span><span class="o">=</span><span class="s1">'./.'</span> <span class="c1"># This is the working directory.</span>
 
 <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Change parameters here</span>
-<span class="n">filtname</span> <span class="o">=</span> <span class="s1">&#39;f150w&#39;</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Gather the F150W *cal.fits files back in the working directory</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Change parameters here</span>
+<span class="n">filtname</span> <span class="o">=</span> <span class="s1">'f150w'</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># Gather the F150W *cal.fits files back in the working directory</span>
 <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
-<span class="n">filter_pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="s1">&#39;*_cal.fits&#39;</span><span class="p">)</span> 
+<span class="n">filter_pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="s1">'*_cal.fits'</span><span class="p">)</span> 
 <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">filter_pattern</span><span class="p">)[:]</span> 
 <span class="n">namelist</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">outlist</span> <span class="o">=</span> <span class="p">[]</span>
-</pre></div>
-</div>
-</div>
-</div>
-<section id="this-next-cell-only-needs-to-be-executed-for-this-version-of-the-notebook-which-only-runs-the-pipeline-for-one-pointing-due-to-file-size-limitations-you-can-comment-out-with-more-than-one-pointing-or-set-of-exposures">
-<h3>This next cell only needs to be executed for this version of the notebook, which only runs the pipeline for one pointing due to file size limitations. You can comment out with more than one pointing or set of exposures.<a class="headerlink" href="#this-next-cell-only-needs-to-be-executed-for-this-version-of-the-notebook-which-only-runs-the-pipeline-for-one-pointing-due-to-file-size-limitations-you-can-comment-out-with-more-than-one-pointing-or-set-of-exposures" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files</span> <span class="o">=</span> <span class="n">files</span><span class="p">[:]</span><span class="o">+</span><span class="n">files</span><span class="p">[:]</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <section id="this-next-cell-only-needs-to-be-executed-for-this-version-of-the-notebook-which-only-runs-the-pipeline-for-one-pointing-due-to-file-size-limitations-you-can-comment-out-with-more-than-one-pointing-or-set-of-exposures">
+           <h3>
+            This next cell only needs to be executed for this version of the notebook, which only runs the pipeline for one pointing due to file size limitations. You can comment out with more than one pointing or set of exposures.
+            <a class="headerlink" href="#this-next-cell-only-needs-to-be-executed-for-this-version-of-the-notebook-which-only-runs-the-pipeline-for-one-pointing-due-to-file-size-limitations-you-can-comment-out-with-more-than-one-pointing-or-set-of-exposures" title="Permalink to this heading">
+             #
+            </a>
+           </h3>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="n">files</span> <span class="o">=</span> <span class="n">files</span><span class="p">[:]</span><span class="o">+</span><span class="n">files</span><span class="p">[:]</span>
 <span class="n">files</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We convert corner pixel coordinates to world coordinates </span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="c1"># We convert corner pixel coordinates to world coordinates </span>
 <span class="n">coord</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
@@ -586,64 +733,75 @@ document.write(`
     <span class="c1"># Parse the WCS keywords in the primary HDU</span>
     <span class="n">w</span> <span class="o">=</span> <span class="n">wcs</span><span class="o">.</span><span class="n">WCS</span><span class="p">(</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">,</span> <span class="n">naxis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     
-    <span class="c1"># Print out the &quot;name&quot; of the WCS, as defined in the FITS header</span>
+    <span class="c1"># Print out the "name" of the WCS, as defined in the FITS header</span>
     <span class="c1"># print(w.wcs.name)</span>
 
     <span class="c1"># Three pixel coordinates of interest.</span>
-    <span class="c1"># Note we&#39;ve silently assumed a NAXIS=2 image here</span>
+    <span class="c1"># Note we've silently assumed a NAXIS=2 image here</span>
     <span class="n">pixcrd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">2048</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2048</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">)</span>
     
     <span class="c1"># Convert pixel coordinates to world coordinates</span>
     <span class="n">world</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">wcs_pix2world</span><span class="p">(</span><span class="n">pixcrd</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="c1">#world = w.wcs_pix2world([[0, 0], [2048, 0], [2048, 2048], [0, 2048]], 0)</span>
     <span class="n">coord</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">world</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># we read the input source catalogue</span>
-<span class="n">pointsource_catalog</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;./preimaging/pointsource_LMCcalField_F150W.cat&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
-<span class="n">pointsource_ra</span> <span class="o">=</span> <span class="n">pointsource_catalog</span><span class="p">[</span><span class="s1">&#39;x_or_RA&#39;</span><span class="p">]</span>
-<span class="n">pointsource_dec</span> <span class="o">=</span> <span class="n">pointsource_catalog</span><span class="p">[</span><span class="s1">&#39;y_or_Dec&#39;</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We plot the field of view of the simulated images (blue) on top of the source catalogue (red)</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="c1"># we read the input source catalogue</span>
+<span class="n">pointsource_catalog</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">'./preimaging/pointsource_LMCcalField_F150W.cat'</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'ascii'</span><span class="p">)</span>
+<span class="n">pointsource_ra</span> <span class="o">=</span> <span class="n">pointsource_catalog</span><span class="p">[</span><span class="s1">'x_or_RA'</span><span class="p">]</span>
+<span class="n">pointsource_dec</span> <span class="o">=</span> <span class="n">pointsource_catalog</span><span class="p">[</span><span class="s1">'y_or_Dec'</span><span class="p">]</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="c1"># We plot the field of view of the simulated images (blue) on top of the source catalogue (red)</span>
 
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">'w'</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'k'</span><span class="p">)</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
 
-<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">pointsource_ra</span><span class="p">,</span> <span class="n">pointsource_dec</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Catalog point sources&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">pointsource_ra</span><span class="p">,</span> <span class="n">pointsource_dec</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'red'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Catalog point sources'</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)):</span>
-    <span class="n">rect1</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">patches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> 
-                                       <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">rect1</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">patches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'red'</span><span class="p">,</span> 
+                                       <span class="n">facecolor</span><span class="o">=</span><span class="s1">'blue'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">rect1</span><span class="p">)</span>
-<span class="n">rect1</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;Detector&#39;</span><span class="p">)</span>
+<span class="n">rect1</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">'Detector'</span><span class="p">)</span>
 
 <span class="c1"># These limits correspond to the LMC </span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="mf">80.2</span><span class="p">,</span> <span class="mf">80.8</span><span class="p">])</span> <span class="c1"># alpha</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">69.4</span><span class="p">,</span> <span class="o">-</span><span class="mf">69.6</span><span class="p">])</span> <span class="c1"># delta</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;RA (degrees)&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Dec (degrees)&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;F150W Mosaic&#39;</span><span class="p">)</span>
-<span class="c1">#plt.axis(&#39;scaled&#39;)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'RA (degrees)'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Dec (degrees)'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'F150W Mosaic'</span><span class="p">)</span>
+<span class="c1">#plt.axis('scaled')</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>In order to create an association for stage 3 of the pipeline, we need to check that each image contains sources from the catalog and that the images overlap in such a way that they make a continuous mosaic.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">current_detector_idx</span> <span class="o">=</span> <span class="kc">None</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <p>
+            In order to create an association for stage 3 of the pipeline, we need to check that each image contains sources from the catalog and that the images overlap in such a way that they make a continuous mosaic.
+           </p>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="n">current_detector_idx</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="n">current_detector</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="n">current_detector_coords</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -678,8 +836,8 @@ document.write(`
                 <span class="n">best_overlap_index</span> <span class="o">=</span> <span class="n">m</span>
                 
         <span class="k">if</span> <span class="n">maxcoverage</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Some images are excluded&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of excluded images: &#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">detectors</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'Some images are excluded'</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'Number of excluded images: '</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">detectors</span><span class="p">))</span>
             <span class="k">break</span>
             
         <span class="c1"># select the file with the maximum overlap</span>
@@ -697,63 +855,71 @@ document.write(`
     
     <span class="n">referencia</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">current_detector_coords</span><span class="p">)</span> <span class="k">if</span> <span class="n">iteration</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">referencia</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">Polygon</span><span class="p">(</span><span class="n">current_detector_coords</span><span class="p">))</span>
          
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;removing current detector &#39;</span> <span class="o">+</span> <span class="n">current_detector</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'removing current detector '</span> <span class="o">+</span> <span class="n">current_detector</span><span class="p">)</span>
     <span class="n">finallist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_detector</span><span class="p">)</span>
     <span class="n">finalcoords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_detector_coords</span><span class="p">)</span>
 
 
     <span class="c1"># Plot </span>
     <span class="c1"># ----</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">'w'</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'k'</span><span class="p">)</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
     
     <span class="n">rect1</span> <span class="o">=</span> <span class="n">leopolygon</span><span class="p">([</span>
         <span class="p">(</span><span class="mf">80.3125</span><span class="p">,</span> <span class="o">-</span><span class="mf">69.4950</span><span class="p">),</span> 
         <span class="p">(</span><span class="mf">80.4958</span><span class="p">,</span> <span class="o">-</span><span class="mf">69.4392</span><span class="p">),</span> 
         <span class="p">(</span><span class="mf">80.6625</span><span class="p">,</span> <span class="o">-</span><span class="mf">69.5022</span><span class="p">),</span> 
-        <span class="p">(</span><span class="mf">80.4792</span><span class="p">,</span> <span class="o">-</span><span class="mf">69.5564</span><span class="p">)],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">)</span>
+        <span class="p">(</span><span class="mf">80.4792</span><span class="p">,</span> <span class="o">-</span><span class="mf">69.5564</span><span class="p">)],</span> <span class="n">color</span><span class="o">=</span><span class="s1">'yellow'</span><span class="p">)</span>
     
     <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">rect1</span><span class="p">)</span>
     
-    <span class="n">rect2</span> <span class="o">=</span> <span class="n">leopolygon</span><span class="p">(</span><span class="n">current_detector_coords</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;navy&#39;</span><span class="p">,</span> 
-                       <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;navy&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="n">rect2</span> <span class="o">=</span> <span class="n">leopolygon</span><span class="p">(</span><span class="n">current_detector_coords</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'navy'</span><span class="p">,</span> 
+                       <span class="n">facecolor</span><span class="o">=</span><span class="s1">'navy'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
     
     <span class="n">new_shape</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">cascaded_union</span><span class="p">(</span><span class="n">referencia</span><span class="p">)</span>
     <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span> <span class="o">=</span> <span class="n">new_shape</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">xy</span>
     
-    <span class="n">ax</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s1">'red'</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s1">'red'</span><span class="p">)</span>
 
     <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">rect2</span><span class="p">)</span>
     
     <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="mf">80.2</span><span class="p">,</span> <span class="mf">80.8</span><span class="p">])</span> <span class="c1"># RA</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">69.4</span><span class="p">,</span> <span class="o">-</span><span class="mf">69.6</span><span class="p">])</span> <span class="c1"># Dec</span>
     
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;coverage = </span><span class="si">{}</span><span class="s1">% </span><span class="se">\n</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">covfile</span><span class="p">[</span><span class="n">current_detector_idx</span><span class="p">]),</span> 
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'coverage = </span><span class="si">{}</span><span class="s1">% </span><span class="se">\n</span><span class="s1"> </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">covfile</span><span class="p">[</span><span class="n">current_detector_idx</span><span class="p">]),</span> 
                                             <span class="n">current_detector</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;RA (degrees)&#39;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Dec (degrees)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'RA (degrees)'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Dec (degrees)'</span><span class="p">)</span>
     
-    <span class="n">pdfname</span> <span class="o">=</span> <span class="s1">&#39;figure_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">finallist</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">pdfname</span> <span class="o">=</span> <span class="s1">'figure_'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">finallist</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
     <span class="c1"># plt.savefig(pdfname) </span>
   
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
      
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">finallist</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Here we need to go through the final list and calculate the overlap
-with the stellar catalogue. We select the files that have an overlap of 99% or larger.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bestlist</span> <span class="o">=</span> <span class="p">[]</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="n">finallist</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <p>
+            Here we need to go through the final list and calculate the overlap
+with the stellar catalogue. We select the files that have an overlap of 99% or larger.
+           </p>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="n">bestlist</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="c1"># these coordinates represent the extent of the LMC catalogue</span>
 <span class="n">referencia</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">([(</span><span class="mf">80.3125</span><span class="p">,</span> <span class="o">-</span><span class="mf">69.4950</span><span class="p">),</span> 
@@ -773,70 +939,101 @@ with the stellar catalogue. We select the files that have an overlap of 99% or l
     <span class="k">else</span><span class="p">:</span>
         <span class="n">rejected</span> <span class="o">+=</span> <span class="mi">1</span>
         
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;number of overlapping images = &#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">bestlist</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;number of rejected images = &#39;</span><span class="p">,</span> <span class="n">rejected</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="save-detector-list-to-an-association-json-file">
-<h3>Save Detector List to an Association (JSON file)<a class="headerlink" href="#save-detector-list-to-an-association-json-file" title="Permalink to this heading">#</a></h3>
-<p><em>Developer Note:</em></p>
-<p>There is a new way to implement the association introduced in version 0.16.0 of the JWST package. It might be worthwhile to explore.</p>
-<p>The following link provides a complete description of the association keywords.</p>
-<p>https://jwst-pipeline.readthedocs.io/en/latest/jwst/associations/level3_asn_technical.html#association-meta-keywords</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># here we print a json file with the science files in the correct order</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'number of overlapping images = '</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">bestlist</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'number of rejected images = '</span><span class="p">,</span> <span class="n">rejected</span><span class="p">)</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+          </section>
+          <section id="save-detector-list-to-an-association-json-file">
+           <h3>
+            Save Detector List to an Association (JSON file)
+            <a class="headerlink" href="#save-detector-list-to-an-association-json-file" title="Permalink to this heading">
+             #
+            </a>
+           </h3>
+           <p>
+            <em>
+             Developer Note:
+            </em>
+           </p>
+           <p>
+            There is a new way to implement the association introduced in version 0.16.0 of the JWST package. It might be worthwhile to explore.
+           </p>
+           <p>
+            The following link provides a complete description of the association keywords.
+           </p>
+           <p>
+            https://jwst-pipeline.readthedocs.io/en/latest/jwst/associations/level3_asn_technical.html#association-meta-keywords
+           </p>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="c1"># here we print a json file with the science files in the correct order</span>
 
 <span class="n">association</span> <span class="o">=</span> <span class="p">{}</span>
  
-<span class="n">association</span><span class="p">[</span><span class="s2">&quot;asn_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;a3001&quot;</span>
-<span class="n">association</span><span class="p">[</span><span class="s2">&quot;asn_pool&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span> 
-<span class="n">association</span><span class="p">[</span><span class="s2">&quot;asn_rule&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Asn_Image&quot;</span> 
-<span class="n">association</span><span class="p">[</span><span class="s2">&quot;program&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1069&quot;</span> 
-<span class="n">association</span><span class="p">[</span><span class="s2">&quot;asn_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;image3&quot;</span> 
-<span class="n">association</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;No constraints&quot;</span> 
-<span class="n">association</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span> 
-<span class="n">association</span><span class="p">[</span><span class="s2">&quot;version_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;null&quot;</span> 
-<span class="n">association</span><span class="p">[</span><span class="s2">&quot;degraded_status&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;No known degraded exposures in association.&quot;</span>
+<span class="n">association</span><span class="p">[</span><span class="s2">"asn_id"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"a3001"</span>
+<span class="n">association</span><span class="p">[</span><span class="s2">"asn_pool"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"none"</span> 
+<span class="n">association</span><span class="p">[</span><span class="s2">"asn_rule"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Asn_Image"</span> 
+<span class="n">association</span><span class="p">[</span><span class="s2">"program"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"1069"</span> 
+<span class="n">association</span><span class="p">[</span><span class="s2">"asn_type"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"image3"</span> 
+<span class="n">association</span><span class="p">[</span><span class="s2">"constraints"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"No constraints"</span> 
+<span class="n">association</span><span class="p">[</span><span class="s2">"target"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"none"</span> 
+<span class="n">association</span><span class="p">[</span><span class="s2">"version_id"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"null"</span> 
+<span class="n">association</span><span class="p">[</span><span class="s2">"degraded_status"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"No known degraded exposures in association."</span>
     
 <span class="n">products_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
-<span class="n">products_dict</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;lmc-&quot;</span> <span class="o">+</span> <span class="n">filtname</span> 
-<span class="n">products_dict</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>   
+<span class="n">products_dict</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"lmc-"</span> <span class="o">+</span> <span class="n">filtname</span> 
+<span class="n">products_dict</span><span class="p">[</span><span class="s2">"members"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>   
 <span class="k">for</span> <span class="n">current_detector</span> <span class="ow">in</span> <span class="n">bestlist</span><span class="p">:</span>
     <span class="n">obs_dict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;expname&quot;</span><span class="p">:</span> <span class="n">current_detector</span><span class="p">,</span>
-        <span class="s2">&quot;exptype&quot;</span><span class="p">:</span> <span class="s2">&quot;science&quot;</span>
+        <span class="s2">"expname"</span><span class="p">:</span> <span class="n">current_detector</span><span class="p">,</span>
+        <span class="s2">"exptype"</span><span class="p">:</span> <span class="s2">"science"</span>
     <span class="p">}</span>
-    <span class="n">products_dict</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs_dict</span><span class="p">)</span> 
+    <span class="n">products_dict</span><span class="p">[</span><span class="s2">"members"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs_dict</span><span class="p">)</span> 
 
-<span class="n">association</span><span class="p">[</span><span class="s2">&quot;products&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">products_dict</span><span class="p">]</span> 
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># save association file</span>
-<span class="n">jsonfile</span> <span class="o">=</span> <span class="s2">&quot;association-&quot;</span> <span class="o">+</span> <span class="n">filtname</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">jsonfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+<span class="n">association</span><span class="p">[</span><span class="s2">"products"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">products_dict</span><span class="p">]</span> 
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="c1"># save association file</span>
+<span class="n">jsonfile</span> <span class="o">=</span> <span class="s2">"association-"</span> <span class="o">+</span> <span class="n">filtname</span> <span class="o">+</span> <span class="s2">".json"</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">jsonfile</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
     <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">association</span><span class="p">,</span> <span class="n">json_file</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-</section>
-</section>
-<section id="execute-the-third-stage-of-the-nircam-pipeline">
-<h1>Execute the third stage of the NIRCam pipeline<a class="headerlink" href="#execute-the-third-stage-of-the-nircam-pipeline" title="Permalink to this heading">#</a></h1>
-<p>Here we execute the third stage of the NIRCam pipeline. In this stage the pipeline creates a mosaic of the input images and extracts a source catalogue.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Execute pipeline</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+          </section>
+         </section>
+        </section>
+        <section id="execute-the-third-stage-of-the-nircam-pipeline">
+         <h1>
+          Execute the third stage of the NIRCam pipeline
+          <a class="headerlink" href="#execute-the-third-stage-of-the-nircam-pipeline" title="Permalink to this heading">
+           #
+          </a>
+         </h1>
+         <p>
+          Here we execute the third stage of the NIRCam pipeline. In this stage the pipeline creates a mosaic of the input images and extracts a source catalogue.
+         </p>
+         <div class="cell docutils container">
+          <div class="cell_input docutils container">
+           <div class="highlight-ipython3 notranslate">
+            <div class="highlight">
+             <pre><span></span><span class="c1"># Execute pipeline</span>
 <span class="c1"># ----------------</span>
 
 <span class="c1"># run Image3 pipeline to get source catalog</span>
@@ -853,7 +1050,7 @@ with the stellar catalogue. We select the files that have an overlap of 99% or l
 <span class="c1">#im3.resample.blendheaders = False</span>
 <span class="n">im3</span><span class="o">.</span><span class="n">tweakreg</span><span class="o">.</span><span class="n">skip</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">im3</span><span class="o">.</span><span class="n">tweakreg</span><span class="o">.</span><span class="n">enforce_user_order</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">im3</span><span class="o">.</span><span class="n">tweakreg</span><span class="o">.</span><span class="n">fitgeometry</span> <span class="o">=</span> <span class="s1">&#39;shift&#39;</span> <span class="c1"># valid values are &#39;shift&#39;, &#39;rscale&#39;, &#39;general&#39;</span>
+<span class="n">im3</span><span class="o">.</span><span class="n">tweakreg</span><span class="o">.</span><span class="n">fitgeometry</span> <span class="o">=</span> <span class="s1">'shift'</span> <span class="c1"># valid values are 'shift', 'rscale', 'general'</span>
 <span class="n">im3</span><span class="o">.</span><span class="n">tweakreg</span><span class="o">.</span><span class="n">expand_refcat</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">im3</span><span class="o">.</span><span class="n">tweakreg</span><span class="o">.</span><span class="n">minobj</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">im3</span><span class="o">.</span><span class="n">tweakreg</span><span class="o">.</span><span class="n">use2dhist</span> <span class="o">=</span> <span class="kc">True</span>
@@ -862,45 +1059,59 @@ with the stellar catalogue. We select the files that have an overlap of 99% or l
 <span class="c1">#im3.tweakreg.xoffset = 7.5</span>
 <span class="c1">#im3.tweakreg.yoffset = -7.2</span>
 <span class="n">im3</span><span class="o">.</span><span class="n">tweakreg</span><span class="o">.</span><span class="n">searchrad</span> <span class="o">=</span> <span class="mf">0.1</span> 
-<span class="n">im3</span><span class="o">.</span><span class="n">skymatch</span><span class="o">.</span><span class="n">skymethod</span> <span class="o">=</span> <span class="s1">&#39;global&#39;</span> <span class="c1"># valid values are: &#39;local&#39;, &#39;global&#39;, &#39;match&#39;, or &#39;global+match&#39;</span>
+<span class="n">im3</span><span class="o">.</span><span class="n">skymatch</span><span class="o">.</span><span class="n">skymethod</span> <span class="o">=</span> <span class="s1">'global'</span> <span class="c1"># valid values are: 'local', 'global', 'match', or 'global+match'</span>
 <span class="n">im3</span><span class="o">.</span><span class="n">source_catalog</span><span class="o">.</span><span class="n">skip</span> <span class="o">=</span> <span class="kc">False</span> 
-<span class="n">im3</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="s1">&#39;lmc-f150w-02.fits&#39;</span>
+<span class="n">im3</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="s1">'lmc-f150w-02.fits'</span>
 
 <span class="c1"># Execute </span>
 <span class="c1"># -------</span>
 
 <span class="n">im3</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">jsonfile</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<section id="load-data-into-imviz">
-<h2>Load data into <a class="reference external" href="https://jdaviz.readthedocs.io/en/latest/imviz/index.html">Imviz</a><a class="headerlink" href="#load-data-into-imviz" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">jdaviz</span> <span class="kn">import</span> <span class="n">Imviz</span>
+</pre>
+            </div>
+           </div>
+          </div>
+         </div>
+         <section id="load-data-into-imviz">
+          <h2>
+           Load data into
+           <a class="reference external" href="https://jdaviz.readthedocs.io/en/latest/imviz/index.html">
+            Imviz
+           </a>
+           <a class="headerlink" href="#load-data-into-imviz" title="Permalink to this heading">
+            #
+           </a>
+          </h2>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="kn">from</span> <span class="nn">jdaviz</span> <span class="kn">import</span> <span class="n">Imviz</span>
 <span class="n">imviz</span> <span class="o">=</span> <span class="n">Imviz</span><span class="p">()</span>
 <span class="n">imviz</span><span class="o">.</span><span class="n">show_in_sidecar</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">imviz</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="s1">&#39;lmc-f150w-02_i2d.fits&#39;</span><span class="p">)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="n">imviz</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="s1">'lmc-f150w-02_i2d.fits'</span><span class="p">)</span>
 <span class="n">viewer</span> <span class="o">=</span> <span class="n">imviz</span><span class="o">.</span><span class="n">default_viewer</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">cuts</span> <span class="o">=</span> <span class="s1">&#39;95%&#39;</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">cuts</span> <span class="o">=</span> <span class="s1">'95%'</span>
 <span class="n">viewer</span><span class="o">.</span><span class="n">colormap_options</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">set_colormap</span><span class="p">(</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-</section>
-
-    <script type="text/x-thebe-config">
-    {
+<span class="n">viewer</span><span class="o">.</span><span class="n">set_colormap</span><span class="p">(</span><span class="s1">'viridis'</span><span class="p">)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+         </section>
+        </section>
+        <script type="text/x-thebe-config">
+         {
         requestKernel: true,
         binderOptions: {
             repo: "spacetelescope/jdat_notebooks",
@@ -916,103 +1127,106 @@ with the stellar catalogue. We select the files that have an overlap of 99% or l
         },
         predefinedOutput: true
     }
-    </script>
-    <script>kernelName = 'python3'</script>
-
-                </article>
-              
-
-              
-              
-                <footer class="bd-footer-article">
-                  
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
-<div class="prev-next-area">
-</div></div>
-  
-</div>
-
-                </footer>
-              
-            </div>
-            
-            
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">NIRCam Preimaging: Pipeline Stage 3</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-things-up">Setting things up</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#this-next-cell-only-needs-to-be-executed-for-this-version-of-the-notebook-which-only-runs-the-pipeline-for-one-pointing-due-to-file-size-limitations-you-can-comment-out-with-more-than-one-pointing-or-set-of-exposures">This next cell only needs to be executed for this version of the notebook, which only runs the pipeline for one pointing due to file size limitations. You can comment out with more than one pointing or set of exposures.</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#save-detector-list-to-an-association-json-file">Save Detector List to an Association (JSON file)</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#execute-the-third-stage-of-the-nircam-pipeline">Execute the third stage of the NIRCam pipeline</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data-into-imviz">Load data into Imviz</a></li>
-</ul>
-</li>
-</ul>
-
-  </nav></div>
-
-</div></div>
-              
-            
+        </script>
+        <script>
+         kernelName = 'python3'
+        </script>
+       </article>
+       <footer class="bd-footer-article">
+        <div class="footer-article-items footer-article__inner">
+         <div class="footer-article-item">
+          <!-- Previous / next buttons -->
+          <div class="prev-next-area">
           </div>
-          <footer class="bd-footer-content">
-            
-<div class="bd-footer-content__inner container">
-  
-  <div class="footer-item">
-    
-<p class="component-author">
-By STScI
-</p>
-
+         </div>
+        </div>
+       </footer>
+      </div>
+      <div class="bd-sidebar-secondary bd-toc">
+       <div class="sidebar-secondary-items sidebar-secondary__inner">
+        <div class="sidebar-secondary-item">
+         <div class="page-toc tocsection onthispage">
+          <i class="fa-solid fa-list">
+          </i>
+          Contents
+         </div>
+         <nav class="bd-toc-nav page-toc">
+          <ul class="visible nav section-nav flex-column">
+           <li class="toc-h1 nav-item toc-entry">
+            <a class="reference internal nav-link" href="#">
+             NIRCam Preimaging: Pipeline Stage 3
+            </a>
+            <ul class="visible nav section-nav flex-column">
+             <li class="toc-h2 nav-item toc-entry">
+              <a class="reference internal nav-link" href="#introduction">
+               Introduction
+              </a>
+             </li>
+             <li class="toc-h2 nav-item toc-entry">
+              <a class="reference internal nav-link" href="#setting-things-up">
+               Setting things up
+              </a>
+              <ul class="nav section-nav flex-column">
+               <li class="toc-h3 nav-item toc-entry">
+                <a class="reference internal nav-link" href="#this-next-cell-only-needs-to-be-executed-for-this-version-of-the-notebook-which-only-runs-the-pipeline-for-one-pointing-due-to-file-size-limitations-you-can-comment-out-with-more-than-one-pointing-or-set-of-exposures">
+                 This next cell only needs to be executed for this version of the notebook, which only runs the pipeline for one pointing due to file size limitations. You can comment out with more than one pointing or set of exposures.
+                </a>
+               </li>
+               <li class="toc-h3 nav-item toc-entry">
+                <a class="reference internal nav-link" href="#save-detector-list-to-an-association-json-file">
+                 Save Detector List to an Association (JSON file)
+                </a>
+               </li>
+              </ul>
+             </li>
+            </ul>
+           </li>
+           <li class="toc-h1 nav-item toc-entry">
+            <a class="reference internal nav-link" href="#execute-the-third-stage-of-the-nircam-pipeline">
+             Execute the third stage of the NIRCam pipeline
+            </a>
+            <ul class="visible nav section-nav flex-column">
+             <li class="toc-h2 nav-item toc-entry">
+              <a class="reference internal nav-link" href="#load-data-into-imviz">
+               Load data into Imviz
+              </a>
+             </li>
+            </ul>
+           </li>
+          </ul>
+         </nav>
+        </div>
+       </div>
+      </div>
+     </div>
+     <footer class="bd-footer-content">
+      <div class="bd-footer-content__inner container">
+       <div class="footer-item">
+        <p class="component-author">
+         By STScI
+        </p>
+       </div>
+       <div class="footer-item">
+        <p class="copyright">
+         © Copyright 2022.
+         <br/>
+        </p>
+       </div>
+       <div class="footer-item">
+       </div>
+       <div class="footer-item">
+       </div>
+      </div>
+     </footer>
+    </main>
+   </div>
   </div>
-  
-  <div class="footer-item">
-    
-  <p class="copyright">
-    
-      © Copyright 2022.
-      <br/>
-    
-  </p>
-
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
-</div>
-          </footer>
-        
-
-      </main>
-    </div>
-  </div>
-  
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
-
+  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52">
+  </script>
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52">
+  </script>
   <footer class="bd-footer">
   </footer>
-  </body>
+ </body>
 </html>

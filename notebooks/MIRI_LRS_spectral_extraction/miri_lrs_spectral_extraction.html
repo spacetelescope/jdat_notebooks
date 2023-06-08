@@ -1,532 +1,747 @@
-
-
 <!DOCTYPE html>
-
-
-<html lang="en" >
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
-    <title>LRS Optimal Spectral Extraction &#8212; STScI JDAT Notebooks</title>
-  
-  
-  
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="Docutils 0.18.1: http://docutils.sourceforge.net/" name="generator"/>
+  <title>
+   LRS Optimal Spectral Extraction — STScI JDAT Notebooks
+  </title>
   <script data-cfasync="false">
-    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+   document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
-  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-
-  
-  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/main.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
-  
+  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet"/>
+  <link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet"/>
+  <link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet"/>
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet"/>
+  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
+  <link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/togglebutton.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/copybutton.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/sphinx-thebe.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/main.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" rel="stylesheet" type="text/css"/>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
-
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
-    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../../_static/design-tabs.js"></script>
-    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
-    <script>
-                window.dataLayer = window.dataLayer || [];
+  <link as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" rel="preload"/>
+  <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" rel="preload"/>
+  <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js">
+  </script>
+  <script src="../../_static/jquery.js">
+  </script>
+  <script src="../../_static/underscore.js">
+  </script>
+  <script src="../../_static/_sphinx_javascript_frameworks_compat.js">
+  </script>
+  <script src="../../_static/doctools.js">
+  </script>
+  <script src="../../_static/clipboard.min.js">
+  </script>
+  <script src="../../_static/copybutton.js">
+  </script>
+  <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824">
+  </script>
+  <script>
+   let toggleHintShow = 'Click to show';
+  </script>
+  <script>
+   let toggleHintHide = 'Click to hide';
+  </script>
+  <script>
+   let toggleOpenOnPrint = 'true';
+  </script>
+  <script src="../../_static/togglebutton.js">
+  </script>
+  <script>
+   var togglebuttonSelector = '.toggle, .admonition.dropdown';
+  </script>
+  <script src="../../_static/design-tabs.js">
+  </script>
+  <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3">
+  </script>
+  <script>
+   window.dataLayer = window.dataLayer || [];
                 function gtag(){ dataLayer.push(arguments); }
                 gtag('js', new Date());
                 gtag('config', 'G-D46G4HKJY3');
-            </script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+  </script>
+  <script>
+   const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/MIRI_LRS_spectral_extraction/miri_lrs_spectral_extraction';</script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Point Source Aperture Photometry" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html" />
-    <link rel="prev" title="IFU of YSOs in LMC" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
-  
-  
-  <a class="skip-link" href="#main-content">Skip to main content</a>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
-  
+  </script>
+  <script async="async" src="../../_static/sphinx-thebe.js">
+  </script>
+  <script>
+   DOCUMENTATION_OPTIONS.pagename = 'notebooks/MIRI_LRS_spectral_extraction/miri_lrs_spectral_extraction';
+  </script>
+  <link href="../../genindex.html" rel="index" title="Index"/>
+  <link href="../../search.html" rel="search" title="Search"/>
+  <link href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html" rel="next" title="Point Source Aperture Photometry"/>
+  <link href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html" rel="prev" title="IFU of YSOs in LMC"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="en" name="docsearch:language"/>
+ </head>
+ <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+  <a class="skip-link" href="#main-content">
+   Skip to main content
+  </a>
+  <input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
+  <label class="overlay overlay-primary" for="__primary">
+  </label>
+  <input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
+  <label class="overlay overlay-secondary" for="__secondary">
+  </label>
   <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
-<form class="bd-search d-flex align-items-center"
-      action="../../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         id="search-input"
-         placeholder="Search this book..."
-         aria-label="Search this book..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
+   <div class="search-button__overlay">
+   </div>
+   <div class="search-button__search-container">
+    <form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
+     <i class="fa-solid fa-magnifying-glass">
+     </i>
+     <input aria-label="Search this book..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search this book..." spellcheck="false" type="search"/>
+     <span class="search-button__kbd-shortcut">
+      <kbd class="kbd-shortcut__modifier">
+       Ctrl
+      </kbd>
+      +
+      <kbd>
+       K
+      </kbd>
+     </span>
+    </form>
+   </div>
   </div>
-  
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
-  
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+  </nav>
   <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
-      
-      <div class="bd-sidebar-primary bd-sidebar">
-        
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-    
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-  
-
-<a class="navbar-brand logo" href="../../intro.html">
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../../_static/stsci_logo2.png" class="logo__image only-light" alt="Logo image"/>
-    <script>document.write(`<img src="../../_static/stsci_logo2.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
-  
-  
-</a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item navbar-nav active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="../../intro.html">
-                    
-                </a>
-            </li>
-        </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/notebook_development_workflow.html">Notebook Development Workflow</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../docs/submitting_notebooks.html">Submitting Notebooks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/requirements.html">Requirements file</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/notebooks.html">Jupyter Notebooks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/data_files.html">Data Files</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">GitHub Guidelines</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../docs/github_setup.html">GitHub Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/github_workflow.html">GitHub Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/github_pr.html">GitHub PR</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cross-Instrument</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../asdf_example/asdf_example.html">ASDF Example</a></li>
-
-<li class="toctree-l1"><a class="reference internal" href="../background_estimation_imaging/Imaging_Sky_Background_Estimation.html">Complex 2D Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">Composite Model Spectral Fitting</a></li>
-
-
-<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">MAST Query</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../rgb_imviz/imviz_rgb_carina.html">RGB images with Imviz</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">Specviz Simple Demo</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">MIRI</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">MRS Mstar - Run Pipeline</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">MRS Detector Based Extraction</a></li>
-
-
-
-
-<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">MRS Mstar - Data Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">IFU of YSOs in LMC</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">LRS Optimal Spectral Extraction</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRCam</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">Point Source Aperture Photometry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../NIRCam_photometry/NIRCam_multiband_photometry.html">Extended Aperture Photometry</a></li>
-
-
-<li class="toctree-l1"><a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">Cross-Filter PSF Matching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">PSF Photometry</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRISS</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">WFSS Spectra - Optimal Extraction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">WFSS Spectra - Combine and Normalize 1D Spectra</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">WFSS Spectra - Cross-Correlation Template</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">WFSS Spectra - Emission Line Map</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRSpec</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">IFU Cube Fitting</a></li>
-
-<li class="toctree-l1"><a class="reference internal" href="../ifu_optimal/ifu_optimal.html">IFU Optimal Spectral Extraction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../optimal_extraction/Spectral_Extraction-static.html">MOS Optimal Extraction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../mos_spectroscopy_advanced/MOSspec_advanced.html">MOS Spectroscopy of Extragalactic Field</a></li>
-
-<li class="toctree-l1"><a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">BOTS Time Series Observations</a></li>
-
-
-
-
-
-
-
-
-</ul>
-
-    </div>
-</nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-  </div>
-  
-  <div id="rtd-footer-container"></div>
-
-
+   <div class="bd-container__inner bd-page-width">
+    <div class="bd-sidebar-primary bd-sidebar">
+     <div class="sidebar-header-items sidebar-primary__section">
+     </div>
+     <div class="sidebar-primary-items__start sidebar-primary__section">
+      <div class="sidebar-primary-item">
+       <a class="navbar-brand logo" href="../../intro.html">
+        <img alt="Logo image" class="logo__image only-light" src="../../_static/stsci_logo2.png"/>
+        <script>
+         document.write(`<img src="../../_static/stsci_logo2.png" class="logo__image only-dark" alt="Logo image"/>`);
+        </script>
+       </a>
       </div>
-      
-      <main id="main-content" class="bd-main">
-        
-        
-
-<div class="sbt-scroll-pixel-helper"></div>
-
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article">
-<div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <span class="fa-solid fa-bars"></span>
-</label></div>
-      
+      <div class="sidebar-primary-item">
+       <nav aria-label="Main" class="bd-links" id="bd-docs-nav">
+        <div class="bd-toc-item navbar-nav active">
+         <ul class="nav bd-sidenav bd-sidenav__home-link">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../intro.html">
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           General
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../index.html">
+            Home
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../install.html">
+            Installation
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../docs/notebook_development_workflow.html">
+            Notebook Development Workflow
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           Development
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../docs/submitting_notebooks.html">
+            Submitting Notebooks
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../docs/requirements.html">
+            Requirements file
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../docs/notebooks.html">
+            Jupyter Notebooks
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../docs/data_files.html">
+            Data Files
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           GitHub Guidelines
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../docs/github_setup.html">
+            GitHub Setup
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../docs/github_workflow.html">
+            GitHub Workflow
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../../docs/github_pr.html">
+            GitHub PR
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           Cross-Instrument
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../asdf_example/asdf_example.html">
+            ASDF Example
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../background_estimation_imaging/Imaging_Sky_Background_Estimation.html">
+            Complex 2D Background
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">
+            Composite Model Spectral Fitting
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">
+            MAST Query
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../rgb_imviz/imviz_rgb_carina.html">
+            RGB images with Imviz
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">
+            Specviz Simple Demo
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           MIRI
+          </span>
+         </p>
+         <ul class="current nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">
+            MRS Mstar - Run Pipeline
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">
+            MRS Detector Based Extraction
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">
+            MRS Mstar - Data Analysis
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">
+            IFU of YSOs in LMC
+           </a>
+          </li>
+          <li class="toctree-l1 current active">
+           <a class="current reference internal" href="#">
+            LRS Optimal Spectral Extraction
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           NIRCam
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">
+            Point Source Aperture Photometry
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRCam_photometry/NIRCam_multiband_photometry.html">
+            Extended Aperture Photometry
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">
+            Cross-Filter PSF Matching
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">
+            PSF Photometry
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           NIRISS
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">
+            WFSS Spectra - Optimal Extraction
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">
+            WFSS Spectra - Combine and Normalize 1D Spectra
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">
+            WFSS Spectra - Cross-Correlation Template
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">
+            WFSS Spectra - Emission Line Map
+           </a>
+          </li>
+         </ul>
+         <p aria-level="2" class="caption" role="heading">
+          <span class="caption-text">
+           NIRSpec
+          </span>
+         </p>
+         <ul class="nav bd-sidenav">
+          <li class="toctree-l1">
+           <a class="reference internal" href="../IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">
+            IFU Cube Fitting
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../ifu_optimal/ifu_optimal.html">
+            IFU Optimal Spectral Extraction
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../optimal_extraction/Spectral_Extraction-static.html">
+            MOS Optimal Extraction
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../mos_spectroscopy_advanced/MOSspec_advanced.html">
+            MOS Spectroscopy of Extragalactic Field
+           </a>
+          </li>
+          <li class="toctree-l1">
+           <a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">
+            BOTS Time Series Observations
+           </a>
+          </li>
+         </ul>
+        </div>
+       </nav>
+      </div>
+     </div>
+     <div class="sidebar-primary-items__end sidebar-primary__section">
+     </div>
+     <div id="rtd-footer-container">
+     </div>
     </div>
-  
-  
-    <div class="header-article-items__end">
-      
-        <div class="header-article-item">
-
-<div class="article-header-buttons">
-
-
-
-
-
-<div class="dropdown dropdown-launch-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
-    <i class="fas fa-rocket"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li>
-<button onclick="initThebeSBT()"
-  class="btn btn-sm btn-launch-thebe dropdown-item"
-  title="Launch Thebe"
-  data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-play"></i>
-  </span>
-<span class="btn__text-container">Live Code</span>
-</button>
-</li>
-      
-  </ul>
-</div>
-
-
-
-
-
-
-<div class="dropdown dropdown-source-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
-    <i class="fab fa-github"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="https://github.com/spacetelescope/jdat_notebooks" target="_blank"
-   class="btn btn-sm btn-source-repository-button dropdown-item"
-   title="Source repository"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="btn__text-container">Repository</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/MIRI_LRS_spectral_extraction/miri_lrs_spectral_extraction.html&body=Your%20issue%20content%20here." target="_blank"
-   class="btn btn-sm btn-source-issues-button dropdown-item"
-   title="Open an issue"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="btn__text-container">Open issue</span>
-</a>
-</li>
-      
-  </ul>
-</div>
-
-
-
-
-
-
-<div class="dropdown dropdown-download-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
-    <i class="fas fa-download"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="../../_sources/notebooks/MIRI_LRS_spectral_extraction/miri_lrs_spectral_extraction.ipynb" target="_blank"
-   class="btn btn-sm btn-download-source-button dropdown-item"
-   title="Download source file"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="btn__text-container">.ipynb</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li>
-<button onclick="window.print()"
-  class="btn btn-sm btn-download-pdf-button dropdown-item"
-  title="Print to PDF"
-  data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="btn__text-container">.pdf</span>
-</button>
-</li>
-      
-  </ul>
-</div>
-
-
-
-
-<button onclick="toggleFullScreen()"
-  class="btn btn-sm btn-fullscreen-button"
-  title="Fullscreen mode"
-  data-bs-placement="bottom" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-expand"></i>
-  </span>
-
-</button>
-
-
-<script>
-document.write(`
+    <main class="bd-main" id="main-content">
+     <div class="sbt-scroll-pixel-helper">
+     </div>
+     <div class="bd-content">
+      <div class="bd-article-container">
+       <div class="bd-header-article">
+        <div class="header-article-items header-article__inner">
+         <div class="header-article-items__start">
+          <div class="header-article-item">
+           <label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+            <span class="fa-solid fa-bars">
+            </span>
+           </label>
+          </div>
+         </div>
+         <div class="header-article-items__end">
+          <div class="header-article-item">
+           <div class="article-header-buttons">
+            <div class="dropdown dropdown-launch-buttons">
+             <button aria-expanded="false" aria-label="Launch interactive content" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+              <i class="fas fa-rocket">
+              </i>
+             </button>
+             <ul class="dropdown-menu">
+              <li>
+               <button class="btn btn-sm btn-launch-thebe dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" onclick="initThebeSBT()" title="Launch Thebe">
+                <span class="btn__icon-container">
+                 <i class="fas fa-play">
+                 </i>
+                </span>
+                <span class="btn__text-container">
+                 Live Code
+                </span>
+               </button>
+              </li>
+             </ul>
+            </div>
+            <div class="dropdown dropdown-source-buttons">
+             <button aria-expanded="false" aria-label="Source repositories" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+              <i class="fab fa-github">
+              </i>
+             </button>
+             <ul class="dropdown-menu">
+              <li>
+               <a class="btn btn-sm btn-source-repository-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="https://github.com/spacetelescope/jdat_notebooks" target="_blank" title="Source repository">
+                <span class="btn__icon-container">
+                 <i class="fab fa-github">
+                 </i>
+                </span>
+                <span class="btn__text-container">
+                 Repository
+                </span>
+               </a>
+              </li>
+              <li>
+               <a class="btn btn-sm btn-source-issues-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/MIRI_LRS_spectral_extraction/miri_lrs_spectral_extraction.html&amp;body=Your%20issue%20content%20here." target="_blank" title="Open an issue">
+                <span class="btn__icon-container">
+                 <i class="fas fa-lightbulb">
+                 </i>
+                </span>
+                <span class="btn__text-container">
+                 Open issue
+                </span>
+               </a>
+              </li>
+             </ul>
+            </div>
+            <div class="dropdown dropdown-download-buttons">
+             <button aria-expanded="false" aria-label="Download this page" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+              <i class="fas fa-download">
+              </i>
+             </button>
+             <ul class="dropdown-menu">
+              <li>
+               <a class="btn btn-sm btn-download-source-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="../../_sources/notebooks/MIRI_LRS_spectral_extraction/miri_lrs_spectral_extraction.ipynb" target="_blank" title="Download source file">
+                <span class="btn__icon-container">
+                 <i class="fas fa-file">
+                 </i>
+                </span>
+                <span class="btn__text-container">
+                 .ipynb
+                </span>
+               </a>
+              </li>
+              <li>
+               <button class="btn btn-sm btn-download-pdf-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" onclick="window.print()" title="Print to PDF">
+                <span class="btn__icon-container">
+                 <i class="fas fa-file-pdf">
+                 </i>
+                </span>
+                <span class="btn__text-container">
+                 .pdf
+                </span>
+               </button>
+              </li>
+             </ul>
+            </div>
+            <button class="btn btn-sm btn-fullscreen-button" data-bs-placement="bottom" data-bs-toggle="tooltip" onclick="toggleFullScreen()" title="Fullscreen mode">
+             <span class="btn__icon-container">
+              <i class="fas fa-expand">
+              </i>
+             </span>
+            </button>
+            <script>
+             document.write(`
   <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
     <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
     <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
   </button>
 `);
-</script>
-
-<script>
-document.write(`
+            </script>
+            <script>
+             document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass"></i>
   </button>
 `);
-</script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</label>
-</div></div>
-      
-    </div>
-  
-</div>
-</div>
-              
-              
-
-<div id="jb-print-docs-body" class="onlyprint">
-    <h1>LRS Optimal Spectral Extraction</h1>
-    <!-- Table of contents -->
-    <div id="print-main-content">
-        <div id="jb-print-toc">
-            
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#devloper-notes">Devloper notes</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-files">Download Files</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#file-information">File information</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">Loading data</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boxcar-extraction">Boxcar Extraction</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fixed-width-boxcar">Fixed width boxcar</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wavelength-scaled-width-boxcar">Wavelength scaled width boxcar</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psf-based-extraction">PSF based Extraction</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#psf-weighted-extaction">PSF weighted extaction</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-the-psf-profile-as-a-function-of-wavelength">Generate the PSF profile as a function of wavelength</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-spectrum-using-wavelength-dependent-psf-profiles">Extract spectrum using wavelength dependent PSF profiles</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-in-rayleigh-jeans-units">Plotting in Rayleigh-Jeans units</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this notebook</a></li>
-</ul>
-            </nav>
+            </script>
+            <label class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__secondary" title="Toggle secondary sidebar">
+             <span class="fa-solid fa-list">
+             </span>
+            </label>
+           </div>
+          </div>
+         </div>
         </div>
-    </div>
-</div>
-
-              
-                
-<div id="searchbox"></div>
-                <article class="bd-article" role="main">
-                  
-  <section id="lrs-optimal-spectral-extraction">
-<h1>LRS Optimal Spectral Extraction<a class="headerlink" href="#lrs-optimal-spectral-extraction" title="Permalink to this heading">#</a></h1>
-<p><strong>Use case:</strong> Extract spectra with different locations, extraction apertures, and techniques.<br>
-<strong>Data:</strong> Simulated MIRI LRS spectrum.<br>
-<strong>Tools:</strong> jwst, gwcs, matplotlib, astropy.<br>
-<strong>Cross-intrument:</strong> NIRSpec, MIRI.<br>
-<strong>Documentation:</strong> This notebook is part of a STScI’s larger <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis">post-pipeline Data Analysis Tools Ecosystem</a>.<br></p>
-<section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
-<p>This notebook extracts a 1D spectra from a 2D MIRI LRS spectral observation (single image).  The goal is to provide the ability to extract spectra with different locations, extraction apertures, and techniques than are done in the JWST pipeline.</p>
-<p>The simpliest spectral extraction is “boxcar” where all the pixels within some fixed width centered on the source position are summed at each wavelength.  Background subtraction can be done using regions offset from the source center.</p>
-<p>For spectra taken with a diffraction limited telescope like JWST, a modification boxcar extraction is to vary the extraction width linearly with wavelength.  Such a scaled boxcar extraction keeps the fraction of the source flux within the extraction region approximately constant with wavelength.</p>
-<p>For point sources, a PSF-weighted spectral extraction can be done.  Using the PSF to weight the extraction uses the actual PSF as a function of wavelength to optimize the extraction to the pixels with the greatest signal.  PSF-weighted extractions show the largest differences with boxcar extractions at lower S/N values.</p>
-<p><strong>Note:</strong> Corrections for the finite aperture used in all the extractions have not been applied.  Thus, the physical flux densities of all the extracted spectra are lower than the actual values.</p>
-</section>
-<section id="imports">
-<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
-<ul class="simple">
-<li><p><em>matplotlib.pyplot</em> for plotting data</p></li>
-<li><p><em>numpy</em> to handle array functions</p></li>
-<li><p><em>astropy.io fits</em> for accessing FITS files</p></li>
-<li><p><em>astropy.visualization</em> for scaling image for display</p></li>
-<li><p><em>astropy.table Table</em> for reading the pipeline 1d extractions</p></li>
-<li><p><em>jwst datamodels</em> for reading/access the jwst data</p></li>
-</ul>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+       </div>
+       <div class="onlyprint" id="jb-print-docs-body">
+        <h1>
+         LRS Optimal Spectral Extraction
+        </h1>
+        <!-- Table of contents -->
+        <div id="print-main-content">
+         <div id="jb-print-toc">
+          <div>
+           <h2>
+            Contents
+           </h2>
+          </div>
+          <nav aria-label="Page">
+           <ul class="visible nav section-nav flex-column">
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#introduction">
+              Introduction
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#imports">
+              Imports
+             </a>
+             <ul class="nav section-nav flex-column">
+              <li class="toc-h3 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#devloper-notes">
+                Devloper notes
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#download-files">
+              Download Files
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#file-information">
+              File information
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#loading-data">
+              Loading data
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#boxcar-extraction">
+              Boxcar Extraction
+             </a>
+             <ul class="nav section-nav flex-column">
+              <li class="toc-h3 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#fixed-width-boxcar">
+                Fixed width boxcar
+               </a>
+              </li>
+              <li class="toc-h3 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#wavelength-scaled-width-boxcar">
+                Wavelength scaled width boxcar
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#psf-based-extraction">
+              PSF based Extraction
+             </a>
+             <ul class="nav section-nav flex-column">
+              <li class="toc-h3 nav-item toc-entry">
+               <a class="reference internal nav-link" href="#psf-weighted-extaction">
+                PSF weighted extaction
+               </a>
+               <ul class="nav section-nav flex-column">
+                <li class="toc-h4 nav-item toc-entry">
+                 <a class="reference internal nav-link" href="#generate-the-psf-profile-as-a-function-of-wavelength">
+                  Generate the PSF profile as a function of wavelength
+                 </a>
+                </li>
+                <li class="toc-h4 nav-item toc-entry">
+                 <a class="reference internal nav-link" href="#extract-spectrum-using-wavelength-dependent-psf-profiles">
+                  Extract spectrum using wavelength dependent PSF profiles
+                 </a>
+                </li>
+                <li class="toc-h4 nav-item toc-entry">
+                 <a class="reference internal nav-link" href="#plotting-in-rayleigh-jeans-units">
+                  Plotting in Rayleigh-Jeans units
+                 </a>
+                </li>
+               </ul>
+              </li>
+             </ul>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#additional-resources">
+              Additional Resources
+             </a>
+            </li>
+            <li class="toc-h2 nav-item toc-entry">
+             <a class="reference internal nav-link" href="#about-this-notebook">
+              About this notebook
+             </a>
+            </li>
+           </ul>
+          </nav>
+         </div>
+        </div>
+       </div>
+       <div id="searchbox">
+       </div>
+       <article class="bd-article" role="main">
+        <section id="lrs-optimal-spectral-extraction">
+         <h1>
+          LRS Optimal Spectral Extraction
+          <a class="headerlink" href="#lrs-optimal-spectral-extraction" title="Permalink to this heading">
+           #
+          </a>
+         </h1>
+         <p>
+          <strong>
+           Use case:
+          </strong>
+          Extract spectra with different locations, extraction apertures, and techniques.
+          <br/>
+          <strong>
+           Data:
+          </strong>
+          Simulated MIRI LRS spectrum.
+          <br/>
+          <strong>
+           Tools:
+          </strong>
+          jwst, gwcs, matplotlib, astropy.
+          <br/>
+          <strong>
+           Cross-intrument:
+          </strong>
+          NIRSpec, MIRI.
+          <br/>
+          <strong>
+           Documentation:
+          </strong>
+          This notebook is part of a STScI’s larger
+          <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis">
+           post-pipeline Data Analysis Tools Ecosystem
+          </a>
+          .
+          <br/>
+         </p>
+         <section id="introduction">
+          <h2>
+           Introduction
+           <a class="headerlink" href="#introduction" title="Permalink to this heading">
+            #
+           </a>
+          </h2>
+          <p>
+           This notebook extracts a 1D spectra from a 2D MIRI LRS spectral observation (single image).  The goal is to provide the ability to extract spectra with different locations, extraction apertures, and techniques than are done in the JWST pipeline.
+          </p>
+          <p>
+           The simpliest spectral extraction is “boxcar” where all the pixels within some fixed width centered on the source position are summed at each wavelength.  Background subtraction can be done using regions offset from the source center.
+          </p>
+          <p>
+           For spectra taken with a diffraction limited telescope like JWST, a modification boxcar extraction is to vary the extraction width linearly with wavelength.  Such a scaled boxcar extraction keeps the fraction of the source flux within the extraction region approximately constant with wavelength.
+          </p>
+          <p>
+           For point sources, a PSF-weighted spectral extraction can be done.  Using the PSF to weight the extraction uses the actual PSF as a function of wavelength to optimize the extraction to the pixels with the greatest signal.  PSF-weighted extractions show the largest differences with boxcar extractions at lower S/N values.
+          </p>
+          <p>
+           <strong>
+            Note:
+           </strong>
+           Corrections for the finite aperture used in all the extractions have not been applied.  Thus, the physical flux densities of all the extracted spectra are lower than the actual values.
+          </p>
+         </section>
+         <section id="imports">
+          <h2>
+           Imports
+           <a class="headerlink" href="#imports" title="Permalink to this heading">
+            #
+           </a>
+          </h2>
+          <ul class="simple">
+           <li>
+            <p>
+             <em>
+              matplotlib.pyplot
+             </em>
+             for plotting data
+            </p>
+           </li>
+           <li>
+            <p>
+             <em>
+              numpy
+             </em>
+             to handle array functions
+            </p>
+           </li>
+           <li>
+            <p>
+             <em>
+              astropy.io fits
+             </em>
+             for accessing FITS files
+            </p>
+           </li>
+           <li>
+            <p>
+             <em>
+              astropy.visualization
+             </em>
+             for scaling image for display
+            </p>
+           </li>
+           <li>
+            <p>
+             <em>
+              astropy.table Table
+             </em>
+             for reading the pipeline 1d extractions
+            </p>
+           </li>
+           <li>
+            <p>
+             <em>
+              jwst datamodels
+             </em>
+             for reading/access the jwst data
+            </p>
+           </li>
+          </ul>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
 
@@ -537,22 +752,25 @@ document.write(`
 <span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">simple_norm</span>
 
 <span class="kn">from</span> <span class="nn">jwst</span> <span class="kn">import</span> <span class="n">datamodels</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># useful function that work for boxcar, boxcar scaled with wavelength,</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># useful function that work for boxcar, boxcar scaled with wavelength,</span>
 <span class="c1"># and psf-weighted extractions</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">gwcs.wcstools</span> <span class="kn">import</span> <span class="n">grid_from_bounding_box</span>
 
 
 <span class="k">def</span> <span class="nf">get_boxcar_weights</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">hwidth</span><span class="p">,</span> <span class="n">npix</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the weights given an aperture center, half widths, and number of pixels</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">npix</span><span class="p">))</span>
     <span class="c1"># pixels with full weight</span>
     <span class="n">fullpixels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">center</span> <span class="o">-</span> <span class="n">hwidth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)),</span> <span class="nb">min</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">center</span> <span class="o">+</span> <span class="n">hwidth</span><span class="p">),</span> <span class="n">npix</span><span class="p">)]</span>
@@ -570,7 +788,7 @@ document.write(`
 <span class="k">def</span> <span class="nf">ap_weight_images</span><span class="p">(</span>
     <span class="n">center</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">bkg_offset</span><span class="p">,</span> <span class="n">bkg_width</span><span class="p">,</span> <span class="n">image_size</span><span class="p">,</span> <span class="n">waves</span><span class="p">,</span> <span class="n">wavescale</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a weight image that defines the desired extraction aperture</span>
 <span class="sd">    and the weight image for the requested background regions</span>
 
@@ -599,7 +817,7 @@ document.write(`
 <span class="sd">    wimage, bkg_wimage : (2D image, 2D image)</span>
 <span class="sd">        wimage is the weight image defining the aperature</span>
 <span class="sd">        bkg_image is the weight image defining the background regions</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">wimage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">image_size</span><span class="p">)</span>
     <span class="n">bkg_wimage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">image_size</span><span class="p">)</span>
     <span class="n">hwidth</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">width</span>
@@ -625,7 +843,7 @@ document.write(`
 
 
 <span class="k">def</span> <span class="nf">extract_1dspec</span><span class="p">(</span><span class="n">jdatamodel</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">bkg_offset</span><span class="p">,</span> <span class="n">bkg_width</span><span class="p">,</span> <span class="n">wavescale</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Extract the 1D spectrum using the boxcar method.</span>
 <span class="sd">    Does a background subtraction as part of the extraction.</span>
 
@@ -652,14 +870,14 @@ document.write(`
 <span class="sd">    waves, ext1d : (ndarray, ndarray)</span>
 <span class="sd">        2D `float` array with wavelengths</span>
 <span class="sd">        1D `float` array with extracted 1d spectrum in Jy</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># should be determined from the gWCS in cal.fits</span>
     <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">jdatamodel</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
     <span class="n">grid</span> <span class="o">=</span> <span class="n">grid_from_bounding_box</span><span class="p">(</span><span class="n">jdatamodel</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">wcs</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">)</span>
     <span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="p">,</span> <span class="n">lam</span> <span class="o">=</span> <span class="n">jdatamodel</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">wcs</span><span class="p">(</span><span class="o">*</span><span class="n">grid</span><span class="p">)</span>
     <span class="n">lam_image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span>
 
-    <span class="c1"># compute a &quot;rough&quot; wavelength scale to allow for aperture to scale with wavelength</span>
+    <span class="c1"># compute a "rough" wavelength scale to allow for aperture to scale with wavelength</span>
     <span class="n">rough_waves</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">lam_image</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="c1"># images to use for extraction</span>
@@ -690,246 +908,350 @@ document.write(`
     <span class="n">waves</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">lam_image</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">wimage</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">ext1d</span><span class="p">,</span> <span class="n">data_bkgsub</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<section id="devloper-notes">
-<h3>Devloper notes<a class="headerlink" href="#devloper-notes" title="Permalink to this heading">#</a></h3>
-<p>The difference between the pipeline (x1d) and the extractions done in this notebook are quite large.  Help in understanding the origin of these differences is needed.</p>
-<p>Not clear how to use the JWST pipeline <code class="docutils literal notranslate"><span class="pre">extract_1d</span></code> (quite complex) code.
-Help to determine how to use the JWST pipeline code instead of the custom code for boxcar is needed.</p>
-<p>Applying aperture corrections for the finite extraction widths is needed.  Help in how to get the needed informatinom for different (user set) extraction widths is needed.</p>
-</section>
-</section>
-<section id="download-files">
-<h2>Download Files<a class="headerlink" href="#download-files" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">astropy.utils.data</span> <span class="kn">import</span> <span class="n">download_file</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <section id="devloper-notes">
+           <h3>
+            Devloper notes
+            <a class="headerlink" href="#devloper-notes" title="Permalink to this heading">
+             #
+            </a>
+           </h3>
+           <p>
+            The difference between the pipeline (x1d) and the extractions done in this notebook are quite large.  Help in understanding the origin of these differences is needed.
+           </p>
+           <p>
+            Not clear how to use the JWST pipeline
+            <code class="docutils literal notranslate">
+             <span class="pre">
+              extract_1d
+             </span>
+            </code>
+            (quite complex) code.
+Help to determine how to use the JWST pipeline code instead of the custom code for boxcar is needed.
+           </p>
+           <p>
+            Applying aperture corrections for the finite extraction widths is needed.  Help in how to get the needed informatinom for different (user set) extraction widths is needed.
+           </p>
+          </section>
+         </section>
+         <section id="download-files">
+          <h2>
+           Download Files
+           <a class="headerlink" href="#download-files" title="Permalink to this heading">
+            #
+           </a>
+          </h2>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="kn">from</span> <span class="nn">astropy.utils.data</span> <span class="kn">import</span> <span class="n">download_file</span>
 
-<span class="n">calfilename</span> <span class="o">=</span> <span class="s2">&quot;det_image_seq5_MIRIMAGE_P750Lexp1_cal.fits&quot;</span>
-<span class="n">s2dfilename</span> <span class="o">=</span> <span class="s2">&quot;det_image_seq5_MIRIMAGE_P750Lexp1_s2d.fits&quot;</span>
-<span class="n">x1dfilename</span> <span class="o">=</span> <span class="s2">&quot;det_image_seq5_MIRIMAGE_P750Lexp1_x1d.fits&quot;</span>
-<span class="n">spatialprofilefilename</span> <span class="o">=</span> <span class="s2">&quot;det_image_seq1_MIRIMAGE_P750Lexp1_s2d.fits&quot;</span>
-<span class="n">mainurl</span> <span class="o">=</span> <span class="s2">&quot;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MIRI_LRS_notebook/&quot;</span>
+<span class="n">calfilename</span> <span class="o">=</span> <span class="s2">"det_image_seq5_MIRIMAGE_P750Lexp1_cal.fits"</span>
+<span class="n">s2dfilename</span> <span class="o">=</span> <span class="s2">"det_image_seq5_MIRIMAGE_P750Lexp1_s2d.fits"</span>
+<span class="n">x1dfilename</span> <span class="o">=</span> <span class="s2">"det_image_seq5_MIRIMAGE_P750Lexp1_x1d.fits"</span>
+<span class="n">spatialprofilefilename</span> <span class="o">=</span> <span class="s2">"det_image_seq1_MIRIMAGE_P750Lexp1_s2d.fits"</span>
+<span class="n">mainurl</span> <span class="o">=</span> <span class="s2">"https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/MIRI_LRS_notebook/"</span>
 
 <span class="n">calfile_dld</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="n">mainurl</span> <span class="o">+</span> <span class="n">calfilename</span><span class="p">)</span>
 <span class="n">s2dfile_dld</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="n">mainurl</span> <span class="o">+</span> <span class="n">s2dfilename</span><span class="p">)</span>
 <span class="n">x1dfile_dld</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="n">mainurl</span> <span class="o">+</span> <span class="n">x1dfilename</span><span class="p">)</span>
 <span class="n">spatialprofilefile_dld</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="n">mainurl</span> <span class="o">+</span> <span class="n">spatialprofilefilename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># rename files so that they have the right extensions</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># rename files so that they have the right extensions</span>
 <span class="c1"># required for the jwst datamodels to work</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="n">calfile</span> <span class="o">=</span> <span class="n">calfile_dld</span> <span class="o">+</span> <span class="s1">&#39;_cal.fits&#39;</span>
+<span class="n">calfile</span> <span class="o">=</span> <span class="n">calfile_dld</span> <span class="o">+</span> <span class="s1">'_cal.fits'</span>
 <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">calfile_dld</span><span class="p">,</span> <span class="n">calfile</span><span class="p">)</span>
-<span class="n">s2dfile</span> <span class="o">=</span> <span class="n">s2dfile_dld</span> <span class="o">+</span> <span class="s1">&#39;_s2d.fits&#39;</span>
+<span class="n">s2dfile</span> <span class="o">=</span> <span class="n">s2dfile_dld</span> <span class="o">+</span> <span class="s1">'_s2d.fits'</span>
 <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">s2dfile_dld</span><span class="p">,</span> <span class="n">s2dfile</span><span class="p">)</span>
-<span class="n">x1dfile</span> <span class="o">=</span> <span class="n">x1dfile_dld</span> <span class="o">+</span> <span class="s1">&#39;_x1d.fits&#39;</span>
+<span class="n">x1dfile</span> <span class="o">=</span> <span class="n">x1dfile_dld</span> <span class="o">+</span> <span class="s1">'_x1d.fits'</span>
 <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">x1dfile_dld</span><span class="p">,</span> <span class="n">x1dfile</span><span class="p">)</span>
-<span class="n">spatialprofilefile</span> <span class="o">=</span> <span class="n">spatialprofilefile_dld</span> <span class="o">+</span> <span class="s1">&#39;_s2d.fits&#39;</span>
+<span class="n">spatialprofilefile</span> <span class="o">=</span> <span class="n">spatialprofilefile_dld</span> <span class="o">+</span> <span class="s1">'_s2d.fits'</span>
 <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">spatialprofilefile_dld</span><span class="p">,</span> <span class="n">spatialprofilefile</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="file-information">
-<h2>File information<a class="headerlink" href="#file-information" title="Permalink to this heading">#</a></h2>
-<p>The data used is a simulation of a LRS slit observation for a blackbody with a similar flux density to the star BD+60d1753, a flux calibration star.  This simulation was created with MIRISim.
-The simulated exposure was reduced using the JWST pipeline (v0.16.1) through the Detector1 and Spec2 stages.</p>
-<p>The cal file is one of the Spec2 products and is the calibration full frame image. It contains:</p>
-<ol class="arabic simple">
-<li><p>(Primary): This HDU contains meta-data related to the observation and data reduction.</p></li>
-<li><p>(SCI): The calibrated image. Units are MJy/sr.</p></li>
-<li><p>(ERR): Uncertainty image.  Units are MJy/sr.</p></li>
-<li><p>(DQ): Data quality image.</p></li>
-<li><p>(VAR_POISSON): Unc. component 1: Poisson uncertainty image.  Units are (MJy/sr)^2.</p></li>
-<li><p>(VAR_RNOISE): Unc. component 2: Read Noise uncertainty image.  Units are (MJy/sr)^2.</p></li>
-<li><p>(VAR_FLAT): Unc. component 3: Flat Field uncertainty image.  Units are (MJy/sr)^2.</p></li>
-<li><p>(ASDF_METADATA): Metadata.</p></li>
-</ol>
-<p>The s2d file is one of the Spec2 products and containes the calibrated rectified cutout of the LRS Slit region.  It has:</p>
-<ol class="arabic simple">
-<li><p>(Primary): This HDU contains meta-data related to the observation and data reduction.</p></li>
-<li><p>(WGT): Weight.</p></li>
-<li><p>(CON): ??</p></li>
-<li><p>(ASDF_METADATA): Metadata.</p></li>
-</ol>
-</section>
-<section id="loading-data">
-<h2>Loading data<a class="headerlink" href="#loading-data" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># use a jwst datamodel to provide a good interface to the data and wcs info</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+         </section>
+         <section id="file-information">
+          <h2>
+           File information
+           <a class="headerlink" href="#file-information" title="Permalink to this heading">
+            #
+           </a>
+          </h2>
+          <p>
+           The data used is a simulation of a LRS slit observation for a blackbody with a similar flux density to the star BD+60d1753, a flux calibration star.  This simulation was created with MIRISim.
+The simulated exposure was reduced using the JWST pipeline (v0.16.1) through the Detector1 and Spec2 stages.
+          </p>
+          <p>
+           The cal file is one of the Spec2 products and is the calibration full frame image. It contains:
+          </p>
+          <ol class="arabic simple">
+           <li>
+            <p>
+             (Primary): This HDU contains meta-data related to the observation and data reduction.
+            </p>
+           </li>
+           <li>
+            <p>
+             (SCI): The calibrated image. Units are MJy/sr.
+            </p>
+           </li>
+           <li>
+            <p>
+             (ERR): Uncertainty image.  Units are MJy/sr.
+            </p>
+           </li>
+           <li>
+            <p>
+             (DQ): Data quality image.
+            </p>
+           </li>
+           <li>
+            <p>
+             (VAR_POISSON): Unc. component 1: Poisson uncertainty image.  Units are (MJy/sr)^2.
+            </p>
+           </li>
+           <li>
+            <p>
+             (VAR_RNOISE): Unc. component 2: Read Noise uncertainty image.  Units are (MJy/sr)^2.
+            </p>
+           </li>
+           <li>
+            <p>
+             (VAR_FLAT): Unc. component 3: Flat Field uncertainty image.  Units are (MJy/sr)^2.
+            </p>
+           </li>
+           <li>
+            <p>
+             (ASDF_METADATA): Metadata.
+            </p>
+           </li>
+          </ol>
+          <p>
+           The s2d file is one of the Spec2 products and containes the calibrated rectified cutout of the LRS Slit region.  It has:
+          </p>
+          <ol class="arabic simple">
+           <li>
+            <p>
+             (Primary): This HDU contains meta-data related to the observation and data reduction.
+            </p>
+           </li>
+           <li>
+            <p>
+             (WGT): Weight.
+            </p>
+           </li>
+           <li>
+            <p>
+             (CON): ??
+            </p>
+           </li>
+           <li>
+            <p>
+             (ASDF_METADATA): Metadata.
+            </p>
+           </li>
+          </ol>
+         </section>
+         <section id="loading-data">
+          <h2>
+           Loading data
+           <a class="headerlink" href="#loading-data" title="Permalink to this heading">
+            #
+           </a>
+          </h2>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># use a jwst datamodel to provide a good interface to the data and wcs info</span>
 <span class="n">cal</span> <span class="o">=</span> <span class="n">datamodels</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">calfile</span><span class="p">)</span>
 <span class="n">s2d</span> <span class="o">=</span> <span class="n">datamodels</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">s2dfile</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Basic information about the image.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;cal image&quot;</span><span class="p">)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <p>
+           Basic information about the image.
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"cal image"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">cal</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">cal</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">cal</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">cal</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;s2d image&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"s2d image"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">s2d</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">s2d</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">s2d</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">s2d</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>cal image
-(1024, 1032)
-9.826068
--1199.9769 64995.82
-s2d image
-(387, 44)
-603.8127
--942.0139 63358.58
-</pre></div>
-</div>
-</div>
-</div>
-<p>Display the full 2D image</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">cal</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <p>
+           Display the full 2D image
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">cal</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="s1">'sqrt'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cal</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;The full image from the MIRI IMAGER detector&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;The full image from the MIRI IMAGER detector&#39;)
-</pre></div>
-</div>
-<img alt="../../_images/c656f43e72decaf1e16e79389551a2f5ed939f8e7d7da614766da07af47badef.png" src="../../_images/c656f43e72decaf1e16e79389551a2f5ed939f8e7d7da614766da07af47badef.png" />
-</div>
-</div>
-<p>Display the LRS Slit region only (use s2d)</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># transpose to make it display better</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cal</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"The full image from the MIRI IMAGER detector"</span><span class="p">)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <p>
+           Display the LRS Slit region only (use s2d)
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># transpose to make it display better</span>
 <span class="n">data_lrs_reg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">s2d</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-<span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">data_lrs_reg</span><span class="p">,</span> <span class="s2">&quot;sqrt&quot;</span><span class="p">)</span>
+<span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">data_lrs_reg</span><span class="p">,</span> <span class="s2">"sqrt"</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data_lrs_reg</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;The LRS region&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;The LRS region&#39;)
-</pre></div>
-</div>
-<img alt="../../_images/82123cee7114e1f1821939917a38b6167f0a393e7fae0d1283754f7aa5c9c87a.png" src="../../_images/82123cee7114e1f1821939917a38b6167f0a393e7fae0d1283754f7aa5c9c87a.png" />
-</div>
-</div>
-<p>JWST pipeline 1D extraction</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># for reference read in the JWST pipeline extracted spectrum</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data_lrs_reg</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"The LRS region"</span><span class="p">)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+          <p>
+           JWST pipeline 1D extraction
+          </p>
+          <div class="cell docutils container">
+           <div class="cell_input docutils container">
+            <div class="highlight-ipython3 notranslate">
+             <div class="highlight">
+              <pre><span></span><span class="c1"># for reference read in the JWST pipeline extracted spectrum</span>
 <span class="n">jpipe_x1d</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">x1dfile</span><span class="p">,</span> <span class="n">hdu</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">jpipe_x1d</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 <span class="c1"># plot</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">jpipe_x1d</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">],</span> <span class="n">jpipe_x1d</span><span class="p">[</span><span class="s1">&#39;FLUX&#39;</span><span class="p">],</span> <span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;jpipe_x1d&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;JWST Pipeline x1d extracted spectrum&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;wavelength&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux Density [Jy]&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;TableColumns names=(&#39;WAVELENGTH&#39;,&#39;FLUX&#39;,&#39;ERROR&#39;,&#39;SURF_BRIGHT&#39;,&#39;SB_ERROR&#39;,&#39;DQ&#39;,&#39;BACKGROUND&#39;,&#39;BERROR&#39;,&#39;NPIXELS&#39;)&gt;
-</pre></div>
-</div>
-<img alt="../../_images/ae72fb2c626b21226d0ca9f3b1a6de992da6d9345903abef9d979a6260215806.png" src="../../_images/ae72fb2c626b21226d0ca9f3b1a6de992da6d9345903abef9d979a6260215806.png" />
-</div>
-</div>
-</section>
-<section id="boxcar-extraction">
-<h2>Boxcar Extraction<a class="headerlink" href="#boxcar-extraction" title="Permalink to this heading">#</a></h2>
-<p>Extract a 1D spectrum using a simple boxcar.  Basically collapse the spectrum in the cross-dispersion direction over a specified number of pixels.</p>
-<p>Limitation: currently it is assumed there are no bad pixels.</p>
-<section id="fixed-width-boxcar">
-<h3>Fixed width boxcar<a class="headerlink" href="#fixed-width-boxcar" title="Permalink to this heading">#</a></h3>
-<p>Define extraction parameters</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ext_center</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">jpipe_x1d</span><span class="p">[</span><span class="s1">'WAVELENGTH'</span><span class="p">],</span> <span class="n">jpipe_x1d</span><span class="p">[</span><span class="s1">'FLUX'</span><span class="p">],</span> <span class="s1">'k-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"jpipe_x1d"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"JWST Pipeline x1d extracted spectrum"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"wavelength"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Flux Density [Jy]"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
+</pre>
+             </div>
+            </div>
+           </div>
+          </div>
+         </section>
+         <section id="boxcar-extraction">
+          <h2>
+           Boxcar Extraction
+           <a class="headerlink" href="#boxcar-extraction" title="Permalink to this heading">
+            #
+           </a>
+          </h2>
+          <p>
+           Extract a 1D spectrum using a simple boxcar.  Basically collapse the spectrum in the cross-dispersion direction over a specified number of pixels.
+          </p>
+          <p>
+           Limitation: currently it is assumed there are no bad pixels.
+          </p>
+          <section id="fixed-width-boxcar">
+           <h3>
+            Fixed width boxcar
+            <a class="headerlink" href="#fixed-width-boxcar" title="Permalink to this heading">
+             #
+            </a>
+           </h3>
+           <p>
+            Define extraction parameters
+           </p>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="n">ext_center</span> <span class="o">=</span> <span class="mi">30</span>
 <span class="n">ext_width</span> <span class="o">=</span> <span class="mi">8</span>
 <span class="n">bkg_offset</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">bkg_width</span> <span class="o">=</span> <span class="mi">2</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Plot cross-disperion cut showing the extraction parameters</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <p>
+            Plot cross-disperion cut showing the extraction parameters
+           </p>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data_lrs_reg</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">data_lrs_reg</span><span class="p">[:,</span><span class="mi">300</span><span class="p">],</span> <span class="s1">&#39;k-&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">data_lrs_reg</span><span class="p">[:,</span><span class="mi">300</span><span class="p">],</span> <span class="s1">'k-'</span><span class="p">)</span>
 <span class="n">mm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">ext_center</span><span class="p">,</span> <span class="n">ext_center</span><span class="p">])</span>
 <span class="n">mm_y</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mm</span><span class="p">,</span> <span class="n">mm_y</span><span class="p">,</span> <span class="s1">&#39;b--&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mm</span> <span class="o">-</span> <span class="n">ext_width</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">mm_y</span><span class="p">,</span> <span class="s1">&#39;g:&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mm</span> <span class="o">+</span> <span class="n">ext_width</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">mm_y</span><span class="p">,</span> <span class="s1">&#39;g:&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Cross-dispersion Cut at Pixel=300&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Cross-dispersion Cut at Pixel=300&#39;)
-</pre></div>
-</div>
-<img alt="../../_images/264b7951274503a6cb1e5a223ae6af1d0562338b4a507727a87ca2d3e5355641.png" src="../../_images/264b7951274503a6cb1e5a223ae6af1d0562338b4a507727a87ca2d3e5355641.png" />
-</div>
-</div>
-<p>Do the extraction</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># visualize the weight images used in the fixed boxcar extraction </span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mm</span><span class="p">,</span> <span class="n">mm_y</span><span class="p">,</span> <span class="s1">'b--'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mm</span> <span class="o">-</span> <span class="n">ext_width</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">mm_y</span><span class="p">,</span> <span class="s1">'g:'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mm</span> <span class="o">+</span> <span class="n">ext_width</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">mm_y</span><span class="p">,</span> <span class="s1">'g:'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Cross-dispersion Cut at Pixel=300"</span><span class="p">)</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <p>
+            Do the extraction
+           </p>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="c1"># visualize the weight images used in the fixed boxcar extraction </span>
 <span class="n">wimage_fixedboxcar</span><span class="p">,</span> <span class="n">wimage_fb_bkg</span> <span class="o">=</span> <span class="n">ap_weight_images</span><span class="p">(</span><span class="n">ext_center</span><span class="p">,</span> <span class="n">ext_width</span><span class="p">,</span> <span class="n">bkg_offset</span><span class="p">,</span> 
                                                      <span class="n">bkg_width</span><span class="p">,</span> <span class="n">data_lrs_reg</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 <span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">wimage_fixedboxcar</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wimage_fixedboxcar</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Fixed boxcar weight image&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wimage_fixedboxcar</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Fixed boxcar weight image"</span><span class="p">)</span>
 
 <span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">wimage_fb_bkg</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wimage_fb_bkg</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Fixed boxcar backgound weight image&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Fixed boxcar backgound weight image&#39;)
-</pre></div>
-</div>
-<img alt="../../_images/eb40692ae5eccc7370606fe095249bbf3c7e1ead302f36a6516c07bca51255ec.png" src="../../_images/eb40692ae5eccc7370606fe095249bbf3c7e1ead302f36a6516c07bca51255ec.png" />
-<img alt="../../_images/5c5e028a43fddb9ecf4dfcfde905dafb4612730fff4a391d828018ba98b5d3fc.png" src="../../_images/5c5e028a43fddb9ecf4dfcfde905dafb4612730fff4a391d828018ba98b5d3fc.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># extract the spectrum using the weight images</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wimage_fb_bkg</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Fixed boxcar backgound weight image"</span><span class="p">)</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="c1"># extract the spectrum using the weight images</span>
 
 <span class="c1"># without background subtraction</span>
 <span class="n">waves_boxcar</span><span class="p">,</span> <span class="n">ext1d_boxcar</span><span class="p">,</span> <span class="n">tmpval</span> <span class="o">=</span> <span class="n">extract_1dspec</span><span class="p">(</span><span class="n">s2d</span><span class="p">,</span> <span class="n">ext_center</span><span class="p">,</span> <span class="n">ext_width</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -941,57 +1263,57 @@ s2d image
 <span class="c1"># plot</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">gpts</span> <span class="o">=</span> <span class="n">ext1d_boxcar_bkgsub</span> <span class="o">&gt;</span> <span class="mf">0.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_boxcar</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;boxcar&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">&#39;k:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;boxcar (bkgsub)&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">jpipe_x1d</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">],</span> <span class="n">jpipe_x1d</span><span class="p">[</span><span class="s1">&#39;FLUX&#39;</span><span class="p">],</span> <span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;jpipe_x1d&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Fixed boxcar 1D extracted spectrum&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;wavelength [$\mu$m]&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux Density [Jy]&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_boxcar</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"boxcar"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k:'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"boxcar (bkgsub)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">jpipe_x1d</span><span class="p">[</span><span class="s1">'WAVELENGTH'</span><span class="p">],</span> <span class="n">jpipe_x1d</span><span class="p">[</span><span class="s1">'FLUX'</span><span class="p">],</span> <span class="s1">'k-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"jpipe_x1d"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Fixed boxcar 1D extracted spectrum"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"wavelength [$\mu$m]"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Flux Density [Jy]"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f77c94530d0&gt;
-</pre></div>
-</div>
-<img alt="../../_images/3be5e54561342434db1776daf29b81de83bb668ce0f0dd6bb543eb0fff17daa4.png" src="../../_images/3be5e54561342434db1776daf29b81de83bb668ce0f0dd6bb543eb0fff17daa4.png" />
-</div>
-</div>
-</section>
-<section id="wavelength-scaled-width-boxcar">
-<h3>Wavelength scaled width boxcar<a class="headerlink" href="#wavelength-scaled-width-boxcar" title="Permalink to this heading">#</a></h3>
-<p>The LRS spatial profile changes as a function of wavelength as JWST is diffraction limited at these wavelengths.  Nominally this means that the FWHM is changing linearly with wavelength.  Scaling the width of the extraction aperture with wavelength accounts for the changing diffraction limit with wavelength to first order.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># visualize the weight images used in the scaled boxcar extraction </span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+          </section>
+          <section id="wavelength-scaled-width-boxcar">
+           <h3>
+            Wavelength scaled width boxcar
+            <a class="headerlink" href="#wavelength-scaled-width-boxcar" title="Permalink to this heading">
+             #
+            </a>
+           </h3>
+           <p>
+            The LRS spatial profile changes as a function of wavelength as JWST is diffraction limited at these wavelengths.  Nominally this means that the FWHM is changing linearly with wavelength.  Scaling the width of the extraction aperture with wavelength accounts for the changing diffraction limit with wavelength to first order.
+           </p>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="c1"># visualize the weight images used in the scaled boxcar extraction </span>
 <span class="n">wimage_scaledboxcar</span><span class="p">,</span> <span class="n">wimage_sb_bkg</span> <span class="o">=</span> <span class="n">ap_weight_images</span><span class="p">(</span><span class="n">ext_center</span><span class="p">,</span> <span class="n">ext_width</span><span class="p">,</span> <span class="n">bkg_offset</span><span class="p">,</span> <span class="n">bkg_width</span><span class="p">,</span> 
                                                       <span class="n">data_lrs_reg</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">waves_boxcar</span><span class="p">,</span> <span class="n">wavescale</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
 
 <span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">wimage_scaledboxcar</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wimage_scaledboxcar</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Scaled boxcar weight image&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wimage_scaledboxcar</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Scaled boxcar weight image"</span><span class="p">)</span>
 
 <span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">wimage_sb_bkg</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wimage_sb_bkg</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Scaled boxcar backgound weight image&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Scaled boxcar backgound weight image&#39;)
-</pre></div>
-</div>
-<img alt="../../_images/55d4c825e8919f99060c12aec81fc741547aa51297f9383f75e50d951d0970e1.png" src="../../_images/55d4c825e8919f99060c12aec81fc741547aa51297f9383f75e50d951d0970e1.png" />
-<img alt="../../_images/0cfc93ee3c3552652b0ce552e5b4c1f7414512e1292075c243755bf1b98c652b.png" src="../../_images/0cfc93ee3c3552652b0ce552e5b4c1f7414512e1292075c243755bf1b98c652b.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># extract the spectrum using the weight image</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wimage_sb_bkg</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Scaled boxcar backgound weight image"</span><span class="p">)</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="cell docutils container">
+            <div class="cell_input docutils container">
+             <div class="highlight-ipython3 notranslate">
+              <div class="highlight">
+               <pre><span></span><span class="c1"># extract the spectrum using the weight image</span>
 
 <span class="c1"># with background subtraction</span>
 <span class="n">waves_sboxcar_bkgsub</span><span class="p">,</span> <span class="n">ext1d_sboxcar_bkgsub</span><span class="p">,</span> <span class="n">sboxcar_bkgsub_image</span> <span class="o">=</span> <span class="n">extract_1dspec</span><span class="p">(</span><span class="n">s2d</span><span class="p">,</span> <span class="n">ext_center</span><span class="p">,</span> 
@@ -1001,70 +1323,105 @@ s2d image
 <span class="c1"># plot</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">gpts</span> <span class="o">=</span> <span class="n">ext1d_boxcar_bkgsub</span> <span class="o">&gt;</span> <span class="mf">0.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">&#39;k:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;fixed boxcar (bkgsub)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k:'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"fixed boxcar (bkgsub)"</span><span class="p">)</span>
 <span class="n">gpts</span> <span class="o">=</span> <span class="n">ext1d_sboxcar_bkgsub</span> <span class="o">&gt;</span> <span class="mf">0.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;scaled boxcar (bkgsub)&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Scaled boxcar 1D extracted spectrum&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;wavelength [$\mu$m]&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux Density [Jy]&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"scaled boxcar (bkgsub)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Scaled boxcar 1D extracted spectrum"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"wavelength [$\mu$m]"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Flux Density [Jy]"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f77c6c5b0d0&gt;
-</pre></div>
-</div>
-<img alt="../../_images/46654b29ffe4b16aec5574280fa340de2720b54dfbd609fb8520bf4320079d65.png" src="../../_images/46654b29ffe4b16aec5574280fa340de2720b54dfbd609fb8520bf4320079d65.png" />
-</div>
-</div>
-<p>Note that the impact of the scaled boxcar is largest at shorter wavelengths.  This is the result of using the same aperature at 10 microns for both the boxcar and scaled boxcar.</p>
-</section>
-</section>
-<section id="psf-based-extraction">
-<h2>PSF based Extraction<a class="headerlink" href="#psf-based-extraction" title="Permalink to this heading">#</a></h2>
-<p>While to first order the PSF FHWM changes linearly with wavelength, this is an approximation.  It is better to use the measured spatial profile as a function of wavelength to extract the spectrum.  This tracks the actual variation with wavelength and optimizes the extraction to the higher S/N measurements.  In general, PSF based extractions show the most improvements over boxcar extractions at lower the S/N.</p>
-<p>There are two PSF based extraction methods.</p>
-<ol class="arabic simple">
-<li><p>PSF weighted: the spatial profile at each wavelength is used to weight the extraction.</p></li>
-<li><p>PSF fitting: the spatial profile is fit at each wavelength with the scale parameter versus wavelength giving the spectrum.</p></li>
-</ol>
-<p>Only the PSF weighted technique is currently part of this notebook.</p>
-<p>Note 1: calibration reference file for the specific LRS slit position should be used.</p>
-<p>Note 2: Small shifts in the centering of the source in the slit should be investigated to see if they impact the PSF based extractions.</p>
-<p>Limitation: currently it is assumed there are no bad pixels.</p>
-<section id="psf-weighted-extaction">
-<h3>PSF weighted extaction<a class="headerlink" href="#psf-weighted-extaction" title="Permalink to this heading">#</a></h3>
-<section id="generate-the-psf-profile-as-a-function-of-wavelength">
-<h4>Generate the PSF profile as a function of wavelength<a class="headerlink" href="#generate-the-psf-profile-as-a-function-of-wavelength" title="Permalink to this heading">#</a></h4>
-<p>For MIRI LRS slit observations, observations are made at two nod position in the slit after target acquisition.  This means that the location of the sources in the slit is very well known.  Hence, spatial profile (PSF) as a function of wavelength for the two nod positions is straightforward to measure using observations of a bright source.</p>
-<p>The next few steps generate the needed information for the nod position for which we are extracting spectra based on a simulation of a bright source at the same nod position.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># lrs spatial profile (PSF) as a function of wavelength</span>
-<span class="c1"># currently, this is just a &quot;high&quot; S/N observation of a flat spectrum source at the same slit position</span>
+</pre>
+              </div>
+             </div>
+            </div>
+           </div>
+           <p>
+            Note that the impact of the scaled boxcar is largest at shorter wavelengths.  This is the result of using the same aperature at 10 microns for both the boxcar and scaled boxcar.
+           </p>
+          </section>
+         </section>
+         <section id="psf-based-extraction">
+          <h2>
+           PSF based Extraction
+           <a class="headerlink" href="#psf-based-extraction" title="Permalink to this heading">
+            #
+           </a>
+          </h2>
+          <p>
+           While to first order the PSF FHWM changes linearly with wavelength, this is an approximation.  It is better to use the measured spatial profile as a function of wavelength to extract the spectrum.  This tracks the actual variation with wavelength and optimizes the extraction to the higher S/N measurements.  In general, PSF based extractions show the most improvements over boxcar extractions at lower the S/N.
+          </p>
+          <p>
+           There are two PSF based extraction methods.
+          </p>
+          <ol class="arabic simple">
+           <li>
+            <p>
+             PSF weighted: the spatial profile at each wavelength is used to weight the extraction.
+            </p>
+           </li>
+           <li>
+            <p>
+             PSF fitting: the spatial profile is fit at each wavelength with the scale parameter versus wavelength giving the spectrum.
+            </p>
+           </li>
+          </ol>
+          <p>
+           Only the PSF weighted technique is currently part of this notebook.
+          </p>
+          <p>
+           Note 1: calibration reference file for the specific LRS slit position should be used.
+          </p>
+          <p>
+           Note 2: Small shifts in the centering of the source in the slit should be investigated to see if they impact the PSF based extractions.
+          </p>
+          <p>
+           Limitation: currently it is assumed there are no bad pixels.
+          </p>
+          <section id="psf-weighted-extaction">
+           <h3>
+            PSF weighted extaction
+            <a class="headerlink" href="#psf-weighted-extaction" title="Permalink to this heading">
+             #
+            </a>
+           </h3>
+           <section id="generate-the-psf-profile-as-a-function-of-wavelength">
+            <h4>
+             Generate the PSF profile as a function of wavelength
+             <a class="headerlink" href="#generate-the-psf-profile-as-a-function-of-wavelength" title="Permalink to this heading">
+              #
+             </a>
+            </h4>
+            <p>
+             For MIRI LRS slit observations, observations are made at two nod position in the slit after target acquisition.  This means that the location of the sources in the slit is very well known.  Hence, spatial profile (PSF) as a function of wavelength for the two nod positions is straightforward to measure using observations of a bright source.
+            </p>
+            <p>
+             The next few steps generate the needed information for the nod position for which we are extracting spectra based on a simulation of a bright source at the same nod position.
+            </p>
+            <div class="cell docutils container">
+             <div class="cell_input docutils container">
+              <div class="highlight-ipython3 notranslate">
+               <div class="highlight">
+                <pre><span></span><span class="c1"># lrs spatial profile (PSF) as a function of wavelength</span>
+<span class="c1"># currently, this is just a "high" S/N observation of a flat spectrum source at the same slit position</span>
 <span class="n">psf</span> <span class="o">=</span> <span class="n">datamodels</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">spatialprofilefile</span><span class="p">)</span>
 <span class="c1"># transpose to make it display better</span>
 <span class="n">lrspsf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">psf</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-<span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">lrspsf</span><span class="p">,</span> <span class="s2">&quot;sqrt&quot;</span><span class="p">)</span>
+<span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">lrspsf</span><span class="p">,</span> <span class="s2">"sqrt"</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">lrspsf</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;The LRS Spatial Profile (PSF) Observation&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;The LRS Spatial Profile (PSF) Observation&#39;)
-</pre></div>
-</div>
-<img alt="../../_images/09147d931815c88ed9f8950a510845d129c89b492b015b432a5949ccef593e2f.png" src="../../_images/09147d931815c88ed9f8950a510845d129c89b492b015b432a5949ccef593e2f.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Mock a LRS spectral profile reference file</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">lrspsf</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"The LRS Spatial Profile (PSF) Observation"</span><span class="p">)</span>
+</pre>
+               </div>
+              </div>
+             </div>
+            </div>
+            <div class="cell docutils container">
+             <div class="cell_input docutils container">
+              <div class="highlight-ipython3 notranslate">
+               <div class="highlight">
+                <pre><span></span><span class="c1"># Mock a LRS spectral profile reference file</span>
 <span class="c1"># Sum along the spatial direction and normalize to 1</span>
 <span class="c1"># assume there is no background (none was included in the MIRISim for the flat spectrum source observation)</span>
 <span class="c1"># ignore regions far from the source using a scaled boxcar weight image</span>
@@ -1083,48 +1440,49 @@ s2d image
 <span class="n">psf_weightimage</span> <span class="o">/=</span> <span class="n">div_image</span>
 
 <span class="c1"># display</span>
-<span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">psf_weightimage</span><span class="p">,</span> <span class="s2">&quot;sqrt&quot;</span><span class="p">)</span>
+<span class="n">norm_data</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">psf_weightimage</span><span class="p">,</span> <span class="s2">"sqrt"</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf_weightimage</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;The LRS Spatial Profile Reference Image (Normalized)&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;The LRS Spatial Profile Reference Image (Normalized)&#39;)
-</pre></div>
-</div>
-<img alt="../../_images/f434893dc1c55d703b5e40b9e414e83fede7bb2458a24ed138b2716c343a058f.png" src="../../_images/f434893dc1c55d703b5e40b9e414e83fede7bb2458a24ed138b2716c343a058f.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf_weightimage</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"The LRS Spatial Profile Reference Image (Normalized)"</span><span class="p">)</span>
+</pre>
+               </div>
+              </div>
+             </div>
+            </div>
+            <div class="cell docutils container">
+             <div class="cell_input docutils container">
+              <div class="highlight-ipython3 notranslate">
+               <div class="highlight">
+                <pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">psf_weightimage</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">psf_weightimage</span><span class="p">[:,</span><span class="mi">150</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;pixel=150&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">psf_weightimage</span><span class="p">[:,</span><span class="mi">225</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;pixel=225&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">psf_weightimage</span><span class="p">[:,</span><span class="mi">300</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;pixel=300&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">psf_weightimage</span><span class="p">[:,</span><span class="mi">370</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;pixel=370&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Cross-dispersion Cuts&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">psf_weightimage</span><span class="p">[:,</span><span class="mi">150</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"pixel=150"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">psf_weightimage</span><span class="p">[:,</span><span class="mi">225</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"pixel=225"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">psf_weightimage</span><span class="p">[:,</span><span class="mi">300</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"pixel=300"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">psf_weightimage</span><span class="p">[:,</span><span class="mi">370</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"pixel=370"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Cross-dispersion Cuts"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">ext_center</span><span class="o">-</span><span class="n">psf_width</span><span class="p">,</span> <span class="n">ext_center</span><span class="o">+</span><span class="n">psf_width</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f77c685b510&gt;
-</pre></div>
-</div>
-<img alt="../../_images/86003ab2083add4a3fd36c1bb2cbc53ad22cfd38b5d1a8d2422d20dc8157f021.png" src="../../_images/86003ab2083add4a3fd36c1bb2cbc53ad22cfd38b5d1a8d2422d20dc8157f021.png" />
-</div>
-</div>
-<p>Note that the spatial profile becomes narrower as the pixel values increases as this corresponds to the wavelength decreasing.</p>
-</section>
-<section id="extract-spectrum-using-wavelength-dependent-psf-profiles">
-<h4>Extract spectrum using wavelength dependent PSF profiles<a class="headerlink" href="#extract-spectrum-using-wavelength-dependent-psf-profiles" title="Permalink to this heading">#</a></h4>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># use the normalized PSF weight image to extract the specrum</span>
+</pre>
+               </div>
+              </div>
+             </div>
+            </div>
+            <p>
+             Note that the spatial profile becomes narrower as the pixel values increases as this corresponds to the wavelength decreasing.
+            </p>
+           </section>
+           <section id="extract-spectrum-using-wavelength-dependent-psf-profiles">
+            <h4>
+             Extract spectrum using wavelength dependent PSF profiles
+             <a class="headerlink" href="#extract-spectrum-using-wavelength-dependent-psf-profiles" title="Permalink to this heading">
+              #
+             </a>
+            </h4>
+            <div class="cell docutils container">
+             <div class="cell_input docutils container">
+              <div class="highlight-ipython3 notranslate">
+               <div class="highlight">
+                <pre><span></span><span class="c1"># use the normalized PSF weight image to extract the specrum</span>
 <span class="c1"># use the background subtracted image from the scaled boxcar extraction</span>
 <span class="n">ext1d_psfweight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sboxcar_bkgsub_image</span> <span class="o">*</span> <span class="n">psf_weightimage</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">ext1d_psfweight</span> <span class="o">*=</span> <span class="mf">1e6</span> <span class="o">*</span> <span class="n">s2d</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">photometry</span><span class="o">.</span><span class="n">pixelarea_steradians</span>
@@ -1132,81 +1490,133 @@ s2d image
 <span class="c1"># plot</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">gpts</span> <span class="o">=</span> <span class="n">ext1d_psfweight</span> <span class="o">&gt;</span> <span class="mf">0.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_psfweight</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;psf weighted (bkgsub)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_psfweight</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"psf weighted (bkgsub)"</span><span class="p">)</span>
 <span class="n">gpts</span> <span class="o">=</span> <span class="n">ext1d_sboxcar_bkgsub</span> <span class="o">&gt;</span> <span class="mf">0.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">&#39;k:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;scaled boxcar (bkgsub)&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;PSF weigthed extracted spectrum&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;wavelength [$\mu$m]&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux Density [Jy]&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="n">ext1d_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k:'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"scaled boxcar (bkgsub)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"PSF weigthed extracted spectrum"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"wavelength [$\mu$m]"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Flux Density [Jy]"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f77c68c65d0&gt;
-</pre></div>
-</div>
-<img alt="../../_images/70dc4b8d17af2087ea102c07cfdf7b197e6d08e1cc0f8ef8304ac38e4fd30144.png" src="../../_images/70dc4b8d17af2087ea102c07cfdf7b197e6d08e1cc0f8ef8304ac38e4fd30144.png" />
-</div>
-</div>
-<p>Note that the psf weighted extraction has visabily higher S/N, especially at the longer wavelengths where the S/N is lowest overall.</p>
-</section>
-<section id="plotting-in-rayleigh-jeans-units">
-<h4>Plotting in Rayleigh-Jeans units<a class="headerlink" href="#plotting-in-rayleigh-jeans-units" title="Permalink to this heading">#</a></h4>
-<p>For sources that have stellar continuum, it can be useful to plot MIR spectra in Rayleigh-Jeans units.  This just means removing the spectral shape expected for a blackbody with a peak at much shorter wavelengths than the MIR.  This is easily done by multiplying the spectrum by lambda^4 or nu^2.</p>
-<p>An example of this is given below.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Rayleigh-Jeans plot</span>
+</pre>
+               </div>
+              </div>
+             </div>
+            </div>
+            <p>
+             Note that the psf weighted extraction has visabily higher S/N, especially at the longer wavelengths where the S/N is lowest overall.
+            </p>
+           </section>
+           <section id="plotting-in-rayleigh-jeans-units">
+            <h4>
+             Plotting in Rayleigh-Jeans units
+             <a class="headerlink" href="#plotting-in-rayleigh-jeans-units" title="Permalink to this heading">
+              #
+             </a>
+            </h4>
+            <p>
+             For sources that have stellar continuum, it can be useful to plot MIR spectra in Rayleigh-Jeans units.  This just means removing the spectral shape expected for a blackbody with a peak at much shorter wavelengths than the MIR.  This is easily done by multiplying the spectrum by lambda^4 or nu^2.
+            </p>
+            <p>
+             An example of this is given below.
+            </p>
+            <div class="cell docutils container">
+             <div class="cell_input docutils container">
+              <div class="highlight-ipython3 notranslate">
+               <div class="highlight">
+                <pre><span></span><span class="c1"># Rayleigh-Jeans plot</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">gpts</span> <span class="o">=</span> <span class="n">ext1d_psfweight</span> <span class="o">&gt;</span> <span class="mf">0.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">]</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span><span class="o">*</span><span class="n">ext1d_psfweight</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;psf weighted (bkgsub)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">]</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span><span class="o">*</span><span class="n">ext1d_psfweight</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"psf weighted (bkgsub)"</span><span class="p">)</span>
 <span class="n">gpts</span> <span class="o">=</span> <span class="n">ext1d_sboxcar_bkgsub</span> <span class="o">&gt;</span> <span class="mf">0.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="p">(</span><span class="n">waves_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">]</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span><span class="o">*</span><span class="n">ext1d_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">&#39;k:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;scaled boxcar (bkgsub)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="p">(</span><span class="n">waves_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">]</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span><span class="o">*</span><span class="n">ext1d_sboxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k:'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"scaled boxcar (bkgsub)"</span><span class="p">)</span>
 <span class="n">gpts</span> <span class="o">=</span> <span class="n">ext1d_boxcar_bkgsub</span> <span class="o">&gt;</span> <span class="mf">0.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">]</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span><span class="o">*</span><span class="n">ext1d_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">&#39;k--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;fixed boxcar (bkgsub)&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Rayleigh-Jeans plot for all extractions&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;wavelength [$\mu$m]&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Rayleigh-Jeans Flux Density [$\mu$m$^4$ Jy]&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="p">(</span><span class="n">waves_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">]</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span><span class="o">*</span><span class="n">ext1d_boxcar_bkgsub</span><span class="p">[</span><span class="n">gpts</span><span class="p">],</span> <span class="s1">'k--'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"fixed boxcar (bkgsub)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Rayleigh-Jeans plot for all extractions"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"wavelength [$\mu$m]"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Rayleigh-Jeans Flux Density [$\mu$m$^4$ Jy]"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f77c6c83510&gt;
-</pre></div>
-</div>
-<img alt="../../_images/20557c87e4b15e1e96a3d4c27461be3f227e39ef9738108071d031ae33ebaf84.png" src="../../_images/20557c87e4b15e1e96a3d4c27461be3f227e39ef9738108071d031ae33ebaf84.png" />
-</div>
-</div>
-</section>
-</section>
-</section>
-<section id="additional-resources">
-<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this heading">#</a></h2>
-<ul class="simple">
-<li><p><a class="reference external" href="https://jwst-docs.stsci.edu/mid-infrared-instrument/miri-observing-modes/miri-low-resolution-spectroscopy">MIRI LRS</a></p></li>
-<li><p><a class="reference external" href="http://www.stsci.edu/jwst/science-planning/proposal-planning-toolbox/mirisim">MIRISim</a></p></li>
-<li><p><a class="reference external" href="https://jwst-docs.stsci.edu/jwst-data-reduction-pipeline">JWST pipeline</a></p></li>
-<li><p>PSF weighted extraction <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1986PASP...98..609H/abstract">Horne 1986, PASP, 98, 609</a>.</p></li>
-</ul>
-</section>
-<section id="about-this-notebook">
-<h2>About this notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">#</a></h2>
-<p><strong>Author:</strong> Karl Gordon, JWST
-<strong>Updated On:</strong> 2020-07-07</p>
-<hr class="docutils" />
-<p><span class="xref myst">Top of Page</span>
-<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
-</section>
-</section>
-
-    <script type="text/x-thebe-config">
-    {
+</pre>
+               </div>
+              </div>
+             </div>
+            </div>
+           </section>
+          </section>
+         </section>
+         <section id="additional-resources">
+          <h2>
+           Additional Resources
+           <a class="headerlink" href="#additional-resources" title="Permalink to this heading">
+            #
+           </a>
+          </h2>
+          <ul class="simple">
+           <li>
+            <p>
+             <a class="reference external" href="https://jwst-docs.stsci.edu/mid-infrared-instrument/miri-observing-modes/miri-low-resolution-spectroscopy">
+              MIRI LRS
+             </a>
+            </p>
+           </li>
+           <li>
+            <p>
+             <a class="reference external" href="http://www.stsci.edu/jwst/science-planning/proposal-planning-toolbox/mirisim">
+              MIRISim
+             </a>
+            </p>
+           </li>
+           <li>
+            <p>
+             <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-data-reduction-pipeline">
+              JWST pipeline
+             </a>
+            </p>
+           </li>
+           <li>
+            <p>
+             PSF weighted extraction
+             <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1986PASP...98..609H/abstract">
+              Horne 1986, PASP, 98, 609
+             </a>
+             .
+            </p>
+           </li>
+          </ul>
+         </section>
+         <section id="about-this-notebook">
+          <h2>
+           About this notebook
+           <a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">
+            #
+           </a>
+          </h2>
+          <p>
+           <strong>
+            Author:
+           </strong>
+           Karl Gordon, JWST
+           <strong>
+            Updated On:
+           </strong>
+           2020-07-07
+          </p>
+          <hr class="docutils"/>
+          <p>
+           <span class="xref myst">
+            Top of Page
+           </span>
+           <a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png">
+            <img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;"/>
+           </a>
+          </p>
+         </section>
+        </section>
+        <script type="text/x-thebe-config">
+         {
         requestKernel: true,
         binderOptions: {
             repo: "spacetelescope/jdat_notebooks",
@@ -1222,131 +1632,177 @@ s2d image
         },
         predefinedOutput: true
     }
-    </script>
-    <script>kernelName = 'python3'</script>
-
-                </article>
-              
-
-              
-              
-                <footer class="bd-footer-article">
-                  
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
-<div class="prev-next-area">
-    <a class="left-prev"
-       href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">IFU of YSOs in LMC</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Point Source Aperture Photometry</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
-</div></div>
-  
-</div>
-
-                </footer>
-              
+        </script>
+        <script>
+         kernelName = 'python3'
+        </script>
+       </article>
+       <footer class="bd-footer-article">
+        <div class="footer-article-items footer-article__inner">
+         <div class="footer-article-item">
+          <!-- Previous / next buttons -->
+          <div class="prev-next-area">
+           <a class="left-prev" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html" title="previous page">
+            <i class="fa-solid fa-angle-left">
+            </i>
+            <div class="prev-next-info">
+             <p class="prev-next-subtitle">
+              previous
+             </p>
+             <p class="prev-next-title">
+              IFU of YSOs in LMC
+             </p>
             </div>
-            
-            
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#devloper-notes">Devloper notes</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-files">Download Files</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#file-information">File information</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">Loading data</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boxcar-extraction">Boxcar Extraction</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fixed-width-boxcar">Fixed width boxcar</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wavelength-scaled-width-boxcar">Wavelength scaled width boxcar</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psf-based-extraction">PSF based Extraction</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#psf-weighted-extaction">PSF weighted extaction</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-the-psf-profile-as-a-function-of-wavelength">Generate the PSF profile as a function of wavelength</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-spectrum-using-wavelength-dependent-psf-profiles">Extract spectrum using wavelength dependent PSF profiles</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-in-rayleigh-jeans-units">Plotting in Rayleigh-Jeans units</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this notebook</a></li>
-</ul>
-  </nav></div>
-
-</div></div>
-              
-            
+           </a>
+           <a class="right-next" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html" title="next page">
+            <div class="prev-next-info">
+             <p class="prev-next-subtitle">
+              next
+             </p>
+             <p class="prev-next-title">
+              Point Source Aperture Photometry
+             </p>
+            </div>
+            <i class="fa-solid fa-angle-right">
+            </i>
+           </a>
           </div>
-          <footer class="bd-footer-content">
-            
-<div class="bd-footer-content__inner container">
-  
-  <div class="footer-item">
-    
-<p class="component-author">
-By STScI
-</p>
-
+         </div>
+        </div>
+       </footer>
+      </div>
+      <div class="bd-sidebar-secondary bd-toc">
+       <div class="sidebar-secondary-items sidebar-secondary__inner">
+        <div class="sidebar-secondary-item">
+         <div class="page-toc tocsection onthispage">
+          <i class="fa-solid fa-list">
+          </i>
+          Contents
+         </div>
+         <nav class="bd-toc-nav page-toc">
+          <ul class="visible nav section-nav flex-column">
+           <li class="toc-h2 nav-item toc-entry">
+            <a class="reference internal nav-link" href="#introduction">
+             Introduction
+            </a>
+           </li>
+           <li class="toc-h2 nav-item toc-entry">
+            <a class="reference internal nav-link" href="#imports">
+             Imports
+            </a>
+            <ul class="nav section-nav flex-column">
+             <li class="toc-h3 nav-item toc-entry">
+              <a class="reference internal nav-link" href="#devloper-notes">
+               Devloper notes
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li class="toc-h2 nav-item toc-entry">
+            <a class="reference internal nav-link" href="#download-files">
+             Download Files
+            </a>
+           </li>
+           <li class="toc-h2 nav-item toc-entry">
+            <a class="reference internal nav-link" href="#file-information">
+             File information
+            </a>
+           </li>
+           <li class="toc-h2 nav-item toc-entry">
+            <a class="reference internal nav-link" href="#loading-data">
+             Loading data
+            </a>
+           </li>
+           <li class="toc-h2 nav-item toc-entry">
+            <a class="reference internal nav-link" href="#boxcar-extraction">
+             Boxcar Extraction
+            </a>
+            <ul class="nav section-nav flex-column">
+             <li class="toc-h3 nav-item toc-entry">
+              <a class="reference internal nav-link" href="#fixed-width-boxcar">
+               Fixed width boxcar
+              </a>
+             </li>
+             <li class="toc-h3 nav-item toc-entry">
+              <a class="reference internal nav-link" href="#wavelength-scaled-width-boxcar">
+               Wavelength scaled width boxcar
+              </a>
+             </li>
+            </ul>
+           </li>
+           <li class="toc-h2 nav-item toc-entry">
+            <a class="reference internal nav-link" href="#psf-based-extraction">
+             PSF based Extraction
+            </a>
+            <ul class="nav section-nav flex-column">
+             <li class="toc-h3 nav-item toc-entry">
+              <a class="reference internal nav-link" href="#psf-weighted-extaction">
+               PSF weighted extaction
+              </a>
+              <ul class="nav section-nav flex-column">
+               <li class="toc-h4 nav-item toc-entry">
+                <a class="reference internal nav-link" href="#generate-the-psf-profile-as-a-function-of-wavelength">
+                 Generate the PSF profile as a function of wavelength
+                </a>
+               </li>
+               <li class="toc-h4 nav-item toc-entry">
+                <a class="reference internal nav-link" href="#extract-spectrum-using-wavelength-dependent-psf-profiles">
+                 Extract spectrum using wavelength dependent PSF profiles
+                </a>
+               </li>
+               <li class="toc-h4 nav-item toc-entry">
+                <a class="reference internal nav-link" href="#plotting-in-rayleigh-jeans-units">
+                 Plotting in Rayleigh-Jeans units
+                </a>
+               </li>
+              </ul>
+             </li>
+            </ul>
+           </li>
+           <li class="toc-h2 nav-item toc-entry">
+            <a class="reference internal nav-link" href="#additional-resources">
+             Additional Resources
+            </a>
+           </li>
+           <li class="toc-h2 nav-item toc-entry">
+            <a class="reference internal nav-link" href="#about-this-notebook">
+             About this notebook
+            </a>
+           </li>
+          </ul>
+         </nav>
+        </div>
+       </div>
+      </div>
+     </div>
+     <footer class="bd-footer-content">
+      <div class="bd-footer-content__inner container">
+       <div class="footer-item">
+        <p class="component-author">
+         By STScI
+        </p>
+       </div>
+       <div class="footer-item">
+        <p class="copyright">
+         © Copyright 2022.
+         <br/>
+        </p>
+       </div>
+       <div class="footer-item">
+       </div>
+       <div class="footer-item">
+       </div>
+      </div>
+     </footer>
+    </main>
+   </div>
   </div>
-  
-  <div class="footer-item">
-    
-  <p class="copyright">
-    
-      © Copyright 2022.
-      <br/>
-    
-  </p>
-
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
-</div>
-          </footer>
-        
-
-      </main>
-    </div>
-  </div>
-  
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
-
+  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52">
+  </script>
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52">
+  </script>
   <footer class="bd-footer">
   </footer>
-  </body>
+ </body>
 </html>
