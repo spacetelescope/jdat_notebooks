@@ -493,6 +493,7 @@ document.write(`
                   
   <section id="niriss-ami-binary-fitting-of-ab-dor-using-fouriever">
 <h1>NIRISS AMI: Binary fitting of AB Dor using Fouriever<a class="headerlink" href="#niriss-ami-binary-fitting-of-ab-dor-using-fouriever" title="Permalink to this heading">#</a></h1>
+<p><font color="red">This notebook currently fails to execute, use as reference only</font></p>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
 <p>This notebook takes a calibrated OIFITS file (see <em>Defining Terms</em> below) from NIRISS Aperture Masking Interferometry (AMI) data of binary point source AB Dor and calibrator HD 37093. The data were observed during science instrument commissioning on June 5, 2022, calibrated with the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/index.html">JWST pipeline</a>, and had interferometric observables extracted using the Image Plane approach to Interferometric Analysis (<a class="reference external" href="http://ascl.net/1808.004">ImPlaneIA</a>). This notebook estimates the parameters of a best-fit binary model for this data.</p>
@@ -584,11 +585,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/jdat_notebooks/jdat_notebooks/notebooks/niriss_ami_binary/niriss_ami_binary3/calib_abdor_f480m_pos1_hd37093.oifits
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="file-information">
@@ -611,47 +607,12 @@ OIFITS files are multi-extension FITS binary tables.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Filename: ./niriss_ami_binary3/calib_abdor_f480m_pos1_hd37093.oifits
-No.    Name      Ver    Type      Cards   Dimensions   Format
-  0  PRIMARY       1 PrimaryHDU      18   ()      
-  1  OI_WAVELENGTH    1 BinTableHDU     17   1R x 2C   [1E, 1E]   
-  2  OI_TARGET     1 BinTableHDU     56   1R x 17C   [1I, 16A, 1D, 1D, 1E, 1D, 1D, 1D, 8A, 8A, 1D, 1D, 1D, 1D, 1E, 1E, 16A]   
-  3  OI_ARRAY      1 BinTableHDU     37   7R x 8C   [16A, 16A, 1I, 1E, 3D, 1D, 6A, 2D]   
-  4  OI_VIS        1 BinTableHDU     44   21R x 12C   [1I, 1D, 1D, 1D, 1D, 1D, 1D, 1D, 1D, 1D, 2I, 1L]   
-  5  OI_VIS2       1 BinTableHDU     38   21R x 10C   [1I, 1D, 1D, 1D, 1D, 1D, 1D, 1D, 2I, 1L]   
-  6  OI_T3         1 BinTableHDU     50   35R x 14C   [1I, 1D, 1D, 1D, 1D, 1D, 1D, 1D, 1D, 1D, 1D, 1D, 3I, 1L]   
-</pre></div>
-</div>
-</div>
 </div>
 <p>The primary header tells us some information about the contents, such as the telescope (JWST), aperture mask design used (g7s6), the name of the target (AB Dor), and the name of the calibrator (HD37093):</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Display primary header contents</span>
 <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">calib_oifits</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SIMPLE  =                    T / conforms to FITS standard                      
-BITPIX  =                    8 / array data type                                
-NAXIS   =                    0 / number of array dimensions                     
-EXTEND  =                    T                                                  
-DATE    = &#39;2022-06-06&#39;                                                          
-ORIGIN  = &#39;STScI   &#39;                                                            
-DATE-OBS= &#39;2022-06-05T00:00:00.000&#39;                                             
-CONTENT = &#39;OIFITS2 &#39;                                                            
-TELESCOP= &#39;JWST    &#39;                                                            
-INSTRUME= &#39;NIRISS  &#39;                                                            
-OBSERVER= &#39;UNKNOWN &#39;                                                            
-OBJECT  = &#39;AB DOR  &#39;                                                            
-INSMODE = &#39;NRM     &#39;                                                            
-FILT    = &#39;F480M   &#39;                                                            
-ARRNAME = &#39;g7s6    &#39;                                                            
-MASK    = &#39;g7s6    &#39;                                                            
-PA      =    171.8779402866089                                                  
-CALIB   = &#39;HD 37093&#39;                                                            
 </pre></div>
 </div>
 </div>
@@ -682,12 +643,6 @@ CALIB   = &#39;HD 37093&#39;
 
 <span class="n">hole_ctrs</span> <span class="o">=</span> <span class="n">oiarray</span><span class="p">[</span><span class="s1">&#39;STAXYZ&#39;</span><span class="p">]</span>
 <span class="n">hole_idx</span> <span class="o">=</span> <span class="n">oiarray</span><span class="p">[</span><span class="s1">&#39;STA_INDEX&#39;</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Wavelength: 4.82e-06 m
-V3 PA: 171.88 degrees
 </pre></div>
 </div>
 </div>
@@ -761,9 +716,6 @@ V3 PA: 171.88 degrees
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../_images/1b753e1f7aca87d899887b2446fac7337da0b1d1055dd1939afe13e91c075a28.png" src="../../_images/1b753e1f7aca87d899887b2446fac7337da0b1d1055dd1939afe13e91c075a28.png" />
-</div>
 </div>
 <p>The above plots show the calibrated closure phases (left) and the calibrated squared visibilities (right). Each quantity is plotted against $B_{max}/\lambda$, the baseline length divided by the wavelength of the observation. In the case of closure phases, where the triangle is formed by three baselines, the longest one is selected.</p>
 <p>For a monochromatic observation of a point source, we would expect all 35 closure phases to be zero, and all 21 squared visibilities to be unity. Asymmetries in the target caused by e.g. an unresolved companion cause the closure phases and visibilities corresponding to the baselines between affected sub-apertures to diverge from zero or unity. We can now use the set of calibrated observables to model the most probable location and contrast ratio of the companion.</p>
@@ -799,15 +751,6 @@ V3 PA: 171.88 degrees
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected instrument = NIRISS
-   Use self.set_inst(inst) to change the selected instrument
-Selected observables = [&#39;v2&#39;, &#39;cp&#39;]
-   Use self.set_observables(observables) to change the selected observables
-   Computing closure phase correlations
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -825,43 +768,6 @@ Selected observables = [&#39;v2&#39;, &#39;cp&#39;]
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Opened NIRISS data
-   1 observations
-   21 baselines
-   35 triangles
-   1 wavelengths
-Selected instrument = NIRISS
-   Use self.set_inst(inst) to change the selected instrument
-Selected observables = [&#39;v2&#39;, &#39;cp&#39;]
-   Use self.set_observables(observables) to change the selected observables
-Data properties
-   Smallest spatial scale = 94.1 mas
-   Largest spatial scale = 376.4 mas
-   Minimum baseline = 1.32 m
-   Maximum baseline = 5.28 m
-   Bandwidth smearing = 3
-   Using data covariance = True
-   WARNING: not all data sets have covariances
-Computing grid
-   Min. sep. = 25.0 mas
-   Max. sep. = 500.0 mas
-   1256 non-empty grid cells
-Computing chi-squared map (DO NOT TRUST UNCERTAINTIES)
-   Cell 1681 of 1681
-   1255 unique minima found after 1256 fits
-   Optimal step size = 25.3 mas
-   Current step size = 25.0 mas
-   Best fit companion flux = 1.691 +/- 0.014 %
-   Best fit companion right ascension = -321.1 +/- 0.6 mas
-   Best fit companion declination = 57.3 +/- 0.9 mas
-   Best fit companion separation = 326.1 +/- 0.6 mas
-   Best fit companion position angle = -79.9 +/- 0.1 deg
-   Best fit red. chi2 = 0.044 (bin)
-   Significance of companion = 8.0 sigma
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -870,9 +776,6 @@ Computing chi-squared map (DO NOT TRUST UNCERTAINTIES)
 <span class="n">Image</span><span class="p">(</span><span class="n">obase1</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_chi2map.png&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../../_images/5a57a6566596ba297e67536ce004f5293740928a830042d026b5d2e2c4db88d8.png" src="../../_images/5a57a6566596ba297e67536ce004f5293740928a830042d026b5d2e2c4db88d8.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -887,111 +790,12 @@ Computing chi-squared map (DO NOT TRUST UNCERTAINTIES)
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing best fit companion parameters (UNCERTAINTIES FROM MCMC)
-   Bandwidth smearing = 3
-   Using data covariance = True
-   WARNING: not all data sets have covariances
-   Covariance inflation factor = 0.044
-   This may take a few minutes
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 5000/5000 [00:05&lt;00:00, 858.86it/s]
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   Best fit companion flux = 1.677 +/- 0.028 %
-   Best fit companion right ascension = -323.2 +/- 1.3 mas
-   Best fit companion declination = 56.4 +/- 1.2 mas
-   Best fit companion separation = 328.1 +/- 1.3 mas
-   Best fit companion position angle = -80.1 +/- 0.2 deg
-   Best fit red. chi2 = 0.041 (bin)
-   Significance of companion = 8.0 sigma
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Display MCMC fit results</span>
 
 <span class="n">Image</span><span class="p">(</span><span class="n">obase1</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_mcmc_corner.png&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">File /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11/site-packages/IPython/core/display.py:1045,</span> in <span class="ni">Image._data_and_metadata</span><span class="nt">(self, always_both)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1044</span> <span class="k">try</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1045</span>     <span class="n">b64_data</span> <span class="o">=</span> <span class="n">b2a_base64</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1046</span> <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-
-<span class="ne">TypeError</span>: a bytes-like object is required, not &#39;str&#39;
-
-<span class="n">The</span> <span class="n">above</span> <span class="n">exception</span> <span class="n">was</span> <span class="n">the</span> <span class="n">direct</span> <span class="n">cause</span> <span class="n">of</span> <span class="n">the</span> <span class="n">following</span> <span class="n">exception</span><span class="p">:</span>
-
-<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="nn">File /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11/site-packages/IPython/core/formatters.py:974,</span> in <span class="ni">MimeBundleFormatter.__call__</span><span class="nt">(self, obj, include, exclude)</span>
-<span class="g g-Whitespace">    </span><span class="mi">971</span>     <span class="n">method</span> <span class="o">=</span> <span class="n">get_real_method</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_method</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">973</span>     <span class="k">if</span> <span class="n">method</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">974</span>         <span class="k">return</span> <span class="n">method</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="n">include</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="n">exclude</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">975</span>     <span class="k">return</span> <span class="kc">None</span>
-<span class="g g-Whitespace">    </span><span class="mi">976</span> <span class="k">else</span><span class="p">:</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11/site-packages/IPython/core/display.py:1035,</span> in <span class="ni">Image._repr_mimebundle_</span><span class="nt">(self, include, exclude)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1033</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">embed</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1034</span>     <span class="n">mimetype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mimetype</span>
-<span class="ne">-&gt; </span><span class="mi">1035</span>     <span class="n">data</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_and_metadata</span><span class="p">(</span><span class="n">always_both</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1036</span>     <span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1037</span>         <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="n">mimetype</span><span class="p">:</span> <span class="n">metadata</span><span class="p">}</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11/site-packages/IPython/core/display.py:1047,</span> in <span class="ni">Image._data_and_metadata</span><span class="nt">(self, always_both)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1045</span>     <span class="n">b64_data</span> <span class="o">=</span> <span class="n">b2a_base64</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1046</span> <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1047</span>     <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1048</span>         <span class="s2">&quot;No such file or directory: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">))</span> <span class="kn">from</span> <span class="nn">e</span>
-<span class="g g-Whitespace">   </span><span class="mi">1049</span> <span class="n">md</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="g g-Whitespace">   </span><span class="mi">1050</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">:</span>
-
-<span class="ne">FileNotFoundError</span>: No such file or directory: &#39;ami_binary_smear_cov_mcmc_corner.png&#39;
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">File /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11/site-packages/IPython/core/display.py:1045,</span> in <span class="ni">Image._data_and_metadata</span><span class="nt">(self, always_both)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1044</span> <span class="k">try</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1045</span>     <span class="n">b64_data</span> <span class="o">=</span> <span class="n">b2a_base64</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1046</span> <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-
-<span class="ne">TypeError</span>: a bytes-like object is required, not &#39;str&#39;
-
-<span class="n">The</span> <span class="n">above</span> <span class="n">exception</span> <span class="n">was</span> <span class="n">the</span> <span class="n">direct</span> <span class="n">cause</span> <span class="n">of</span> <span class="n">the</span> <span class="n">following</span> <span class="n">exception</span><span class="p">:</span>
-
-<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="nn">File /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11/site-packages/IPython/core/formatters.py:344,</span> in <span class="ni">BaseFormatter.__call__</span><span class="nt">(self, obj)</span>
-<span class="g g-Whitespace">    </span><span class="mi">342</span>     <span class="n">method</span> <span class="o">=</span> <span class="n">get_real_method</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_method</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">343</span>     <span class="k">if</span> <span class="n">method</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">344</span>         <span class="k">return</span> <span class="n">method</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">345</span>     <span class="k">return</span> <span class="kc">None</span>
-<span class="g g-Whitespace">    </span><span class="mi">346</span> <span class="k">else</span><span class="p">:</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11/site-packages/IPython/core/display.py:1067,</span> in <span class="ni">Image._repr_png_</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1065</span> <span class="k">def</span> <span class="nf">_repr_png_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="g g-Whitespace">   </span><span class="mi">1066</span>     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">embed</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_FMT_PNG</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1067</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_and_metadata</span><span class="p">()</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.11.3/x64/lib/python3.11/site-packages/IPython/core/display.py:1047,</span> in <span class="ni">Image._data_and_metadata</span><span class="nt">(self, always_both)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1045</span>     <span class="n">b64_data</span> <span class="o">=</span> <span class="n">b2a_base64</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1046</span> <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1047</span>     <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1048</span>         <span class="s2">&quot;No such file or directory: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">))</span> <span class="kn">from</span> <span class="nn">e</span>
-<span class="g g-Whitespace">   </span><span class="mi">1049</span> <span class="n">md</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="g g-Whitespace">   </span><span class="mi">1050</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">:</span>
-
-<span class="ne">FileNotFoundError</span>: No such file or directory: &#39;ami_binary_smear_cov_mcmc_corner.png&#39;
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;IPython.core.display.Image object&gt;
 </pre></div>
 </div>
 </div>
@@ -1005,9 +809,6 @@ Computing chi-squared map (DO NOT TRUST UNCERTAINTIES)
 <span class="n">Image</span><span class="p">(</span><span class="n">obase1</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_cp_bin.png&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../../_images/d6785119f3c777216681457966315381f84de69497aa8209daae34646f701941.png" src="../../_images/d6785119f3c777216681457966315381f84de69497aa8209daae34646f701941.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1025,35 +826,6 @@ Computing chi-squared map (DO NOT TRUST UNCERTAINTIES)
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Subtracting bin model
-Data properties
-   Smallest spatial scale = 94.1 mas
-   Largest spatial scale = 376.4 mas
-   Minimum baseline = 1.32 m
-   Maximum baseline = 5.28 m
-   Bandwidth smearing = 3
-   Using data covariance = True
-   WARNING: not all data sets have covariances
-Computing grid
-   Min. sep. = 25.0 mas
-   Max. sep. = 500.0 mas
-   1256 non-empty grid cells
-Computing chi-squared map (DO NOT TRUST UNCERTAINTIES)
-   Cell 1681 of 1681
-   1256 unique minima found after 1256 fits
-   Optimal step size = 25.2 mas
-   Current step size = 25.0 mas
-   Best fit companion flux = 0.081 +/- 0.000 %
-   Best fit companion right ascension = -75.0 +/- 0.0 mas
-   Best fit companion declination = -150.0 +/- 0.0 mas
-   Best fit companion separation = 167.7 +/- 0.0 mas
-   Best fit companion position angle = -153.4 +/- 0.0 deg
-   Best fit red. chi2 = 0.030 (bin)
-   Significance of companion = 2.0 sigma
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1062,9 +834,6 @@ Computing chi-squared map (DO NOT TRUST UNCERTAINTIES)
 <span class="n">Image</span><span class="p">(</span><span class="n">obase2</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_chi2map.png&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../../_images/4817de81a1ed35d40ef062586e667e0f749ced6367c2d35447d56b407b8956c1.png" src="../../_images/4817de81a1ed35d40ef062586e667e0f749ced6367c2d35447d56b407b8956c1.png" />
 </div>
 </div>
 <p>This “detection” after the companion is subtracted has a low $N_{\sigma}$ and the symmetry in the map suggests Fourier aliasing at that location, so we do not believe there is a second companion detected here.</p>
@@ -1119,14 +888,6 @@ Computing chi-squared map (DO NOT TRUST UNCERTAINTIES)
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>             Expected      Model
-Sep [mas]:   370.980      328.134 +/- 1.31
-Theta [deg]: 286.980      279.905 +/- 0.21
-dm [mag]:    4.200        4.439 +/- 0.02
-</pre></div>
-</div>
-</div>
 </div>
 <p>We notice that there is a significant difference between the expected and retrieved binary parameters, most notably the separation. Since the expected parameters were derived from astrometric measurements of AB Dor, the most recent of which was in 2007 (HIP2), there were large uncertainties on these values. We think it is probable that the observed position is the real position of the companion.</p>
 </section>
@@ -1147,28 +908,6 @@ dm [mag]:    4.200        4.439 +/- 0.02
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Subtracting bin model
-Data properties
-   Smallest spatial scale = 94.1 mas
-   Largest spatial scale = 376.4 mas
-   Minimum baseline = 1.32 m
-   Maximum baseline = 5.28 m
-   Bandwidth smearing = 3
-   Using data covariance = True
-   WARNING: not all data sets have covariances
-Computing best fit uniform disk diameter (DO NOT TRUST UNCERTAINTIES)
-   Best fit uniform disk diameter = 5.56617 +/- 0.06510 mas
-   Best fit red. chi2 = 0.038 (ud)
-Computing grid
-   Min. sep. = 25.0 mas
-   Max. sep. = 500.0 mas
-   1256 non-empty grid cells
-Computing detection limits (3-sigma)
-   Cell 1681 of 1681
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1177,9 +916,6 @@ Computing detection limits (3-sigma)
 <span class="n">Image</span><span class="p">(</span><span class="n">obase2</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_detlim.png&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../../_images/c076eb0af5971ec15a108a0a3b18a43b56598a76699489f012759dd7f06a883d.png" src="../../_images/c076eb0af5971ec15a108a0a3b18a43b56598a76699489f012759dd7f06a883d.png" />
 </div>
 </div>
 <p>The top plots show the detection limit, in terms of contrast ($\Delta$Mag), at each location in the search grid based on the injection/detection of false companions using two slightly different methods. The lower plot shows an estimate of the same detection limit with respect to the angular separation [mas] from the primary target (azimuthally averaged from the top plots).</p>
@@ -1216,12 +952,6 @@ Computing detection limits (3-sigma)
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\Delta\delta$ [mas]&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;$\\Delta\\delta$ [mas]&#39;)
-</pre></div>
-</div>
-<img alt="../../_images/cc06807efb9684122a0a4ca26017bbc9c90b9492b97b73eabf55556b971190e9.png" src="../../_images/cc06807efb9684122a0a4ca26017bbc9c90b9492b97b73eabf55556b971190e9.png" />
 </div>
 </div>
 <p>The above plot confirms the position of the faint companion relative to the target, shown here as change in right ascension and declination from the center of the target star.</p>
