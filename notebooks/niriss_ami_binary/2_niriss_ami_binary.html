@@ -1,831 +1,560 @@
+
+
 <!DOCTYPE html>
-<html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <meta content="Docutils 0.18.1: http://docutils.sourceforge.net/" name="generator"/>
-  <title>
-   NIRISS AMI: Pipeline — STScI JDAT Notebooks
-  </title>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>NIRISS AMI: Pipeline &#8212; STScI JDAT Notebooks</title>
+  
+  
+  
   <script data-cfasync="false">
-   document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet"/>
-  <link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet"/>
-  <link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet"/>
-  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet"/>
-  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
-  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
-  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
-  <link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/togglebutton.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/copybutton.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/sphinx-thebe.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/main.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/main.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" rel="preload"/>
-  <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" rel="preload"/>
-  <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js">
-  </script>
-  <script src="../../_static/jquery.js">
-  </script>
-  <script src="../../_static/underscore.js">
-  </script>
-  <script src="../../_static/_sphinx_javascript_frameworks_compat.js">
-  </script>
-  <script src="../../_static/doctools.js">
-  </script>
-  <script src="../../_static/clipboard.min.js">
-  </script>
-  <script src="../../_static/copybutton.js">
-  </script>
-  <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824">
-  </script>
-  <script>
-   let toggleHintShow = 'Click to show';
-  </script>
-  <script>
-   let toggleHintHide = 'Click to hide';
-  </script>
-  <script>
-   let toggleOpenOnPrint = 'true';
-  </script>
-  <script src="../../_static/togglebutton.js">
-  </script>
-  <script>
-   var togglebuttonSelector = '.toggle, .admonition.dropdown';
-  </script>
-  <script src="../../_static/design-tabs.js">
-  </script>
-  <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3">
-  </script>
-  <script>
-   window.dataLayer = window.dataLayer || [];
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
                 function gtag(){ dataLayer.push(arguments); }
                 gtag('js', new Date());
                 gtag('config', 'G-D46G4HKJY3');
-  </script>
-  <script>
-   const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
-  </script>
-  <script async="async" src="../../_static/sphinx-thebe.js">
-  </script>
-  <script>
-   DOCUMENTATION_OPTIONS.pagename = 'notebooks/niriss_ami_binary/2_niriss_ami_binary';
-  </script>
-  <link href="../../genindex.html" rel="index" title="Index"/>
-  <link href="../../search.html" rel="search" title="Search"/>
-  <meta content="width=device-width, initial-scale=1" name="viewport"/>
-  <meta content="en" name="docsearch:language"/>
- </head>
- <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
-  <a class="skip-link" href="#main-content">
-   Skip to main content
-  </a>
-  <input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
-  <label class="overlay overlay-primary" for="__primary">
-  </label>
-  <input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
-  <label class="overlay overlay-secondary" for="__secondary">
-  </label>
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/niriss_ami_binary/2_niriss_ami_binary';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
   <div class="search-button__wrapper">
-   <div class="search-button__overlay">
-   </div>
-   <div class="search-button__search-container">
-    <form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
-     <i class="fa-solid fa-magnifying-glass">
-     </i>
-     <input aria-label="Search this book..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search this book..." spellcheck="false" type="search"/>
-     <span class="search-button__kbd-shortcut">
-      <kbd class="kbd-shortcut__modifier">
-       Ctrl
-      </kbd>
-      +
-      <kbd>
-       K
-      </kbd>
-     </span>
-    </form>
-   </div>
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
   </div>
-  <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-  </nav>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
   <div class="bd-container">
-   <div class="bd-container__inner bd-page-width">
-    <div class="bd-sidebar-primary bd-sidebar">
-     <div class="sidebar-header-items sidebar-primary__section">
-     </div>
-     <div class="sidebar-primary-items__start sidebar-primary__section">
-      <div class="sidebar-primary-item">
-       <a class="navbar-brand logo" href="../../intro.html">
-        <img alt="Logo image" class="logo__image only-light" src="../../_static/stsci_logo2.png"/>
-        <script>
-         document.write(`<img src="../../_static/stsci_logo2.png" class="logo__image only-dark" alt="Logo image"/>`);
-        </script>
-       </a>
-      </div>
-      <div class="sidebar-primary-item">
-       <nav aria-label="Main" class="bd-links" id="bd-docs-nav">
-        <div class="bd-toc-item navbar-nav active">
-         <ul class="nav bd-sidenav bd-sidenav__home-link">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../intro.html">
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           General
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../index.html">
-            Home
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../install.html">
-            Installation
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/notebook_development_workflow.html">
-            Notebook Development Workflow
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           Development
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/submitting_notebooks.html">
-            Submitting Notebooks
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/requirements.html">
-            Requirements file
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/notebooks.html">
-            Jupyter Notebooks
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/data_files.html">
-            Data Files
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           GitHub Guidelines
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/github_setup.html">
-            GitHub Setup
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/github_workflow.html">
-            GitHub Workflow
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/github_pr.html">
-            GitHub PR
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           Cross-Instrument
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../asdf_example/asdf_example.html">
-            ASDF Example
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../background_estimation_imaging/Imaging_Sky_Background_Estimation.html">
-            Complex 2D Background
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">
-            Composite Model Spectral Fitting
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">
-            MAST Query
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../rgb_imviz/imviz_rgb_carina.html">
-            RGB images with Imviz
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">
-            Specviz Simple Demo
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           MIRI
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">
-            MRS Mstar - Run Pipeline
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">
-            MRS Detector Based Extraction
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">
-            MRS Mstar - Data Analysis
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">
-            IFU of YSOs in LMC
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../MIRI_LRS_spectral_extraction/miri_lrs_spectral_extraction.html">
-            LRS Optimal Spectral Extraction
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           NIRCam
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">
-            Point Source Aperture Photometry
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRCam_photometry/NIRCam_multiband_photometry.html">
-            Extended Aperture Photometry
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">
-            Cross-Filter PSF Matching
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">
-            PSF Photometry
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           NIRISS
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">
-            WFSS Spectra - Optimal Extraction
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">
-            WFSS Spectra - Combine and Normalize 1D Spectra
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">
-            WFSS Spectra - Cross-Correlation Template
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">
-            WFSS Spectra - Emission Line Map
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           NIRSpec
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">
-            IFU Cube Fitting
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../ifu_optimal/ifu_optimal.html">
-            IFU Optimal Spectral Extraction
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../optimal_extraction/Spectral_Extraction-static.html">
-            MOS Optimal Extraction
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../mos_spectroscopy_advanced/MOSspec_advanced.html">
-            MOS Spectroscopy of Extragalactic Field
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">
-            BOTS Time Series Observations
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../galaxy_redshift/redshift_fitting.html">
-            Redshift and Template Fitting
-           </a>
-          </li>
-         </ul>
-        </div>
-       </nav>
-      </div>
-     </div>
-     <div class="sidebar-primary-items__end sidebar-primary__section">
-     </div>
-     <div id="rtd-footer-container">
-     </div>
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/stsci_logo2.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../_static/stsci_logo2.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/notebook_development_workflow.html">Notebook Development Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../docs/submitting_notebooks.html">Submitting Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/requirements.html">Requirements file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/notebooks.html">Jupyter Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/data_files.html">Data Files</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">GitHub Guidelines</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../docs/github_setup.html">GitHub Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/github_workflow.html">GitHub Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/github_pr.html">GitHub PR</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cross-Instrument</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../asdf_example/asdf_example.html">ASDF Example</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../background_estimation_imaging/Imaging_Sky_Background_Estimation.html">Complex 2D Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">Composite Model Spectral Fitting</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">MAST Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rgb_imviz/imviz_rgb_carina.html">RGB images with Imviz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">Specviz Simple Demo</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">MIRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">MRS Mstar - Run Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">MRS Detector Based Extraction</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">MRS Mstar - Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">IFU of YSOs in LMC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../MIRI_LRS_spectral_extraction/miri_lrs_spectral_extraction.html">LRS Optimal Spectral Extraction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRCam</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">Point Source Aperture Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRCam_photometry/NIRCam_multiband_photometry.html">Extended Aperture Photometry</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">Cross-Filter PSF Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">PSF Photometry</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRISS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">WFSS Spectra - Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">WFSS Spectra - Combine and Normalize 1D Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">WFSS Spectra - Cross-Correlation Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">WFSS Spectra - Emission Line Map</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRSpec</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">IFU Cube Fitting</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../ifu_optimal/ifu_optimal.html">IFU Optimal Spectral Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimal_extraction/Spectral_Extraction-static.html">MOS Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mos_spectroscopy_advanced/MOSspec_advanced.html">MOS Spectroscopy of Extragalactic Field</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">BOTS Time Series Observations</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../galaxy_redshift/redshift_fitting.html">Redshift and Template Fitting</a></li>
+</ul>
+
     </div>
-    <main class="bd-main" id="main-content">
-     <div class="sbt-scroll-pixel-helper">
-     </div>
-     <div class="bd-content">
-      <div class="bd-article-container">
-       <div class="bd-header-article">
-        <div class="header-article-items header-article__inner">
-         <div class="header-article-items__start">
-          <div class="header-article-item">
-           <label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
-            <span class="fa-solid fa-bars">
-            </span>
-           </label>
-          </div>
-         </div>
-         <div class="header-article-items__end">
-          <div class="header-article-item">
-           <div class="article-header-buttons">
-            <div class="dropdown dropdown-launch-buttons">
-             <button aria-expanded="false" aria-label="Launch interactive content" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
-              <i class="fas fa-rocket">
-              </i>
-             </button>
-             <ul class="dropdown-menu">
-              <li>
-               <button class="btn btn-sm btn-launch-thebe dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" onclick="initThebeSBT()" title="Launch Thebe">
-                <span class="btn__icon-container">
-                 <i class="fas fa-play">
-                 </i>
-                </span>
-                <span class="btn__text-container">
-                 Live Code
-                </span>
-               </button>
-              </li>
-             </ul>
-            </div>
-            <div class="dropdown dropdown-source-buttons">
-             <button aria-expanded="false" aria-label="Source repositories" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
-              <i class="fab fa-github">
-              </i>
-             </button>
-             <ul class="dropdown-menu">
-              <li>
-               <a class="btn btn-sm btn-source-repository-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="https://github.com/spacetelescope/jdat_notebooks" target="_blank" title="Source repository">
-                <span class="btn__icon-container">
-                 <i class="fab fa-github">
-                 </i>
-                </span>
-                <span class="btn__text-container">
-                 Repository
-                </span>
-               </a>
-              </li>
-              <li>
-               <a class="btn btn-sm btn-source-issues-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/niriss_ami_binary/2_niriss_ami_binary.html&amp;body=Your%20issue%20content%20here." target="_blank" title="Open an issue">
-                <span class="btn__icon-container">
-                 <i class="fas fa-lightbulb">
-                 </i>
-                </span>
-                <span class="btn__text-container">
-                 Open issue
-                </span>
-               </a>
-              </li>
-             </ul>
-            </div>
-            <div class="dropdown dropdown-download-buttons">
-             <button aria-expanded="false" aria-label="Download this page" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
-              <i class="fas fa-download">
-              </i>
-             </button>
-             <ul class="dropdown-menu">
-              <li>
-               <a class="btn btn-sm btn-download-source-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="../../_sources/notebooks/niriss_ami_binary/2_niriss_ami_binary.ipynb" target="_blank" title="Download source file">
-                <span class="btn__icon-container">
-                 <i class="fas fa-file">
-                 </i>
-                </span>
-                <span class="btn__text-container">
-                 .ipynb
-                </span>
-               </a>
-              </li>
-              <li>
-               <button class="btn btn-sm btn-download-pdf-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" onclick="window.print()" title="Print to PDF">
-                <span class="btn__icon-container">
-                 <i class="fas fa-file-pdf">
-                 </i>
-                </span>
-                <span class="btn__text-container">
-                 .pdf
-                </span>
-               </button>
-              </li>
-             </ul>
-            </div>
-            <button class="btn btn-sm btn-fullscreen-button" data-bs-placement="bottom" data-bs-toggle="tooltip" onclick="toggleFullScreen()" title="Fullscreen mode">
-             <span class="btn__icon-container">
-              <i class="fas fa-expand">
-              </i>
-             </span>
-            </button>
-            <script>
-             document.write(`
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/niriss_ami_binary/2_niriss_ami_binary.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/notebooks/niriss_ami_binary/2_niriss_ami_binary.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
   <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
     <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
     <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
   </button>
 `);
-            </script>
-            <script>
-             document.write(`
+</script>
+
+<script>
+document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass"></i>
   </button>
 `);
-            </script>
-            <label class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__secondary" title="Toggle secondary sidebar">
-             <span class="fa-solid fa-list">
-             </span>
-            </label>
-           </div>
-          </div>
-         </div>
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>NIRISS AMI: Pipeline</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">Loading data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examine-the-input-raw-files">Examine the input raw files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-output-directory">Define output directory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-detector1-and-image2-pipelines">Run Detector1 and Image2 pipelines</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examine-the-output-files">Examine the output files</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rate-and-rateints-files">rate and rateints files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cal-and-calints-files">cal and calints files</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#display-calibrated-data">Display calibrated data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fix-bad-pixels">Fix bad pixels</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#display-calibrated-data-after-fixing-bad-pixels">Display calibrated data after fixing bad pixels</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-implaneia-to-reduce-calibrated-images-to-fringe-observables">Run ImPlaneIA to reduce calibrated images to fringe observables</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#define-functions">Define functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-implaneia">Run ImPlaneIA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#examine-the-output-products">Examine the output products</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#information-about-observables-calculated-from-the-1st-integration">Information about observables calculated from the 1st integration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oifits-files-for-the-target-and-calibrator">OIFITS files for the target and calibrator</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calibrate-the-closure-phases-and-fringe-amplitudes-of-target-with-the-closure-phases-and-fringe-amplitudes-of-the-calibrator">Calibrate the closure phases and fringe amplitudes of target with the closure phases and fringe amplitudes of the calibrator.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aditional-resources">Aditional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this notebook</a></li>
+</ul>
+            </nav>
         </div>
-       </div>
-       <div class="onlyprint" id="jb-print-docs-body">
-        <h1>
-         NIRISS AMI: Pipeline
-        </h1>
-        <!-- Table of contents -->
-        <div id="print-main-content">
-         <div id="jb-print-toc">
-          <div>
-           <h2>
-            Contents
-           </h2>
-          </div>
-          <nav aria-label="Page">
-           <ul class="visible nav section-nav flex-column">
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#introduction">
-              Introduction
-             </a>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#imports">
-              Imports
-             </a>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#loading-data">
-              Loading data
-             </a>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#examine-the-input-raw-files">
-              Examine the input raw files
-             </a>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#define-output-directory">
-              Define output directory
-             </a>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#run-detector1-and-image2-pipelines">
-              Run Detector1 and Image2 pipelines
-             </a>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#examine-the-output-files">
-              Examine the output files
-             </a>
-             <ul class="nav section-nav flex-column">
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#rate-and-rateints-files">
-                rate and rateints files
-               </a>
-              </li>
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#cal-and-calints-files">
-                cal and calints files
-               </a>
-              </li>
-             </ul>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#display-calibrated-data">
-              Display calibrated data
-             </a>
-             <ul class="nav section-nav flex-column">
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#fix-bad-pixels">
-                Fix bad pixels
-               </a>
-              </li>
-             </ul>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#display-calibrated-data-after-fixing-bad-pixels">
-              Display calibrated data after fixing bad pixels
-             </a>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#run-implaneia-to-reduce-calibrated-images-to-fringe-observables">
-              Run ImPlaneIA to reduce calibrated images to fringe observables
-             </a>
-             <ul class="nav section-nav flex-column">
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#define-functions">
-                Define functions
-               </a>
-              </li>
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#run-implaneia">
-                Run ImPlaneIA
-               </a>
-              </li>
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#examine-the-output-products">
-                Examine the output products
-               </a>
-              </li>
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#information-about-observables-calculated-from-the-1st-integration">
-                Information about observables calculated from the 1st integration
-               </a>
-              </li>
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#oifits-files-for-the-target-and-calibrator">
-                OIFITS files for the target and calibrator
-               </a>
-              </li>
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#calibrate-the-closure-phases-and-fringe-amplitudes-of-target-with-the-closure-phases-and-fringe-amplitudes-of-the-calibrator">
-                Calibrate the closure phases and fringe amplitudes of target with the closure phases and fringe amplitudes of the calibrator.
-               </a>
-              </li>
-             </ul>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#aditional-resources">
-              Aditional Resources
-             </a>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#about-this-notebook">
-              About this notebook
-             </a>
-            </li>
-           </ul>
-          </nav>
-         </div>
-        </div>
-       </div>
-       <div id="searchbox">
-       </div>
-       <article class="bd-article" role="main">
-        <section id="niriss-ami-pipeline">
-         <h1>
-          NIRISS AMI: Pipeline
-          <a class="headerlink" href="#niriss-ami-pipeline" title="Permalink to this heading">
-           #
-          </a>
-         </h1>
-         <p>
-          <font color="red">
-           This notebook currently fails to execute, use as reference only
-          </font>
-         </p>
-         <p>
-          <strong>
-           Use case:
-          </strong>
-          Run pipeline and stand-alone tool ImPlaneIA on NIRISS AMI data.
-          <br/>
-          <strong>
-           Data:
-          </strong>
-          JWST data from commissioning.
-          <br/>
-          <strong>
-           Tools:
-          </strong>
-          jwst, astropy.
-          <br/>
-          <strong>
-           Cross-intrument:
-          </strong>
-          <br/>
-          <strong>
-           Documentation:
-          </strong>
-          This notebook is part of a STScI’s larger
-          <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis">
-           post-pipeline Data Analysis Tools Ecosystem
-          </a>
-          .
-          <br/>
-         </p>
-         <p>
-          <strong>
-           Latest update
-          </strong>
-          : December 2022
-         </p>
-         <section id="introduction">
-          <h2>
-           Introduction
-           <a class="headerlink" href="#introduction" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <p>
-           This notebook runs JWST pipeline on Aperture Masking Interferometry(AMI) data of binary point source AB Dor and calibrator HD37093 observed during AMI commissioning. We are only using two NRM + F480M exposures at dither position POS1, one for the target and one for the calibrator.
-          </p>
-          <p>
-           Steps:
-          </p>
-          <p>
-           [1] Run Detector1 pipeline on all _uncal.fits files to create _rate.fits and _rateints.fits files.
-          </p>
-          <p>
-           [2] Run Image2 pipeline on all _rate.fits files to create _cal.fits and on _rateints.fits files to
-create _calints.fits files.
-          </p>
-          <p>
-           [3] Run ImPlaneIA (
-           <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2015ApJ...798...68G/abstract">
-            Greenbaum, A. et al. 2015
-           </a>
-           ) to extract observables in oifits format.
-          </p>
-         </section>
-         <hr class="docutils"/>
-         <section id="imports">
-          <h2>
-           Imports
-           <a class="headerlink" href="#imports" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <p>
-           Describe the libraries we’re using here. If there’s something unusual, explain what the library is, and why we need it.
-          </p>
-          <ul class="simple">
-           <li>
-            <p>
-             <em>
-              numpy
-             </em>
-             to handle array functions
-            </p>
-           </li>
-           <li>
-            <p>
-             <em>
-              astropy.io fits
-             </em>
-             for accessing FITS files
-            </p>
-           </li>
-           <li>
-            <p>
-             <em>
-              matplotlib.pyplot
-             </em>
-             for plotting data
-            </p>
-           </li>
-           <li>
-            <p>
-             <em>
-              zipfile
-             </em>
-             for accessing zip file
-            </p>
-           </li>
-           <li>
-            <p>
-             <em>
-              urllib.request
-             </em>
-             to access URL
-            </p>
-           </li>
-           <li>
-            <p>
-             <em>
-              jwst.pipeline Detector1Pipeline, Image2Pipeline
-             </em>
-             for calibrating raw data
-            </p>
-           </li>
-           <li>
-            <p>
-             ImplaneIA to extract interferometric obssrvables from calibrated data
-            </p>
-           </li>
-          </ul>
-          <p>
-           This notebook requires a series of reference data to run. These must be set at the very beginning of the notebook, before importing the relative packages. In some cases, these locations are already provided in shall configuration files. If this is not the case, they can be set here. Follow the instruction to download the required data:
-          </p>
-          <ul class="simple">
-           <li>
-            <p>
-             PYSYN_CDBS: https://pysynphot.readthedocs.io/en/latest/#installation-and-setup
-            </p>
-           </li>
-           <li>
-            <p>
-             WEBBPSF_PATH: https://webbpsf.readthedocs.io/en/latest/installation.html#installing-the-required-data-files
-            </p>
-           </li>
-           <li>
-            <p>
-             CRDS_PATH and CRDS_SERVER_URL: https://hst-crds.stsci.edu/static/users_guide/environment.html
-            </p>
-           </li>
-          </ul>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># Modify the path to a directory on your machine</span>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="niriss-ami-pipeline">
+<h1>NIRISS AMI: Pipeline<a class="headerlink" href="#niriss-ami-pipeline" title="Permalink to this heading">#</a></h1>
+<p><font color="red">This notebook currently fails to execute, use as reference only</font></p>
+<p><strong>Use case:</strong> Run pipeline and stand-alone tool ImPlaneIA on NIRISS AMI data.<br>
+<strong>Data:</strong> JWST data from commissioning.<br>
+<strong>Tools:</strong>  jwst, astropy.<br>
+<strong>Cross-intrument:</strong> <br>
+<strong>Documentation:</strong> This notebook is part of a STScI’s larger <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis">post-pipeline Data Analysis Tools Ecosystem</a>.<br></p>
+<p><strong>Latest update</strong>: December 2022</p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<p>This notebook runs JWST pipeline on Aperture Masking Interferometry(AMI) data of binary point source AB Dor and calibrator HD37093 observed during AMI commissioning. We are only using two NRM + F480M exposures at dither position POS1, one for the target and one for the calibrator.</p>
+<p>Steps:</p>
+<p>[1] Run Detector1 pipeline on all _uncal.fits files to create _rate.fits and _rateints.fits files.</p>
+<p>[2] Run Image2 pipeline on all _rate.fits files to create _cal.fits and on _rateints.fits files to
+create _calints.fits files.</p>
+<p>[3] Run ImPlaneIA (<a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2015ApJ...798...68G/abstract">Greenbaum, A. et al. 2015</a>) to extract observables in oifits format.</p>
+</section>
+<hr class="docutils" />
+<section id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
+<p>Describe the libraries we’re using here. If there’s something unusual, explain what the library is, and why we need it.</p>
+<ul class="simple">
+<li><p><em>numpy</em> to handle array functions</p></li>
+<li><p><em>astropy.io fits</em> for accessing FITS files</p></li>
+<li><p><em>matplotlib.pyplot</em> for plotting data</p></li>
+<li><p><em>zipfile</em> for accessing zip file</p></li>
+<li><p><em>urllib.request</em> to access URL</p></li>
+<li><p><em>jwst.pipeline Detector1Pipeline, Image2Pipeline</em> for calibrating raw data</p></li>
+<li><p>ImplaneIA to extract interferometric obssrvables from calibrated data</p></li>
+</ul>
+<p>This notebook requires a series of reference data to run. These must be set at the very beginning of the notebook, before importing the relative packages. In some cases, these locations are already provided in shall configuration files. If this is not the case, they can be set here. Follow the instruction to download the required data:</p>
+<ul class="simple">
+<li><p>PYSYN_CDBS: https://pysynphot.readthedocs.io/en/latest/#installation-and-setup</p></li>
+<li><p>WEBBPSF_PATH: https://webbpsf.readthedocs.io/en/latest/installation.html#installing-the-required-data-files</p></li>
+<li><p>CRDS_PATH and CRDS_SERVER_URL: https://hst-crds.stsci.edu/static/users_guide/environment.html</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Modify the path to a directory on your machine</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="c1"># os.environ["CRDS_PATH"] = ""</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"CRDS_SERVER_URL"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"https://jwst-crds.stsci.edu"</span>
+<span class="c1"># os.environ[&quot;CRDS_PATH&quot;] = &quot;&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CRDS_SERVER_URL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;https://jwst-crds.stsci.edu&quot;</span>
 
 <span class="c1"># WEBBPSF and STSYNPHOT</span>
-<span class="c1"># os.environ['WEBBPSF_PATH'] = ""</span>
-<span class="c1"># os.environ['PYSYN_CDBS'] = ""</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># flake8-ignore: E402</span>
+<span class="c1"># os.environ[&#39;WEBBPSF_PATH&#39;] = &quot;&quot;</span>
+<span class="c1"># os.environ[&#39;PYSYN_CDBS&#39;] = &quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># flake8-ignore: E402</span>
 <span class="c1"># imports</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="kn">import</span> <span class="nn">glob</span>
@@ -845,139 +574,98 @@ create _calints.fits files.
 <span class="kn">from</span> <span class="nn">nrm_analysis.misctools.implane2oifits</span> <span class="kn">import</span> <span class="n">calibrate_oifits</span>
 
 <span class="kn">from</span> <span class="nn">run_bp_fix</span> <span class="kn">import</span> <span class="n">correct_fitsfiles</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-         </section>
-         <section id="loading-data">
-          <h2>
-           Loading data
-           <a class="headerlink" href="#loading-data" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <p>
-           Download the data of the AMI commissioning activity:
-           <br/>
-           Ab Dor: jw01093012001_03102_00001_nis_uncal.fits
-           <br/>
-           HD37093: jw01093015001_03102_00001_nis_uncal.fits
-          </p>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># Download the data of the AMI commissioning activity</span>
-<span class="n">boxlink</span> <span class="o">=</span> <span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/niriss_ami_binary/niriss_ami_binary2_inflight.zip'</span>
-<span class="n">boxfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'./niriss_ami_binary2_inflight.zip'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="loading-data">
+<h2>Loading data<a class="headerlink" href="#loading-data" title="Permalink to this heading">#</a></h2>
+<p>Download the data of the AMI commissioning activity:<br />
+Ab Dor: jw01093012001_03102_00001_nis_uncal.fits<br />
+HD37093: jw01093015001_03102_00001_nis_uncal.fits</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download the data of the AMI commissioning activity</span>
+<span class="n">boxlink</span> <span class="o">=</span> <span class="s1">&#39;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/niriss_ami_binary/niriss_ami_binary2_inflight.zip&#39;</span>
+<span class="n">boxfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./niriss_ami_binary2_inflight.zip&#39;</span><span class="p">)</span>
 
 <span class="c1"># Download zip file</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">boxfile</span><span class="p">):</span>
     <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
 
-    <span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+    <span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
     <span class="n">zf</span><span class="o">.</span><span class="n">extractall</span><span class="p">()</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># Define directory that has commissioning data. NRM + F480M exposures of AB Dor, HD 37093 at POS 1</span>
-<span class="n">currentdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'.'</span><span class="p">)</span>
-<span class="n">inflightdata</span> <span class="o">=</span> <span class="n">currentdir</span> <span class="o">/</span> <span class="s1">'niriss_ami_binary2_inflight'</span>
-<span class="n">datafiles</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">inflightdata</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'jw*uncal.fits'</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define directory that has commissioning data. NRM + F480M exposures of AB Dor, HD 37093 at POS 1</span>
+<span class="n">currentdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">inflightdata</span> <span class="o">=</span> <span class="n">currentdir</span> <span class="o">/</span> <span class="s1">&#39;niriss_ami_binary2_inflight&#39;</span>
+<span class="n">datafiles</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">inflightdata</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;jw*uncal.fits&#39;</span><span class="p">)))</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">datafiles</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-         </section>
-         <section id="examine-the-input-raw-files">
-          <h2>
-           Examine the input raw files
-           <a class="headerlink" href="#examine-the-input-raw-files" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <p>
-           Look at the last group of the first integration of the uncal.fits file
-          </p>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="examine-the-input-raw-files">
+<h2>Examine the input raw files<a class="headerlink" href="#examine-the-input-raw-files" title="Permalink to this heading">#</a></h2>
+<p>Look at the last group of the first integration of the uncal.fits file</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">datafiles</span><span class="p">):</span>
     <span class="n">file</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
     <span class="n">file</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
     <span class="n">im</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">im</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
     <span class="n">header</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="s1">'TARGPROP'</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;TARGPROP&#39;</span><span class="p">])</span>
     <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">im</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">"NRM + F480M raw exposures (last group of integration 1) at POS1"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">'bold'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;NRM + F480M raw exposures (last group of integration 1) at POS1&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
 <span class="c1"># display the last group of the first integration of each file</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"AB Dor"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">4</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;AB Dor&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">4</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"HD37093"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">11</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-         </section>
-         <section id="define-output-directory">
-          <h2>
-           Define output directory
-           <a class="headerlink" href="#define-output-directory" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># Define output directory to save pipeline output products.</span>
-<span class="n">outdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'./pipeline_calibrated_data/'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;HD37093&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">11</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="define-output-directory">
+<h2>Define output directory<a class="headerlink" href="#define-output-directory" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define output directory to save pipeline output products.</span>
+<span class="n">outdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./pipeline_calibrated_data/&#39;</span><span class="p">)</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
     <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"Created"</span><span class="p">,</span> <span class="n">outdir</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-         </section>
-         <section id="run-detector1-and-image2-pipelines">
-          <h2>
-           Run Detector1 and Image2 pipelines
-           <a class="headerlink" href="#run-detector1-and-image2-pipelines" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># Run Detector1, Image 2 pipelines</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Created&quot;</span><span class="p">,</span> <span class="n">outdir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="run-detector1-and-image2-pipelines">
+<h2>Run Detector1 and Image2 pipelines<a class="headerlink" href="#run-detector1-and-image2-pipelines" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run Detector1, Image 2 pipelines</span>
 <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">datafiles</span><span class="p">:</span>
     <span class="n">result1</span> <span class="o">=</span> <span class="n">Detector1Pipeline</span><span class="p">()</span>
     <span class="c1"># Example code to override reference files</span>
-    <span class="c1"># superbiasfile = refdir + 'jwst_niriss_superbias_sim.fits'</span>
-    <span class="c1"># darkfile = refdir + 'jwst_niriss_dark_sub80_sim.fits'</span>
+    <span class="c1"># superbiasfile = refdir + &#39;jwst_niriss_superbias_sim.fits&#39;</span>
+    <span class="c1"># darkfile = refdir + &#39;jwst_niriss_dark_sub80_sim.fits&#39;</span>
     <span class="c1"># result1.superbias.override_superbias = superbiasfile</span>
     <span class="c1"># result1.dark_current.override_dark = darkfile</span>
     <span class="n">result1</span><span class="o">.</span><span class="n">ipc</span><span class="o">.</span><span class="n">skip</span> <span class="o">=</span> <span class="kc">True</span>
@@ -986,10 +674,10 @@ create _calints.fits files.
     <span class="n">result1</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
     <span class="n">result1</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
 
-    <span class="n">df_rate</span> <span class="o">=</span> <span class="n">outdir</span> <span class="o">/</span> <span class="n">df</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'uncal'</span><span class="p">,</span> <span class="s1">'rate'</span><span class="p">)</span>
+    <span class="n">df_rate</span> <span class="o">=</span> <span class="n">outdir</span> <span class="o">/</span> <span class="n">df</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;uncal&#39;</span><span class="p">,</span> <span class="s1">&#39;rate&#39;</span><span class="p">)</span>
     <span class="n">result2</span> <span class="o">=</span> <span class="n">Image2Pipeline</span><span class="p">()</span>
     <span class="c1"># Example code to override reference files</span>
-    <span class="c1"># flatfieldfile = refdir + "jwst_niriss_flat_general.fits"</span>
+    <span class="c1"># flatfieldfile = refdir + &quot;jwst_niriss_flat_general.fits&quot;</span>
     <span class="c1"># result2.flat_field.override_flat = flatfieldfile</span>
     <span class="n">result2</span><span class="o">.</span><span class="n">photom</span><span class="o">.</span><span class="n">skip</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">result2</span><span class="o">.</span><span class="n">resample</span><span class="o">.</span><span class="n">skip</span> <span class="o">=</span> <span class="kc">True</span>
@@ -997,7 +685,7 @@ create _calints.fits files.
     <span class="n">result2</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
     <span class="n">result2</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">df_rate</span><span class="p">))</span>
 
-    <span class="n">df_rateints</span> <span class="o">=</span> <span class="n">outdir</span> <span class="o">/</span> <span class="n">df</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'uncal'</span><span class="p">,</span> <span class="s1">'rateints'</span><span class="p">)</span>
+    <span class="n">df_rateints</span> <span class="o">=</span> <span class="n">outdir</span> <span class="o">/</span> <span class="n">df</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;uncal&#39;</span><span class="p">,</span> <span class="s1">&#39;rateints&#39;</span><span class="p">)</span>
     <span class="n">result3</span> <span class="o">=</span> <span class="n">Image2Pipeline</span><span class="p">()</span>
     <span class="c1"># Example code to override reference files</span>
     <span class="c1"># result3.flat_field.override_flat = flatfieldfile</span>
@@ -1006,93 +694,61 @@ create _calints.fits files.
     <span class="n">result3</span><span class="o">.</span><span class="n">save_results</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">result3</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
     <span class="n">result3</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">df_rateints</span><span class="p">))</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-         </section>
-         <section id="examine-the-output-files">
-          <h2>
-           Examine the output files
-           <a class="headerlink" href="#examine-the-output-files" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="n">rampfiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outdir</span> <span class="o">/</span> <span class="s1">'jw*ramp.fits'</span><span class="p">)))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rampfiles</span><span class="p">))</span>
-<span class="n">ratefiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outdir</span> <span class="o">/</span> <span class="s1">'jw*rate.fits'</span><span class="p">)))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ratefiles</span><span class="p">))</span>
-<span class="n">rateintsfiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outdir</span> <span class="o">/</span> <span class="s1">'jw*rateints.fits'</span><span class="p">)))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rateintsfiles</span><span class="p">))</span>
-<span class="n">calfiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outdir</span> <span class="o">/</span> <span class="s1">'jw*cal.fits'</span><span class="p">)))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">calfiles</span><span class="p">))</span>
-<span class="n">calintsfiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outdir</span> <span class="o">/</span> <span class="s1">'jw*calints.fits'</span><span class="p">)))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">calintsfiles</span><span class="p">))</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <section id="rate-and-rateints-files">
-           <h3>
-            rate and rateints files
-            <a class="headerlink" href="#rate-and-rateints-files" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rateintf</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rateintsfiles</span><span class="p">):</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="examine-the-output-files">
+<h2>Examine the output files<a class="headerlink" href="#examine-the-output-files" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rampfiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outdir</span> <span class="o">/</span> <span class="s1">&#39;jw*ramp.fits&#39;</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rampfiles</span><span class="p">))</span>
+<span class="n">ratefiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outdir</span> <span class="o">/</span> <span class="s1">&#39;jw*rate.fits&#39;</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ratefiles</span><span class="p">))</span>
+<span class="n">rateintsfiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outdir</span> <span class="o">/</span> <span class="s1">&#39;jw*rateints.fits&#39;</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rateintsfiles</span><span class="p">))</span>
+<span class="n">calfiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outdir</span> <span class="o">/</span> <span class="s1">&#39;jw*cal.fits&#39;</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">calfiles</span><span class="p">))</span>
+<span class="n">calintsfiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outdir</span> <span class="o">/</span> <span class="s1">&#39;jw*calints.fits&#39;</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">calintsfiles</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="rate-and-rateints-files">
+<h3>rate and rateints files<a class="headerlink" href="#rate-and-rateints-files" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rateintf</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rateintsfiles</span><span class="p">):</span>
     <span class="n">fits</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">rateintf</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ratef</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ratefiles</span><span class="p">):</span>
     <span class="n">fits</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">ratef</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-          </section>
-          <section id="cal-and-calints-files">
-           <h3>
-            cal and calints files
-            <a class="headerlink" href="#cal-and-calints-files" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">calintf</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">calintsfiles</span><span class="p">):</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="cal-and-calints-files">
+<h3>cal and calints files<a class="headerlink" href="#cal-and-calints-files" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">calintf</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">calintsfiles</span><span class="p">):</span>
     <span class="n">fits</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">calintf</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">calf</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">calfiles</span><span class="p">):</span>
     <span class="n">fits</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">calf</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-          </section>
-         </section>
-         <section id="display-calibrated-data">
-          <h2>
-           Display calibrated data
-           <a class="headerlink" href="#display-calibrated-data" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="display-calibrated-data">
+<h2>Display calibrated data<a class="headerlink" href="#display-calibrated-data" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">calintsfiles</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
     <span class="n">im</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>    
@@ -1100,56 +756,40 @@ create _calints.fits files.
     <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
 <span class="c1"># print(data[0].shape, data[1].shape)</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">"NRM + F480M calibrated exposures (first integration) at POS1"</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">'bold'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;NRM + F480M calibrated exposures (first integration) at POS1&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="c1"># Look at the first integration from each calints.fits file</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"AB Dor"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">clim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">6000</span><span class="p">,</span> <span class="mi">40000</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;AB Dor&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">clim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">6000</span><span class="p">,</span> <span class="mi">40000</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"HD37093"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">clim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">6000</span><span class="p">,</span> <span class="mi">40000</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <section id="fix-bad-pixels">
-           <h3>
-            Fix bad pixels
-            <a class="headerlink" href="#fix-bad-pixels" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="n">datasuperdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'./pipeline_calibrated_data_corr/'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;HD37093&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">clim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">6000</span><span class="p">,</span> <span class="mi">40000</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="fix-bad-pixels">
+<h3>Fix bad pixels<a class="headerlink" href="#fix-bad-pixels" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">datasuperdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./pipeline_calibrated_data_corr/&#39;</span><span class="p">)</span>
 
 <span class="n">correct_fitsfiles</span><span class="p">(</span><span class="n">indir</span><span class="o">=</span><span class="n">outdir</span><span class="p">,</span>
                   <span class="n">odir</span><span class="o">=</span><span class="n">datasuperdir</span><span class="p">)</span>
 
-<span class="n">calintfiles_corr</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">'*calints.fits'</span><span class="p">)))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">calintfiles_corr</span><span class="p">))</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-          </section>
-         </section>
-         <section id="display-calibrated-data-after-fixing-bad-pixels">
-          <h2>
-           Display calibrated data after fixing bad pixels
-           <a class="headerlink" href="#display-calibrated-data-after-fixing-bad-pixels" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">calintfiles_corr</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">&#39;*calints.fits&#39;</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">calintfiles_corr</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="display-calibrated-data-after-fixing-bad-pixels">
+<h2>Display calibrated data after fixing bad pixels<a class="headerlink" href="#display-calibrated-data-after-fixing-bad-pixels" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">calintfiles_corr</span><span class="p">:</span>
     <span class="n">file</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
     <span class="n">im</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
@@ -1159,58 +799,45 @@ create _calints.fits files.
 <span class="n">f</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="c1"># plt.tight_layout()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">"NRM + F480M calibrated exposures at POS1 (after fixing bad pixels)"</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">'bold'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"AB Dor"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">clim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">6000</span><span class="p">,</span> <span class="mi">40000</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;NRM + F480M calibrated exposures at POS1 (after fixing bad pixels)&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;AB Dor&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">clim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">6000</span><span class="p">,</span> <span class="mi">40000</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"HD 37093"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">clim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">6000</span><span class="p">,</span> <span class="mi">40000</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-         </section>
-         <section id="run-implaneia-to-reduce-calibrated-images-to-fringe-observables">
-          <h2>
-           Run ImPlaneIA to reduce calibrated images to fringe observables
-           <a class="headerlink" href="#run-implaneia-to-reduce-calibrated-images-to-fringe-observables" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <section id="define-functions">
-           <h3>
-            Define functions
-            <a class="headerlink" href="#define-functions" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">160</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;HD 37093&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">clim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">6000</span><span class="p">,</span> <span class="mi">40000</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="run-implaneia-to-reduce-calibrated-images-to-fringe-observables">
+<h2>Run ImPlaneIA to reduce calibrated images to fringe observables<a class="headerlink" href="#run-implaneia-to-reduce-calibrated-images-to-fringe-observables" title="Permalink to this heading">#</a></h2>
+<section id="define-functions">
+<h3>Define functions<a class="headerlink" href="#define-functions" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">160</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">examine_observables</span><span class="p">(</span><span class="n">ff</span><span class="p">,</span> <span class="n">trim</span><span class="o">=</span><span class="mi">36</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">""" input: FringeFitter instance after fringes are fit """</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; input: FringeFitter instance after fringes are fit &quot;&quot;&quot;</span>
    
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Examine_observables, standard deviations &amp; variances of *independent* CP's and CAs:"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"   Closure phase mean </span><span class="si">{:+.4f}</span><span class="s2">  std dev </span><span class="si">{:.2e}</span><span class="s2">  var </span><span class="si">{:.2e}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">redundant_cps</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Examine_observables, standard deviations &amp; variances of *independent* CP&#39;s and CAs:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   Closure phase mean </span><span class="si">{:+.4f}</span><span class="s2">  std dev </span><span class="si">{:.2e}</span><span class="s2">  var </span><span class="si">{:.2e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">redundant_cps</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
           <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">cp_var</span><span class="p">(</span><span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">redundant_cps</span><span class="p">)),</span> <span class="n">utils</span><span class="o">.</span><span class="n">cp_var</span><span class="p">(</span><span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">redundant_cps</span><span class="p">)))</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"   Closure amp   mean </span><span class="si">{:+.4f}</span><span class="s2">  std dev </span><span class="si">{:.2e}</span><span class="s2">  var </span><span class="si">{:.2e}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">redundant_cas</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   Closure amp   mean </span><span class="si">{:+.4f}</span><span class="s2">  std dev </span><span class="si">{:.2e}</span><span class="s2">  var </span><span class="si">{:.2e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">redundant_cas</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
           <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">cp_var</span><span class="p">(</span><span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">redundant_cas</span><span class="p">)),</span> <span class="n">utils</span><span class="o">.</span><span class="n">cp_var</span><span class="p">(</span><span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">redundant_cas</span><span class="p">)))</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"   Fringe amp   mean </span><span class="si">{:+.4f}</span><span class="s2">  std dev </span><span class="si">{:.2e}</span><span class="s2">  var </span><span class="si">{:.2e}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">fringeamp</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   Fringe amp   mean </span><span class="si">{:+.4f}</span><span class="s2">  std dev </span><span class="si">{:.2e}</span><span class="s2">  var </span><span class="si">{:.2e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">fringeamp</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
                                                                             <span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">fringeamp</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> 
                                                                             <span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">fringeamp</span><span class="o">.</span><span class="n">var</span><span class="p">()))</span>
 
-    <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">formatter</span><span class="o">=</span><span class="p">{</span><span class="s1">'float'</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">'</span><span class="si">{:+.1e}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)},</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">" Normalized residuals central 6 pixels"</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">formatter</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;float&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{:+.1e}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)},</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Normalized residuals central 6 pixels&quot;</span><span class="p">)</span>
     <span class="n">tlo</span><span class="p">,</span> <span class="n">thi</span> <span class="o">=</span> <span class="p">(</span><span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">residual</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">3</span><span class="p">,</span> <span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">residual</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">((</span><span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">residual</span><span class="o">/</span><span class="n">ff</span><span class="o">.</span><span class="n">datapeak</span><span class="p">)[</span><span class="n">tlo</span><span class="p">:</span><span class="n">thi</span><span class="p">,</span> <span class="n">tlo</span><span class="p">:</span><span class="n">thi</span><span class="p">])</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">" Normalized residuals max and min: </span><span class="si">{:.2e}</span><span class="s2">, </span><span class="si">{:.2e}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">residual</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">ff</span><span class="o">.</span><span class="n">datapeak</span><span class="p">,</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Normalized residuals max and min: </span><span class="si">{:.2e}</span><span class="s2">, </span><span class="si">{:.2e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">residual</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">ff</span><span class="o">.</span><span class="n">datapeak</span><span class="p">,</span>
                                                                      <span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">residual</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">/</span> <span class="n">ff</span><span class="o">.</span><span class="n">datapeak</span><span class="p">))</span>
     <span class="n">utils</span><span class="o">.</span><span class="n">default_printoptions</span><span class="p">()</span>
 
@@ -1221,30 +848,30 @@ create _calints.fits files.
                     <span class="n">rotsearch_d</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">set_pistons</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">oversample</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                    <span class="n">mnem</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span>
+                    <span class="n">mnem</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                     <span class="n">firstfew</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">usebp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reduce calibrated data to fringe observables</span>
 
 <span class="sd">        returns: affine2d (measured or input),</span>
 <span class="sd">        psf_offset_find_rotation (input),</span>
 <span class="sd">        psf_offset_ff (input or found),</span>
 <span class="sd">        fringe pistons/r (found)</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"raw_observables: input"</span><span class="p">,</span> <span class="n">fitsimdir</span> <span class="o">/</span> <span class="n">fitsfn</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;raw_observables: input&quot;</span><span class="p">,</span> <span class="n">fitsimdir</span> <span class="o">/</span> <span class="n">fitsfn</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"raw_observables: oversample"</span><span class="p">,</span> <span class="n">oversample</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;raw_observables: oversample&quot;</span><span class="p">,</span> <span class="n">oversample</span><span class="p">)</span>
 
     <span class="n">fobj</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fitsimdir</span> <span class="o">/</span> <span class="n">fitsfn</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">fobj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">'FILTER'</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">fobj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;FILTER&#39;</span><span class="p">])</span>
         
-    <span class="n">niriss</span> <span class="o">=</span> <span class="n">InstrumentData</span><span class="o">.</span><span class="n">NIRISS</span><span class="p">(</span><span class="n">fobj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">'FILTER'</span><span class="p">],</span>
+    <span class="n">niriss</span> <span class="o">=</span> <span class="n">InstrumentData</span><span class="o">.</span><span class="n">NIRISS</span><span class="p">(</span><span class="n">fobj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;FILTER&#39;</span><span class="p">],</span>
                                    <span class="n">usebp</span><span class="o">=</span><span class="n">usebp</span><span class="p">,</span>
                                    <span class="n">firstfew</span><span class="o">=</span><span class="n">firstfew</span><span class="p">,</span> <span class="c1"># read_data truncation to only read first few slices...</span>
                                    <span class="p">)</span>
@@ -1259,25 +886,25 @@ create _calints.fits files.
     <span class="n">ff</span><span class="o">.</span><span class="n">fit_fringes</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">fitsimdir</span> <span class="o">/</span> <span class="n">fitsfn</span><span class="p">))</span>
     <span class="n">examine_observables</span><span class="p">(</span><span class="n">ff</span><span class="p">)</span>
 
-    <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">formatter</span><span class="o">=</span><span class="p">{</span><span class="s1">'float'</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">'</span><span class="si">{:+.2e}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)},</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">formatter</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;float&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{:+.2e}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)},</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"raw_observables: fringepistons/rad"</span><span class="p">,</span> <span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">fringepistons</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;raw_observables: fringepistons/rad&quot;</span><span class="p">,</span> <span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">fringepistons</span><span class="p">)</span>
     <span class="n">utils</span><span class="o">.</span><span class="n">default_printoptions</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">affine2d</span><span class="p">,</span> <span class="n">psf_offset_find_rotation</span><span class="p">,</span> <span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">psf_offset</span><span class="p">,</span> <span class="n">ff</span><span class="o">.</span><span class="n">nrm</span><span class="o">.</span><span class="n">fringepistons</span>
 
 
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">fitsimdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oitdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oifdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ifn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mnem</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">firstfew</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">usebp</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">fitsimdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oitdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oifdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ifn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mnem</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">firstfew</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">usebp</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    fitsimdir: string: dir containing data file</span>
 <span class="sd">    ifn: str inout file name</span>
 
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">formatter</span><span class="o">=</span><span class="p">{</span><span class="s1">'float'</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">'</span><span class="si">{:+.2e}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)},</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">formatter</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;float&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{:+.2e}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)},</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"main: "</span><span class="p">,</span> <span class="n">ifn</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;main: &quot;</span><span class="p">,</span> <span class="n">ifn</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"main: fitsimdir"</span><span class="p">,</span> <span class="n">fitsimdir</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;main: fitsimdir&quot;</span><span class="p">,</span> <span class="n">fitsimdir</span><span class="p">)</span>
       
     <span class="n">aff</span><span class="p">,</span> <span class="n">psf_offset_r</span><span class="p">,</span> <span class="n">psf_offset_ff</span><span class="p">,</span> <span class="n">fringepistons</span> <span class="o">=</span> <span class="n">raw_observables</span><span class="p">(</span><span class="n">fitsfn</span><span class="o">=</span><span class="n">ifn</span><span class="p">,</span> 
                                                                       <span class="n">fitsimdir</span><span class="o">=</span><span class="n">fitsimdir</span><span class="p">,</span> 
@@ -1287,105 +914,76 @@ create _calints.fits files.
                                                                       <span class="n">firstfew</span><span class="o">=</span><span class="n">firstfew</span><span class="p">,</span>
                                                                       <span class="n">usebp</span><span class="o">=</span><span class="n">usebp</span><span class="p">,</span>
                                                                       <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">'aff'</span><span class="p">,</span> <span class="n">aff</span><span class="p">,</span> <span class="s1">'psf_offset_r'</span><span class="p">,</span> <span class="n">psf_offset_r</span><span class="p">,</span> <span class="s1">'psf_offset_ff'</span><span class="p">,</span> <span class="n">psf_offset_ff</span><span class="p">,</span> <span class="s1">'fringepistons'</span><span class="p">,</span> <span class="n">fringepistons</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-          </section>
-          <section id="run-implaneia">
-           <h3>
-            Run ImPlaneIA
-            <a class="headerlink" href="#run-implaneia" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="n">mirdatafiles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'jw01093012001_03102_00001_nis_calints.fits'</span><span class="p">,</span>
-                <span class="s1">'jw01093015001_03102_00001_nis_calints.fits'</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;aff&#39;</span><span class="p">,</span> <span class="n">aff</span><span class="p">,</span> <span class="s1">&#39;psf_offset_r&#39;</span><span class="p">,</span> <span class="n">psf_offset_r</span><span class="p">,</span> <span class="s1">&#39;psf_offset_ff&#39;</span><span class="p">,</span> <span class="n">psf_offset_ff</span><span class="p">,</span> <span class="s1">&#39;fringepistons&#39;</span><span class="p">,</span> <span class="n">fringepistons</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="run-implaneia">
+<h3>Run ImPlaneIA<a class="headerlink" href="#run-implaneia" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mirdatafiles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;jw01093012001_03102_00001_nis_calints.fits&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;jw01093015001_03102_00001_nis_calints.fits&#39;</span><span class="p">]</span>
 
 <span class="c1"># Choose FIRSTFEW = None to analyze all integrations</span>
 <span class="n">FIRSTFEW</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">OVERSAMPLE</span> <span class="o">=</span> <span class="mi">7</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'FIRSTFEW'</span><span class="p">,</span> <span class="n">FIRSTFEW</span><span class="p">,</span> <span class="s1">'OVERSAMPLE'</span><span class="p">,</span> <span class="n">OVERSAMPLE</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;FIRSTFEW&#39;</span><span class="p">,</span> <span class="n">FIRSTFEW</span><span class="p">,</span> <span class="s1">&#39;OVERSAMPLE&#39;</span><span class="p">,</span> <span class="n">OVERSAMPLE</span><span class="p">)</span>
 
 
 <span class="n">COUNT</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">for</span> <span class="n">fnmir</span> <span class="ow">in</span> <span class="n">mirdatafiles</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">Analyzing</span><span class="se">\n</span><span class="s1">   '</span><span class="p">,</span> <span class="n">COUNT</span><span class="p">,</span> <span class="n">fnmir</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'.fits'</span><span class="p">,</span> <span class="s1">''</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">' '</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Analyzing</span><span class="se">\n</span><span class="s1">   &#39;</span><span class="p">,</span> <span class="n">COUNT</span><span class="p">,</span> <span class="n">fnmir</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
     <span class="n">hdr</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="n">fnmir</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">hdr</span><span class="p">[</span><span class="s1">'FILTER'</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s1">' '</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">hdr</span><span class="p">[</span><span class="s1">'TARGNAME'</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s1">' '</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">hdr</span><span class="p">[</span><span class="s1">'TARGPROP'</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;FILTER&#39;</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;TARGNAME&#39;</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;TARGPROP&#39;</span><span class="p">])</span>
     <span class="c1"># next line for convenient use in oifits writer which looks up target online</span>
-    <span class="n">catname</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="s1">'TARGPROP'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'-'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span> <span class="c1"># for target lookup on-line, otherwise UNKNOWN used</span>
-    <span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="n">fnmir</span><span class="p">,</span> <span class="s1">'TARGNAME'</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">catname</span><span class="p">)</span>
-    <span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="n">fnmir</span><span class="p">,</span> <span class="s1">'TARGPROP'</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">catname</span><span class="p">)</span>
+    <span class="n">catname</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;TARGPROP&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="c1"># for target lookup on-line, otherwise UNKNOWN used</span>
+    <span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="n">fnmir</span><span class="p">,</span> <span class="s1">&#39;TARGNAME&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">catname</span><span class="p">)</span>
+    <span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="n">fnmir</span><span class="p">,</span> <span class="s1">&#39;TARGPROP&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">catname</span><span class="p">)</span>
     
     <span class="n">usebp</span> <span class="o">=</span> <span class="kc">False</span>
         
     <span class="n">main</span><span class="p">(</span><span class="n">fitsimdir</span><span class="o">=</span><span class="n">datasuperdir</span><span class="p">,</span>
-         <span class="n">oitdir</span><span class="o">=</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">'Saveoit'</span><span class="p">,</span>
-         <span class="n">oifdir</span><span class="o">=</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">'Saveoif'</span><span class="p">,</span>
+         <span class="n">oitdir</span><span class="o">=</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">&#39;Saveoit&#39;</span><span class="p">,</span>
+         <span class="n">oifdir</span><span class="o">=</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">&#39;Saveoif&#39;</span><span class="p">,</span>
          <span class="n">ifn</span><span class="o">=</span><span class="n">fnmir</span><span class="p">,</span> 
          <span class="n">oversample</span><span class="o">=</span><span class="n">OVERSAMPLE</span><span class="p">,</span> 
-         <span class="n">mnem</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span>
+         <span class="n">mnem</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
          <span class="n">firstfew</span><span class="o">=</span><span class="n">FIRSTFEW</span><span class="p">,</span>
          <span class="n">usebp</span><span class="o">=</span><span class="n">usebp</span><span class="p">,</span>
          <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># verbose only has driver-function scope</span>
     <span class="n">COUNT</span> <span class="o">+=</span> <span class="mi">1</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-          </section>
-          <section id="examine-the-output-products">
-           <h3>
-            Examine the output products
-            <a class="headerlink" href="#examine-the-output-products" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <p>
-            Analytical model is created and interferometric observables are calculated for each integration of the data. The output products are stored in a folder that has rootname of the file, jw01093012001_03102_00001_nis_calints for AB Dor and jw01093015001_03102_00001_nis_calints for HD37093.
-           </p>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># integration 0 (1st integration)</span>
-<span class="n">results_int0</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">'Saveoit'</span> <span class="o">/</span> <span class="s2">"jw01093012001_03102_00001_nis_calints"</span> <span class="o">/</span> <span class="s2">"*00*"</span><span class="p">))</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="n">results_int0</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-          </section>
-          <section id="information-about-observables-calculated-from-the-1st-integration">
-           <h3>
-            Information about observables calculated from the 1st integration
-            <a class="headerlink" href="#information-about-observables-calculated-from-the-1st-integration" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <div class="highlight-default notranslate">
-            <div class="highlight">
-             <pre><span></span><span class="o">-</span> <span class="n">phases_00</span><span class="o">.</span><span class="n">txt</span><span class="p">:</span> <span class="mi">35</span> <span class="n">fringe</span> <span class="n">phases</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="examine-the-output-products">
+<h3>Examine the output products<a class="headerlink" href="#examine-the-output-products" title="Permalink to this heading">#</a></h3>
+<p>Analytical model is created and interferometric observables are calculated for each integration of the data. The output products are stored in a folder that has rootname of the file, jw01093012001_03102_00001_nis_calints for AB Dor and jw01093015001_03102_00001_nis_calints for HD37093.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># integration 0 (1st integration)</span>
+<span class="n">results_int0</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">&#39;Saveoit&#39;</span> <span class="o">/</span> <span class="s2">&quot;jw01093012001_03102_00001_nis_calints&quot;</span> <span class="o">/</span> <span class="s2">&quot;*00*&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results_int0</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="information-about-observables-calculated-from-the-1st-integration">
+<h3>Information about observables calculated from the 1st integration<a class="headerlink" href="#information-about-observables-calculated-from-the-1st-integration" title="Permalink to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">phases_00</span><span class="o">.</span><span class="n">txt</span><span class="p">:</span> <span class="mi">35</span> <span class="n">fringe</span> <span class="n">phases</span>
 <span class="o">-</span> <span class="n">amplitudes_00</span><span class="o">.</span><span class="n">txt</span><span class="p">:</span> <span class="mi">21</span> <span class="n">fringe</span> <span class="n">amplitudes</span>
 <span class="o">-</span> <span class="n">CPs_00</span><span class="o">.</span><span class="n">txt</span><span class="p">:</span> <span class="mi">35</span> <span class="n">closure</span> <span class="n">phases</span>
 <span class="o">-</span> <span class="n">CAs_00</span><span class="o">.</span><span class="n">txt</span><span class="p">:</span> <span class="mi">35</span> <span class="n">closure</span> <span class="n">amplitudes</span>
@@ -1396,164 +994,100 @@ create _calints.fits files.
 <span class="o">-</span> <span class="n">residual_00</span><span class="o">.</span><span class="n">fits</span><span class="p">:</span> <span class="n">data</span> <span class="o">-</span> <span class="n">model</span>
 <span class="o">-</span> <span class="n">n_residual_00</span><span class="o">.</span><span class="n">fits</span><span class="p">:</span> <span class="n">normalized</span> <span class="n">residual</span>
 
-</pre>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="n">cropped_data</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">'Saveoit'</span> <span class="o">/</span> <span class="s2">"jw01093012001_03102_00001_nis_calints"</span> <span class="o">/</span> <span class="s2">"centered_0.fits"</span><span class="p">)</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">'Saveoit'</span> <span class="o">/</span> <span class="s2">"jw01093012001_03102_00001_nis_calints"</span> <span class="o">/</span> <span class="s2">"modelsolution_00.fits"</span><span class="p">)</span>
-<span class="n">residual</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">'Saveoit'</span> <span class="o">/</span> <span class="s2">"jw01093012001_03102_00001_nis_calints"</span> <span class="o">/</span> <span class="s2">"residual_00.fits"</span><span class="p">)</span>
-<span class="n">n_residual</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">'Saveoit'</span> <span class="o">/</span> <span class="s2">"jw01093012001_03102_00001_nis_calints"</span> <span class="o">/</span> <span class="s2">"n_residual_00.fits"</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cropped_data</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">&#39;Saveoit&#39;</span> <span class="o">/</span> <span class="s2">&quot;jw01093012001_03102_00001_nis_calints&quot;</span> <span class="o">/</span> <span class="s2">&quot;centered_0.fits&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">&#39;Saveoit&#39;</span> <span class="o">/</span> <span class="s2">&quot;jw01093012001_03102_00001_nis_calints&quot;</span> <span class="o">/</span> <span class="s2">&quot;modelsolution_00.fits&quot;</span><span class="p">)</span>
+<span class="n">residual</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">&#39;Saveoit&#39;</span> <span class="o">/</span> <span class="s2">&quot;jw01093012001_03102_00001_nis_calints&quot;</span> <span class="o">/</span> <span class="s2">&quot;residual_00.fits&quot;</span><span class="p">)</span>
+<span class="n">n_residual</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">&#39;Saveoit&#39;</span> <span class="o">/</span> <span class="s2">&quot;jw01093012001_03102_00001_nis_calints&quot;</span> <span class="o">/</span> <span class="s2">&quot;n_residual_00.fits&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"AB Dor cropped data"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cropped_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;AB Dor cropped data&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cropped_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"AB Dor analytical model"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;AB Dor analytical model&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"AB Dor residual (data - model)"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">residual</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"AB Dor normalized residual"</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">n_residual</span><span class="p">,</span> <span class="n">clim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;AB Dor residual (data - model)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">residual</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;AB Dor normalized residual&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">n_residual</span><span class="p">,</span> <span class="n">clim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-          </section>
-          <section id="oifits-files-for-the-target-and-calibrator">
-           <h3>
-            OIFITS files for the target and calibrator
-            <a class="headerlink" href="#oifits-files-for-the-target-and-calibrator" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <p>
-            OIFITS is the standard data exchange format for Optical Interferometry.  It is based on the Flexible Image Transport System (FITS).  OIFITS files include data tables for storing interferometric observables, including squared visibilities and closure phases.
-           </p>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="n">oifiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">'Saveoif'</span> <span class="o">/</span> <span class="s2">"*oifits"</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="oifits-files-for-the-target-and-calibrator">
+<h3>OIFITS files for the target and calibrator<a class="headerlink" href="#oifits-files-for-the-target-and-calibrator" title="Permalink to this heading">#</a></h3>
+<p>OIFITS is the standard data exchange format for Optical Interferometry.  It is based on the Flexible Image Transport System (FITS).  OIFITS files include data tables for storing interferometric observables, including squared visibilities and closure phases.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">oifiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">&#39;Saveoif&#39;</span> <span class="o">/</span> <span class="s2">&quot;*oifits&quot;</span><span class="p">)))</span>
 <span class="n">oifiles</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-          </section>
-          <section id="calibrate-the-closure-phases-and-fringe-amplitudes-of-target-with-the-closure-phases-and-fringe-amplitudes-of-the-calibrator">
-           <h3>
-            Calibrate the closure phases and fringe amplitudes of target with the closure phases and fringe amplitudes of the calibrator.
-            <a class="headerlink" href="#calibrate-the-closure-phases-and-fringe-amplitudes-of-target-with-the-closure-phases-and-fringe-amplitudes-of-the-calibrator" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <p>
-            This step is necessary to remove instrumental contribution to closure phases and fringe amplitudes.
-           </p>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Define the target and calibrator OIFITS files</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="calibrate-the-closure-phases-and-fringe-amplitudes-of-target-with-the-closure-phases-and-fringe-amplitudes-of-the-calibrator">
+<h3>Calibrate the closure phases and fringe amplitudes of target with the closure phases and fringe amplitudes of the calibrator.<a class="headerlink" href="#calibrate-the-closure-phases-and-fringe-amplitudes-of-target-with-the-closure-phases-and-fringe-amplitudes-of-the-calibrator" title="Permalink to this heading">#</a></h3>
+<p>This step is necessary to remove instrumental contribution to closure phases and fringe amplitudes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the target and calibrator OIFITS files</span>
 
-<span class="n">targ_oifits</span> <span class="o">=</span> <span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">'Saveoif'</span> <span class="o">/</span> <span class="s1">'jw01093012001_03102_00001_nis.oifits'</span><span class="p">)</span>
-<span class="n">cal_oifits</span> <span class="o">=</span> <span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">'Saveoif'</span> <span class="o">/</span> <span class="s1">'jw01093015001_03102_00001_nis.oifits'</span><span class="p">)</span>
+<span class="n">targ_oifits</span> <span class="o">=</span> <span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">&#39;Saveoif&#39;</span> <span class="o">/</span> <span class="s1">&#39;jw01093012001_03102_00001_nis.oifits&#39;</span><span class="p">)</span>
+<span class="n">cal_oifits</span> <span class="o">=</span> <span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">&#39;Saveoif&#39;</span> <span class="o">/</span> <span class="s1">&#39;jw01093015001_03102_00001_nis.oifits&#39;</span><span class="p">)</span>
 
 <span class="c1"># Produce a single calibrated OIFITS file</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"************  Running calibrate ***************"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Calibrating  AB Dor with HD37093"</span><span class="p">)</span>
-<span class="n">calibrate_oifits</span><span class="p">(</span><span class="n">targ_oifits</span><span class="p">,</span> <span class="n">cal_oifits</span><span class="p">,</span> <span class="n">oifdir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">'Saveoif'</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;************  Running calibrate ***************&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Calibrating  AB Dor with HD37093&quot;</span><span class="p">)</span>
+<span class="n">calibrate_oifits</span><span class="p">(</span><span class="n">targ_oifits</span><span class="p">,</span> <span class="n">cal_oifits</span><span class="p">,</span> <span class="n">oifdir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">datasuperdir</span> <span class="o">/</span> <span class="s1">&#39;Saveoif&#39;</span><span class="p">))</span>
 
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"The output of calibrate is calibrated oifits file that will be used as an input to 3_niriss_ami_binary.ipynb."</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <p>
-            <em>
-             Developer Note:
-            </em>
-            The observable extraction performed in this notebook used only the first 5 integrations to save time while demonstrating the use of ImPlaneIA to reduce pipeline-calibrated observations. For accurate science use, we use all the integrations contained in the input data files. Therefore the input data for notebook 3 (3_niriss_ami_binary.ipynb) is slightly different from the output of 2_niriss_ami_binary.ipynb.
-           </p>
-          </section>
-         </section>
-         <section id="aditional-resources">
-          <h2>
-           Aditional Resources
-           <a class="headerlink" href="#aditional-resources" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <ul class="simple">
-           <li>
-            <p>
-             <a class="reference external" href="https://jwst-docs.stsci.edu/near-infrared-imager-and-slitless-spectrograph/niriss-observing-modes/niriss-aperture-masking-interferometry">
-              JWST NIRISS AMI
-             </a>
-            </p>
-           </li>
-          </ul>
-         </section>
-         <section id="about-this-notebook">
-          <h2>
-           About this notebook
-           <a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <p>
-           <strong>
-            Author:
-           </strong>
-           Deepashri Thatte, Anand Sivaramakrishnan, Rachel Cooper, Jens Kammerer
-           <br/>
-           <strong>
-            Updated On:
-           </strong>
-           2022-09-16
-          </p>
-          <hr class="docutils"/>
-          <p>
-           <span class="xref myst">
-            Top of Page
-           </span>
-           <a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png">
-            <img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;"/>
-           </a>
-          </p>
-         </section>
-        </section>
-        <script type="text/x-thebe-config">
-         {
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The output of calibrate is calibrated oifits file that will be used as an input to 3_niriss_ami_binary.ipynb.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><em>Developer Note:</em>
+The observable extraction performed in this notebook used only the first 5 integrations to save time while demonstrating the use of ImPlaneIA to reduce pipeline-calibrated observations. For accurate science use, we use all the integrations contained in the input data files. Therefore the input data for notebook 3 (3_niriss_ami_binary.ipynb) is slightly different from the output of 2_niriss_ami_binary.ipynb.</p>
+</section>
+</section>
+<section id="aditional-resources">
+<h2>Aditional Resources<a class="headerlink" href="#aditional-resources" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://jwst-docs.stsci.edu/near-infrared-imager-and-slitless-spectrograph/niriss-observing-modes/niriss-aperture-masking-interferometry">JWST NIRISS AMI</a></p></li>
+</ul>
+</section>
+<section id="about-this-notebook">
+<h2>About this notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">#</a></h2>
+<p><strong>Author:</strong> Deepashri Thatte, Anand Sivaramakrishnan, Rachel Cooper, Jens Kammerer<br />
+<strong>Updated On:</strong> 2022-09-16</p>
+<hr class="docutils" />
+<p><span class="xref myst">Top of Page</span>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
         requestKernel: true,
         binderOptions: {
             repo: "spacetelescope/jdat_notebooks",
@@ -1569,176 +1103,116 @@ create _calints.fits files.
         },
         predefinedOutput: true
     }
-        </script>
-        <script>
-         kernelName = 'python3'
-        </script>
-       </article>
-       <footer class="bd-footer-article">
-        <div class="footer-article-items footer-article__inner">
-         <div class="footer-article-item">
-          <!-- Previous / next buttons -->
-          <div class="prev-next-area">
-          </div>
-         </div>
-        </div>
-       </footer>
-      </div>
-      <div class="bd-sidebar-secondary bd-toc">
-       <div class="sidebar-secondary-items sidebar-secondary__inner">
-        <div class="sidebar-secondary-item">
-         <div class="page-toc tocsection onthispage">
-          <i class="fa-solid fa-list">
-          </i>
-          Contents
-         </div>
-         <nav class="bd-toc-nav page-toc">
-          <ul class="visible nav section-nav flex-column">
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#introduction">
-             Introduction
-            </a>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#imports">
-             Imports
-            </a>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#loading-data">
-             Loading data
-            </a>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#examine-the-input-raw-files">
-             Examine the input raw files
-            </a>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#define-output-directory">
-             Define output directory
-            </a>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#run-detector1-and-image2-pipelines">
-             Run Detector1 and Image2 pipelines
-            </a>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#examine-the-output-files">
-             Examine the output files
-            </a>
-            <ul class="nav section-nav flex-column">
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#rate-and-rateints-files">
-               rate and rateints files
-              </a>
-             </li>
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#cal-and-calints-files">
-               cal and calints files
-              </a>
-             </li>
-            </ul>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#display-calibrated-data">
-             Display calibrated data
-            </a>
-            <ul class="nav section-nav flex-column">
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#fix-bad-pixels">
-               Fix bad pixels
-              </a>
-             </li>
-            </ul>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#display-calibrated-data-after-fixing-bad-pixels">
-             Display calibrated data after fixing bad pixels
-            </a>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#run-implaneia-to-reduce-calibrated-images-to-fringe-observables">
-             Run ImPlaneIA to reduce calibrated images to fringe observables
-            </a>
-            <ul class="nav section-nav flex-column">
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#define-functions">
-               Define functions
-              </a>
-             </li>
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#run-implaneia">
-               Run ImPlaneIA
-              </a>
-             </li>
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#examine-the-output-products">
-               Examine the output products
-              </a>
-             </li>
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#information-about-observables-calculated-from-the-1st-integration">
-               Information about observables calculated from the 1st integration
-              </a>
-             </li>
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#oifits-files-for-the-target-and-calibrator">
-               OIFITS files for the target and calibrator
-              </a>
-             </li>
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#calibrate-the-closure-phases-and-fringe-amplitudes-of-target-with-the-closure-phases-and-fringe-amplitudes-of-the-calibrator">
-               Calibrate the closure phases and fringe amplitudes of target with the closure phases and fringe amplitudes of the calibrator.
-              </a>
-             </li>
-            </ul>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#aditional-resources">
-             Aditional Resources
-            </a>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#about-this-notebook">
-             About this notebook
-            </a>
-           </li>
-          </ul>
-         </nav>
-        </div>
-       </div>
-      </div>
-     </div>
-     <footer class="bd-footer-content">
-      <div class="bd-footer-content__inner container">
-       <div class="footer-item">
-        <p class="component-author">
-         By STScI
-        </p>
-       </div>
-       <div class="footer-item">
-        <p class="copyright">
-         © Copyright 2022.
-         <br/>
-        </p>
-       </div>
-       <div class="footer-item">
-       </div>
-       <div class="footer-item">
-       </div>
-      </div>
-     </footer>
-    </main>
-   </div>
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
   </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">Loading data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examine-the-input-raw-files">Examine the input raw files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-output-directory">Define output directory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-detector1-and-image2-pipelines">Run Detector1 and Image2 pipelines</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examine-the-output-files">Examine the output files</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rate-and-rateints-files">rate and rateints files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cal-and-calints-files">cal and calints files</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#display-calibrated-data">Display calibrated data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fix-bad-pixels">Fix bad pixels</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#display-calibrated-data-after-fixing-bad-pixels">Display calibrated data after fixing bad pixels</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-implaneia-to-reduce-calibrated-images-to-fringe-observables">Run ImPlaneIA to reduce calibrated images to fringe observables</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#define-functions">Define functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-implaneia">Run ImPlaneIA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#examine-the-output-products">Examine the output products</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#information-about-observables-calculated-from-the-1st-integration">Information about observables calculated from the 1st integration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oifits-files-for-the-target-and-calibrator">OIFITS files for the target and calibrator</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calibrate-the-closure-phases-and-fringe-amplitudes-of-target-with-the-closure-phases-and-fringe-amplitudes-of-the-calibrator">Calibrate the closure phases and fringe amplitudes of target with the closure phases and fringe amplitudes of the calibrator.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aditional-resources">Aditional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this notebook</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52">
-  </script>
-  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52">
-  </script>
+  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
   <footer class="bd-footer">
   </footer>
- </body>
+  </body>
 </html>
