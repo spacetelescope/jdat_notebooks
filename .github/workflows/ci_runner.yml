@@ -1,0 +1,25 @@
+## Workflow to run when there is a direct push to the main branch, or a PR is submitted.
+## The workflow runs three workflows - Valdation, Execution, and HTML Deployment.
+## The jobs are dependent on the previous succeding - if valdiation fails, the rest will, if 
+## execution fails, html deployment will not run.
+## Each job runs on its own runner with an independent environment, with the exception of the 
+## HTML generation, which occurs on a single runner using the global environment.
+
+  
+name: Notebook Execution and Validation
+
+on: 
+   pull_request:
+    branches:
+      - main
+    paths:
+      - 'notebooks/**.ipynb'
+      - '*.yml'
+      
+env:
+  CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
+  CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
+
+jobs:
+  NotebookExecutionValidation:
+   uses: spacetelescope/notebook-ci-actions/.github/workflows/ci_runner.yml@v2
