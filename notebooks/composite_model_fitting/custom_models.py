@@ -138,5 +138,3 @@ class powerlaw_2(models.PowerLaw1D):
         alpha  = args[2]
         super(powerlaw_2, self).__init__(amp, x0, alpha, **kwargs)
 
-
-
