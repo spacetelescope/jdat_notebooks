@@ -19,12 +19,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
 
   
-  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -39,8 +39,9 @@
     <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
 
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
@@ -84,6 +85,15 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -428,10 +438,10 @@ const thebe_selector_output = ".output, .cell_output"
 
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
@@ -439,7 +449,7 @@ document.write(`
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
@@ -576,7 +586,7 @@ document.write(`
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">astropy.convolution</span> <span class="kn">import</span> <span class="n">Gaussian2DKernel</span>
+<span class="kn">from</span> <span class="nn">astropy.convolution</span> <span class="kn">import</span> <span class="n">convolve</span>
 <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
 <span class="kn">from</span> <span class="nn">astropy.stats</span> <span class="kn">import</span> <span class="n">gaussian_fwhm_to_sigma</span>
 <span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">QTable</span>
@@ -584,10 +594,9 @@ document.write(`
 <span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">make_lupton_rgb</span><span class="p">,</span> <span class="n">SqrtStretch</span><span class="p">,</span> <span class="n">ImageNormalize</span><span class="p">,</span> <span class="n">simple_norm</span>
 <span class="kn">import</span> <span class="nn">astropy.wcs</span> <span class="k">as</span> <span class="nn">wcs</span>
 
-<span class="kn">import</span> <span class="nn">photutils</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;photutils&#39;</span><span class="p">,</span> <span class="n">photutils</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">photutils</span> <span class="kn">import</span> <span class="n">Background2D</span><span class="p">,</span> <span class="n">MedianBackground</span><span class="p">,</span> <span class="n">detect_sources</span><span class="p">,</span> <span class="n">deblend_sources</span><span class="p">,</span> <span class="n">SourceCatalog</span><span class="c1">#, source_properties (new API)</span>
+<span class="kn">from</span> <span class="nn">photutils.background</span> <span class="kn">import</span> <span class="n">Background2D</span><span class="p">,</span> <span class="n">MedianBackground</span>
+<span class="kn">from</span> <span class="nn">photutils.segmentation</span> <span class="kn">import</span> <span class="p">(</span><span class="n">detect_sources</span><span class="p">,</span> <span class="n">deblend_sources</span><span class="p">,</span> <span class="n">SourceCatalog</span><span class="p">,</span>
+                                    <span class="n">make_2dgaussian_kernel</span><span class="p">,</span> <span class="n">SegmentationImage</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">photutils.utils</span> <span class="kn">import</span> <span class="n">calc_total_error</span>
 </pre></div>
 </div>
@@ -715,14 +724,13 @@ document.write(`
 <span class="n">threshold</span> <span class="o">=</span> <span class="n">bkg</span><span class="o">.</span><span class="n">background</span> <span class="o">+</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">bkg</span><span class="o">.</span><span class="n">background_rms</span><span class="p">)</span>
 
 <span class="c1"># Before detection, smooth image with Gaussian FWHM = 3 pixels</span>
-<span class="n">sigma</span> <span class="o">=</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="n">gaussian_fwhm_to_sigma</span>  
-<span class="n">kernel</span> <span class="o">=</span> <span class="n">Gaussian2DKernel</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">x_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">y_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">kernel</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+<span class="n">smooth_kernel</span> <span class="o">=</span> <span class="n">make_2dgaussian_kernel</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">convolved_data</span> <span class="o">=</span> <span class="n">convolve</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">smooth_kernel</span><span class="p">)</span>
 
 <span class="c1"># Detect and deblend</span>
-<span class="n">segm_detect</span> <span class="o">=</span> <span class="n">detect_sources</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">npixels</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">)</span>
+<span class="n">segm_detect</span> <span class="o">=</span> <span class="n">detect_sources</span><span class="p">(</span><span class="n">convolved_data</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">npixels</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
-<span class="n">segm_deblend</span> <span class="o">=</span> <span class="n">deblend_sources</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">segm_detect</span><span class="p">,</span> <span class="n">npixels</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">nlevels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+<span class="n">segm_deblend</span> <span class="o">=</span> <span class="n">deblend_sources</span><span class="p">(</span><span class="n">convolved_data</span><span class="p">,</span> <span class="n">segm_detect</span><span class="p">,</span> <span class="n">npixels</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">nlevels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
 
 <span class="c1"># Save segmentation map of detected objects</span>
 <span class="n">segm_hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">segm_deblend</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">),</span> <span class="n">header</span><span class="o">=</span><span class="n">imwcs</span><span class="o">.</span><span class="n">to_header</span><span class="p">())</span>
@@ -984,7 +992,7 @@ document.write(`
 <span class="c1"># Segmentation map</span>
 <span class="n">segmfile</span> <span class="o">=</span> <span class="s1">&#39;JADES_detections_segm.fits&#39;</span>
 <span class="n">segm</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">segmfile</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="n">segm</span> <span class="o">=</span> <span class="n">photutils</span><span class="o">.</span><span class="n">segmentation</span><span class="o">.</span><span class="n">SegmentationImage</span><span class="p">(</span><span class="n">segm</span><span class="p">)</span>
+<span class="n">segm</span> <span class="o">=</span> <span class="n">SegmentationImage</span><span class="p">(</span><span class="n">segm</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1226,11 +1234,10 @@ document.write(`
 
               
               
-                <footer class="bd-footer-article">
-                  
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html"
@@ -1250,10 +1257,7 @@ document.write(`
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -1350,8 +1354,8 @@ By STScI
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
 
   <footer class="bd-footer">
   </footer>
