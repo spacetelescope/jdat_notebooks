@@ -531,19 +531,12 @@ document.write(`
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">h5py</span>
 
-<span class="kn">from</span> <span class="nn">astropy.convolution</span> <span class="kn">import</span> <span class="n">Gaussian2DKernel</span>
 <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
-<span class="kn">from</span> <span class="nn">astropy.stats</span> <span class="kn">import</span> <span class="n">gaussian_fwhm_to_sigma</span>
 <span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">QTable</span>
-<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
 <span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
-<span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">make_lupton_rgb</span><span class="p">,</span> <span class="n">SqrtStretch</span><span class="p">,</span> <span class="n">ImageNormalize</span><span class="p">,</span> <span class="n">simple_norm</span>
-<span class="kn">import</span> <span class="nn">astropy.wcs</span> <span class="k">as</span> <span class="nn">wcs</span>
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">ascii</span>
 <span class="kn">from</span> <span class="nn">astropy.nddata</span> <span class="kn">import</span> <span class="n">StdDevUncertainty</span>
 <span class="kn">from</span> <span class="nn">astropy.modeling.polynomial</span> <span class="kn">import</span> <span class="n">Chebyshev1D</span>
 <span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">const</span>
-<span class="kn">from</span> <span class="nn">astropy.io.misc</span> <span class="kn">import</span> <span class="n">hdf5</span>
 
 <span class="kn">import</span> <span class="nn">astropy</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;astropy&#39;</span><span class="p">,</span> <span class="n">astropy</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
@@ -580,7 +573,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Specutils:  1.11.0
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Specutils:  1.12.0
 </pre></div>
 </div>
 </div>
@@ -604,11 +597,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Already exists
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="open-optimally-extracted-1d-spectrum-text-file">
@@ -620,11 +608,10 @@ document.write(`
 <span class="n">filt</span> <span class="o">=</span> <span class="s1">&#39;f200w&#39;</span>
 
 <span class="n">grism</span> <span class="o">=</span> <span class="s1">&#39;G150C&#39;</span>
-<span class="c1">#grism = &#39;G150R&#39;</span>
+<span class="c1"># grism = &#39;G150R&#39;</span>
 
 <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;00004&#39;</span>
-
-<span class="n">file_1d</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_combine_1d_opt.fits&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+<span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_combine_1d_opt.fits&#39;</span>
 <span class="n">fd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="n">hd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
 <span class="n">fd</span>
@@ -774,7 +761,7 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Open files for other filters.</span>
 <span class="n">filt</span> <span class="o">=</span> <span class="s1">&#39;f150w&#39;</span>
-<span class="n">file_1d</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_combine_1d_opt.fits&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+<span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_combine_1d_opt.fits&#39;</span>
 <span class="n">fd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 
 <span class="n">wave_150</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span>
@@ -783,7 +770,7 @@ document.write(`
 
 <span class="c1"># </span>
 <span class="n">filt</span> <span class="o">=</span> <span class="s1">&#39;f115w&#39;</span>
-<span class="n">file_1d</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_combine_1d_opt.fits&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+<span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_combine_1d_opt.fits&#39;</span>
 <span class="n">fd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 
 <span class="n">wave_115</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span>
@@ -812,7 +799,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f2da6180c50&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f63830a9b10&gt;
 </pre></div>
 </div>
 <img alt="../../_images/915b6505bdb94257e3231e5879be7fe6bd01672f4f5055719b6cfc672c33a5cd.png" src="../../_images/915b6505bdb94257e3231e5879be7fe6bd01672f4f5055719b6cfc672c33a5cd.png" />
@@ -837,7 +824,7 @@ document.write(`
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_200</span><span class="p">,</span> <span class="n">flux_200</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;F200W&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave_200</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">continuum_200</span><span class="p">(</span><span class="n">obs_200</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">),</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Fitted continuum&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave_200</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">continuum_200</span><span class="p">(</span><span class="n">obs_200</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Fitted continuum&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">flux_200_sub</span> <span class="o">=</span> <span class="n">flux_200</span> <span class="o">*</span> <span class="n">spec_unit</span> <span class="o">-</span> <span class="n">continuum_200</span><span class="p">(</span><span class="n">wave_200</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
@@ -897,7 +884,7 @@ document.write(`
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">flux_115_sub</span> <span class="o">=</span> <span class="n">flux_115</span> <span class="o">*</span> <span class="n">spec_unit</span> <span class="o">-</span> <span class="n">continuum_115</span><span class="p">(</span><span class="n">wave_115</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
-<span class="n">mask_115</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave_115</span> <span class="o">&gt;</span> <span class="mf">1.02</span><span class="p">)</span>  <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave_115</span> <span class="o">&lt;</span> <span class="mf">1.25</span><span class="p">)</span>
+<span class="n">mask_115</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave_115</span> <span class="o">&gt;</span> <span class="mf">1.02</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave_115</span> <span class="o">&lt;</span> <span class="mf">1.25</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -913,9 +900,9 @@ document.write(`
 <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_150</span><span class="p">[</span><span class="n">mask_150</span><span class="p">],</span> <span class="n">flux_150_sub</span><span class="p">[</span><span class="n">mask_150</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;F150W&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_200</span><span class="p">[</span><span class="n">mask_200</span><span class="p">],</span> <span class="n">flux_200_sub</span><span class="p">[</span><span class="n">mask_200</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;F200W&#39;</span><span class="p">)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_115</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_115</span><span class="p">,</span> <span class="n">flux_err_115</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_150</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_150</span><span class="p">,</span> <span class="n">flux_err_150</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_200</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_200</span><span class="p">,</span> <span class="n">flux_err_200</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_115</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_115</span><span class="p">,</span> <span class="n">flux_err_115</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_150</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_150</span><span class="p">,</span> <span class="n">flux_err_150</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">wave_200</span><span class="p">,</span> <span class="o">-</span><span class="n">flux_err_200</span><span class="p">,</span> <span class="n">flux_err_200</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength / um&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -923,7 +910,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f2da3f61e50&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f6380d3d790&gt;
 </pre></div>
 </div>
 <img alt="../../_images/b9b9c8ecc06d7d248baf66ec4d2d73319b04b890b7706589b5d94db82f196385.png" src="../../_images/b9b9c8ecc06d7d248baf66ec4d2d73319b04b890b7706589b5d94db82f196385.png" />
@@ -943,7 +930,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.PolyCollection at 0x7f2da3fc29d0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.PolyCollection at 0x7f6380d41850&gt;
 </pre></div>
 </div>
 <img alt="../../_images/3da5e105d5ac02abf82ee5596d2398039239b2d00017acd38afdf1d6fab66848.png" src="../../_images/3da5e105d5ac02abf82ee5596d2398039239b2d00017acd38afdf1d6fab66848.png" />
@@ -955,13 +942,13 @@ document.write(`
 <span class="n">spec_unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">MJy</span>
 
 <span class="n">dataspec</span> <span class="o">=</span> <span class="n">QTable</span><span class="p">([</span><span class="n">wave_obs</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span> <span class="n">flux_obs</span><span class="o">*</span><span class="n">spec_unit</span><span class="p">,</span> <span class="n">wht_obs</span><span class="p">,</span> <span class="n">flux_err_obs</span><span class="p">],</span>
-                   <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">,</span><span class="s1">&#39;flux&#39;</span><span class="p">,</span><span class="s1">&#39;weight&#39;</span><span class="p">,</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">))</span>
+                  <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">,</span> <span class="s1">&#39;flux&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="s1">&#39;uncertainty&#39;</span><span class="p">))</span>
 <span class="n">dataspec_sub</span> <span class="o">=</span> <span class="n">dataspec</span><span class="p">[</span><span class="n">dataspec</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">]</span>
 
 <span class="c1"># Now make it into a Spectrum1D instance.</span>
 <span class="n">p_obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">],</span>
-                 <span class="n">flux</span><span class="o">=</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">],</span>
-                 <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;MJy&#39;</span><span class="p">)</span>
+                   <span class="n">flux</span><span class="o">=</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">],</span>
+                   <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;MJy&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -982,21 +969,13 @@ document.write(`
 
     <span class="n">contents</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_obj</span><span class="p">:</span>
-        <span class="n">no_wave_units</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">no_flux_units</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">file_obj</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">dataset</span> <span class="o">=</span> <span class="n">file_obj</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">wave_units_string</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;wavelength_units&#39;</span><span class="p">]</span>
             <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
                 <span class="n">wave_units_string</span> <span class="o">=</span> <span class="s1">&#39;micron&#39;</span>
-                <span class="n">no_wave_units</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">flux_units_string</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flux_units&#39;</span><span class="p">]</span>
-            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                <span class="n">flux_units_string</span> <span class="o">=</span> <span class="s1">&#39;flam_cgs&#39;</span>
-                <span class="n">no_flux_units</span> <span class="o">=</span> <span class="kc">True</span>
-
+                
             <span class="c1"># Catch common errors</span>
             <span class="k">if</span> <span class="n">wave_units_string</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;microns&#39;</span><span class="p">,</span> <span class="s1">&#39;angstroms&#39;</span><span class="p">,</span> <span class="s1">&#39;nanometers&#39;</span><span class="p">]:</span>
                 <span class="n">wave_units_string</span> <span class="o">=</span> <span class="n">wave_units_string</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -1074,13 +1053,13 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The template is already redshifted for simulation. </span>
 <span class="c1"># Now, blueshift it to z=0;</span>
-<span class="n">z_input</span>  <span class="o">=</span> <span class="mf">2.1</span> 
+<span class="n">z_input</span> <span class="o">=</span> <span class="mf">2.1</span> 
 <span class="n">iix</span> <span class="o">=</span> <span class="mi">10709</span> <span class="c1"># Index for the particular template.</span>
 
 <span class="n">flux_all</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="n">iix</span><span class="p">][</span><span class="s1">&#39;fluxes&#39;</span><span class="p">]</span>
 <span class="n">wave_all</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="n">iix</span><span class="p">][</span><span class="s1">&#39;wavelengths&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">z_input</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e4</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave_all</span><span class="p">,</span> <span class="n">flux_all</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span><span class="mi">8000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">8000</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1195,7 +1174,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f2da3eff3d0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f6380cdfa50&gt;
 </pre></div>
 </div>
 <img alt="../../_images/2a41c9a18d6e04a742fdcb31e91209f812599c9fa4a432b6d9113884e721ff12.png" src="../../_images/2a41c9a18d6e04a742fdcb31e91209f812599c9fa4a432b6d9113884e721ff12.png" />
@@ -1209,17 +1188,17 @@ document.write(`
 <h3>Cross Correlation using specutils functionarity;<a class="headerlink" href="#cross-correlation-using-specutils-functionarity" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### With no additional specifications, both the entire template and entire spectrum </span>
-<span class="c1">### will be included in the correlation computation. This in general will incur in </span>
-<span class="c1">### a significant increase in execution time. It is advised that the template is cut</span>
-<span class="c1">### to work only on the useful region.</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># With no additional specifications, both the entire template and entire spectrum </span>
+<span class="c1"># will be included in the correlation computation. This in general will incur in </span>
+<span class="c1"># a significant increase in execution time. It is advised that the template is cut</span>
+<span class="c1"># to work only on the useful region.</span>
 
 <span class="n">corr</span><span class="p">,</span> <span class="n">lag</span> <span class="o">=</span> <span class="n">correlation</span><span class="o">.</span><span class="n">template_correlate</span><span class="p">(</span><span class="n">p_obs</span><span class="p">,</span> <span class="n">p_smooth_template</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/lib/python3.11/site-packages/astropy/units/quantity.py:666: RuntimeWarning: invalid value encountered in divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.11.6/x64/lib/python3.11/site-packages/astropy/units/quantity.py:666: RuntimeWarning: invalid value encountered in divide
   result = super().__array_ufunc__(function, method, *arrays, **kwargs)
 </pre></div>
 </div>
@@ -1263,10 +1242,10 @@ Redshift from peak maximum:  2.0975617532255066
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Redshift based on parabolic fit to mazimum</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Redshift based on parabolic fit to maximum</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">8</span> <span class="c1"># points to the left or right of correlation maximum</span>
-<span class="n">peak_lags</span> <span class="o">=</span> <span class="n">lag</span><span class="p">[</span><span class="n">index_peak</span><span class="o">-</span><span class="n">n</span> <span class="p">:</span> <span class="n">index_peak</span><span class="o">+</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
-<span class="n">peak_vals</span> <span class="o">=</span> <span class="n">corr</span><span class="p">[</span><span class="n">index_peak</span><span class="o">-</span><span class="n">n</span> <span class="p">:</span> <span class="n">index_peak</span><span class="o">+</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+<span class="n">peak_lags</span> <span class="o">=</span> <span class="n">lag</span><span class="p">[</span><span class="n">index_peak</span><span class="o">-</span><span class="n">n</span><span class="p">:</span><span class="n">index_peak</span><span class="o">+</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+<span class="n">peak_vals</span> <span class="o">=</span> <span class="n">corr</span><span class="p">[</span><span class="n">index_peak</span><span class="o">-</span><span class="n">n</span><span class="p">:</span><span class="n">index_peak</span><span class="o">+</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
 <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">peak_lags</span><span class="p">,</span> <span class="n">peak_vals</span><span class="p">,</span> <span class="n">deg</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">roots</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roots</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
@@ -1280,8 +1259,8 @@ Redshift from peak maximum:  2.0975617532255066
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parabolic fit with maximum at:  629196.3189064463 km / s
-Redshift from parabolic fit:  2.098773008180367
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parabolic fit with maximum at:  629196.3189064474 km / s
+Redshift from parabolic fit:  2.0987730081803706
 </pre></div>
 </div>
 </div>
@@ -1291,7 +1270,7 @@ Redshift from parabolic fit:  2.098773008180367
 <h3>How does it look?<a class="headerlink" href="#how-does-it-look" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;z =&#39;</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;z =&#39;</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
@@ -1307,7 +1286,7 @@ Redshift from parabolic fit:  2.098773008180367
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>z = 2.098773008180367
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>z = 2.0987730081803706
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;um&#39;)

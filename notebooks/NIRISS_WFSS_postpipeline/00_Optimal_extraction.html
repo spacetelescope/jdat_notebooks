@@ -550,13 +550,8 @@ document.write(`
 <span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">rotate</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
 
-
-<span class="kn">from</span> <span class="nn">astropy.convolution</span> <span class="kn">import</span> <span class="n">Gaussian2DKernel</span>
 <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
-<span class="kn">from</span> <span class="nn">astropy.stats</span> <span class="kn">import</span> <span class="n">gaussian_fwhm_to_sigma</span>
-<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">QTable</span>
 <span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
-<span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">make_lupton_rgb</span><span class="p">,</span> <span class="n">SqrtStretch</span><span class="p">,</span> <span class="n">ImageNormalize</span><span class="p">,</span> <span class="n">simple_norm</span>
 <span class="kn">import</span> <span class="nn">astropy.wcs</span> <span class="k">as</span> <span class="nn">wcs</span>
 <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">ascii</span>
 
@@ -572,7 +567,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>specutils 1.11.0
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>specutils 1.12.0
 astropy 5.3.4
 </pre></div>
 </div>
@@ -581,8 +576,8 @@ astropy 5.3.4
 <section id="the-version-should-be">
 <h3>The version should be<a class="headerlink" href="#the-version-should-be" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p>specutils 1.0</p></li>
-<li><p>astropy 4.0.1.post1</p></li>
+<li><p>specutils 1.11.0</p></li>
+<li><p>astropy 5.3.4</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -619,7 +614,7 @@ astropy 5.3.4
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DIR_DATA</span> <span class="o">=</span> <span class="s1">&#39;./pipeline_products/&#39;</span>
 
 <span class="c1"># Output directory;</span>
-<span class="n">DIR_OUT</span>  <span class="o">=</span> <span class="s1">&#39;./output/&#39;</span>
+<span class="n">DIR_OUT</span> <span class="o">=</span> <span class="s1">&#39;./output/&#39;</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">):</span>
     <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">)</span>
 
@@ -628,11 +623,12 @@ astropy 5.3.4
 
 <span class="c1"># Image array from direct image. This is for optimal extraction and masking.</span>
 <span class="c1"># This image should already be sky-subtracted; otherwise, you will encounter a wrong result with optimal extraction.</span>
-<span class="n">infile</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_i2d_skysub.fits&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_DATA</span><span class="p">,</span><span class="n">filt_det</span><span class="p">)</span>
+
+<span class="n">infile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_DATA</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt_det</span><span class="si">}</span><span class="s1">_i2d_skysub.fits&#39;</span>
 <span class="n">hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
 
 <span class="c1"># This is just for error array;</span>
-<span class="n">infile</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_i2d.fits&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_DATA</span><span class="p">,</span><span class="n">filt_det</span><span class="p">)</span>
+<span class="n">infile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_DATA</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt_det</span><span class="si">}</span><span class="s1">_i2d.fits&#39;</span>
 <span class="n">hdu_err</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
 
 <span class="n">data</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
@@ -643,14 +639,14 @@ astropy 5.3.4
 
 <span class="c1"># Segmentation map;</span>
 <span class="c1"># This can be prepared by running Photutils, if the pipeline does not generate one.</span>
-<span class="n">segfile</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_i2d_seg.fits&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_DATA</span><span class="p">,</span> <span class="n">filt_det</span><span class="p">)</span>
+<span class="n">segfile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_DATA</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt_det</span><span class="si">}</span><span class="s1">_i2d_seg.fits&#39;</span>
 <span class="n">seghdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">segfile</span><span class="p">)</span>
 <span class="n">segdata</span> <span class="o">=</span> <span class="n">seghdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2109/774001514.py:24: RuntimeWarning: divide by zero encountered in divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_1919/874489203.py:25: RuntimeWarning: divide by zero encountered in divide
   weight = 1/np.square(err)
 </pre></div>
 </div>
@@ -660,8 +656,8 @@ astropy 5.3.4
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load catalog from image level3;</span>
 <span class="c1"># to obtain source position in pixel coordinate.</span>
-<span class="n">catfile</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_cat.ecsv&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_DATA</span><span class="p">,</span> <span class="n">filt_det</span><span class="p">)</span>
-<span class="n">fd</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="k">catfile</span>)
+<span class="n">catfile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_DATA</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt_det</span><span class="si">}</span><span class="s1">_cat.ecsv&#39;</span>
+<span class="n">fd</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">catfile</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -674,7 +670,7 @@ astropy 5.3.4
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>QTable length=7</i>
-<table id="table140163560223120" class="table-striped table-bordered table-condensed">
+<table id="table139987540320528" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>xcentroid</th><th>ycentroid</th><th>sky_centroid</th><th>aper_bkg_flux</th><th>aper_bkg_flux_err</th><th>aper30_flux</th><th>aper30_flux_err</th><th>aper50_flux</th><th>aper50_flux_err</th><th>aper70_flux</th><th>aper70_flux_err</th><th>aper_total_flux</th><th>aper_total_flux_err</th><th>aper30_abmag</th><th>aper30_abmag_err</th><th>aper50_abmag</th><th>aper50_abmag_err</th><th>aper70_abmag</th><th>aper70_abmag_err</th><th>aper_total_abmag</th><th>aper_total_abmag_err</th><th>aper30_vegamag</th><th>aper30_vegamag_err</th><th>aper50_vegamag</th><th>aper50_vegamag_err</th><th>aper70_vegamag</th><th>aper70_vegamag_err</th><th>aper_total_vegamag</th><th>aper_total_vegamag_err</th><th>CI_30_50</th><th>CI_50_70</th><th>CI_30_70</th><th>is_star</th><th>sharpness</th><th>roundness</th><th>nn_dist</th><th>nn_abmag</th><th>isophotal_flux</th><th>isophotal_flux_err</th><th>isophotal_abmag</th><th>isophotal_abmag_err</th><th>isophotal_vegamag</th><th>isophotal_vegamag_err</th><th>isophotal_area</th><th>semimajor_sigma</th><th>semiminor_sigma</th><th>ellipticity</th><th>orientation</th><th>sky_orientation</th><th>sky_bbox_ll</th><th>sky_bbox_ul</th><th>sky_bbox_lr</th><th>sky_bbox_ur</th></tr></thead>
 <thead><tr><th></th><th>pix</th><th>pix</th><th>deg,deg</th><th>Jy</th><th>Jy</th><th>Jy</th><th>Jy</th><th>Jy</th><th>Jy</th><th>Jy</th><th>Jy</th><th>Jy</th><th>Jy</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th>pix</th><th></th><th>Jy</th><th>Jy</th><th></th><th></th><th></th><th></th><th>pix2</th><th>pix</th><th>pix</th><th></th><th>deg</th><th>deg</th><th>deg,deg</th><th>deg,deg</th><th>deg,deg</th><th>deg,deg</th></tr></thead>
 <thead><tr><th>int64</th><th>float64</th><th>float64</th><th>SkyCoord</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float32</th><th>float64</th><th>float64</th><th>float64</th><th>float32</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>SkyCoord</th><th>SkyCoord</th><th>SkyCoord</th><th>SkyCoord</th></tr></thead>
@@ -703,15 +699,15 @@ astropy 5.3.4
 <span class="n">magzp</span> <span class="o">=</span> <span class="mf">25.0</span> <span class="c1"># magnitude zeropoint in the catalog.</span>
 
 <span class="c1"># Read catalog;</span>
-<span class="n">fd_input</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">sources_extend_01.cat&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_DATA</span><span class="p">))</span>
+<span class="n">fd_input</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_DATA</span><span class="si">}</span><span class="s1">sources_extend_01.cat&#39;</span><span class="p">)</span>
 <span class="n">ra_input</span> <span class="o">=</span> <span class="n">fd_input</span><span class="p">[</span><span class="s1">&#39;x_or_RA&#39;</span><span class="p">]</span>
 <span class="n">dec_input</span> <span class="o">=</span> <span class="n">fd_input</span><span class="p">[</span><span class="s1">&#39;y_or_Dec&#39;</span><span class="p">]</span>
 
 <span class="c1"># Header;</span>
-<span class="n">fw</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_flux.cat&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">fw</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_flux.cat&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
 <span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# id&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">ff</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filts</span><span class="p">)):</span>
-    <span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39; F</span><span class="si">%d</span><span class="s1"> E</span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">eazy_filts</span><span class="p">[</span><span class="n">ff</span><span class="p">],</span> <span class="n">eazy_filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]))</span>
+    <span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; F</span><span class="si">{</span><span class="n">eazy_filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]</span><span class="si">}</span><span class="s1"> E</span><span class="si">{</span><span class="n">eazy_filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
 <span class="c1"># Contents;</span>
@@ -722,17 +718,17 @@ astropy 5.3.4
     
     <span class="k">for</span> <span class="n">ff</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filts</span><span class="p">)):</span>
         <span class="k">if</span> <span class="n">ff</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">fd</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">ii</span><span class="p">]))</span>
+            <span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fd</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">ii</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="n">mag</span> <span class="o">=</span> <span class="n">fd_input</span><span class="p">[</span><span class="s1">&#39;niriss_</span><span class="si">%s</span><span class="s1">_magnitude&#39;</span><span class="o">%</span><span class="k">filts</span>[ff]][iix]
+        <span class="n">mag</span> <span class="o">=</span> <span class="n">fd_input</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;niriss_</span><span class="si">{</span><span class="n">filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]</span><span class="si">}</span><span class="s1">_magnitude&#39;</span><span class="p">][</span><span class="n">iix</span><span class="p">]</span>
         <span class="n">flux_nu</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">((</span><span class="n">mag</span><span class="o">-</span><span class="n">magzp</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span><span class="p">))</span>
 
         <span class="c1"># Currently, the catalog does not provide proper error;</span>
-        <span class="c1"># Assuming 5% error for flux.</span>
+        <span class="c1"># Assuming a 5% error for flux.</span>
         
         <span class="n">flux_err_nu</span> <span class="o">=</span> <span class="n">flux_nu</span> <span class="o">*</span> <span class="mf">0.05</span>
 
-        <span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39; </span><span class="si">%.5e</span><span class="s1"> </span><span class="si">%.5e</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flux_nu</span><span class="p">,</span> <span class="n">flux_err_nu</span><span class="p">))</span>
+        <span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="n">flux_nu</span><span class="si">:</span><span class="s1">.5e</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">flux_err_nu</span><span class="si">:</span><span class="s1">.5e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> 
 
     <span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">fw</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -750,7 +746,7 @@ astropy 5.3.4
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Which filter, grating, and object?</span>
 <span class="n">filt</span> <span class="o">=</span> <span class="s1">&#39;f200w&#39;</span>
 
-<span class="c1">#grism = &#39;G150R&#39;</span>
+<span class="c1"># grism = &#39;G150R&#39;</span>
 <span class="n">grism</span> <span class="o">=</span> <span class="s1">&#39;G150C&#39;</span>
 
 <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;00004&#39;</span>
@@ -758,7 +754,7 @@ astropy 5.3.4
 <span class="c1"># Zero-indexed number for dither --- the test data here has two dither positions, so 0 or 1.</span>
 <span class="n">ndither</span> <span class="o">=</span> <span class="mi">0</span>
 
-<span class="n">file_2d</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_cal.fits&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_DATA</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+<span class="n">file_2d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_DATA</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_cal.fits&#39;</span>
 <span class="n">hdu_2d</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_2d</span><span class="p">)</span>
 
 <span class="c1"># Align grism direction</span>
@@ -798,7 +794,7 @@ astropy 5.3.4
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f7a5f385990&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f5163a1ae10&gt;
 </pre></div>
 </div>
 <img alt="../../_images/d9f6a0d4aa408464f87ec0572d3a12a834d4b97a4788f824734b4c0cd1557c6d.png" src="../../_images/d9f6a0d4aa408464f87ec0572d3a12a834d4b97a4788f824734b4c0cd1557c6d.png" />
@@ -809,10 +805,10 @@ astropy 5.3.4
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get light profile of the source;</span>
 
 <span class="c1"># Again, y is for cross-dispersion, and x is for dispersion directions.</span>
-<span class="n">y2d</span><span class="p">,</span><span class="n">x2d</span> <span class="o">=</span> <span class="n">data_2d</span><span class="o">.</span><span class="n">shape</span><span class="p">[:]</span>
+<span class="n">y2d</span><span class="p">,</span> <span class="n">x2d</span> <span class="o">=</span> <span class="n">data_2d</span><span class="o">.</span><span class="n">shape</span><span class="p">[:]</span>
 
 <span class="c1"># Cut out segmentation map;</span>
-<span class="n">iix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">fd</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">==</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">iix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">fd</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="c1"># Target position from image 3 catalog;</span>
 <span class="n">ycen</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">][</span><span class="n">iix</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
@@ -858,15 +854,15 @@ astropy 5.3.4
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
-    <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">sci_rot</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span>
-    <span class="n">xx_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_tmp</span><span class="p">,</span> <span class="n">flux_tmp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;x=</span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="k">ii</span>)
+    <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">sci_rot</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span>
+    <span class="n">xx_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_tmp</span><span class="p">,</span> <span class="n">flux_tmp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;x=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ii</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f7a5f3ed390&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f5163a75050&gt;
 </pre></div>
 </div>
 <img alt="../../_images/a0745ca1b728ecfbdd975ea265975b0bc8c20ebf91309c221c5236db8ccc9729.png" src="../../_images/a0745ca1b728ecfbdd975ea265975b0bc8c20ebf91309c221c5236db8ccc9729.png" />
@@ -875,12 +871,12 @@ astropy 5.3.4
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sum along x (disperse) direction</span>
-<span class="n">flux_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+<span class="n">flux_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-    <span class="n">flux_y</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,:])</span>
+    <span class="n">flux_y</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:])</span>
 
 <span class="c1"># Sky subtraction, if needed.</span>
-<span class="c1">#sky = np.mean([flux_y[0], flux_y[-1]])</span>
+<span class="c1"># sky = np.mean([flux_y[0], flux_y[-1]])</span>
 
 <span class="c1"># Normalize;</span>
 <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">/=</span> <span class="n">flux_y</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
@@ -911,15 +907,15 @@ astropy 5.3.4
 <span class="n">wave_disp1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
     
 <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x2d</span><span class="p">):</span> <span class="c1"># Wavelength direction.</span>
-    <span class="n">mask_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="n">dq_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">err_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mask_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="n">dq_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
 
     <span class="c1"># Sum within a box;</span>
-    <span class="n">flux_disp1</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">][</span><span class="n">mask_tmp</span><span class="p">])</span> 
-    <span class="n">err_disp1</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">err_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">][</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> 
-    <span class="n">wave_disp1</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">wave_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">ii</span><span class="p">]</span>
+    <span class="n">flux_disp1</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">][</span><span class="n">mask_tmp</span><span class="p">])</span> 
+    <span class="n">err_disp1</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">][</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> 
+    <span class="n">wave_disp1</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">wave_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ii</span><span class="p">]</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_disp1</span><span class="p">,</span> <span class="n">flux_disp1</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">err_disp1</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">1.7</span><span class="p">,</span><span class="mf">2.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -948,17 +944,17 @@ astropy 5.3.4
     <span class="c1"># 1. DQ array</span>
     <span class="c1"># 2. error value</span>
     <span class="c1"># 3. CR detection</span>
-    <span class="n">mask_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="n">dq_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">err_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span> <span class="p">(</span><span class="n">data_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span> <span class="o">-</span> <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">*</span> <span class="n">flux_disp1</span><span class="p">[</span><span class="n">ii</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">&lt;</span> <span class="n">sig</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">err_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">ivar</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">err_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">mask_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="n">dq_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">((</span><span class="n">data_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">-</span> <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">*</span> <span class="n">flux_disp1</span><span class="p">[</span><span class="n">ii</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">&lt;</span> <span class="n">sig</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ivar</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
 
-    <span class="n">num</span> <span class="o">=</span> <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">*</span> <span class="n">data_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="n">ivar</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">*</span> <span class="n">data_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="n">ivar</span>
     <span class="n">den</span> <span class="o">=</span> <span class="n">flux_y</span><span class="p">[:]</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ivar</span>
     <span class="n">flux_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">den</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">err_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">den</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-    <span class="n">wave_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">wave_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">ii</span><span class="p">]</span>
+    <span class="n">wave_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">wave_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ii</span><span class="p">]</span>
     
 <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_disp</span><span class="p">,</span> <span class="n">flux_disp</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">err_disp</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">1.7</span><span class="p">,</span><span class="mf">2.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -993,7 +989,7 @@ astropy 5.3.4
 <h2>4.Write 1d spectrum out to a file;<a class="headerlink" href="#write-1d-spectrum-out-to-a-file" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">file_1d</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_1d_opt.fits&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_1d_opt.fits&#39;</span>
 
 <span class="c1"># Now make it into a Spectrum1D instance.</span>
 <span class="n">obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave_disp</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span>
@@ -1011,9 +1007,9 @@ astropy 5.3.4
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-    <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,:]</span>
-    <span class="n">xx_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,:]),</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_tmp</span><span class="p">,</span> <span class="n">flux_tmp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;y=</span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">ii</span><span class="p">))</span>
+    <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">xx_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]),</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_tmp</span><span class="p">,</span> <span class="n">flux_tmp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;y=</span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength direction&#39;</span><span class="p">)</span>
@@ -1033,9 +1029,9 @@ astropy 5.3.4
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sum along cross-disperse direction</span>
-<span class="n">flux_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+<span class="n">flux_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-    <span class="n">flux_x</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[:,</span><span class="n">ii</span><span class="p">])</span>
+    <span class="n">flux_x</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">])</span>
 
 <span class="c1"># Normalize;</span>
 <span class="n">flux_x</span><span class="p">[:]</span> <span class="o">/=</span> <span class="n">flux_x</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
@@ -1046,7 +1042,7 @@ astropy 5.3.4
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f7a59b15790&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f515e2a2510&gt;
 </pre></div>
 </div>
 <img alt="../../_images/e6b1cc850e074a65aabb4b6a5bd1b7196c3a81804e576b43315b00bd26d5da50.png" src="../../_images/e6b1cc850e074a65aabb4b6a5bd1b7196c3a81804e576b43315b00bd26d5da50.png" />
@@ -1058,18 +1054,20 @@ astropy 5.3.4
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fitting function with Moffat</span>
-
 <span class="c1"># Moffat fnc.</span>
+
 <span class="k">def</span> <span class="nf">moffat</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">alp</span><span class="p">):</span>
     <span class="n">yy</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="p">(</span><span class="n">xx</span><span class="o">-</span><span class="n">x0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">gamma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">alp</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">yy</span>
 
+
 <span class="k">def</span> <span class="nf">fit_mof</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">lsf</span><span class="p">):</span>
-    <span class="c1">#xx = lsf * 0</span>
-    <span class="c1">#for ii in range(len(lsf)):</span>
+    <span class="c1"># xx = lsf * 0</span>
+    <span class="c1"># for ii in range(len(lsf)):</span>
     <span class="c1">#    xx[ii] = ii - len(lsf)/2.</span>
     <span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">moffat</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">lsf</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">popt</span>
+
 
 <span class="k">def</span> <span class="nf">LSF_mof</span><span class="p">(</span><span class="n">xsf</span><span class="p">,</span> <span class="n">lsf</span><span class="p">,</span> <span class="n">f_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
@@ -1079,7 +1077,7 @@ astropy 5.3.4
 <span class="sd">    lsf : light profile.    </span>
 <span class="sd">    &#39;&#39;&#39;</span>
     
-    <span class="c1">#for ii in range(len(sci[0,:])):</span>
+    <span class="c1"># for ii in range(len(sci[0, :])):</span>
     <span class="c1">#    lsf[ii] = np.mean(sci_rot[int(height/2.-5):int(height/2.+5), ii])</span>
     <span class="c1">#    xsf[ii] = ii - len(lsf)/2.</span>
 
@@ -1090,13 +1088,13 @@ astropy 5.3.4
         <span class="n">A</span><span class="p">,</span> <span class="n">xm</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
         <span class="k">pass</span>
 
-    <span class="k">if</span> <span class="n">A</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">A</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">lsf_mod</span> <span class="o">=</span> <span class="n">moffat</span><span class="p">(</span><span class="n">xsf</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
         
     <span class="k">if</span> <span class="n">f_plot</span><span class="p">:</span>
         <span class="n">yy</span> <span class="o">=</span> <span class="n">moffat</span><span class="p">(</span><span class="n">xsf</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">xm</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xsf</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="s1">&#39;r.&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Data&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xsf</span><span class="p">,</span> <span class="n">lsf_mod</span><span class="p">,</span> <span class="s1">&#39;b+&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Model:$gamma=</span><span class="si">%.2f</span><span class="s1">$</span><span class="se">\n</span><span class="s1">$alpha=</span><span class="si">%.2f</span><span class="s1">$&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">alpha</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xsf</span><span class="p">,</span> <span class="n">lsf_mod</span><span class="p">,</span> <span class="s1">&#39;b+&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Model: gamma=</span><span class="si">{</span><span class="n">gamma</span><span class="si">:</span><span class="s1">2f</span><span class="si">}</span><span class="se">\n</span><span class="s1">alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">:</span><span class="s1">2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     
@@ -1115,17 +1113,17 @@ astropy 5.3.4
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/20833c38ca05b957a664e2fd2efadb8430705dee20fd90b6a0b4b1ed760cfee8.png" src="../../_images/20833c38ca05b957a664e2fd2efadb8430705dee20fd90b6a0b4b1ed760cfee8.png" />
+<img alt="../../_images/e71e0488594fd6ee310de974bf604dc695b1b1d98cf9d2bf5d50e4ca7ab119ff.png" src="../../_images/e71e0488594fd6ee310de974bf604dc695b1b1d98cf9d2bf5d50e4ca7ab119ff.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Write it down;</span>
 <span class="c1"># Tha parameters are in unit of pixel.</span>
-<span class="n">fm</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_moffat.txt&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">fm</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_moffat.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
 <span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# A x0 gamma alp</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# Moffat function</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%.3f</span><span class="s1"> </span><span class="si">%.3f</span><span class="s1"> </span><span class="si">%.3f</span><span class="s1"> </span><span class="si">%.3f</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">xm</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">alpha</span><span class="p">))</span>
+<span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">A</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">xm</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">gamma</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">alpha</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
 <span class="n">fm</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
@@ -1155,7 +1153,7 @@ astropy 5.3.4
     <span class="nb">print</span><span class="p">(</span><span class="n">filt</span><span class="p">)</span>
     
     <span class="c1"># 2d spectrum;</span>
-    <span class="n">file_2d</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_cal.fits&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_DATA</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="n">file_2d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_DATA</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_cal.fits&#39;</span>
     <span class="n">hdu_2d</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_2d</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">ndither</span> <span class="ow">in</span> <span class="n">ndithers</span><span class="p">:</span>
@@ -1173,14 +1171,14 @@ astropy 5.3.4
             <span class="n">err_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
             <span class="n">wave_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
 
-        <span class="n">y2d</span><span class="p">,</span><span class="n">x2d</span> <span class="o">=</span> <span class="n">data_2d</span><span class="o">.</span><span class="n">shape</span><span class="p">[:]</span>
+        <span class="n">y2d</span><span class="p">,</span> <span class="n">x2d</span> <span class="o">=</span> <span class="n">data_2d</span><span class="o">.</span><span class="n">shape</span><span class="p">[:]</span>
 
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data_2d</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
         <span class="c1"># Re-extract 2d image;</span>
-        <span class="c1">#if ndither == 0:</span>
+        <span class="c1"># if ndither == 0:</span>
         <span class="n">rsq</span> <span class="o">=</span> <span class="n">y2d</span>
         <span class="n">sci_cut</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)]</span>
         <span class="n">seg_cut</span> <span class="o">=</span> <span class="n">segdata</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)]</span>
@@ -1191,19 +1189,16 @@ astropy 5.3.4
         <span class="k">else</span><span class="p">:</span>
             <span class="n">sci_rot</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">sci_cut</span><span class="p">,</span> <span class="n">PA_V3</span><span class="o">+</span><span class="mi">0</span><span class="o">+</span><span class="mi">90</span><span class="p">)</span>
 
-
-        <span class="c1">#</span>
         <span class="c1"># This is for spectral resolution;</span>
-        <span class="c1">#</span>
         <span class="c1"># Get light profile along the x-axis</span>
         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-            <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,:]</span>
-            <span class="n">xx_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,:]),</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">xx_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]),</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># Sum along cross-disperse direction</span>
-        <span class="n">flux_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="n">flux_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-            <span class="n">flux_x</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,:])</span>
+            <span class="n">flux_x</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:])</span>
 
         <span class="c1"># Normalize;</span>
         <span class="n">flux_x</span><span class="p">[:]</span> <span class="o">/=</span> <span class="n">flux_x</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
@@ -1215,23 +1210,20 @@ astropy 5.3.4
 
         <span class="k">if</span> <span class="n">ndither</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># Write it down;</span>
-            <span class="n">fm</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_moffat.txt&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+            <span class="n">fm</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_moffat.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
             <span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# A x0 gamma alp</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# Moffat function</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%.3f</span><span class="s1"> </span><span class="si">%.3f</span><span class="s1"> </span><span class="si">%.3f</span><span class="s1"> </span><span class="si">%.3f</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">xm</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">alpha</span><span class="p">))</span>
+            <span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">A</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">xm</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">gamma</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">alpha</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">fm</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-        <span class="c1">#</span>
         <span class="c1"># This is for Optimal extraction;</span>
-        <span class="c1">#</span>
         <span class="c1"># Sum along x (disperse) direction</span>
-        <span class="n">flux_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="n">flux_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-            <span class="n">flux_y</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,:])</span>
+            <span class="n">flux_y</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:])</span>
             
         <span class="c1"># Normalize;</span>
         <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">/=</span> <span class="n">flux_y</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-
 
         <span class="c1"># Following Horne;</span>
         <span class="n">flux_disp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
@@ -1243,25 +1235,24 @@ astropy 5.3.4
             <span class="c1"># 1. DQ array</span>
             <span class="c1"># 2. error value</span>
             <span class="c1"># 3. CR detection</span>
-            <span class="n">mask_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="n">dq_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">err_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="n">ivar</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">err_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">mask_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="n">dq_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">ivar</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
 
-            <span class="n">num</span> <span class="o">=</span> <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">*</span> <span class="n">data_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="n">ivar</span> 
+            <span class="n">num</span> <span class="o">=</span> <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">*</span> <span class="n">data_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="n">ivar</span> 
             <span class="n">den</span> <span class="o">=</span> <span class="n">flux_y</span><span class="p">[:]</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ivar</span>
             <span class="n">flux_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="n">den</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="n">err_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">den</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-            <span class="n">wave_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">wave_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">ii</span><span class="p">]</span>
-
+            <span class="n">wave_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">wave_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ii</span><span class="p">]</span>
 
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">con_plot</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave_disp</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">con_plot</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave_disp</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_disp</span><span class="p">[</span><span class="n">con_plot</span><span class="p">],</span> <span class="n">flux_disp</span><span class="p">[</span><span class="n">con_plot</span><span class="p">],</span> <span class="n">yerr</span><span class="o">=</span><span class="n">err_disp</span><span class="p">[</span><span class="n">con_plot</span><span class="p">])</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3000</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
         <span class="c1"># Wirte:</span>
         <span class="c1"># Now make it into a Spectrum1D instance.</span>
-        <span class="n">file_1d</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_ndither</span><span class="si">%d</span><span class="s1">_1d_opt.fits&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">ndither</span><span class="p">)</span>
+        <span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_ndither</span><span class="si">{</span><span class="n">ndither</span><span class="si">}</span><span class="s1">_1d_opt.fits&#39;</span>
 
         <span class="k">if</span> <span class="n">wave_disp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">wave_disp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave_disp</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span>
@@ -1273,8 +1264,6 @@ astropy 5.3.4
                              <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">err_disp</span><span class="p">),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;MJy&#39;</span><span class="p">)</span>
             
         <span class="n">obs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_1d</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;tabular-fits&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    
-    
 </pre></div>
 </div>
 </div>
@@ -1284,39 +1273,39 @@ astropy 5.3.4
 </pre></div>
 </div>
 <img alt="../../_images/82e2b3f71f0c028aa457b58dc2350a9932e00302b79d2e1a0fb38c13519ffc00.png" src="../../_images/82e2b3f71f0c028aa457b58dc2350a9932e00302b79d2e1a0fb38c13519ffc00.png" />
-<img alt="../../_images/3eb2475164199b8d05e92aaabf524a2e189fb312a89e26cb50f48a8b2bf2c3e6.png" src="../../_images/3eb2475164199b8d05e92aaabf524a2e189fb312a89e26cb50f48a8b2bf2c3e6.png" />
+<img alt="../../_images/8c3d2700e297b384c01043a34fa93769ad96cd7aebc3070110efac58225496b0.png" src="../../_images/8c3d2700e297b384c01043a34fa93769ad96cd7aebc3070110efac58225496b0.png" />
 <img alt="../../_images/33f857ba97569938ee1da92010010445521dd20ca6647606a3f82c3ddf40d35b.png" src="../../_images/33f857ba97569938ee1da92010010445521dd20ca6647606a3f82c3ddf40d35b.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
 </pre></div>
 </div>
 <img alt="../../_images/ee1d67c24b34c0bad87879522a9ddcc98250c19add86fae8f89003354da1434d.png" src="../../_images/ee1d67c24b34c0bad87879522a9ddcc98250c19add86fae8f89003354da1434d.png" />
-<img alt="../../_images/3eb2475164199b8d05e92aaabf524a2e189fb312a89e26cb50f48a8b2bf2c3e6.png" src="../../_images/3eb2475164199b8d05e92aaabf524a2e189fb312a89e26cb50f48a8b2bf2c3e6.png" />
+<img alt="../../_images/8c3d2700e297b384c01043a34fa93769ad96cd7aebc3070110efac58225496b0.png" src="../../_images/8c3d2700e297b384c01043a34fa93769ad96cd7aebc3070110efac58225496b0.png" />
 <img alt="../../_images/c0e764b94c4bc4e1a871bf8a04f62f9c5c06a29dfa9f603d6b193d90bb9dc627.png" src="../../_images/c0e764b94c4bc4e1a871bf8a04f62f9c5c06a29dfa9f603d6b193d90bb9dc627.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>f150w
 0
 </pre></div>
 </div>
 <img alt="../../_images/b78ad25baf2750edfb8fa1c2534056dac1ab5d0de19025f6f4230b58c3b48641.png" src="../../_images/b78ad25baf2750edfb8fa1c2534056dac1ab5d0de19025f6f4230b58c3b48641.png" />
-<img alt="../../_images/3eb2475164199b8d05e92aaabf524a2e189fb312a89e26cb50f48a8b2bf2c3e6.png" src="../../_images/3eb2475164199b8d05e92aaabf524a2e189fb312a89e26cb50f48a8b2bf2c3e6.png" />
+<img alt="../../_images/8c3d2700e297b384c01043a34fa93769ad96cd7aebc3070110efac58225496b0.png" src="../../_images/8c3d2700e297b384c01043a34fa93769ad96cd7aebc3070110efac58225496b0.png" />
 <img alt="../../_images/ca1cbbb6c6ed4e4231921bfb1f1fdee182232abfe5684d711d918b123be85057.png" src="../../_images/ca1cbbb6c6ed4e4231921bfb1f1fdee182232abfe5684d711d918b123be85057.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
 </pre></div>
 </div>
 <img alt="../../_images/9ce529ed20f2701f9bdda1a4de0e9774584ad9c8e598a66530c44ad57c1fcdb3.png" src="../../_images/9ce529ed20f2701f9bdda1a4de0e9774584ad9c8e598a66530c44ad57c1fcdb3.png" />
-<img alt="../../_images/3eb2475164199b8d05e92aaabf524a2e189fb312a89e26cb50f48a8b2bf2c3e6.png" src="../../_images/3eb2475164199b8d05e92aaabf524a2e189fb312a89e26cb50f48a8b2bf2c3e6.png" />
+<img alt="../../_images/8c3d2700e297b384c01043a34fa93769ad96cd7aebc3070110efac58225496b0.png" src="../../_images/8c3d2700e297b384c01043a34fa93769ad96cd7aebc3070110efac58225496b0.png" />
 <img alt="../../_images/8b5291cecf874456a856a1bc7b3bd534314e6bc3b49dbf86fa1d6fdd89c8484a.png" src="../../_images/8b5291cecf874456a856a1bc7b3bd534314e6bc3b49dbf86fa1d6fdd89c8484a.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>f200w
 0
 </pre></div>
 </div>
 <img alt="../../_images/6481301dbebc03185eeb0bd09de490e52d15a0dcd2c8fa39ae52ddc15e3ccd23.png" src="../../_images/6481301dbebc03185eeb0bd09de490e52d15a0dcd2c8fa39ae52ddc15e3ccd23.png" />
-<img alt="../../_images/62f22926f5a56e38df5e5fb29e7d68ec4163e998be6a0eaedeec43fa1014181b.png" src="../../_images/62f22926f5a56e38df5e5fb29e7d68ec4163e998be6a0eaedeec43fa1014181b.png" />
+<img alt="../../_images/fbe8fb81bcb4ebb40cece95c7b9a2b4afcc588dc2c6fad6ba27651b03888c20c.png" src="../../_images/fbe8fb81bcb4ebb40cece95c7b9a2b4afcc588dc2c6fad6ba27651b03888c20c.png" />
 <img alt="../../_images/03d46caed514ee798e9a4d4bf552b0ddd19ab34bcaeaa4079929abad0f680744.png" src="../../_images/03d46caed514ee798e9a4d4bf552b0ddd19ab34bcaeaa4079929abad0f680744.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
 </pre></div>
 </div>
 <img alt="../../_images/7a1d6039730394378fa3073d5c43a0dfa8438bde9d5f6b7480939e5f018ed5a5.png" src="../../_images/7a1d6039730394378fa3073d5c43a0dfa8438bde9d5f6b7480939e5f018ed5a5.png" />
-<img alt="../../_images/3eb2475164199b8d05e92aaabf524a2e189fb312a89e26cb50f48a8b2bf2c3e6.png" src="../../_images/3eb2475164199b8d05e92aaabf524a2e189fb312a89e26cb50f48a8b2bf2c3e6.png" />
+<img alt="../../_images/8c3d2700e297b384c01043a34fa93769ad96cd7aebc3070110efac58225496b0.png" src="../../_images/8c3d2700e297b384c01043a34fa93769ad96cd7aebc3070110efac58225496b0.png" />
 <img alt="../../_images/d3134dad35051d602f8f3a6b65cdb6d73bce290a22b789e998f2223b50db98a7.png" src="../../_images/d3134dad35051d602f8f3a6b65cdb6d73bce290a22b789e998f2223b50db98a7.png" />
 </div>
 </div>
@@ -1328,18 +1317,18 @@ astropy 5.3.4
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grism</span> <span class="o">=</span> <span class="s1">&#39;G150C&#39;</span>
-<span class="nb">id</span>    <span class="o">=</span> <span class="s1">&#39;00003&#39;</span>
+<span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;00003&#39;</span>
 <span class="n">DIR_OUT</span> <span class="o">=</span> <span class="s1">&#39;./output/&#39;</span>
 
-<span class="n">filts</span>  <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;f115w&#39;</span><span class="p">,</span> <span class="s1">&#39;f150w&#39;</span><span class="p">,</span> <span class="s1">&#39;f200w&#39;</span><span class="p">]</span>
-<span class="n">ndithers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># There are four dithers in the data set;</span>
+<span class="n">filts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;f115w&#39;</span><span class="p">,</span> <span class="s1">&#39;f150w&#39;</span><span class="p">,</span> <span class="s1">&#39;f200w&#39;</span><span class="p">]</span>
+<span class="n">ndithers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># There are four dithers in the data set;</span>
 
 <span class="n">sig</span> <span class="o">=</span> <span class="mf">5.0</span>
 
 <span class="k">for</span> <span class="n">filt</span> <span class="ow">in</span> <span class="n">filts</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">filt</span><span class="p">)</span>
     <span class="c1"># 2d spectrum;</span>
-    <span class="n">file_2d</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_cal.fits&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_DATA</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="n">file_2d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_DATA</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_cal.fits&#39;</span>
     <span class="n">hdu_2d</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_2d</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">ndither</span> <span class="ow">in</span> <span class="n">ndithers</span><span class="p">:</span>
@@ -1347,45 +1336,43 @@ astropy 5.3.4
         <span class="k">if</span> <span class="n">grism</span> <span class="o">==</span> <span class="s1">&#39;G150C&#39;</span><span class="p">:</span>
             <span class="c1"># If spectrum is horizontal;</span>
             <span class="n">data_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-            <span class="n">dq_2d</span>   <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-            <span class="n">err_2d</span>  <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">dq_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">err_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
             <span class="n">wave_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">data_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
-            <span class="n">dq_2d</span>   <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
-            <span class="n">err_2d</span>  <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+            <span class="n">dq_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+            <span class="n">err_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
             <span class="n">wave_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
 
-        <span class="n">y2d</span><span class="p">,</span><span class="n">x2d</span> <span class="o">=</span> <span class="n">data_2d</span><span class="o">.</span><span class="n">shape</span><span class="p">[:]</span>
+        <span class="n">y2d</span><span class="p">,</span> <span class="n">x2d</span> <span class="o">=</span> <span class="n">data_2d</span><span class="o">.</span><span class="n">shape</span><span class="p">[:]</span>
 
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data_2d</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
         <span class="c1"># Re-extract 2d image;</span>
-        <span class="c1">#if ndither == 0:</span>
+        <span class="c1"># if ndither == 0:</span>
         <span class="n">rsq</span> <span class="o">=</span> <span class="n">y2d</span>
         <span class="n">sci_cut</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)]</span>
         <span class="n">seg_cut</span> <span class="o">=</span> <span class="n">segdata</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)]</span>
 
-        <span class="c1"># Not sure if the offset in extractioin box is bug ;</span>
+        <span class="c1"># Not sure if the offset in extraction box is bug ;</span>
         <span class="k">if</span> <span class="n">grism</span> <span class="o">==</span> <span class="s1">&#39;G150C&#39;</span><span class="p">:</span>
             <span class="n">sci_rot</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">sci_cut</span><span class="p">,</span> <span class="n">PA_V3</span><span class="o">+</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">sci_rot</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">sci_cut</span><span class="p">,</span> <span class="n">PA_V3</span><span class="o">+</span><span class="mi">0</span><span class="o">+</span><span class="mi">90</span><span class="p">)</span>
 
-        <span class="c1">#</span>
         <span class="c1"># This is for spectral resolution;</span>
-        <span class="c1">#</span>
         <span class="c1"># Get light profile along the x-axis</span>
         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-            <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,:]</span>
-            <span class="n">xx_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,:]),</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">xx_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]),</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># Sum along cross-disperse direction</span>
-        <span class="n">flux_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="n">flux_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-            <span class="n">flux_x</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,:])</span>
+            <span class="n">flux_x</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:])</span>
 
         <span class="c1"># Normalize;</span>
         <span class="n">flux_x</span><span class="p">[:]</span> <span class="o">/=</span> <span class="n">flux_x</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
@@ -1397,29 +1384,24 @@ astropy 5.3.4
 
         <span class="k">if</span> <span class="n">ndither</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># Write it down;</span>
-            <span class="n">fm</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_moffat.txt&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+            <span class="n">fm</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_moffat.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
             <span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# A x0 gamma alp</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# Moffat function</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%.3f</span><span class="s1"> </span><span class="si">%.3f</span><span class="s1"> </span><span class="si">%.3f</span><span class="s1"> </span><span class="si">%.3f</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">xm</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">alpha</span><span class="p">))</span>
+            <span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">A</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">xm</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">gamma</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">alpha</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">fm</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-
-        <span class="c1">#</span>
         <span class="c1"># This is for Optimal extraction;</span>
-        <span class="c1">#</span>
         <span class="c1"># Sum along x (disperse) direction</span>
-        <span class="n">flux_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="n">flux_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-            <span class="n">flux_y</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,:])</span>
-
-            
+            <span class="n">flux_y</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:])</span>
+    
         <span class="c1"># Normalize;</span>
         <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">/=</span> <span class="n">flux_y</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 
-
         <span class="c1"># Following Horne;</span>
         <span class="n">flux_disp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
-        <span class="n">err_disp</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="n">err_disp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
         <span class="n">wave_disp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x2d</span><span class="p">):</span>
@@ -1427,14 +1409,14 @@ astropy 5.3.4
             <span class="c1"># 1. DQ array</span>
             <span class="c1"># 2. error value</span>
             <span class="c1"># 3. CR detection</span>
-            <span class="n">mask_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="n">dq_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">err_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> 
-            <span class="n">ivar</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">err_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">mask_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="n">dq_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> 
+            <span class="n">ivar</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
 
-            <span class="n">num</span> <span class="o">=</span> <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">*</span> <span class="n">data_2d</span><span class="p">[:,</span><span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="n">ivar</span> 
+            <span class="n">num</span> <span class="o">=</span> <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">*</span> <span class="n">data_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="n">ivar</span> 
             <span class="n">den</span> <span class="o">=</span> <span class="n">flux_y</span><span class="p">[:]</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ivar</span>
             <span class="n">flux_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="n">den</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="n">err_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">den</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-            <span class="n">wave_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">wave_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">ii</span><span class="p">]</span>
+            <span class="n">wave_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">wave_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ii</span><span class="p">]</span>
 
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">con_plot</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave_disp</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
@@ -1442,9 +1424,9 @@ astropy 5.3.4
         <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-        <span class="c1"># Wirte:</span>
-        <span class="c1"># Now make it into a Spectrum1D instance.</span>
-        <span class="n">file_1d</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">l3_nis_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_s</span><span class="si">%s</span><span class="s1">_ndither</span><span class="si">%d</span><span class="s1">_1d_opt.fits&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grism</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">ndither</span><span class="p">)</span>
+        <span class="c1"># Write:</span>
+        <span class="c1"># Now, make it into a Spectrum1D instance.</span>
+        <span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_ndither</span><span class="si">{</span><span class="n">ndither</span><span class="si">}</span><span class="s1">_1d_opt.fits&#39;</span>
 
         <span class="k">if</span> <span class="n">wave_disp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">wave_disp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave_disp</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span>
@@ -1465,39 +1447,39 @@ astropy 5.3.4
 </pre></div>
 </div>
 <img alt="../../_images/bb921e1596e80a92a70c600a44fa3ac6c64df4592eeb4330cc054ac28a8758e6.png" src="../../_images/bb921e1596e80a92a70c600a44fa3ac6c64df4592eeb4330cc054ac28a8758e6.png" />
-<img alt="../../_images/b00a9c7aa73d937c1902137770f519bd4b8b94ed5bdde8c782877c6fc2bcc887.png" src="../../_images/b00a9c7aa73d937c1902137770f519bd4b8b94ed5bdde8c782877c6fc2bcc887.png" />
+<img alt="../../_images/7c39e30660b1057659b000ab81e5163ed5b6a9c5656ac1b04427d1df9b3ca62e.png" src="../../_images/7c39e30660b1057659b000ab81e5163ed5b6a9c5656ac1b04427d1df9b3ca62e.png" />
 <img alt="../../_images/ceb74abc44dc9c690483e204a7d3f157e363aaaf16cf25c7352791924d23dbf0.png" src="../../_images/ceb74abc44dc9c690483e204a7d3f157e363aaaf16cf25c7352791924d23dbf0.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
 </pre></div>
 </div>
 <img alt="../../_images/ae5d08a2b4b12c007796e43c675464aea39ad85333754ed7eebd87fe0e26b53d.png" src="../../_images/ae5d08a2b4b12c007796e43c675464aea39ad85333754ed7eebd87fe0e26b53d.png" />
-<img alt="../../_images/b00a9c7aa73d937c1902137770f519bd4b8b94ed5bdde8c782877c6fc2bcc887.png" src="../../_images/b00a9c7aa73d937c1902137770f519bd4b8b94ed5bdde8c782877c6fc2bcc887.png" />
+<img alt="../../_images/7c39e30660b1057659b000ab81e5163ed5b6a9c5656ac1b04427d1df9b3ca62e.png" src="../../_images/7c39e30660b1057659b000ab81e5163ed5b6a9c5656ac1b04427d1df9b3ca62e.png" />
 <img alt="../../_images/af19838bfe5c7cfe8ba4ecd3cfa82267c0c09987de6a381e726defafadaf5192.png" src="../../_images/af19838bfe5c7cfe8ba4ecd3cfa82267c0c09987de6a381e726defafadaf5192.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>f150w
 0
 </pre></div>
 </div>
 <img alt="../../_images/d7379bab5dac7526000fb8ccea84027fec1931010a3153f8062b319b7f1f680b.png" src="../../_images/d7379bab5dac7526000fb8ccea84027fec1931010a3153f8062b319b7f1f680b.png" />
-<img alt="../../_images/b00a9c7aa73d937c1902137770f519bd4b8b94ed5bdde8c782877c6fc2bcc887.png" src="../../_images/b00a9c7aa73d937c1902137770f519bd4b8b94ed5bdde8c782877c6fc2bcc887.png" />
+<img alt="../../_images/7c39e30660b1057659b000ab81e5163ed5b6a9c5656ac1b04427d1df9b3ca62e.png" src="../../_images/7c39e30660b1057659b000ab81e5163ed5b6a9c5656ac1b04427d1df9b3ca62e.png" />
 <img alt="../../_images/08d149c4a22a954f47d72a7ff100a6f6ec5b3e41a762f03786b49b91e92c6563.png" src="../../_images/08d149c4a22a954f47d72a7ff100a6f6ec5b3e41a762f03786b49b91e92c6563.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
 </pre></div>
 </div>
 <img alt="../../_images/1548c5f25ec45d7a080c7e08d65c7e3ac5e7e436f7639f2b9ebc379c23e890f7.png" src="../../_images/1548c5f25ec45d7a080c7e08d65c7e3ac5e7e436f7639f2b9ebc379c23e890f7.png" />
-<img alt="../../_images/7ed200bc838740118edf427119c93482020cd937ca6cad5fe8356d005eeb18e6.png" src="../../_images/7ed200bc838740118edf427119c93482020cd937ca6cad5fe8356d005eeb18e6.png" />
+<img alt="../../_images/c618ea8e64072c9199262891dd124fef821291fafaf64e5dcad233d0106184e8.png" src="../../_images/c618ea8e64072c9199262891dd124fef821291fafaf64e5dcad233d0106184e8.png" />
 <img alt="../../_images/0fb3569aec0a15981693879022181d2b23f0d62624eab57ecd2d09d24d2368b5.png" src="../../_images/0fb3569aec0a15981693879022181d2b23f0d62624eab57ecd2d09d24d2368b5.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>f200w
 0
 </pre></div>
 </div>
 <img alt="../../_images/6f9f3313593bd370dd0a66bd2a4ae63f05ec5feb268ac412b95b62b38b399fe5.png" src="../../_images/6f9f3313593bd370dd0a66bd2a4ae63f05ec5feb268ac412b95b62b38b399fe5.png" />
-<img alt="../../_images/b00a9c7aa73d937c1902137770f519bd4b8b94ed5bdde8c782877c6fc2bcc887.png" src="../../_images/b00a9c7aa73d937c1902137770f519bd4b8b94ed5bdde8c782877c6fc2bcc887.png" />
+<img alt="../../_images/7c39e30660b1057659b000ab81e5163ed5b6a9c5656ac1b04427d1df9b3ca62e.png" src="../../_images/7c39e30660b1057659b000ab81e5163ed5b6a9c5656ac1b04427d1df9b3ca62e.png" />
 <img alt="../../_images/fc5050196878b490e50f3b1a842e6501dddfebba4907dc905a497e51ff19abf5.png" src="../../_images/fc5050196878b490e50f3b1a842e6501dddfebba4907dc905a497e51ff19abf5.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
 </pre></div>
 </div>
 <img alt="../../_images/1ce31b2c4d6da1c45ac1f26922c270f8df2e6a608934598f33848b27c173c66e.png" src="../../_images/1ce31b2c4d6da1c45ac1f26922c270f8df2e6a608934598f33848b27c173c66e.png" />
-<img alt="../../_images/b00a9c7aa73d937c1902137770f519bd4b8b94ed5bdde8c782877c6fc2bcc887.png" src="../../_images/b00a9c7aa73d937c1902137770f519bd4b8b94ed5bdde8c782877c6fc2bcc887.png" />
+<img alt="../../_images/7c39e30660b1057659b000ab81e5163ed5b6a9c5656ac1b04427d1df9b3ca62e.png" src="../../_images/7c39e30660b1057659b000ab81e5163ed5b6a9c5656ac1b04427d1df9b3ca62e.png" />
 <img alt="../../_images/9c65ff5ef6fe221651c52e79c666d9bcea19bf7d02b6b25a103da1024d626678.png" src="../../_images/9c65ff5ef6fe221651c52e79c666d9bcea19bf7d02b6b25a103da1024d626678.png" />
 </div>
 </div>
