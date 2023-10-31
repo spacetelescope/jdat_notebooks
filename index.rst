@@ -87,10 +87,10 @@ location of the notebooks for you to :ref:`download <install>`.
        - **Tools:** specutils, photutils, astropy.
        - **Cross-instrument:**
    * - `LRS Optimal Extraction <https://github.com/spacetelescope/jdat_notebooks/tree/main/notebooks/MIRI_LRS_spectral_extraction>`_
-     - - **Use case:**Optimal spectral extraction.
-       - **Data:** MIRISim simulated LRS spectrum.
-       - **Tools:** jwst pipeline, gwcs.
-       - **Cross-instrument:** NIRSpec, NIRISS, MIRI
+     - - **Use case:** Spectral extraction of slit spectra with the JWST calibration pipeline.
+       - **Data:** Publicly available science data
+       - **Tools:** jwst, matplotlib, astropy.
+       - **Cross-instrument:** NIRSpec, MIRI
    * - NIRCam
      -
    * - `Point Source Aperture Photometry <https://github.com/spacetelescope/jdat_notebooks/tree/main/notebooks/aperture_photometry>`_
@@ -99,7 +99,7 @@ location of the notebooks for you to :ref:`download <install>`.
        - **Tools:** jwst pipeline, photutils
        - **Cross-instrument:** MIRI, NIRCam
    * - `Multiband Extended Aperture Photometry <https://github.com/spacetelescope/jdat_notebooks/tree/main/notebooks/NIRCam_photometry>`_
-     - - **Use case:** measure extended galaxy galaxy photomtery in a field.
+     - - **Use case:** measure extended galaxy galaxy photometry in a field.
        - **Data:** Simulated NIRCam images from JADES GTO extragalactic blank field.
        - **Tools:** photutils
        - **Cross-instrument:** MIRI, NIRCam
@@ -109,7 +109,7 @@ location of the notebooks for you to :ref:`download <install>`.
        - **Tools:** photutils
        - **Cross-instrument:** MIRI, NIRCam
    * - `PSF Photometry <https://github.com/spacetelescope/jdat_notebooks/tree/main/notebooks/psf_photometry>`_
-     - - **Use case:** Crowded field imaging with PSF-fitting photomtery.
+     - - **Use case:** Crowded field imaging with PSF-fitting photometry.
        - **Data:** Simulated NIRCam images of LMC astrometric calibration field.
        - **Tools:** webbpsf, photutils
        - **Cross-instrument:** MIRI, NIRCam
