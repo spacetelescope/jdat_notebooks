@@ -70,6 +70,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/composite_model_fitting/specfit_demo_3';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -543,7 +545,7 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="composite-model-spectral-fitting">
+  <section class="tex2jax_ignore mathjax_ignore" id="composite-model-spectral-fitting">
 <h1>Composite Model Spectral Fitting<a class="headerlink" href="#composite-model-spectral-fitting" title="Permalink to this heading">#</a></h1>
 <p><strong>Use case:</strong> Fitting the complex continuum around Lyman-alpha in the spectrum of an active galaxy NGC 5548.<br>
 <strong>Data:</strong> 3-column ECSV file with units for each column.<br>
@@ -968,7 +970,7 @@ Parameters:
 </section>
 </section>
 </section>
-<section id="fitting">
+<section class="tex2jax_ignore mathjax_ignore" id="fitting">
 <h1>Fitting<a class="headerlink" href="#fitting" title="Permalink to this heading">#</a></h1>
 <p>We have the data and the model, now we need to fit one to the other. We can use that by instantiating an Astropy fitter, in this case the <code class="docutils literal notranslate"><span class="pre">LevMarLSQFitter</span></code> which uses the Levenberg-Marquardt algorithm for least-squares fitting.</p>
 <div class="cell docutils container">
@@ -978,13 +980,13 @@ Parameters:
 </div>
 </div>
 </div>
-<p>In this example, we have access to the errors for the data points, so we can use their inverse as weights for the fit. To include the mask, which is <code class="docutils literal notranslate"><span class="pre">1</span></code> for pixels we want to fit and <code class="docutils literal notranslate"><span class="pre">0</span></code> for pixels we want to exclude, we take $\rm {mask} / \sigma$, as the weight to give to the fitter.</p>
+<p>In this example, we have access to the errors for the data points, so we can use their inverse as weights for the fit. To include the mask, which is <code class="docutils literal notranslate"><span class="pre">1</span></code> for pixels we want to fit and <code class="docutils literal notranslate"><span class="pre">0</span></code> for pixels we want to exclude, we take <span class="math notranslate nohighlight">\(\rm {mask} / \sigma\)</span>, as the weight to give to the fitter.</p>
 <section id="id7">
 <h2>Developer notes<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Because the compound model fitting didn’t work out of the box feeding it the Specutils <code class="docutils literal notranslate"><span class="pre">spectral_axis</span></code> and <code class="docutils literal notranslate"><span class="pre">flux</span></code> Quanitities, I’m getting rid of the units. In conversation, it seems like there is some machinery for removing the units and putting them back in <code class="docutils literal notranslate"><span class="pre">fit_line</span></code> (which is more general than just fitting a line), but I didn’t think to look there.</p></li>
-<li><p>While it agrees with the scipy fitter conventions, I think it is quite confusing to call $w = 1/\sigma$ the <em>weight</em>. I checked the code and for this fitter, indeed it is squaring this to use as the weight, so the calculation is correct. But I think it is more common to think of the correct weight as being $w = 1/\sigma^2$ for least-squares fitting. I’ve now gone down the rabbit hole of trying to double-check that Astropy is doing the weighting correctly twice because of this unusual use of the word “weight.”</p></li>
-<li><p>Nadia Dencheva is going to check that the non-least-squares fitters are using weight when their instructions say use $1/\sigma$ – i.e. are they squaring it or not before computing the merit function?</p></li>
+<li><p>While it agrees with the scipy fitter conventions, I think it is quite confusing to call <span class="math notranslate nohighlight">\(w = 1/\sigma\)</span> the <em>weight</em>. I checked the code and for this fitter, indeed it is squaring this to use as the weight, so the calculation is correct. But I think it is more common to think of the correct weight as being <span class="math notranslate nohighlight">\(w = 1/\sigma^2\)</span> for least-squares fitting. I’ve now gone down the rabbit hole of trying to double-check that Astropy is doing the weighting correctly twice because of this unusual use of the word “weight.”</p></li>
+<li><p>Nadia Dencheva is going to check that the non-least-squares fitters are using weight when their instructions say use <span class="math notranslate nohighlight">\(1/\sigma\)</span> – i.e. are they squaring it or not before computing the merit function?</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1101,7 +1103,7 @@ Parameters:
 <p>Lets print some derived results:</p>
 </section>
 </section>
-<section id="looking-at-the-fit-results">
+<section class="tex2jax_ignore mathjax_ignore" id="looking-at-the-fit-results">
 <h1>Looking at the fit results<a class="headerlink" href="#looking-at-the-fit-results" title="Permalink to this heading">#</a></h1>
 <p>Create a little routine to estimate chisq. It needs to compute the number of degrees of freedom taking into account the mask and the number of free parameters.</p>
 <div class="cell docutils container">
@@ -1140,7 +1142,7 @@ Parameters:
 </div>
 </div>
 </div>
-<p>Print out $\chi^2$ and other relevant info.</p>
+<p>Print out <span class="math notranslate nohighlight">\(\chi^2\)</span> and other relevant info.</p>
 </section>
 <section id="id10">
 <h2>Developer note<a class="headerlink" href="#id10" title="Permalink to this heading">#</a></h2>
