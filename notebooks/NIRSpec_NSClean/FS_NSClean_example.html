@@ -1,0 +1,1985 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Cleaning Residual 1/f Noise in NIRSpec FS Products with NSClean &#8212; STScI JDAT Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/main.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-D46G4HKJY3');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/NIRSpec_NSClean/FS_NSClean_example';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Cleaning Residual 1/f Noise in NIRSpec IFU Products with NSClean" href="IFU_NSClean_example.html" />
+    <link rel="prev" title="Redshift and Template Fitting" href="../galaxy_redshift/redshift_fitting.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/stsci_logo2.png" class="logo__image only-light" alt="STScI JDAT Notebooks - Home"/>
+    <script>document.write(`<img src="../../_static/stsci_logo2.png" class="logo__image only-dark" alt="STScI JDAT Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/notebook_development_workflow.html">Notebook Development Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../docs/submitting_notebooks.html">Submitting Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/requirements.html">Requirements file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/notebooks.html">Jupyter Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/data_files.html">Data Files</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">GitHub Guidelines</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../docs/github_setup.html">GitHub Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/github_workflow.html">GitHub Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/github_pr.html">GitHub PR</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cross-Instrument</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../asdf_example/asdf_example.html">ASDF Example</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../background_estimation_imaging/Imaging_Sky_Background_Estimation.html">Complex 2D Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">Composite Model Spectral Fitting</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">MAST Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rgb_imviz/imviz_rgb_carina.html">RGB images with Imviz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">Specviz Simple Demo</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">MIRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">MRS Mstar - Run Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">MRS Detector Based Extraction</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">MRS Mstar - Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">IFU of YSOs in LMC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../MIRI_LRS_spectral_extraction/miri_lrs_advanced_extraction_part1.html">LRS Optimal Spectral Extraction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRCam</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">Point Source Aperture Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRCam_photometry/NIRCam_multiband_photometry.html">Extended Aperture Photometry</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">Cross-Filter PSF Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">PSF Photometry</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRISS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">WFSS Spectra - Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">WFSS Spectra - Combine and Normalize 1D Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">WFSS Spectra - Cross-Correlation Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">WFSS Spectra - Emission Line Map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../niriss_imaging/niriss-imaging-tutorial.html">NIRISS Imaging Tutorial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRSpec</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">IFU Cube Fitting</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../cube_fitting/cube_fitting.html">IFU Cube Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ifu_optimal/ifu_optimal.html">IFU Optimal Spectral Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimal_extraction/Spectral_Extraction-static.html">MOS Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mos_spectroscopy_advanced/MOSspec_advanced.html">MOS Spectroscopy of Extragalactic Field</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">BOTS Time Series Observations</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../galaxy_redshift/redshift_fitting.html">Redshift and Template Fitting</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">FS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="IFU_NSClean_example.html">IFU Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MOS_NSClean_example.html">MOS Products with NSClean</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/NIRSpec_NSClean/FS_NSClean_example.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/notebooks/NIRSpec_NSClean/FS_NSClean_example.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Cleaning Residual 1/f Noise in NIRSpec FS Products with NSClean</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-goal">Notebook Goal</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-a-name-introduction-a">1. Introduction <a name="introduction"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library-a-name-imports-a">2. Import Library <a name="imports"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-data-a-name-data-a">3. Download the Data <a name="data"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-spec2pipeline-without-nsclean-original-data-a-name-nsclean-skipped-a">4. Running <code class="docutils literal notranslate"><span class="pre">Spec2Pipeline</span></code> without NSClean (Original Data) <a name="nsclean_skipped"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#clean-up-1-f-noise-with-nsclean-default-pipeline-mask-a-name-nsclean-default-a">5. Clean up 1/f Noise with NSClean (Default Pipeline Mask) <a name="nsclean_default"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-the-mask-default-pipeline-mask-a-name-verify-default-mask-a">5.1 Verify the Mask (Default Pipeline Mask) <a name="verify_default_mask"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-original-vs-cleaned-data-default-pipeline-mask-a-name-nsclean-default-compare-a">5.2 Comparing Original vs. Cleaned Data (Default Pipeline Mask) <a name="nsclean_default_compare"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#clean-up-1-f-noise-with-nsclean-alternate-mask-a-name-nsclean-alternate-a">6. Clean up 1/f Noise with NSClean (Alternate Mask) <a name="nsclean_alternate"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-the-mask-alternate-mask-a-name-verify-alternate-mask-a">6.1 Verify the Mask (Alternate Mask) <a name="verify_alternate_mask"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-original-vs-cleaned-data-alternate-mask-a-name-nsclean-alternate-compare-a">6.2 Comparing Original vs. Cleaned Data (Alternate Mask) <a name="nsclean_alternate_compare"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#clean-up-1-f-noise-with-nsclean-hand-modified-mask-a-name-nsclean-modified-a">7. Clean up 1/f Noise with NSClean (Hand-Modified Mask) <a name="nsclean_modified"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-the-mask-hand-modified-mask-a-name-verify-modified-mask-a">7.1 Verify the Mask (Hand-Modified Mask) <a name="verify_modified_mask"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-original-vs-cleaned-data-hand-modified-mask-a-name-nsclean-modified-compare-a">7.2 Comparing Original vs. Cleaned Data (Hand-Modified Mask) <a name="nsclean_modified_compare"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion-a-name-conclusion-a">8. Conclusion <a name="conclusion"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-the-notebook-a-name-about-a">About the Notebook <a name="about"></a></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <p><a id="top"></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="cleaning-residual-1-f-noise-in-nirspec-fs-products-with-nsclean">
+<h1>Cleaning Residual 1/f Noise in NIRSpec FS Products with NSClean<a class="headerlink" href="#cleaning-residual-1-f-noise-in-nirspec-fs-products-with-nsclean" title="Permalink to this heading">#</a></h1>
+<hr style="border:1px solid black">
+<section id="notebook-goal">
+<h2>Notebook Goal<a class="headerlink" href="#notebook-goal" title="Permalink to this heading">#</a></h2>
+<p>The goal of this notebook is to generate cleaned FS (<em>_rate.fits</em>) files by removing residual 1/f noise. These cleaned files will be used as input for the level 3 (<code class="docutils literal notranslate"><span class="pre">Spec3Pipeline</span></code>) pipeline.</p>
+</section>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">#</a></h2>
+<ul>
+<li><ol class="arabic simple">
+<li><p><span class="xref myst">Introduction</span></p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="2">
+<li><p><span class="xref myst">Import Library</span></p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="3">
+<li><p><span class="xref myst">Download the Data</span></p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="4">
+<li><p><span class="xref myst">Running <code class="docutils literal notranslate"><span class="pre">Spec2Pipeline</span></code> without NSClean (Original Data)</span></p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="5">
+<li><p><span class="xref myst">Clean up 1/f Noise with NSClean (Default Pipeline Mask)</span></p></li>
+</ol>
+<ul class="simple">
+<li><p>5.1 <span class="xref myst">Verify the Mask (Default Pipeline Mask)</span></p></li>
+<li><p>5.2 <span class="xref myst">Comparing Original vs. Cleaned Data (Default Pipeline Mask)</span></p></li>
+</ul>
+</li>
+<li><ol class="arabic simple" start="6">
+<li><p><span class="xref myst">Clean up 1/f Noise with NSClean (Alternate Mask)</span></p></li>
+</ol>
+<ul class="simple">
+<li><p>6.1 <span class="xref myst">Verify the Mask (Alternate Mask)</span></p></li>
+<li><p>6.2 <span class="xref myst">Comparing Original vs. Cleaned Data (Alternate Mask)</span></p></li>
+</ul>
+</li>
+<li><ol class="arabic simple" start="7">
+<li><p><span class="xref myst">Clean up 1/f Noise with NSClean (Hand-Modified Mask)</span></p></li>
+</ol>
+<ul class="simple">
+<li><p>7.1 <span class="xref myst">Verify the Mask (Hand-Modified Mask)</span></p></li>
+<li><p>7.2 <span class="xref myst">Comparing Original vs. Cleaned Data (Hand-Modified Mask)</span></p></li>
+</ul>
+</li>
+<li><ol class="arabic simple" start="8">
+<li><p><span class="xref myst">Conclusion</span></p></li>
+</ol>
+</li>
+<li><p><span class="xref myst">About the Notebook</span></p></li>
+</ul>
+</section>
+<section id="introduction-a-name-introduction-a">
+<h2>1. Introduction <a name="introduction"></a><a class="headerlink" href="#introduction-a-name-introduction-a" title="Permalink to this heading">#</a></h2>
+<hr style="border:1px solid black">
+<p>The JWST NIRSpec instrument has a number of features and characteristics that observers should be aware of when planning observations and interpreting data. One notable feature seen in NIRSpec pipeline products is negative and/or surplus flux in the extracted 1-D spectrum, typically with an irregular wavelength-dependent undulation. The cause of this artifact is correlated noise, known as <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-near-infrared-spectrograph/nirspec-instrument-features-and-caveats#NIRSpecInstrumentFeaturesandCaveats-1/fnoise">1/f noise</a>, from low-level detector thermal instabilities, seen as vertical banding in 2-D count rate images, particularly in exposures of the NRS2 detector. While the IRS2 readout mode reduces this effect, it is not completely eliminated.</p>
+<p>To address this issue, the JWST Science Calibration Pipeline has integrated an external package developed by Bernard Rauscher, known as <a class="reference external" href="https://webb.nasa.gov/content/forScientists/publications.html#NSClean">NSClean</a>, within the <code class="docutils literal notranslate"><span class="pre">Spec2Pipeline</span></code> under <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/nsclean/main.html">NSCleanStep</a>. This algorithm uses dark areas of the detector to fit a background model to the data in Fourier space. It requires an input mask to identify all dark areas of the detector. The more thorough and complete this mask is, the better the background fit.</p>
+<p>In this notebook, we will use the NSClean algorithm integrated into the pipeline, utilizing a mask generated on-the-fly with default parameters to remove 1/f noise. In some cases, this mask may not be complete enough/too restrictive for the best possible noise removal. To address this, we demonstrate how one can manually modify the default mask, as well as how to create an alternative mask by adjusting the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/nsclean/arguments.html">NSCleanStep parameters</a>. If needed, see the <a class="reference external" href="https://iopscience.iop.org/article/10.1088/1538-3873/ad1b36/pdf">NSClean documentation</a> for some suggestions on manually creating a custom mask.</p>
+<p>This notebook provides examples from two GTO observations: a fixed slit observation of F dwarf GSC 03162-00665 from program <a class="reference external" href="https://www.stsci.edu/jwst/science-execution/program-information?id=2757">2757</a> and an observation of the brown dwarf J03480772-6022270 from program <a class="reference external" href="https://www.stsci.edu/jwst/science-execution/program-information?id=1189">1189</a>.</p>
+</section>
+<section id="import-library-a-name-imports-a">
+<h2>2. Import Library <a name="imports"></a><a class="headerlink" href="#import-library-a-name-imports-a" title="Permalink to this heading">#</a></h2>
+<hr style="border:1px solid black">
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ---------- Set CRDS environment variables ----------</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">jwst</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_CONTEXT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;jwst_1210.pmap&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;/crds_cache&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://jwst-crds.stsci.edu&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;CRDS cache location: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CRDS_PATH&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;JWST Calibration Pipeline Version=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">jwst</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+<span class="c1"># print(&quot;Current Operational CRDS Context = {}&quot;.format(crds.get_default_context()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS cache location: /home/runner/crds_cache
+JWST Calibration Pipeline Version=1.13.4
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ------ General Imports ------</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">time</span> <span class="k">as</span> <span class="nn">tt</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="c1"># ------ JWST Calibration Pipeline Imports ------</span>
+<span class="kn">from</span> <span class="nn">jwst.pipeline.calwebb_spec2</span> <span class="kn">import</span> <span class="n">Spec2Pipeline</span>
+
+<span class="c1"># # ------ Plotting/Stats Imports ------</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">get_jwst_file</span><span class="p">,</span> <span class="n">plot_dark_data</span><span class="p">,</span> <span class="n">plot_cleaned_data</span><span class="p">,</span> <span class="n">plot_spectra</span>
+
+<span class="c1"># Hide all log and warning messages.</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">disable</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="download-the-data-a-name-data-a">
+<h2>3. Download the Data <a name="data"></a><a class="headerlink" href="#download-the-data-a-name-data-a" title="Permalink to this heading">#</a></h2>
+<hr style="border:1px solid black">
+<p>The input data for this notebook features fixed slit (FS) observations with the S200A1 subarray (SUBS200A1) and full-frame observations with S200A1 as the primary slit. The FS observation of F dwarf GSC 03162-00665 with subarray SUBS200A1 and grating/filter G395M/F290LP is part of the GTO program <a class="reference external" href="https://www.stsci.edu/jwst/science-execution/program-information?id=2757">2757</a>, specifically observation 2. It consists of 15 integrations (5 integration/exposure; 3-POINT-NOD) with 4 groups each. The FS observation of brown dwarf J03480772-6022270 with full-frame readout and grating/filter G140M/F100LP is part of the GTO program <a class="reference external" href="https://www.stsci.edu/jwst/science-execution/program-information?id=1189">1189</a>, specifically observation 1. It consists of 3 integrations (3-POINT-NOD) with 11 groups each.</p>
+<p>This notebook focuses on the first dithered exposure (00001) for each dataset. However, it’s important to note that before proceeding to the <code class="docutils literal notranslate"><span class="pre">Spec3Pipeline</span></code>, all exposures must first be processed through the <code class="docutils literal notranslate"><span class="pre">Spec2Pipeline</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a downloads directory.</span>
+<span class="n">mast_products_dir</span> <span class="o">=</span> <span class="s2">&quot;./mast_products/&quot;</span>
+<span class="c1"># Check if the directory exists.</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mast_products_dir</span><span class="p">):</span>
+    <span class="c1"># Create the directory if it doesn&#39;t exist.</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">mast_products_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Subarray, S200A1; This notebook focuses on the first dither/nod.</span>
+<span class="n">subarray_obs_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;jw02757002001_03104_00001&quot;</span><span class="p">]</span>
+<span class="n">subarray_detectors</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Only Detector NRS1.</span>
+
+<span class="c1"># Full-frame, S200A1 primary; This notebook focuses on the first dither/nod.</span>
+<span class="n">full_obs_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;jw01189001001_04101_00001&quot;</span><span class="p">]</span>
+<span class="n">full_detectors</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>  <span class="c1"># Both Detectors NRS1 and NRS2.</span>
+
+<span class="c1"># Specify countrate data products.</span>
+<span class="n">rate_names</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">rate_types</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">obs_id</span> <span class="ow">in</span> <span class="n">subarray_obs_ids</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">detector</span> <span class="ow">in</span> <span class="n">subarray_detectors</span><span class="p">:</span>
+        <span class="n">rate_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s2">_nrs</span><span class="si">{</span><span class="n">detector</span><span class="si">}</span><span class="s2">_rate.fits&quot;</span><span class="p">)</span>
+        <span class="n">rate_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;subarray&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">obs_id</span> <span class="ow">in</span> <span class="n">full_obs_ids</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">detector</span> <span class="ow">in</span> <span class="n">full_detectors</span><span class="p">:</span>
+        <span class="n">rate_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s2">_nrs</span><span class="si">{</span><span class="n">detector</span><span class="si">}</span><span class="s2">_rate.fits&quot;</span><span class="p">)</span>
+        <span class="n">rate_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;full&quot;</span><span class="p">)</span>
+
+<span class="c1"># Download all the FITS files.</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">rate_names</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Downloading </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">get_jwst_file</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">mast_api_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_directory</span><span class="o">=</span><span class="n">mast_products_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading jw02757002001_03104_00001_nrs1_rate.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading jw01189001001_04101_00001_nrs1_rate.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading jw01189001001_04101_00001_nrs2_rate.fits
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="running-spec2pipeline-without-nsclean-original-data-a-name-nsclean-skipped-a">
+<h2>4. Running <code class="docutils literal notranslate"><span class="pre">Spec2Pipeline</span></code> without NSClean (Original Data) <a name="nsclean_skipped"></a><a class="headerlink" href="#running-spec2pipeline-without-nsclean-original-data-a-name-nsclean-skipped-a" title="Permalink to this heading">#</a></h2>
+<hr style="border:1px solid black">
+<p>The cell below executes the <code class="docutils literal notranslate"><span class="pre">Spec2Pipeline</span></code>, explicitly skipping the NSClean step during processing. The level 2 products generated will serve as a reference point to illustrate how the countrate images and final extracted spectra appear without the removal of 1/f noise.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set up directory for running the pipeline without NSClean.</span>
+<span class="n">stage2_nsclean_skipped_dir</span> <span class="o">=</span> <span class="s2">&quot;./stage2_nsclean_skipped/&quot;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">stage2_nsclean_skipped_dir</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">stage2_nsclean_skipped_dir</span><span class="p">)</span>  <span class="c1"># Create the directory if it doesn&#39;t exist.</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Original data (no NSClean Applied).</span>
+<span class="c1"># Estimated run time: 1-2 minutes.</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">rate_names</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+    <span class="n">Spec2Pipeline</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+        <span class="n">mast_products_dir</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span>
+        <span class="n">save_results</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">steps</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;nsclean&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;skip&quot;</span><span class="p">:</span> <span class="kc">True</span>
+            <span class="p">},</span>  <span class="c1"># Removes correlated read noise (1/f noise) from NIRSpec images.</span>
+        <span class="p">},</span>
+        <span class="n">output_dir</span><span class="o">=</span><span class="n">stage2_nsclean_skipped_dir</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;cal.fits&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;x1d.fits&quot;</span><span class="p">)</span>
+
+<span class="n">end</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run time: &quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">60.0</span><span class="p">,</span> <span class="s2">&quot; min&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing jw02757002001_03104_00001_nrs1_rate.fits...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved jw02757002001_03104_00001_nrs1_cal.fits
+Saved jw02757002001_03104_00001_nrs1_x1d.fits
+Processing jw01189001001_04101_00001_nrs1_rate.fits...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved jw01189001001_04101_00001_nrs1_cal.fits
+Saved jw01189001001_04101_00001_nrs1_x1d.fits
+Processing jw01189001001_04101_00001_nrs2_rate.fits...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved jw01189001001_04101_00001_nrs2_cal.fits
+Saved jw01189001001_04101_00001_nrs2_x1d.fits
+Run time:  1.12  min
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="clean-up-1-f-noise-with-nsclean-default-pipeline-mask-a-name-nsclean-default-a">
+<h2>5. Clean up 1/f Noise with NSClean (Default Pipeline Mask) <a name="nsclean_default"></a><a class="headerlink" href="#clean-up-1-f-noise-with-nsclean-default-pipeline-mask-a-name-nsclean-default-a" title="Permalink to this heading">#</a></h2>
+<hr style="border:1px solid black">
+<p>If a user-supplied mask file is not provided to the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/nsclean/index.html">NSClean step</a> in the <code class="docutils literal notranslate"><span class="pre">Spec2Pipeline</span></code>, the pipeline will generate a mask based on default parameters. This mask will identify any pixel that is unilluminated. That is, the mask must contain True and False values, where True indicates that the pixel is dark, and False indicates that the pixel is illuminated (not dark).</p>
+<p>By default, the pipeline marks the following detector areas as illuminated, non-dark areas (False):</p>
+<ul class="simple">
+<li><p>Pixels designated as science areas for FS data.</p></li>
+<li><p>5-sigma outliers (default value).</p></li>
+<li><p>Any pixel set to NaN in the rate data.</p></li>
+</ul>
+<p>To tune the outlier detection in the mask, try modifying the <code class="docutils literal notranslate"><span class="pre">n_sigma</span></code> parameter (explored in the next section). A higher value will identify fewer outliers. A lower value will identify more.</p>
+<p>The default generated mask is saved and analyzed below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set up directory for running NSClean with default parameters.</span>
+<span class="n">stage2_nsclean_default_dir</span> <span class="o">=</span> <span class="s2">&quot;./stage2_nsclean_default/&quot;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">stage2_nsclean_default_dir</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">stage2_nsclean_default_dir</span><span class="p">)</span>  <span class="c1"># Create the directory if it doesn&#39;t exist.</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1/f noise cleaned data (default NSClean pipeline mask).</span>
+<span class="c1"># Estimated run time: 7 minutes.</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">rate_names</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+    <span class="n">Spec2Pipeline</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+        <span class="n">mast_products_dir</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span>
+        <span class="n">save_results</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">steps</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;nsclean&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;skip&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;save_mask&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;save_results&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="p">},</span>  <span class="c1"># Removes correlated read noise (1/f noise) from NIRSpec images.</span>
+        <span class="p">},</span>
+        <span class="n">output_dir</span><span class="o">=</span><span class="n">stage2_nsclean_default_dir</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;mask.fits&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;nsclean.fits&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;cal.fits&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;x1d.fits&quot;</span><span class="p">)</span>
+
+
+<span class="n">end</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run time: &quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">60.0</span><span class="p">,</span> <span class="s2">&quot; min&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing jw02757002001_03104_00001_nrs1_rate.fits...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved jw02757002001_03104_00001_nrs1_mask.fits
+Saved jw02757002001_03104_00001_nrs1_nsclean.fits
+Saved jw02757002001_03104_00001_nrs1_cal.fits
+Saved jw02757002001_03104_00001_nrs1_x1d.fits
+Processing jw01189001001_04101_00001_nrs1_rate.fits...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved jw01189001001_04101_00001_nrs1_mask.fits
+Saved jw01189001001_04101_00001_nrs1_nsclean.fits
+Saved jw01189001001_04101_00001_nrs1_cal.fits
+Saved jw01189001001_04101_00001_nrs1_x1d.fits
+Processing jw01189001001_04101_00001_nrs2_rate.fits...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved jw01189001001_04101_00001_nrs2_mask.fits
+Saved jw01189001001_04101_00001_nrs2_nsclean.fits
+Saved jw01189001001_04101_00001_nrs2_cal.fits
+Saved jw01189001001_04101_00001_nrs2_x1d.fits
+Run time:  3.865  min
+</pre></div>
+</div>
+</div>
+</div>
+<div class="alert alert-block alert-warning">
+<b>Warning:</b> 
+<p>In some situations, the NSClean step may fail to find a fit to the background noise. This failure may occur if the mask does not contain enough dark data (marked True). In particular, every column in the mask except for the first and last 4 columns must contain some pixels marked True. The background fitting procedure considers each column, one at a time, so it will crash if there is no data in a column to fit. If failure occurs, check that your mask in the image below has at least some True values in every column.</p>
+</div><section id="verify-the-mask-default-pipeline-mask-a-name-verify-default-mask-a">
+<h3>5.1 Verify the Mask (Default Pipeline Mask) <a name="verify_default_mask"></a><a class="headerlink" href="#verify-the-mask-default-pipeline-mask-a-name-verify-default-mask-a" title="Permalink to this heading">#</a></h3>
+<hr style="border:1px solid black">
+<p>Check the mask against the rate data to make sure it keeps only dark areas of the detector.</p>
+<p>Note that there are still some remaining illuminated areas, primarily due to transient artifacts like cosmic rays and snowballs.</p>
+<p>Also, for some data sets, there may be several illuminated regions of the detector that are not masked by the WCS bounding boxes.  In this data, note that the mask does not cover the bluest end of the spectral trace.  This region is illuminated, but is not calibrated.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the rate data with masked areas blocked.</span>
+
+<span class="c1"># List of on-the-fly built masks from the pipeline.</span>
+<span class="n">nsclean_default_masks</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">stage2_nsclean_default_dir</span> <span class="o">+</span> <span class="s2">&quot;jw02757002001_03104_00001_nrs1_mask.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_default_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs1_mask.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_default_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs2_mask.fits&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Plot each associated set of rate data and mask file.</span>
+<span class="k">for</span> <span class="n">rate_file</span><span class="p">,</span> <span class="n">rate_type</span><span class="p">,</span> <span class="n">mask_file</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">rate_names</span><span class="p">,</span> <span class="n">rate_types</span><span class="p">,</span> <span class="n">nsclean_default_masks</span>
+<span class="p">):</span>
+    <span class="n">layout</span> <span class="o">=</span> <span class="s2">&quot;rows&quot;</span> <span class="k">if</span> <span class="n">rate_type</span> <span class="o">==</span> <span class="s2">&quot;subarray&quot;</span> <span class="k">else</span> <span class="s2">&quot;cols&quot;</span>
+    <span class="n">plot_dark_data</span><span class="p">(</span><span class="n">mast_products_dir</span> <span class="o">+</span> <span class="n">rate_file</span><span class="p">,</span> <span class="n">mask_file</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/2e5fe6c5e9a597dee05dbb1688754194bbc7a69f45cd4d4798e770a3bf50f511.png" src="../../_images/2e5fe6c5e9a597dee05dbb1688754194bbc7a69f45cd4d4798e770a3bf50f511.png" />
+<img alt="../../_images/15fb2cb2b9c56746543c7c56b1022ac41712e10fcc31637d9d652bf746ab44a9.png" src="../../_images/15fb2cb2b9c56746543c7c56b1022ac41712e10fcc31637d9d652bf746ab44a9.png" />
+<img alt="../../_images/ac667d532465e1eb84c1985fa1760554ff63503094e8037f70f7bf3e1f76a1bd.png" src="../../_images/ac667d532465e1eb84c1985fa1760554ff63503094e8037f70f7bf3e1f76a1bd.png" />
+</div>
+</div>
+</section>
+<section id="comparing-original-vs-cleaned-data-default-pipeline-mask-a-name-nsclean-default-compare-a">
+<h3>5.2 Comparing Original vs. Cleaned Data (Default Pipeline Mask) <a name="nsclean_default_compare"></a><a class="headerlink" href="#comparing-original-vs-cleaned-data-default-pipeline-mask-a-name-nsclean-default-compare-a" title="Permalink to this heading">#</a></h3>
+<hr style="border:1px solid black">
+<p>We can now compare the cleaned data (with the default pipeline mask) to the original rate file and verify that the 1/f noise has been reduced.</p>
+<p>In many cases, the cleaning process introduces new artifacts to the rate file. These should be carefully examined and weighed against the benefits of noise reduction. If transient artifacts, like snowballs, are interfering with the cleaning process, it may be beneficial to manually edit the mask to remove these areas from consideration in the background fit. To do so, try varying the outlier detection threshold or editing specific pixels in the mask array directly (explored in the next few sections). Otherwise, refer to the <a class="reference external" href="https://iopscience.iop.org/article/10.1088/1538-3873/ad1b36/pdf">NSClean documentation</a> for additional suggestions on manual editing.</p>
+<p>Note that in the images below, there are scattered values with large relative differences from the original rate file (shown in the relative difference image below). These are artifacts of the cleaning process.</p>
+<p>There are also broader low-level residual background effects (shown in the relative difference image on the right, below, with scattered outliers, identified with sigma clipping, hidden by masking). These include the background patterns we are trying to remove: the 1/f noise variations in the dispersion direction and the picture frame effect at the top and bottom of the frame (for full-frame data). However, there may also be low-level artifacts introduced by over-fitting the dark data in the cleaning process.</p>
+<p>Check both residual images carefully to understand the impact of the cleaning process on your data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the original and cleaned data, as well as a residual map.</span>
+
+<span class="n">cleaned_default_masks</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">stage2_nsclean_default_dir</span> <span class="o">+</span> <span class="s2">&quot;jw02757002001_03104_00001_nrs1_nsclean.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_default_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs1_nsclean.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_default_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs2_nsclean.fits&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Plot each associated set of rateint data and cleaned file.</span>
+<span class="k">for</span> <span class="n">rate_file</span><span class="p">,</span> <span class="n">cleaned_file</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rate_names</span><span class="p">,</span> <span class="n">cleaned_default_masks</span><span class="p">):</span>
+    <span class="n">layout</span> <span class="o">=</span> <span class="s2">&quot;rows&quot;</span> <span class="k">if</span> <span class="n">rate_type</span> <span class="o">==</span> <span class="s2">&quot;subarray&quot;</span> <span class="k">else</span> <span class="s2">&quot;cols&quot;</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="mi">8</span> <span class="k">if</span> <span class="s2">&quot;2757&quot;</span> <span class="ow">in</span> <span class="n">rate_file</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="n">plot_cleaned_data</span><span class="p">(</span>
+        <span class="n">mast_products_dir</span> <span class="o">+</span> <span class="n">rate_file</span><span class="p">,</span> <span class="n">cleaned_file</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/b9c5568d1f20565397831c44f10cd2aac3233889f1b705704f6190ef0219f307.png" src="../../_images/b9c5568d1f20565397831c44f10cd2aac3233889f1b705704f6190ef0219f307.png" />
+<img alt="../../_images/baf6614baa7045e227e24a7fadcc6fd6af337e936179eee415dd9751c012cd97.png" src="../../_images/baf6614baa7045e227e24a7fadcc6fd6af337e936179eee415dd9751c012cd97.png" />
+<img alt="../../_images/db654caf72811ff795c09a98c62547f3906e99d2a89b06cb89f6ca63d478248f.png" src="../../_images/db654caf72811ff795c09a98c62547f3906e99d2a89b06cb89f6ca63d478248f.png" />
+</div>
+</div>
+<p>Compare the extracted spectrum from the cleaned data to the spectrum extracted from the original rate file. Note that the following plots for the full-frame data display all FSs, but the primary source is in FS S200A1.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Full frame 1D extracted spectra (all FSs plotted).</span>
+
+<span class="n">x1d_nsclean_skipped</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">stage2_nsclean_skipped_dir</span> <span class="o">+</span> <span class="s2">&quot;jw02757002001_03104_00001_nrs1_x1d.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_skipped_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs1_x1d.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_skipped_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs2_x1d.fits&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">x1d_nsclean_default</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">stage2_nsclean_default_dir</span> <span class="o">+</span> <span class="s2">&quot;jw02757002001_03104_00001_nrs1_x1d.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_default_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs1_x1d.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_default_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs2_x1d.fits&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Plot each FS in the full-frame.</span>
+<span class="k">for</span> <span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">,</span> <span class="n">rate_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">x1d_nsclean_skipped</span><span class="p">,</span> <span class="n">x1d_nsclean_default</span><span class="p">,</span> <span class="n">rate_types</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">rate_type</span> <span class="o">==</span> <span class="s2">&quot;subarray&quot;</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">for</span> <span class="n">slit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>  <span class="c1"># 5 FS in full-frame</span>
+        <span class="n">plot_spectra</span><span class="p">([</span><span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">],</span> <span class="n">ext_num</span><span class="o">=</span><span class="n">slit</span><span class="p">,</span> <span class="n">scale_percent</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/1f2a0327c4d8e9f9bdb282ea3bda2099fecb2e08b126f03b102c3f4d89430ef9.png" src="../../_images/1f2a0327c4d8e9f9bdb282ea3bda2099fecb2e08b126f03b102c3f4d89430ef9.png" />
+<img alt="../../_images/9243cab0ce187e955160ee3a65e54439f25fdad9a889e620d429222b8718182c.png" src="../../_images/9243cab0ce187e955160ee3a65e54439f25fdad9a889e620d429222b8718182c.png" />
+<img alt="../../_images/728bd81acb4e39d224ff99192280f0ad633459c69b87414eb0d696cbdcacda87.png" src="../../_images/728bd81acb4e39d224ff99192280f0ad633459c69b87414eb0d696cbdcacda87.png" />
+<img alt="../../_images/587f59785aa48440e05baf3a3d63a071dc2dde379abb2e4b736b0e8ee49a94cc.png" src="../../_images/587f59785aa48440e05baf3a3d63a071dc2dde379abb2e4b736b0e8ee49a94cc.png" />
+<img alt="../../_images/c81d76c2865b2d9bcced018444cfc40df5a5d5047632a97f363ff71405580b8a.png" src="../../_images/c81d76c2865b2d9bcced018444cfc40df5a5d5047632a97f363ff71405580b8a.png" />
+</div>
+</div>
+<div class="alert alert-block alert-info">
+<p><b>Note:</b> The bright spectrum in primary slit S200A1 shows little difference after cleaning (at some wavelengths, the cleaned spectrum has a subtle increase in flux according to the ratio). The faint background spectra in the secondary slits (S200A2, S400A1, S1600A1, S200B1) have been corrected for negative fluxes (indicated by a ratio close to zero) along with wavelength-dependent variations.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Subarray SUBS200A1 1D extracted spectra.</span>
+
+<span class="k">for</span> <span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">,</span> <span class="n">rate_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">x1d_nsclean_skipped</span><span class="p">,</span> <span class="n">x1d_nsclean_default</span><span class="p">,</span> <span class="n">rate_types</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">rate_type</span> <span class="o">!=</span> <span class="s2">&quot;subarray&quot;</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">for</span> <span class="n">slit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>  <span class="c1"># 1 slit S200A1</span>
+        <span class="n">plot_spectra</span><span class="p">([</span><span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">],</span> <span class="n">ext_num</span><span class="o">=</span><span class="n">slit</span><span class="p">,</span> <span class="n">scale_percent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># Subarray SUBS200A1 1D extracted Spectra -- smaller wavelength region of interest.</span>
+<span class="n">wavelength_range</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nrs1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">4.3</span><span class="p">,</span> <span class="mf">4.7</span><span class="p">]}</span>
+<span class="n">flux_range</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nrs1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.004</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">]}</span>
+
+<span class="k">for</span> <span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">,</span> <span class="n">rate_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">x1d_nsclean_skipped</span><span class="p">,</span> <span class="n">x1d_nsclean_default</span><span class="p">,</span> <span class="n">rate_types</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">rate_type</span> <span class="o">!=</span> <span class="s2">&quot;subarray&quot;</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">for</span> <span class="n">slit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>  <span class="c1"># 1 slit S200A1</span>
+        <span class="n">plot_spectra</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">],</span>
+            <span class="n">ext_num</span><span class="o">=</span><span class="n">slit</span><span class="p">,</span>
+            <span class="n">scale_percent</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">wavelength_range</span><span class="o">=</span><span class="n">wavelength_range</span><span class="p">,</span>
+            <span class="n">flux_range</span><span class="o">=</span><span class="n">flux_range</span><span class="p">,</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/bfc2e0dbacd8b3a7c079bbd28a73ec5a312bd807578f4e5cac22ed1d14c96373.png" src="../../_images/bfc2e0dbacd8b3a7c079bbd28a73ec5a312bd807578f4e5cac22ed1d14c96373.png" />
+<img alt="../../_images/0dbde57992922cc79bc06f91cbcb6a9f55e56becf3ed153d45830f860853a9ce.png" src="../../_images/0dbde57992922cc79bc06f91cbcb6a9f55e56becf3ed153d45830f860853a9ce.png" />
+</div>
+</div>
+<div class="alert alert-block alert-info">
+<p><b>Notes:</b></p>
+<ul class="simple">
+<li><p>For the fainter spectrum in the subarray data, we can see small changes to the continuum level from the cleaning process.</p></li>
+<li><p>The excess flux around 4.55um in the original data is corrected after cleaning.</p></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="clean-up-1-f-noise-with-nsclean-alternate-mask-a-name-nsclean-alternate-a">
+<h2>6. Clean up 1/f Noise with NSClean (Alternate Mask) <a name="nsclean_alternate"></a><a class="headerlink" href="#clean-up-1-f-noise-with-nsclean-alternate-mask-a-name-nsclean-alternate-a" title="Permalink to this heading">#</a></h2>
+<hr style="border:1px solid black">
+<p>For some data sets, masking the entire science region may excessively mask dark areas of the detector that could be used to improve the background fit.  Excessive masking can introduce some high frequency noise in the cleaning process that appears as vertical striping over the spectral traces. For example, see the cleaned rate data for the subarray (PID 2757) above in section 6.2. Since this region is completely masked, some residual artifacts are introduced.</p>
+<p>Also, for some data sets, there may be several illuminated regions of the detector that are not masked by the WCS bounding boxes.  In the subarray data, note that the mask does not cover the bluest end of the spectral trace.  This region is illuminated, but is not calibrated.</p>
+<p>In some cases, it may be beneficial to build the mask with an alternate algorithm.  Here, we do not use the bounding boxes and instead iteratively mask any data more than 2 sigma above the background.  For bright sources, this leaves more dark data near the spectral trace and may improve the background fit.</p>
+<p>Note, however, that excessive cleaning may impact the continuum level for the spectrum, if too much or too little illuminated data is included in the mask. Again, the generated mask and output spectra should be carefully examined to weigh the benefits of cleaning against the impact on the spectra.</p>
+<p>To tune the illumination detection in this mask, try modifying the <code class="docutils literal notranslate"><span class="pre">n_sigma</span></code> parameter below. A higher value will identify less illumination. A lower value will identify more.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set up directory for running NSClean with user-supplied mask.</span>
+<span class="n">stage2_nsclean_alternate_dir</span> <span class="o">=</span> <span class="s2">&quot;./stage2_nsclean_alternate/&quot;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">stage2_nsclean_alternate_dir</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span>
+        <span class="n">stage2_nsclean_alternate_dir</span>
+    <span class="p">)</span>  <span class="c1"># Create the directory if it doesn&#39;t exist.</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1/f noise cleaned data (alternate NSClean pipeline mask).</span>
+<span class="c1"># Estimated run time: 9 minutes.</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">indx</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rate_names</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">... &quot;</span><span class="p">)</span>
+
+    <span class="n">Spec2Pipeline</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+        <span class="n">mast_products_dir</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span>
+        <span class="n">save_results</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">steps</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;nsclean&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;skip&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;save_mask&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;n_sigma&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;mask_spectral_regions&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;save_results&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="p">},</span>  <span class="c1"># Removes correlated read noise (1/f noise) from NIRSpec images</span>
+        <span class="p">},</span>
+        <span class="n">output_dir</span><span class="o">=</span><span class="n">stage2_nsclean_alternate_dir</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;mask.fits&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;nsclean.fits&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;cal.fits&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;x1d.fits&quot;</span><span class="p">)</span>
+
+
+<span class="n">end</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run time: &quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">60.0</span><span class="p">,</span> <span class="s2">&quot; min&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing jw02757002001_03104_00001_nrs1_rate.fits... 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved jw02757002001_03104_00001_nrs1_mask.fits
+Saved jw02757002001_03104_00001_nrs1_nsclean.fits
+Saved jw02757002001_03104_00001_nrs1_cal.fits
+Saved jw02757002001_03104_00001_nrs1_x1d.fits
+Processing jw01189001001_04101_00001_nrs1_rate.fits... 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved jw01189001001_04101_00001_nrs1_mask.fits
+Saved jw01189001001_04101_00001_nrs1_nsclean.fits
+Saved jw01189001001_04101_00001_nrs1_cal.fits
+Saved jw01189001001_04101_00001_nrs1_x1d.fits
+Processing jw01189001001_04101_00001_nrs2_rate.fits... 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved jw01189001001_04101_00001_nrs2_mask.fits
+Saved jw01189001001_04101_00001_nrs2_nsclean.fits
+Saved jw01189001001_04101_00001_nrs2_cal.fits
+Saved jw01189001001_04101_00001_nrs2_x1d.fits
+Run time:  4.9399999999999995  min
+</pre></div>
+</div>
+</div>
+</div>
+<section id="verify-the-mask-alternate-mask-a-name-verify-alternate-mask-a">
+<h3>6.1 Verify the Mask (Alternate Mask) <a name="verify_alternate_mask"></a><a class="headerlink" href="#verify-the-mask-alternate-mask-a-name-verify-alternate-mask-a" title="Permalink to this heading">#</a></h3>
+<hr style="border:1px solid black">
+<p>Check the mask against the rate data to make sure it keeps only dark areas of the detector.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the rate data with masked areas blocked.</span>
+
+<span class="c1"># List of on-the-fly built masks from the pipeline.</span>
+<span class="n">nsclean_alternate_masks</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">stage2_nsclean_alternate_dir</span> <span class="o">+</span> <span class="s2">&quot;jw02757002001_03104_00001_nrs1_mask.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_alternate_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs1_mask.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_alternate_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs2_mask.fits&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Plot each associated set of rate data and mask file.</span>
+<span class="k">for</span> <span class="n">rate_file</span><span class="p">,</span> <span class="n">rate_type</span><span class="p">,</span> <span class="n">mask_file</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">rate_names</span><span class="p">,</span> <span class="n">rate_types</span><span class="p">,</span> <span class="n">nsclean_alternate_masks</span>
+<span class="p">):</span>
+    <span class="n">layout</span> <span class="o">=</span> <span class="s2">&quot;rows&quot;</span> <span class="k">if</span> <span class="n">rate_type</span> <span class="o">==</span> <span class="s2">&quot;subarray&quot;</span> <span class="k">else</span> <span class="s2">&quot;cols&quot;</span>
+    <span class="n">plot_dark_data</span><span class="p">(</span><span class="n">mast_products_dir</span> <span class="o">+</span> <span class="n">rate_file</span><span class="p">,</span> <span class="n">mask_file</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/f4867a664549e0c44aa5739dba9583fef60726908ac2d5ee04833d81d858a81d.png" src="../../_images/f4867a664549e0c44aa5739dba9583fef60726908ac2d5ee04833d81d858a81d.png" />
+<img alt="../../_images/aaa901c860b675e0da95d4be73a37dd835c6a8d3d1e2054fc68c3834e338402a.png" src="../../_images/aaa901c860b675e0da95d4be73a37dd835c6a8d3d1e2054fc68c3834e338402a.png" />
+<img alt="../../_images/d6029516139a67856e259ca8647a8799b3d94768616f1432f063193e9566ed9d.png" src="../../_images/d6029516139a67856e259ca8647a8799b3d94768616f1432f063193e9566ed9d.png" />
+</div>
+</div>
+</section>
+<section id="comparing-original-vs-cleaned-data-alternate-mask-a-name-nsclean-alternate-compare-a">
+<h3>6.2 Comparing Original vs. Cleaned Data (Alternate Mask) <a name="nsclean_alternate_compare"></a><a class="headerlink" href="#comparing-original-vs-cleaned-data-alternate-mask-a-name-nsclean-alternate-compare-a" title="Permalink to this heading">#</a></h3>
+<hr style="border:1px solid black"><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the original and cleaned data, as well as a residual map.</span>
+
+<span class="n">cleaned_alternate_masks</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">stage2_nsclean_alternate_dir</span> <span class="o">+</span> <span class="s2">&quot;jw02757002001_03104_00001_nrs1_nsclean.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_alternate_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs1_nsclean.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_alternate_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs2_nsclean.fits&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Plot each associated set of rateint data and cleaned file.</span>
+<span class="k">for</span> <span class="n">rate_file</span><span class="p">,</span> <span class="n">cleaned_file</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rate_names</span><span class="p">,</span> <span class="n">cleaned_alternate_masks</span><span class="p">):</span>
+    <span class="n">layout</span> <span class="o">=</span> <span class="s2">&quot;rows&quot;</span> <span class="k">if</span> <span class="n">rate_type</span> <span class="o">==</span> <span class="s2">&quot;subarray&quot;</span> <span class="k">else</span> <span class="s2">&quot;cols&quot;</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="mi">8</span> <span class="k">if</span> <span class="s2">&quot;2757&quot;</span> <span class="ow">in</span> <span class="n">rate_file</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="n">plot_cleaned_data</span><span class="p">(</span>
+        <span class="n">mast_products_dir</span> <span class="o">+</span> <span class="n">rate_file</span><span class="p">,</span> <span class="n">cleaned_file</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/a27fcc966a2a94e9b65b71761829059509ea246b66420657b15453c221f07584.png" src="../../_images/a27fcc966a2a94e9b65b71761829059509ea246b66420657b15453c221f07584.png" />
+<img alt="../../_images/b857703aec84211a151e0986137c17ebe1a04457e29f781c5c4c51f43e2344a6.png" src="../../_images/b857703aec84211a151e0986137c17ebe1a04457e29f781c5c4c51f43e2344a6.png" />
+<img alt="../../_images/212c3e132b80975c0219a6504877f9cf0ef3a2dfdd367b7d78f14d3a90c4b2d6.png" src="../../_images/212c3e132b80975c0219a6504877f9cf0ef3a2dfdd367b7d78f14d3a90c4b2d6.png" />
+</div>
+</div>
+<p>Compare the extracted spectrum from the cleaned data to the spectrum extracted from the original rate file. Note that the following plots for the full-frame data display all FSs, but the primary source is in FS S200A1.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Full frame 1D extracted spectra (all FSs plotted)</span>
+
+<span class="n">x1d_nsclean_alternate</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">stage2_nsclean_alternate_dir</span> <span class="o">+</span> <span class="s2">&quot;jw02757002001_03104_00001_nrs1_x1d.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_alternate_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs1_x1d.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_alternate_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs2_x1d.fits&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Plot each FS in the full-frame</span>
+<span class="k">for</span> <span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">,</span> <span class="n">rate_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">x1d_nsclean_skipped</span><span class="p">,</span> <span class="n">x1d_nsclean_alternate</span><span class="p">,</span> <span class="n">rate_types</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">rate_type</span> <span class="o">==</span> <span class="s2">&quot;subarray&quot;</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">for</span> <span class="n">slit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>  <span class="c1"># 5 FS in full-frame</span>
+        <span class="n">plot_spectra</span><span class="p">([</span><span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">],</span> <span class="n">ext_num</span><span class="o">=</span><span class="n">slit</span><span class="p">,</span> <span class="n">scale_percent</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/2a166b2d189488e9fd743ff82103a5d09c103840f46e4fb138066f245ce691ef.png" src="../../_images/2a166b2d189488e9fd743ff82103a5d09c103840f46e4fb138066f245ce691ef.png" />
+<img alt="../../_images/92eebd8044760ec19eec648b94111f683870a61f5a7a70b6f9297839f9ce888e.png" src="../../_images/92eebd8044760ec19eec648b94111f683870a61f5a7a70b6f9297839f9ce888e.png" />
+<img alt="../../_images/047efca025051a3e849f125c4ad20b7f3652c4974404428266556389ceb31da8.png" src="../../_images/047efca025051a3e849f125c4ad20b7f3652c4974404428266556389ceb31da8.png" />
+<img alt="../../_images/ed4ed6df7775d931d5b2793507aa6a01b42e7b71f436bc5a275508a7176e533b.png" src="../../_images/ed4ed6df7775d931d5b2793507aa6a01b42e7b71f436bc5a275508a7176e533b.png" />
+<img alt="../../_images/9c0dde90265ebbf060f511f9863e36cd332874b8e9eb2a93d6410af4e9e876ec.png" src="../../_images/9c0dde90265ebbf060f511f9863e36cd332874b8e9eb2a93d6410af4e9e876ec.png" />
+</div>
+</div>
+<div class="alert alert-block alert-info">
+<p><b>Note:</b> Cleaning with this mask, the bright spectrum in primary slit S200A1 still shows little difference after cleaning (at some wavelengths, the cleaned spectrum has a subtle increase in flux according to the ratio). The faint background spectra in the secondary slits (S200A2, S400A1, S1600A1, S200B1) have been corrected for negative fluxes (indicated by a ratio close to zero) along with wavelength-dependent variations.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Subarray SUBS200A1 1D extracted spectra.</span>
+
+<span class="c1"># Plot each FS in the full-frame.</span>
+<span class="k">for</span> <span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">,</span> <span class="n">rate_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">x1d_nsclean_skipped</span><span class="p">,</span> <span class="n">x1d_nsclean_alternate</span><span class="p">,</span> <span class="n">rate_types</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">rate_type</span> <span class="o">!=</span> <span class="s2">&quot;subarray&quot;</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">for</span> <span class="n">slit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>  <span class="c1"># 5 FS in full-frame</span>
+        <span class="n">plot_spectra</span><span class="p">([</span><span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">],</span> <span class="n">ext_num</span><span class="o">=</span><span class="n">slit</span><span class="p">,</span> <span class="n">scale_percent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># Subarray SUBS200A1 1D extracted spectra -- smaller wavelength region of interest.</span>
+<span class="n">wavelength_range</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nrs1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">4.3</span><span class="p">,</span> <span class="mf">4.7</span><span class="p">]}</span>
+<span class="n">flux_range</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nrs1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.004</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">]}</span>
+
+<span class="k">for</span> <span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">,</span> <span class="n">rate_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">x1d_nsclean_skipped</span><span class="p">,</span> <span class="n">x1d_nsclean_alternate</span><span class="p">,</span> <span class="n">rate_types</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">rate_type</span> <span class="o">!=</span> <span class="s2">&quot;subarray&quot;</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">for</span> <span class="n">slit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>  <span class="c1"># 1 slit S200A1</span>
+        <span class="n">plot_spectra</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">],</span>
+            <span class="n">ext_num</span><span class="o">=</span><span class="n">slit</span><span class="p">,</span>
+            <span class="n">scale_percent</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">wavelength_range</span><span class="o">=</span><span class="n">wavelength_range</span><span class="p">,</span>
+            <span class="n">flux_range</span><span class="o">=</span><span class="n">flux_range</span><span class="p">,</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/763a1325df1bce842631bddfd6f46ce8b7966bb5617a5e3e7288f293126c798b.png" src="../../_images/763a1325df1bce842631bddfd6f46ce8b7966bb5617a5e3e7288f293126c798b.png" />
+<img alt="../../_images/5ab33c20158781f2ff80755b5d9df2c176783621eca488260899f7d62bd90ecf.png" src="../../_images/5ab33c20158781f2ff80755b5d9df2c176783621eca488260899f7d62bd90ecf.png" />
+</div>
+</div>
+<div class="alert alert-block alert-info">
+<p><b>Note:</b> Cleaning with this mask still removes the wavelength-dependent variation near 4.55 um. Compared to the original spectrum, the clipping-based mask may introduce slightly less high-frequency noise.</p>
+</div></section>
+</section>
+<section id="clean-up-1-f-noise-with-nsclean-hand-modified-mask-a-name-nsclean-modified-a">
+<h2>7. Clean up 1/f Noise with NSClean (Hand-Modified Mask) <a name="nsclean_modified"></a><a class="headerlink" href="#clean-up-1-f-noise-with-nsclean-hand-modified-mask-a-name-nsclean-modified-a" title="Permalink to this heading">#</a></h2>
+<hr style="border:1px solid black">
+<p>In certain scenarios, manual generation of a mask may be required. Here, we present <strong>one</strong> approach to manually modify the mask for both datasets (shrinking some of the masked FS regions to include more background), starting with the default mask output from the pipeline. It is worth noting that the mask modified using this method may not necessarily outperform the two previous options.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set up directory for running NSClean with user-supplied mask.</span>
+<span class="n">stage2_nsclean_modified_dir</span> <span class="o">=</span> <span class="s2">&quot;./stage2_nsclean_modified/&quot;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">stage2_nsclean_modified_dir</span><span class="p">):</span>
+    <span class="c1"># Create the directory if it doesn&#39;t exist.</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">stage2_nsclean_modified_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Hand-modify certain mask regions.</span>
+
+<span class="c1"># Define the list to store paths of modified masks.</span>
+<span class="n">nsclean_modified_masks</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># Iterate through the list of original masks.</span>
+<span class="k">for</span> <span class="n">mask</span> <span class="ow">in</span> <span class="n">nsclean_default_masks</span><span class="p">:</span>
+    <span class="c1"># New mask file name</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">mask</span><span class="p">)[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_modified.fits&quot;</span>
+
+    <span class="c1"># Open the FITS file.</span>
+    <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdul</span><span class="p">:</span>
+        <span class="c1"># Extract the mask data from the science extension.</span>
+        <span class="n">mask_data</span> <span class="o">=</span> <span class="n">hdul</span><span class="p">[</span><span class="s2">&quot;SCI&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># Make a copy.</span>
+
+        <span class="k">if</span> <span class="s2">&quot;2757&quot;</span> <span class="ow">in</span> <span class="n">mask</span><span class="p">:</span>
+            <span class="c1"># Step 1: Set the default masked regions back to True.</span>
+            <span class="n">mask_data</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="c1"># Step 2: Re-define masked regions by hand.</span>
+            <span class="n">mask_data</span><span class="p">[</span><span class="mi">26</span><span class="p">:</span><span class="mi">45</span><span class="p">,</span> <span class="mi">680</span><span class="p">:]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="s2">&quot;1189&quot;</span> <span class="ow">and</span> <span class="s2">&quot;nrs1&quot;</span> <span class="ow">in</span> <span class="n">mask</span><span class="p">:</span>
+            <span class="n">mask_data</span><span class="p">[</span><span class="mi">1054</span><span class="p">:</span><span class="mi">1150</span><span class="p">,</span> <span class="mi">650</span><span class="p">:]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">mask_data</span><span class="p">[</span><span class="mi">1077</span><span class="p">:</span><span class="mi">1098</span><span class="p">,</span> <span class="mi">650</span><span class="p">:]</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Update the data within the science extension.</span>
+        <span class="n">hdul</span><span class="p">[</span><span class="s2">&quot;SCI&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">mask_data</span>
+        <span class="c1"># Save the modified FITS file.</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stage2_nsclean_modified_dir</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
+        <span class="n">hdul_modified</span> <span class="o">=</span> <span class="n">hdul</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># Make a copy.</span>
+        <span class="n">hdul_modified</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">nsclean_modified_masks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved modified mask as: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved modified mask as: ./stage2_nsclean_modified/jw02757002001_03104_00001_nrs1_mask_modified.fits
+Saved modified mask as: ./stage2_nsclean_modified/jw01189001001_04101_00001_nrs1_mask_modified.fits
+Saved modified mask as: ./stage2_nsclean_modified/jw01189001001_04101_00001_nrs2_mask_modified.fits
+</pre></div>
+</div>
+</div>
+</div>
+<section id="verify-the-mask-hand-modified-mask-a-name-verify-modified-mask-a">
+<h3>7.1 Verify the Mask (Hand-Modified Mask) <a name="verify_modified_mask"></a><a class="headerlink" href="#verify-the-mask-hand-modified-mask-a-name-verify-modified-mask-a" title="Permalink to this heading">#</a></h3>
+<hr style="border:1px solid black">
+<p>Check the mask against the rate data to make sure it keeps only dark areas of the detector.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the rate data with masked areas blocked.</span>
+
+<span class="c1"># List of modified masks for the pipeline.</span>
+<span class="n">nsclean_modified_masks</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">stage2_nsclean_modified_dir</span> <span class="o">+</span> <span class="s2">&quot;jw02757002001_03104_00001_nrs1_mask_modified.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_modified_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs1_mask_modified.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_modified_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs2_mask_modified.fits&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Plot each associated set of rate data and mask file.</span>
+<span class="k">for</span> <span class="n">rate_file</span><span class="p">,</span> <span class="n">rate_type</span><span class="p">,</span> <span class="n">mask_file</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">rate_names</span><span class="p">,</span> <span class="n">rate_types</span><span class="p">,</span> <span class="n">nsclean_modified_masks</span>
+<span class="p">):</span>
+    <span class="n">layout</span> <span class="o">=</span> <span class="s2">&quot;rows&quot;</span> <span class="k">if</span> <span class="n">rate_type</span> <span class="o">==</span> <span class="s2">&quot;subarray&quot;</span> <span class="k">else</span> <span class="s2">&quot;cols&quot;</span>
+    <span class="n">plot_dark_data</span><span class="p">(</span><span class="n">mast_products_dir</span> <span class="o">+</span> <span class="n">rate_file</span><span class="p">,</span> <span class="n">mask_file</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/5ebc7d36873b1b296a7eac4516ff62ae17f7934e4585f991ede7dd7cb018a93b.png" src="../../_images/5ebc7d36873b1b296a7eac4516ff62ae17f7934e4585f991ede7dd7cb018a93b.png" />
+<img alt="../../_images/38af445c8a74f6877d22a65b037f42d1afaa65b80e1333481575500e5b099712.png" src="../../_images/38af445c8a74f6877d22a65b037f42d1afaa65b80e1333481575500e5b099712.png" />
+<img alt="../../_images/ac667d532465e1eb84c1985fa1760554ff63503094e8037f70f7bf3e1f76a1bd.png" src="../../_images/ac667d532465e1eb84c1985fa1760554ff63503094e8037f70f7bf3e1f76a1bd.png" />
+</div>
+</div>
+<div class="alert alert-block alert-info">
+<b>Note:</b> When modifying the mask for PID 1189 (NRS1), we selected a region to unmask and then re-masked differently. However, this process inadvertently led to the unmasking of some previously masked NaN values (white pixels seen in the dark data plot for NRS1). Therefore, caution should be exercised when modifying the mask. 
+</div><hr style="border:1px solid black">
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1/f noise cleaned data (user-supplied mask).</span>
+<span class="c1"># Estimated run time: 8 minutes.</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">indx</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rate_names</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">... &quot;</span><span class="p">)</span>
+
+    <span class="n">Spec2Pipeline</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+        <span class="n">mast_products_dir</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span>
+        <span class="n">save_results</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">steps</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;nsclean&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;skip&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;save_mask&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;save_results&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;user_mask&quot;</span><span class="p">:</span> <span class="n">nsclean_modified_masks</span><span class="p">[</span><span class="n">indx</span><span class="p">],</span>
+            <span class="p">},</span>  <span class="c1"># Removes correlated read noise (1/f noise) from NIRSpec images.</span>
+        <span class="p">},</span>
+        <span class="n">output_dir</span><span class="o">=</span><span class="n">stage2_nsclean_modified_dir</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;mask.fits&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;nsclean.fits&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;cal.fits&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;x1d.fits&quot;</span><span class="p">)</span>
+
+
+<span class="n">end</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run time: &quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">60.0</span><span class="p">,</span> <span class="s2">&quot; min&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing jw02757002001_03104_00001_nrs1_rate.fits... 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved jw02757002001_03104_00001_nrs1_mask.fits
+Saved jw02757002001_03104_00001_nrs1_nsclean.fits
+Saved jw02757002001_03104_00001_nrs1_cal.fits
+Saved jw02757002001_03104_00001_nrs1_x1d.fits
+Processing jw01189001001_04101_00001_nrs1_rate.fits... 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved jw01189001001_04101_00001_nrs1_mask.fits
+Saved jw01189001001_04101_00001_nrs1_nsclean.fits
+Saved jw01189001001_04101_00001_nrs1_cal.fits
+Saved jw01189001001_04101_00001_nrs1_x1d.fits
+Processing jw01189001001_04101_00001_nrs2_rate.fits... 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved jw01189001001_04101_00001_nrs2_mask.fits
+Saved jw01189001001_04101_00001_nrs2_nsclean.fits
+Saved jw01189001001_04101_00001_nrs2_cal.fits
+Saved jw01189001001_04101_00001_nrs2_x1d.fits
+Run time:  4.328333333333333  min
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="comparing-original-vs-cleaned-data-hand-modified-mask-a-name-nsclean-modified-compare-a">
+<h3>7.2 Comparing Original vs. Cleaned Data (Hand-Modified Mask) <a name="nsclean_modified_compare"></a><a class="headerlink" href="#comparing-original-vs-cleaned-data-hand-modified-mask-a-name-nsclean-modified-compare-a" title="Permalink to this heading">#</a></h3>
+<hr style="border:1px solid black"><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the original and cleaned data, as well as a residual map.</span>
+
+<span class="n">cleaned_modified_masks</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">stage2_nsclean_modified_dir</span> <span class="o">+</span> <span class="s2">&quot;jw02757002001_03104_00001_nrs1_nsclean.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_modified_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs1_nsclean.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_modified_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs2_nsclean.fits&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Plot each associated set of rateint data and cleaned file.</span>
+<span class="k">for</span> <span class="n">rate_file</span><span class="p">,</span> <span class="n">cleaned_file</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rate_names</span><span class="p">,</span> <span class="n">cleaned_modified_masks</span><span class="p">):</span>
+    <span class="n">layout</span> <span class="o">=</span> <span class="s2">&quot;rows&quot;</span> <span class="k">if</span> <span class="n">rate_type</span> <span class="o">==</span> <span class="s2">&quot;subarray&quot;</span> <span class="k">else</span> <span class="s2">&quot;cols&quot;</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="mi">8</span> <span class="k">if</span> <span class="s2">&quot;2757&quot;</span> <span class="ow">in</span> <span class="n">rate_file</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="n">plot_cleaned_data</span><span class="p">(</span>
+        <span class="n">mast_products_dir</span> <span class="o">+</span> <span class="n">rate_file</span><span class="p">,</span> <span class="n">cleaned_file</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/8cf47aaab375dfdc948d84e34b140a7dc4319b2d1269898ccd7ddf8e61c589dc.png" src="../../_images/8cf47aaab375dfdc948d84e34b140a7dc4319b2d1269898ccd7ddf8e61c589dc.png" />
+<img alt="../../_images/11836490f6315bedf79d1f684f80a619fb3c3f60ce747b6f28a353c7e72e45f0.png" src="../../_images/11836490f6315bedf79d1f684f80a619fb3c3f60ce747b6f28a353c7e72e45f0.png" />
+<img alt="../../_images/58dee33dee285e689ff13366b194ec04677bedbd05329a757a1092236bf776d3.png" src="../../_images/58dee33dee285e689ff13366b194ec04677bedbd05329a757a1092236bf776d3.png" />
+</div>
+</div>
+<p>Compare the extracted spectrum from the cleaned data and compare it to the spectrum extracted from the original rate file.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Full Frame 1D Extracted Spectra (all FSs plotted)</span>
+
+<span class="n">x1d_nsclean_modified</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">stage2_nsclean_modified_dir</span> <span class="o">+</span> <span class="s2">&quot;jw02757002001_03104_00001_nrs1_x1d.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_modified_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs1_x1d.fits&quot;</span><span class="p">,</span>
+    <span class="n">stage2_nsclean_modified_dir</span> <span class="o">+</span> <span class="s2">&quot;jw01189001001_04101_00001_nrs2_x1d.fits&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Plot each FS in the Full-frame</span>
+<span class="k">for</span> <span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">,</span> <span class="n">rate_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">x1d_nsclean_skipped</span><span class="p">,</span> <span class="n">x1d_nsclean_modified</span><span class="p">,</span> <span class="n">rate_types</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">rate_type</span> <span class="o">==</span> <span class="s2">&quot;subarray&quot;</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">for</span> <span class="n">slit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>  <span class="c1"># 5 FS in full-frame</span>
+        <span class="n">plot_spectra</span><span class="p">([</span><span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">],</span> <span class="n">ext_num</span><span class="o">=</span><span class="n">slit</span><span class="p">,</span> <span class="n">scale_percent</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/5e47e646c93c697670973b42ff36d115cae9799f581c8c43e61e0c2c3ace2664.png" src="../../_images/5e47e646c93c697670973b42ff36d115cae9799f581c8c43e61e0c2c3ace2664.png" />
+<img alt="../../_images/f9ba155d776ff070b5c60e78c284482642ad5acf27c401f423307f2a1d26648f.png" src="../../_images/f9ba155d776ff070b5c60e78c284482642ad5acf27c401f423307f2a1d26648f.png" />
+<img alt="../../_images/c5433a932d463dbf8a28d05232af4d61a836ed46714ecda86646a821d6e31496.png" src="../../_images/c5433a932d463dbf8a28d05232af4d61a836ed46714ecda86646a821d6e31496.png" />
+<img alt="../../_images/13ca2a510e1a1c54479f7ed820fcded24eaf193d51ff0c6a97a707504f2dc891.png" src="../../_images/13ca2a510e1a1c54479f7ed820fcded24eaf193d51ff0c6a97a707504f2dc891.png" />
+<img alt="../../_images/c81d76c2865b2d9bcced018444cfc40df5a5d5047632a97f363ff71405580b8a.png" src="../../_images/c81d76c2865b2d9bcced018444cfc40df5a5d5047632a97f363ff71405580b8a.png" />
+</div>
+</div>
+<div class="alert alert-block alert-info">
+<p><b>Note:</b> Again, cleaning with this modified mask, the bright spectrum in primary slit S200A1 still shows little difference after cleaning (at some wavelengths, the cleaned spectrum has a subtle increase in flux according to the ratio). The mask applied to the faint background spectra in the secondary slits (S200A2, S400A1, S1600A1, S200B1) remains identical to the default mask provided by the pipeline. Consequently, the results obtained for these slits using this mask remain unchanged when compared to the default mask.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Subarray SUBS200A1 1D Extracted Spectra</span>
+
+<span class="c1"># Plot each FS in the Full-frame</span>
+<span class="k">for</span> <span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">,</span> <span class="n">rate_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">x1d_nsclean_skipped</span><span class="p">,</span> <span class="n">x1d_nsclean_modified</span><span class="p">,</span> <span class="n">rate_types</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">rate_type</span> <span class="o">!=</span> <span class="s2">&quot;subarray&quot;</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">for</span> <span class="n">slit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>  <span class="c1"># 5 FS in full-frame</span>
+        <span class="n">plot_spectra</span><span class="p">([</span><span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">],</span> <span class="n">ext_num</span><span class="o">=</span><span class="n">slit</span><span class="p">,</span> <span class="n">scale_percent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># Subarray SUBS200A1 1D Extracted Spectra -- smaller wavelength region of interest</span>
+
+<span class="c1"># Wavelength region of interest</span>
+<span class="n">wavelength_range</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nrs1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">4.3</span><span class="p">,</span> <span class="mf">4.7</span><span class="p">]}</span>
+<span class="n">flux_range</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nrs1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.004</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">]}</span>
+
+
+<span class="k">for</span> <span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">,</span> <span class="n">rate_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">x1d_nsclean_skipped</span><span class="p">,</span> <span class="n">x1d_nsclean_modified</span><span class="p">,</span> <span class="n">rate_types</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">rate_type</span> <span class="o">!=</span> <span class="s2">&quot;subarray&quot;</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">for</span> <span class="n">slit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>  <span class="c1"># 1 slit S200A1</span>
+        <span class="n">plot_spectra</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">original</span><span class="p">,</span> <span class="n">cleaned</span><span class="p">],</span>
+            <span class="n">ext_num</span><span class="o">=</span><span class="n">slit</span><span class="p">,</span>
+            <span class="n">scale_percent</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">wavelength_range</span><span class="o">=</span><span class="n">wavelength_range</span><span class="p">,</span>
+            <span class="n">flux_range</span><span class="o">=</span><span class="n">flux_range</span><span class="p">,</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/ab03322caa670060a5d2717b50be46ed2ef0650f898b0293c3393c8bdf6bf3a6.png" src="../../_images/ab03322caa670060a5d2717b50be46ed2ef0650f898b0293c3393c8bdf6bf3a6.png" />
+<img alt="../../_images/f42014239617521ce18c4bbe01dcd03eba26461d97e2ea742ba9f3398273988b.png" src="../../_images/f42014239617521ce18c4bbe01dcd03eba26461d97e2ea742ba9f3398273988b.png" />
+</div>
+</div>
+<div class="alert alert-block alert-info">
+<p><b>Note:</b> For the fainter spectrum in the subarray data, we can see small changes to the continuum level from the cleaning process. Cleaning with this mask still removes the wavelength-dependent variation near 4.55 um.</p>
+</div></section>
+</section>
+<section id="conclusion-a-name-conclusion-a">
+<h2>8. Conclusion <a name="conclusion"></a><a class="headerlink" href="#conclusion-a-name-conclusion-a" title="Permalink to this heading">#</a></h2>
+<hr style="border:1px solid black">
+<p>The final plots below show the countrate images and the resulting 1D extracted spectra side-by-side to compare the different cleaning methods: the original (no NSClean applied), the cleaned countrate image (with the default pipeline mask), the cleaned countrate image (with an alternate pipeline mask), and finally, the cleaned countrate image (with the hand-modified mask).</p>
+<p>Please note that the results presented in this notebook may vary for different datasets (e.g., targets of different brightness, spatial extent, etc.). Users are encouraged to explore NSClean using different masking methods to determine the optimal results.</p>
+<p>The output from the cleaning algorithm is now ready for further processing.  The (<em>_cal.fits</em>) files produced by the above <code class="docutils literal notranslate"><span class="pre">Spec2Pipeline</span></code> run may be used as input to the <code class="docutils literal notranslate"><span class="pre">Spec3Pipeline</span></code>, for generating final combined spectra.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load rate data and cleaned masks</span>
+<span class="n">original_rate_data</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">mast_products_dir</span> <span class="o">+</span> <span class="n">rate_name</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="k">for</span> <span class="n">rate_name</span> <span class="ow">in</span> <span class="n">rate_names</span>
+<span class="p">]</span>
+<span class="n">cleaned_rate_default_data</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">cleaned_default_mask</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">for</span> <span class="n">cleaned_default_mask</span> <span class="ow">in</span> <span class="n">cleaned_default_masks</span>
+<span class="p">]</span>
+<span class="n">cleaned_rate_alternate_data</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">cleaned_alternate_mask</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">for</span> <span class="n">cleaned_alternate_mask</span> <span class="ow">in</span> <span class="n">cleaned_alternate_masks</span>
+<span class="p">]</span>
+<span class="n">cleaned_rate_modified_data</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">cleaned_modified_mask</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">for</span> <span class="n">cleaned_modified_mask</span> <span class="ow">in</span> <span class="n">cleaned_modified_masks</span>
+<span class="p">]</span>
+
+<span class="c1"># For plotting visualization</span>
+<span class="k">for</span> <span class="n">data_list</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="n">original_rate_data</span><span class="p">,</span>
+    <span class="n">cleaned_rate_default_data</span><span class="p">,</span>
+    <span class="n">cleaned_rate_alternate_data</span><span class="p">,</span>
+    <span class="n">cleaned_rate_modified_data</span><span class="p">,</span>
+<span class="p">]:</span>
+    <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">data_list</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># Set up clim values</span>
+<span class="n">clim_first_row</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">clim_subsequent_rows</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1e-1</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">)</span>
+
+<span class="c1"># Original vs. cleaned data (with default mask)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;hspace&quot;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">})</span>
+
+<span class="c1"># Set titles and plot data</span>
+<span class="n">titles</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Original Rate Data&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Cleaned Rate Data (Default Mask)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Cleaned Rate Data (Alternate Mask)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Cleaned Rate Data (Hand-Modified Mask)&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">titles</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">original_rate_data</span><span class="p">,</span>
+            <span class="n">cleaned_rate_default_data</span><span class="p">,</span>
+            <span class="n">cleaned_rate_alternate_data</span><span class="p">,</span>
+            <span class="n">cleaned_rate_modified_data</span><span class="p">,</span>
+        <span class="p">][</span><span class="n">i</span><span class="p">]</span>
+    <span class="p">):</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+        <span class="n">aspect</span> <span class="o">=</span> <span class="mi">10</span> <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;auto&quot;</span>
+        <span class="n">clim</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">clim_first_row</span> <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">clim_subsequent_rows</span>
+        <span class="p">)</span>  <span class="c1"># Adjust clim based on row</span>
+        <span class="n">rate_name</span> <span class="o">=</span> <span class="n">rate_names</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">10</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">rate_names</span><span class="p">[</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">10</span><span class="p">]</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rate_name</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect</span><span class="p">,</span> <span class="n">clim</span><span class="o">=</span><span class="n">clim</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;DN/s&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Pixel Column&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Pixel Row&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/23a72886d5ad6572c812715c9b9eea61786c779f45a18a3a04aa8c73a34c5dab.png" src="../../_images/23a72886d5ad6572c812715c9b9eea61786c779f45a18a3a04aa8c73a34c5dab.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_spectra</span><span class="p">(</span>
+    <span class="n">spec_list</span><span class="p">,</span>
+    <span class="n">ext_num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">scale_percent</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+    <span class="n">wavelength_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">flux_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">xlim_low</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot the cleaned extracted 1D spectrum and compare against</span>
+<span class="sd">    the original (not applying NSClean) extracted 1D spectrum.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    ----------</span>
+<span class="sd">    spec_list: list</span>
+<span class="sd">        List of paths to the FITS files containing original/cleaned 1D extracted data.</span>
+<span class="sd">    scale_percent: float</span>
+<span class="sd">        Scaling factor applied to determine the intensity range for visualization.</span>
+<span class="sd">    ext_num: int</span>
+<span class="sd">        Index/extension of the slice to be plotted.</span>
+<span class="sd">        The EXTVER header value. The default is 1 for 2D data.</span>
+<span class="sd">    wavelength_range: dict</span>
+<span class="sd">        Wavelength range (x-axis) {&#39;nrs1&#39;: [3.6, 3.65], &#39;nrs2&#39;: [1.65, 1.75]}.</span>
+<span class="sd">    flux_range: dict</span>
+<span class="sd">        Flux range (y-axis) {&#39;nrs1&#39;: [1, 2], &#39;nrs2&#39;: [1, 2]}.</span>
+<span class="sd">    xlim_low: int</span>
+<span class="sd">        Define a lower wavelength end for the 1D spectrum. Helpful for BOTS data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">wavelength_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">wavelength_range</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Open the FITS files.</span>
+    <span class="n">original_hdul</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">spec_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">cleaned_hdul</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">spec_list</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">alternate_hdul</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">spec_list</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="n">alternate_hdul</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">spec_list</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">handmod_hdul</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">spec_list</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">alternate_hdul</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">handmod_hdul</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Find the spectral extension (EXTRACT1D).</span>
+    <span class="k">for</span> <span class="n">extnum</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">original_hdul</span><span class="p">)):</span>
+        <span class="n">hdu</span> <span class="o">=</span> <span class="n">original_hdul</span><span class="p">[</span><span class="n">extnum</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">hdu</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;EXTRACT1D&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">slit_name</span> <span class="o">=</span> <span class="n">hdu</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s2">&quot;SLTNAME&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">hdu</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s2">&quot;EXTVER&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">ext_num</span><span class="p">:</span>
+
+            <span class="c1"># Plot the original and cleaned spectra together.</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Compare 1D Spectra for </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">spec_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">;&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;EXP_TYPE/Slit = </span><span class="si">{</span><span class="n">slit_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="s2">&quot;nrs1&quot;</span> <span class="ow">in</span> <span class="n">spec_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">xlim_low</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">xlim_low</span> <span class="o">=</span> <span class="n">xlim_low</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">xlim_low</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">step</span><span class="p">(</span>
+                <span class="n">hdu</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:],</span>
+                <span class="n">hdu</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:],</span>
+                <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Original&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">step</span><span class="p">(</span>
+                <span class="n">cleaned_hdul</span><span class="p">[</span><span class="n">extnum</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:],</span>
+                <span class="n">cleaned_hdul</span><span class="p">[</span><span class="n">extnum</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:],</span>
+                <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Cleaned&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wavelength (</span><span class="si">{</span><span class="n">hdu</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;TUNIT1&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+            <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Flux (</span><span class="si">{</span><span class="n">hdu</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;TUNIT2&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+            <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;1D Extracted Spectra&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+            <span class="c1"># Plot the difference between the spectra as a ratio.</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">cleaned_hdul</span><span class="p">[</span><span class="n">extnum</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:]</span>
+                <span class="o">/</span> <span class="n">hdu</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:]</span>
+            <span class="p">)</span>
+            <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">step</span><span class="p">(</span>
+                <span class="n">hdu</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:],</span>
+                <span class="n">diff</span><span class="p">,</span>
+                <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Cleaned/Original&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wavelength (</span><span class="si">{</span><span class="n">hdu</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;TUNIT1&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+            <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Cleaned/Original&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+            <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Difference After Cleaning&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+            <span class="c1"># print(&quot;Average Difference  = {}&quot;.format(np.nanmean(diff)))</span>
+
+            <span class="c1"># If available, also plot the alternate spectra.</span>
+            <span class="k">if</span> <span class="n">alternate_hdul</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">step</span><span class="p">(</span>
+                    <span class="n">alternate_hdul</span><span class="p">[</span><span class="n">extnum</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:],</span>
+                    <span class="n">alternate_hdul</span><span class="p">[</span><span class="n">extnum</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:],</span>
+                    <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Cleaned (alternate mask)&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">diff2</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">alternate_hdul</span><span class="p">[</span><span class="n">extnum</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:]</span>
+                    <span class="o">/</span> <span class="n">hdu</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:]</span>
+                <span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">step</span><span class="p">(</span>
+                    <span class="n">hdu</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:],</span>
+                    <span class="n">diff2</span><span class="p">,</span>
+                    <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Cleaned (alternate mask)/Original&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">handmod_hdul</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+                <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">step</span><span class="p">(</span>
+                    <span class="n">handmod_hdul</span><span class="p">[</span><span class="n">extnum</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:],</span>
+                    <span class="n">handmod_hdul</span><span class="p">[</span><span class="n">extnum</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:],</span>
+                    <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Cleaned (hand-modified mask)&quot;</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;Purple&quot;</span>
+                <span class="p">)</span>
+                <span class="n">diff3</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">handmod_hdul</span><span class="p">[</span><span class="n">extnum</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:]</span>
+                    <span class="o">/</span> <span class="n">hdu</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:]</span>
+                <span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">step</span><span class="p">(</span>
+                    <span class="n">hdu</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">][</span><span class="n">xlim_low</span><span class="p">:],</span>
+                    <span class="n">diff3</span><span class="p">,</span>
+                    <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Cleaned (hand-modified mask)/Original&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Set the y-range of the plot if needed.</span>
+            <span class="k">if</span> <span class="n">flux_range</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">y_range</span> <span class="ow">in</span> <span class="n">flux_range</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">spec_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">and</span> <span class="n">y_range</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_range</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                            <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y_range</span><span class="p">)</span>
+                            <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span>
+                                <span class="p">[</span>
+                                    <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span> <span class="n">scale_percent</span><span class="p">),</span>
+                                    <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span> <span class="mi">100</span> <span class="o">-</span> <span class="n">scale_percent</span><span class="p">),</span>
+                                <span class="p">]</span>
+                            <span class="p">)</span>
+                            <span class="c1"># ax[1].set_ylim(0.5, 1.5)</span>
+
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">all_flux</span> <span class="o">=</span> <span class="p">[</span>
+                                <span class="n">hdu</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">],</span>
+                                <span class="n">cleaned_hdul</span><span class="p">[</span><span class="n">extnum</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">],</span>
+                            <span class="p">]</span>
+                            <span class="n">y_range_ax0</span> <span class="o">=</span> <span class="p">[</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">all_flux</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scale_percent</span><span class="p">),</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">all_flux</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">100</span> <span class="o">-</span> <span class="n">scale_percent</span><span class="p">),</span>
+                            <span class="p">]</span>
+                            <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y_range_ax0</span><span class="p">)</span>
+                            <span class="c1"># ax[1].set_ylim(0.5, 1.5)</span>
+
+                            <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span>
+                                <span class="p">[</span>
+                                    <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span> <span class="n">scale_percent</span><span class="p">),</span>
+                                    <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span> <span class="mi">100</span> <span class="o">-</span> <span class="n">scale_percent</span><span class="p">),</span>
+                                <span class="p">]</span>
+                            <span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">all_flux</span> <span class="o">=</span> <span class="p">[</span><span class="n">hdu</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">],</span> <span class="n">cleaned_hdul</span><span class="p">[</span><span class="n">extnum</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">]]</span>
+                <span class="n">y_range_ax0</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">all_flux</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scale_percent</span><span class="p">),</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">all_flux</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">100</span> <span class="o">-</span> <span class="n">scale_percent</span><span class="p">),</span>
+                <span class="p">]</span>
+                <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y_range_ax0</span><span class="p">)</span>
+                <span class="c1"># ax[1].set_ylim(0.5, 1.5)</span>
+
+                <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span> <span class="n">scale_percent</span><span class="p">),</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span> <span class="mi">100</span> <span class="o">-</span> <span class="n">scale_percent</span><span class="p">),</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Set the x-range of the plot if needed.</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">wavelength_range</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">spec_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">wavelength_range</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">wavelength_range</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">wavelength_range</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+            <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+            <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+            <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="n">original_hdul</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">cleaned_hdul</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">alternate_hdul</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">alternate_hdul</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">handmod_hdul</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Final Comparison - Full Frame (all FS)</span>
+
+<span class="c1"># Plot each FS in the Full-frame</span>
+<span class="k">for</span> <span class="n">original</span><span class="p">,</span> <span class="n">cleaned_og</span><span class="p">,</span> <span class="n">cleaned_alt</span><span class="p">,</span> <span class="n">cleaned_mod</span><span class="p">,</span> <span class="n">rate_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">x1d_nsclean_skipped</span><span class="p">,</span>
+    <span class="n">x1d_nsclean_default</span><span class="p">,</span>
+    <span class="n">x1d_nsclean_alternate</span><span class="p">,</span>
+    <span class="n">x1d_nsclean_modified</span><span class="p">,</span>
+    <span class="n">rate_types</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">rate_type</span> <span class="o">==</span> <span class="s2">&quot;subarray&quot;</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">for</span> <span class="n">slit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>  <span class="c1"># 5 FS in full-frame</span>
+        <span class="n">plot_spectra</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">original</span><span class="p">,</span> <span class="n">cleaned_og</span><span class="p">,</span> <span class="n">cleaned_alt</span><span class="p">,</span> <span class="n">cleaned_mod</span><span class="p">],</span>
+            <span class="n">ext_num</span><span class="o">=</span><span class="n">slit</span><span class="p">,</span>
+            <span class="n">scale_percent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/b806f8682d308744dca7e15b1f3e164bc9eb15b2aeb49094e5cf94359a9b1a75.png" src="../../_images/b806f8682d308744dca7e15b1f3e164bc9eb15b2aeb49094e5cf94359a9b1a75.png" />
+<img alt="../../_images/524f6e02128c22e82c54e82060cc09fcde59ef9211d6f737721097df5085b68b.png" src="../../_images/524f6e02128c22e82c54e82060cc09fcde59ef9211d6f737721097df5085b68b.png" />
+<img alt="../../_images/c468cf0d73964ecdd8ade14d1cfbb08b358d12b1e999ce8610f5751e49d12600.png" src="../../_images/c468cf0d73964ecdd8ade14d1cfbb08b358d12b1e999ce8610f5751e49d12600.png" />
+<img alt="../../_images/5fc20484b755d5c90bccc51c5a20e3ce1ce7d26e13cbc44cb92bf78dfc010622.png" src="../../_images/5fc20484b755d5c90bccc51c5a20e3ce1ce7d26e13cbc44cb92bf78dfc010622.png" />
+<img alt="../../_images/d1cb7c0b06ce6f93d4ad0792218381b7bc85019a290debe2004d4eb78af9a1f6.png" src="../../_images/d1cb7c0b06ce6f93d4ad0792218381b7bc85019a290debe2004d4eb78af9a1f6.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Comparison -- Subarray SUBS200A1 1D Extracted Spectra</span>
+
+<span class="c1"># Wavelength region of interest</span>
+<span class="n">wavelength_range</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nrs1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">4.3</span><span class="p">,</span> <span class="mf">4.7</span><span class="p">]}</span>
+<span class="n">flux_range</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nrs1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.004</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">]}</span>
+
+<span class="k">for</span> <span class="n">original</span><span class="p">,</span> <span class="n">cleaned_og</span><span class="p">,</span> <span class="n">cleaned_alt</span><span class="p">,</span> <span class="n">cleaned_mod</span><span class="p">,</span> <span class="n">rate_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">x1d_nsclean_skipped</span><span class="p">,</span>
+    <span class="n">x1d_nsclean_default</span><span class="p">,</span>
+    <span class="n">x1d_nsclean_alternate</span><span class="p">,</span>
+    <span class="n">x1d_nsclean_modified</span><span class="p">,</span>
+    <span class="n">rate_types</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">rate_type</span> <span class="o">!=</span> <span class="s2">&quot;subarray&quot;</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">for</span> <span class="n">slit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>  <span class="c1"># 5 FS in full-frame</span>
+        <span class="n">plot_spectra</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">original</span><span class="p">,</span> <span class="n">cleaned_og</span><span class="p">,</span> <span class="n">cleaned_alt</span><span class="p">,</span> <span class="n">cleaned_mod</span><span class="p">],</span>
+            <span class="n">ext_num</span><span class="o">=</span><span class="n">slit</span><span class="p">,</span>
+            <span class="n">wavelength_range</span><span class="o">=</span><span class="n">wavelength_range</span><span class="p">,</span>
+            <span class="n">flux_range</span><span class="o">=</span><span class="n">flux_range</span><span class="p">,</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/b0ced951483cf704d9ea3f46c30fedcb477e5aa80f3a8c15437582f65c679ecc.png" src="../../_images/b0ced951483cf704d9ea3f46c30fedcb477e5aa80f3a8c15437582f65c679ecc.png" />
+</div>
+</div>
+<div class="alert alert-block alert-info">
+<p><b>Final Notes:</b></p>
+<ul class="simple">
+<li><p>Overall, after cleaning with each mask (default, alternate, hand-modified), the bright spectrum in S200A1 for the full-frame data shows minimal difference.</p></li>
+<li><p>The background spectra in the secondary slit of the full-frame data have been corrected for negative fluxes regardless of the mask used.
+Regarding the faint source in the S200A1 subarray data, we observe slight changes to the continuum level from the cleaning process with any of the masks. Each mask effectively removes the wavelength-dependent variation near 4.55 um. However, the default masking introduces some high-frequency noise during cleaning, resulting in vertical striping over the spectral traces. In contrast, the hand-modified mask introduces less high-frequency noise, with the alternate (clip-based) masking introducing the least high-frequency noise.</p></li>
+</ul>
+</div></section>
+<section id="about-the-notebook-a-name-about-a">
+<h2>About the Notebook <a name="about"></a><a class="headerlink" href="#about-the-notebook-a-name-about-a" title="Permalink to this heading">#</a></h2>
+<p><strong>Authors:</strong> Melanie Clarke, Kayli Glidic; NIRSpec Instrument Team</p>
+<p><strong>Updated On</strong>: Feburary 29, 2024.</p>
+<hr style="border:0.5px solid black">
+<p><span class="xref myst">Top of Page</span></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/jdat_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/NIRSpec_NSClean"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../galaxy_redshift/redshift_fitting.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Redshift and Template Fitting</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="IFU_NSClean_example.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Cleaning Residual 1/f Noise in NIRSpec IFU Products with NSClean</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-goal">Notebook Goal</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-a-name-introduction-a">1. Introduction <a name="introduction"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library-a-name-imports-a">2. Import Library <a name="imports"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-data-a-name-data-a">3. Download the Data <a name="data"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-spec2pipeline-without-nsclean-original-data-a-name-nsclean-skipped-a">4. Running <code class="docutils literal notranslate"><span class="pre">Spec2Pipeline</span></code> without NSClean (Original Data) <a name="nsclean_skipped"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#clean-up-1-f-noise-with-nsclean-default-pipeline-mask-a-name-nsclean-default-a">5. Clean up 1/f Noise with NSClean (Default Pipeline Mask) <a name="nsclean_default"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-the-mask-default-pipeline-mask-a-name-verify-default-mask-a">5.1 Verify the Mask (Default Pipeline Mask) <a name="verify_default_mask"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-original-vs-cleaned-data-default-pipeline-mask-a-name-nsclean-default-compare-a">5.2 Comparing Original vs. Cleaned Data (Default Pipeline Mask) <a name="nsclean_default_compare"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#clean-up-1-f-noise-with-nsclean-alternate-mask-a-name-nsclean-alternate-a">6. Clean up 1/f Noise with NSClean (Alternate Mask) <a name="nsclean_alternate"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-the-mask-alternate-mask-a-name-verify-alternate-mask-a">6.1 Verify the Mask (Alternate Mask) <a name="verify_alternate_mask"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-original-vs-cleaned-data-alternate-mask-a-name-nsclean-alternate-compare-a">6.2 Comparing Original vs. Cleaned Data (Alternate Mask) <a name="nsclean_alternate_compare"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#clean-up-1-f-noise-with-nsclean-hand-modified-mask-a-name-nsclean-modified-a">7. Clean up 1/f Noise with NSClean (Hand-Modified Mask) <a name="nsclean_modified"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-the-mask-hand-modified-mask-a-name-verify-modified-mask-a">7.1 Verify the Mask (Hand-Modified Mask) <a name="verify_modified_mask"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-original-vs-cleaned-data-hand-modified-mask-a-name-nsclean-modified-compare-a">7.2 Comparing Original vs. Cleaned Data (Hand-Modified Mask) <a name="nsclean_modified_compare"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion-a-name-conclusion-a">8. Conclusion <a name="conclusion"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-the-notebook-a-name-about-a">About the Notebook <a name="about"></a></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
