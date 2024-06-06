@@ -1,828 +1,554 @@
+
+
 <!DOCTYPE html>
-<html data-content_root="" lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <meta content="Docutils 0.18.1: http://docutils.sourceforge.net/" name="generator"/>
-  <title>
-   NIRISS AMI: Binary fitting of AB Dor using Fouriever — STScI JDAT Notebooks
-  </title>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>NIRISS AMI: Binary fitting of AB Dor using Fouriever &#8212; STScI JDAT Notebooks</title>
+  
+  
+  
   <script data-cfasync="false">
-   document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet"/>
-  <link href="../../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet"/>
-  <link href="../../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet"/>
-  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet"/>
-  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
-  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
-  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
-  <link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/togglebutton.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/copybutton.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/sphinx-thebe.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/main.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/main.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" rel="preload"/>
-  <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" rel="preload"/>
-  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341">
-  </script>
-  <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js">
-  </script>
-  <script src="../../_static/jquery.js">
-  </script>
-  <script src="../../_static/underscore.js">
-  </script>
-  <script src="../../_static/_sphinx_javascript_frameworks_compat.js">
-  </script>
-  <script src="../../_static/doctools.js">
-  </script>
-  <script src="../../_static/clipboard.min.js">
-  </script>
-  <script src="../../_static/copybutton.js">
-  </script>
-  <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824">
-  </script>
-  <script>
-   let toggleHintShow = 'Click to show';
-  </script>
-  <script>
-   let toggleHintHide = 'Click to hide';
-  </script>
-  <script>
-   let toggleOpenOnPrint = 'true';
-  </script>
-  <script src="../../_static/togglebutton.js">
-  </script>
-  <script>
-   var togglebuttonSelector = '.toggle, .admonition.dropdown';
-  </script>
-  <script src="../../_static/design-tabs.js">
-  </script>
-  <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3">
-  </script>
-  <script>
-   window.dataLayer = window.dataLayer || [];
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
                 function gtag(){ dataLayer.push(arguments); }
                 gtag('js', new Date());
                 gtag('config', 'G-D46G4HKJY3');
-  </script>
-  <script>
-   const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
-  </script>
-  <script async="async" src="../../_static/sphinx-thebe.js">
-  </script>
-  <script>
-   window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}
-  </script>
-  <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
-  <script>
-   DOCUMENTATION_OPTIONS.pagename = 'notebooks/niriss_ami_binary/3_niriss_ami_binary';
-  </script>
-  <link href="../../genindex.html" rel="index" title="Index"/>
-  <link href="../../search.html" rel="search" title="Search"/>
-  <meta content="width=device-width, initial-scale=1" name="viewport"/>
-  <meta content="en" name="docsearch:language"/>
- </head>
- <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
-  <div class="skip-link d-print-none" id="pst-skip-link">
-   <a href="#main-content">
-    Skip to main content
-   </a>
-  </div>
-  <div id="pst-scroll-pixel-helper">
-  </div>
-  <button class="btn rounded-pill" id="pst-back-to-top" type="button">
-   <i class="fa-solid fa-arrow-up">
-   </i>
-   Back to top
-  </button>
-  <input class="sidebar-toggle" id="pst-primary-sidebar-checkbox" type="checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox">
-  </label>
-  <input class="sidebar-toggle" id="pst-secondary-sidebar-checkbox" type="checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox">
-  </label>
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/niriss_ami_binary/3_niriss_ami_binary';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
   <div class="search-button__wrapper">
-   <div class="search-button__overlay">
-   </div>
-   <div class="search-button__search-container">
-    <form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
-     <i class="fa-solid fa-magnifying-glass">
-     </i>
-     <input aria-label="Search this book..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search this book..." spellcheck="false" type="search"/>
-     <span class="search-button__kbd-shortcut">
-      <kbd class="kbd-shortcut__modifier">
-       Ctrl
-      </kbd>
-      +
-      <kbd>
-       K
-      </kbd>
-     </span>
-    </form>
-   </div>
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
   </div>
+
   <div class="pst-async-banner-revealer d-none">
-   <aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning">
-   </aside>
-  </div>
-  <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
-  </header>
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
   <div class="bd-container">
-   <div class="bd-container__inner bd-page-width">
-    <div class="bd-sidebar-primary bd-sidebar">
-     <div class="sidebar-header-items sidebar-primary__section">
-     </div>
-     <div class="sidebar-primary-items__start sidebar-primary__section">
-      <div class="sidebar-primary-item">
-       <a class="navbar-brand logo" href="../../intro.html">
-        <img alt="STScI JDAT Notebooks - Home" class="logo__image only-light" src="../../_static/stsci_logo2.png"/>
-        <script>
-         document.write(`<img src="../../_static/stsci_logo2.png" class="logo__image only-dark" alt="STScI JDAT Notebooks - Home"/>`);
-        </script>
-       </a>
-      </div>
-      <div class="sidebar-primary-item">
-       <nav aria-label="Main" class="bd-links" id="bd-docs-nav">
-        <div class="bd-toc-item navbar-nav active">
-         <ul class="nav bd-sidenav bd-sidenav__home-link">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../intro.html">
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           General
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../index.html">
-            Home
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../install.html">
-            Installation
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/notebook_development_workflow.html">
-            Notebook Development Workflow
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           Development
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/submitting_notebooks.html">
-            Submitting Notebooks
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/requirements.html">
-            Requirements file
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/notebooks.html">
-            Jupyter Notebooks
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/data_files.html">
-            Data Files
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           GitHub Guidelines
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/github_setup.html">
-            GitHub Setup
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/github_workflow.html">
-            GitHub Workflow
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/github_pr.html">
-            GitHub PR
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           Cross-Instrument
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../asdf_example/asdf_example.html">
-            ASDF Example
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../background_estimation_imaging/Imaging_Sky_Background_Estimation.html">
-            Complex 2D Background
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">
-            Composite Model Spectral Fitting
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">
-            MAST Query
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../rgb_imviz/imviz_rgb_carina.html">
-            RGB images with Imviz
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">
-            Specviz Simple Demo
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           MIRI
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">
-            MRS Mstar - Run Pipeline
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">
-            MRS Detector Based Extraction
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">
-            MRS Mstar - Data Analysis
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">
-            IFU of YSOs in LMC
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../MIRI_LRS_spectral_extraction/miri_lrs_advanced_extraction_part1.html">
-            LRS Optimal Spectral Extraction
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           NIRCam
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">
-            Point Source Aperture Photometry
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRCam_photometry/NIRCam_multiband_photometry.html">
-            Extended Aperture Photometry
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">
-            Cross-Filter PSF Matching
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">
-            PSF Photometry
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           NIRISS
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">
-            WFSS Spectra - Optimal Extraction
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">
-            WFSS Spectra - Combine and Normalize 1D Spectra
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">
-            WFSS Spectra - Cross-Correlation Template
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">
-            WFSS Spectra - Emission Line Map
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../niriss_imaging/niriss-imaging-tutorial.html">
-            NIRISS Imaging Tutorial
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           NIRSpec
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">
-            IFU Cube Fitting
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../cube_fitting/cube_fitting.html">
-            IFU Cube Modeling
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../ifu_optimal/ifu_optimal.html">
-            IFU Optimal Spectral Extraction
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../optimal_extraction/Spectral_Extraction-static.html">
-            MOS Optimal Extraction
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../mos_spectroscopy_advanced/MOSspec_advanced.html">
-            MOS Spectroscopy of Extragalactic Field
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">
-            BOTS Time Series Observations
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../galaxy_redshift/redshift_fitting.html">
-            Redshift and Template Fitting
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRSpec_NSClean/FS_NSClean_example.html">
-            FS Products with NSClean
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRSpec_NSClean/IFU_NSClean_example.html">
-            IFU Products with NSClean
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRSpec_NSClean/MOS_NSClean_example.html">
-            MOS Products with NSClean
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRSpec_NSClean/BOTS_NSClean_example.html">
-            BOTS Products with NSClean
-           </a>
-          </li>
-         </ul>
-        </div>
-       </nav>
-      </div>
-     </div>
-     <div class="sidebar-primary-items__end sidebar-primary__section">
-     </div>
-     <div id="rtd-footer-container">
-     </div>
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/stsci_logo2.png" class="logo__image only-light" alt="STScI JDAT Notebooks - Home"/>
+    <script>document.write(`<img src="../../_static/stsci_logo2.png" class="logo__image only-dark" alt="STScI JDAT Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/notebook_development_workflow.html">Notebook Development Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../docs/submitting_notebooks.html">Submitting Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/requirements.html">Requirements file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/notebooks.html">Jupyter Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/data_files.html">Data Files</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">GitHub Guidelines</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../docs/github_setup.html">GitHub Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/github_workflow.html">GitHub Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/github_pr.html">GitHub PR</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cross-Instrument</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../asdf_example/asdf_example.html">ASDF Example</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../background_estimation_imaging/Imaging_Sky_Background_Estimation.html">Complex 2D Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">Composite Model Spectral Fitting</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">MAST Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rgb_imviz/imviz_rgb_carina.html">RGB images with Imviz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">Specviz Simple Demo</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">MIRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">MRS Mstar - Run Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">MRS Detector Based Extraction</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">MRS Mstar - Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">IFU of YSOs in LMC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../MIRI_LRS_spectral_extraction/miri_lrs_advanced_extraction_part1.html">LRS Optimal Spectral Extraction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRCam</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">Point Source Aperture Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRCam_photometry/NIRCam_multiband_photometry.html">Extended Aperture Photometry</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">Cross-Filter PSF Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">PSF Photometry</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRISS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">WFSS Spectra - Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">WFSS Spectra - Combine and Normalize 1D Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">WFSS Spectra - Cross-Correlation Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">WFSS Spectra - Emission Line Map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../niriss_imaging/niriss-imaging-tutorial.html">NIRISS Imaging Tutorial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRSpec</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">IFU Cube Fitting</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../cube_fitting/cube_fitting.html">IFU Cube Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ifu_optimal/ifu_optimal.html">IFU Optimal Spectral Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimal_extraction/Spectral_Extraction-static.html">MOS Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mos_spectroscopy_advanced/MOSspec_advanced.html">MOS Spectroscopy of Extragalactic Field</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">BOTS Time Series Observations</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../galaxy_redshift/redshift_fitting.html">Redshift and Template Fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_NSClean/FS_NSClean_example.html">FS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_NSClean/IFU_NSClean_example.html">IFU Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_NSClean/MOS_NSClean_example.html">MOS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_NSClean/BOTS_NSClean_example.html">BOTS Products with NSClean</a></li>
+</ul>
+
     </div>
-    <main class="bd-main" id="main-content" role="main">
-     <div class="sbt-scroll-pixel-helper">
-     </div>
-     <div class="bd-content">
-      <div class="bd-article-container">
-       <div class="bd-header-article d-print-none">
-        <div class="header-article-items header-article__inner">
-         <div class="header-article-items__start">
-          <div class="header-article-item">
-           <label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
-            <span class="fa-solid fa-bars">
-            </span>
-           </label>
-          </div>
-         </div>
-         <div class="header-article-items__end">
-          <div class="header-article-item">
-           <div class="article-header-buttons">
-            <div class="dropdown dropdown-launch-buttons">
-             <button aria-expanded="false" aria-label="Launch interactive content" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
-              <i class="fas fa-rocket">
-              </i>
-             </button>
-             <ul class="dropdown-menu">
-              <li>
-               <button class="btn btn-sm btn-launch-thebe dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" onclick="initThebeSBT()" title="Launch Thebe">
-                <span class="btn__icon-container">
-                 <i class="fas fa-play">
-                 </i>
-                </span>
-                <span class="btn__text-container">
-                 Live Code
-                </span>
-               </button>
-              </li>
-             </ul>
-            </div>
-            <div class="dropdown dropdown-source-buttons">
-             <button aria-expanded="false" aria-label="Source repositories" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
-              <i class="fab fa-github">
-              </i>
-             </button>
-             <ul class="dropdown-menu">
-              <li>
-               <a class="btn btn-sm btn-source-repository-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="https://github.com/spacetelescope/jdat_notebooks" target="_blank" title="Source repository">
-                <span class="btn__icon-container">
-                 <i class="fab fa-github">
-                 </i>
-                </span>
-                <span class="btn__text-container">
-                 Repository
-                </span>
-               </a>
-              </li>
-              <li>
-               <a class="btn btn-sm btn-source-issues-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/niriss_ami_binary/3_niriss_ami_binary.html&amp;body=Your%20issue%20content%20here." target="_blank" title="Open an issue">
-                <span class="btn__icon-container">
-                 <i class="fas fa-lightbulb">
-                 </i>
-                </span>
-                <span class="btn__text-container">
-                 Open issue
-                </span>
-               </a>
-              </li>
-             </ul>
-            </div>
-            <div class="dropdown dropdown-download-buttons">
-             <button aria-expanded="false" aria-label="Download this page" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
-              <i class="fas fa-download">
-              </i>
-             </button>
-             <ul class="dropdown-menu">
-              <li>
-               <a class="btn btn-sm btn-download-source-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="../../_sources/notebooks/niriss_ami_binary/3_niriss_ami_binary.ipynb" target="_blank" title="Download source file">
-                <span class="btn__icon-container">
-                 <i class="fas fa-file">
-                 </i>
-                </span>
-                <span class="btn__text-container">
-                 .ipynb
-                </span>
-               </a>
-              </li>
-              <li>
-               <button class="btn btn-sm btn-download-pdf-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" onclick="window.print()" title="Print to PDF">
-                <span class="btn__icon-container">
-                 <i class="fas fa-file-pdf">
-                 </i>
-                </span>
-                <span class="btn__text-container">
-                 .pdf
-                </span>
-               </button>
-              </li>
-             </ul>
-            </div>
-            <button class="btn btn-sm btn-fullscreen-button" data-bs-placement="bottom" data-bs-toggle="tooltip" onclick="toggleFullScreen()" title="Fullscreen mode">
-             <span class="btn__icon-container">
-              <i class="fas fa-expand">
-              </i>
-             </span>
-            </button>
-            <script>
-             document.write(`
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/niriss_ami_binary/3_niriss_ami_binary.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/notebooks/niriss_ami_binary/3_niriss_ami_binary.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
     <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
     <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
-            </script>
-            <script>
-             document.write(`
+</script>
+
+
+<script>
+document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
-            </script>
-            <label class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__secondary" title="Toggle secondary sidebar">
-             <span class="fa-solid fa-list">
-             </span>
-            </label>
-           </div>
-          </div>
-         </div>
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>NIRISS AMI: Binary fitting of AB Dor using Fouriever</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-terms">Defining terms</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">Loading data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#file-information">File Information</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examine-the-data">Examine the data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perform-the-binary-parameter-extraction">Perform the binary parameter extraction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#utilize-the-fouriever-package">Utilize the Fouriever package</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convert-ra-dec-flux-ratio-to-separation-pa-magnitude-difference">Convert RA, Dec, flux ratio to separation, PA, magnitude difference</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-the-contrast-limits">Calculate the contrast limits</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visually-compare-the-position">Visually compare the position</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this notebook</a></li>
+</ul>
+            </nav>
         </div>
-       </div>
-       <div class="onlyprint" id="jb-print-docs-body">
-        <h1>
-         NIRISS AMI: Binary fitting of AB Dor using Fouriever
-        </h1>
-        <!-- Table of contents -->
-        <div id="print-main-content">
-         <div id="jb-print-toc">
-          <div>
-           <h2>
-            Contents
-           </h2>
-          </div>
-          <nav aria-label="Page">
-           <ul class="visible nav section-nav flex-column">
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#introduction">
-              Introduction
-             </a>
-             <ul class="nav section-nav flex-column">
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#defining-terms">
-                Defining terms
-               </a>
-              </li>
-             </ul>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#imports">
-              Imports
-             </a>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#loading-data">
-              Loading data
-             </a>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#file-information">
-              File Information
-             </a>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#examine-the-data">
-              Examine the data
-             </a>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#perform-the-binary-parameter-extraction">
-              Perform the binary parameter extraction
-             </a>
-             <ul class="nav section-nav flex-column">
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#utilize-the-fouriever-package">
-                Utilize the Fouriever package
-               </a>
-              </li>
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#convert-ra-dec-flux-ratio-to-separation-pa-magnitude-difference">
-                Convert RA, Dec, flux ratio to separation, PA, magnitude difference
-               </a>
-              </li>
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#calculate-the-contrast-limits">
-                Calculate the contrast limits
-               </a>
-              </li>
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#visually-compare-the-position">
-                Visually compare the position
-               </a>
-              </li>
-             </ul>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#additional-resources">
-              Additional Resources
-             </a>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#about-this-notebook">
-              About this notebook
-             </a>
-            </li>
-           </ul>
-          </nav>
-         </div>
-        </div>
-       </div>
-       <div id="searchbox">
-       </div>
-       <article class="bd-article">
-        <section class="tex2jax_ignore mathjax_ignore" id="niriss-ami-binary-fitting-of-ab-dor-using-fouriever">
-         <h1>
-          NIRISS AMI: Binary fitting of AB Dor using Fouriever
-          <a class="headerlink" href="#niriss-ami-binary-fitting-of-ab-dor-using-fouriever" title="Permalink to this heading">
-           #
-          </a>
-         </h1>
-         <p>
-          <font color="red">
-           This notebook currently fails to execute, use as reference only
-          </font>
-         </p>
-         <section id="introduction">
-          <h2>
-           Introduction
-           <a class="headerlink" href="#introduction" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <p>
-           This notebook takes a calibrated OIFITS file (see
-           <em>
-            Defining Terms
-           </em>
-           below) from NIRISS Aperture Masking Interferometry (AMI) data of binary point source AB Dor and calibrator HD 37093. The data were observed during science instrument commissioning on June 5, 2022, calibrated with the
-           <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/index.html">
-            JWST pipeline
-           </a>
-           , and had interferometric observables extracted using the Image Plane approach to Interferometric Analysis (
-           <a class="reference external" href="http://ascl.net/1808.004">
-            ImPlaneIA
-           </a>
-           ). This notebook estimates the parameters of a best-fit binary model for this data.
-          </p>
-          <p>
-           We use the
-           <a class="reference external" href="https://github.com/kammerje/fouriever">
-            fouriever
-           </a>
-           analysis package to extract binary point source parameters. It utilizes model-fitting and chi-squared minimization, taking into account correclations between interferometric observables and bandwidth smearing effects at long baselines, to find the most probable location of a stellar companion.
-          </p>
-          <section id="defining-terms">
-           <h3>
-            Defining terms
-            <a class="headerlink" href="#defining-terms" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <p>
-            <strong>
-             Observables
-            </strong>
-            here refers to interferometric observables: quantities that can be measured from an interferogram. We use squared visibilities and closure phases from the fringe amplitudes and fringe phases of the observed scene.
-           </p>
-           <p>
-            <strong>
-             <a class="reference external" href="https://doi.org/10.1051/0004-6361/201526405">
-              OIFITS
-             </a>
-            </strong>
-            files are the Optical Interferometry standard FITS files used by the community. A science target’s observables are
-            <strong>
-             calibrated
-            </strong>
-            by the observables of a PSF calibrator star’s image, to remove telescope/instrument effects (as far as possible).
-           </p>
-           <p>
-            <strong>
-             Fouriever
-            </strong>
-            is a toolkit for analyzing non-redundant masking and kernel phase interferometry data. Details of the analysis methods are described in
-            <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2019MNRAS.486..639K/abstract">
-             Kammerer et al. 2019
-            </a>
-            ,
-            <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2020A%26A...644A.110K/abstract">
-             2020
-            </a>
-            .
-           </p>
-          </section>
-         </section>
-         <hr class="docutils"/>
-         <section id="imports">
-          <h2>
-           Imports
-           <a class="headerlink" href="#imports" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <ul class="simple">
-           <li>
-            <p>
-             <em>
-              numpy
-             </em>
-             to handle array functions
-            </p>
-           </li>
-           <li>
-            <p>
-             <em>
-              zipfile
-             </em>
-             for accessing zip file
-            </p>
-           </li>
-           <li>
-            <p>
-             <em>
-              urllib.request
-             </em>
-             to access URL
-            </p>
-           </li>
-           <li>
-            <p>
-             <em>
-              os
-             </em>
-             and
-             <em>
-              pathlib
-             </em>
-             for path manipulation
-            </p>
-           </li>
-           <li>
-            <p>
-             <em>
-              astropy.io fits
-             </em>
-             for accessing FITS files
-            </p>
-           </li>
-           <li>
-            <p>
-             <em>
-              matplotlib.pyplot
-             </em>
-             for plotting data
-            </p>
-           </li>
-           <li>
-            <p>
-             <em>
-              scipy.ndimage
-             </em>
-             for image handling
-            </p>
-           </li>
-           <li>
-            <p>
-             <em>
-              IPython.display
-             </em>
-             for image display
-            </p>
-           </li>
-           <li>
-            <p>
-             <em>
-              fouriever
-             </em>
-             high-contrast companion detection
-            </p>
-           </li>
-          </ul>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="niriss-ami-binary-fitting-of-ab-dor-using-fouriever">
+<h1>NIRISS AMI: Binary fitting of AB Dor using Fouriever<a class="headerlink" href="#niriss-ami-binary-fitting-of-ab-dor-using-fouriever" title="Permalink to this heading">#</a></h1>
+<p><font color="red">This notebook currently fails to execute, use as reference only</font></p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<p>This notebook takes a calibrated OIFITS file (see <em>Defining Terms</em> below) from NIRISS Aperture Masking Interferometry (AMI) data of binary point source AB Dor and calibrator HD 37093. The data were observed during science instrument commissioning on June 5, 2022, calibrated with the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/index.html">JWST pipeline</a>, and had interferometric observables extracted using the Image Plane approach to Interferometric Analysis (<a class="reference external" href="http://ascl.net/1808.004">ImPlaneIA</a>). This notebook estimates the parameters of a best-fit binary model for this data.</p>
+<p>We use the <a class="reference external" href="https://github.com/kammerje/fouriever">fouriever</a> analysis package to extract binary point source parameters. It utilizes model-fitting and chi-squared minimization, taking into account correclations between interferometric observables and bandwidth smearing effects at long baselines, to find the most probable location of a stellar companion.</p>
+<section id="defining-terms">
+<h3>Defining terms<a class="headerlink" href="#defining-terms" title="Permalink to this heading">#</a></h3>
+<p><strong>Observables</strong> here refers to interferometric observables: quantities that can be measured from an interferogram. We use squared visibilities and closure phases from the fringe amplitudes and fringe phases of the observed scene.</p>
+<p><strong><a class="reference external" href="https://doi.org/10.1051/0004-6361/201526405">OIFITS</a></strong> files are the Optical Interferometry standard FITS files used by the community. A science target’s observables are <strong>calibrated</strong> by the observables of a PSF calibrator star’s image, to remove telescope/instrument effects (as far as possible).</p>
+<p><strong>Fouriever</strong> is a toolkit for analyzing non-redundant masking and kernel phase interferometry data. Details of the analysis methods are described in <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2019MNRAS.486..639K/abstract">Kammerer et al. 2019</a>, <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2020A%26A...644A.110K/abstract">2020</a>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>numpy</em> to handle array functions</p></li>
+<li><p><em>zipfile</em> for accessing zip file</p></li>
+<li><p><em>urllib.request</em> to access URL</p></li>
+<li><p><em>os</em> and <em>pathlib</em> for path manipulation</p></li>
+<li><p><em>astropy.io fits</em> for accessing FITS files</p></li>
+<li><p><em>matplotlib.pyplot</em> for plotting data</p></li>
+<li><p><em>scipy.ndimage</em> for image handling</p></li>
+<li><p><em>IPython.display</em> for image display</p></li>
+<li><p><em>fouriever</em> high-contrast companion detection</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -835,250 +561,122 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">ndimage</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span>
 <span class="kn">from</span> <span class="nn">fouriever</span> <span class="kn">import</span> <span class="n">intercorr</span><span class="p">,</span> <span class="n">uvfit</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <hr class="docutils"/>
-          <p>
-           The provided data is a NIRISS AMI observation of a binary star: a 4.61
-           <span class="math notranslate nohighlight">
-            \(M_L\)
-           </span>
-           K0V primary (AB Dor A) with a faint companion. On the date these data were taken, we expect to observe the following characteristics of the binary system in filter F480M:
-          </p>
-          <ul class="simple">
-           <li>
-            <p>
-             Magnitude difference: dm = 4.2 mag at 4.8 μm (a flux ratio of 48)
-            </p>
-           </li>
-           <li>
-            <p>
-             Sub-λ/D separation: sep = 370.98 mas
-            </p>
-           </li>
-           <li>
-            <p>
-             Position angle: theta = 286.98 degrees (from North)
-            </p>
-           </li>
-          </ul>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># These are the binary parameters we expect Fouriever to extract</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<p>The provided data is a NIRISS AMI observation of a binary star: a 4.61 <span class="math notranslate nohighlight">\(M_L\)</span> K0V primary (AB Dor A) with a faint companion. On the date these data were taken, we expect to observe the following characteristics of the binary system in filter F480M:</p>
+<ul class="simple">
+<li><p>Magnitude difference: dm = 4.2 mag at 4.8 μm (a flux ratio of 48)</p></li>
+<li><p>Sub-λ/D separation: sep = 370.98 mas</p></li>
+<li><p>Position angle: theta = 286.98 degrees (from North)</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># These are the binary parameters we expect Fouriever to extract</span>
 
 <span class="n">sep</span> <span class="o">=</span> <span class="mf">370.98</span>  <span class="c1"># binary separation [mas]</span>
 <span class="n">theta</span> <span class="o">=</span> <span class="mf">286.98</span>  <span class="c1"># position angle (pa) [deg]</span>
 <span class="n">dm</span> <span class="o">=</span> <span class="mf">4.2</span>  <span class="c1"># delta magnitude [mag]</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-         </section>
-         <section id="loading-data">
-          <h2>
-           Loading data
-           <a class="headerlink" href="#loading-data" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <p>
-           Load the input data file. This is the science target’s calibrated oifits file, created by running
-           <code class="docutils literal notranslate">
-            <span class="pre">
-             2_niriss_ami_binary.ipynb
-            </span>
-           </code>
-           . The zipped file also includes a simulated FITS image with the faint companion artificially brightened so we can examine its position relative to the host star.
-          </p>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># Download the products</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="loading-data">
+<h2>Loading data<a class="headerlink" href="#loading-data" title="Permalink to this heading">#</a></h2>
+<p>Load the input data file. This is the science target’s calibrated oifits file, created by running <code class="docutils literal notranslate"><span class="pre">2_niriss_ami_binary.ipynb</span></code>. The zipped file also includes a simulated FITS image with the faint companion artificially brightened so we can examine its position relative to the host star.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download the products</span>
 
-<span class="n">boxlink</span> <span class="o">=</span> <span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/niriss_ami_binary/niriss_ami_binary3.zip'</span>
-<span class="n">boxfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'./niriss_ami_binary3.zip'</span><span class="p">)</span>
+<span class="n">boxlink</span> <span class="o">=</span> <span class="s1">&#39;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/niriss_ami_binary/niriss_ami_binary3.zip&#39;</span>
+<span class="n">boxfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./niriss_ami_binary3.zip&#39;</span><span class="p">)</span>
 
 <span class="c1"># Download zip file</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">boxfile</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
     <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
-    <span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+    <span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
     <span class="n">zf</span><span class="o">.</span><span class="n">extractall</span><span class="p">()</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># The data file is now in the 'niriss_ami_binary3' directory</span>
-<span class="n">calib_oifits</span> <span class="o">=</span> <span class="s1">'./niriss_ami_binary3/calib_abdor_f480m_pos1_hd37093.oifits'</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The data file is now in the &#39;niriss_ami_binary3&#39; directory</span>
+<span class="n">calib_oifits</span> <span class="o">=</span> <span class="s1">&#39;./niriss_ami_binary3/calib_abdor_f480m_pos1_hd37093.oifits&#39;</span>
 <span class="n">datadir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">calib_oifits</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">calib_oifits</span><span class="p">))</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-         </section>
-         <section id="file-information">
-          <h2>
-           File Information
-           <a class="headerlink" href="#file-information" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <p>
-           The science target’s calibrated oifits file needs to have interferometric observables corresponding to all possible baselines in the non-redundant mask, and their associated uncertainties. The uncertainty on each observable is taken to be the “straight” standard deviation (without consideration for linear dependence within a set of variables).
-OIFITS files are multi-extension FITS binary tables.
-          </p>
-          <p>
-           The file contains seven extensions. The primary data extension is empty, and the remaining six extensions binary tables contain information about the observations and the interferometric data.
-          </p>
-          <ul class="simple">
-           <li>
-            <p>
-             <strong>
-              OI_WAVELENGTH
-             </strong>
-             : Bandpass info (e.g. weighted central wavelength)
-            </p>
-           </li>
-           <li>
-            <p>
-             <strong>
-              OI_TARGET
-             </strong>
-             : Properties of the target retrieved from SIMBAD, observation date and duration
-            </p>
-           </li>
-           <li>
-            <p>
-             <strong>
-              OI_ARRAY
-             </strong>
-             : Telescope info (e.g. sub-aperture locations, primary mirror diameter)
-            </p>
-           </li>
-           <li>
-            <p>
-             <strong>
-              OI_VIS
-             </strong>
-             : Fringe visibility amplitudes and phases (calibrated visibility amplitudes of the target, corresponding to 21 baselines)
-            </p>
-           </li>
-           <li>
-            <p>
-             <strong>
-              OI_VIS2
-             </strong>
-             : Squared visibility amplitudes and phases (calibrated squared visibility of the target, corresponding to 21 baselines)
-            </p>
-           </li>
-           <li>
-            <p>
-             <strong>
-              OI_T3
-             </strong>
-             : Triple product amplitudes and phases (calibrated closure phases of the target corresponding to 35 triangles between sub-apertures)
-            </p>
-           </li>
-          </ul>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># Display OIFITS file information</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="file-information">
+<h2>File Information<a class="headerlink" href="#file-information" title="Permalink to this heading">#</a></h2>
+<p>The science target’s calibrated oifits file needs to have interferometric observables corresponding to all possible baselines in the non-redundant mask, and their associated uncertainties. The uncertainty on each observable is taken to be the “straight” standard deviation (without consideration for linear dependence within a set of variables).
+OIFITS files are multi-extension FITS binary tables.</p>
+<p>The file contains seven extensions. The primary data extension is empty, and the remaining six extensions binary tables contain information about the observations and the interferometric data.</p>
+<ul class="simple">
+<li><p><strong>OI_WAVELENGTH</strong>: Bandpass info (e.g. weighted central wavelength)</p></li>
+<li><p><strong>OI_TARGET</strong>: Properties of the target retrieved from SIMBAD, observation date and duration</p></li>
+<li><p><strong>OI_ARRAY</strong>: Telescope info (e.g. sub-aperture locations, primary mirror diameter)</p></li>
+<li><p><strong>OI_VIS</strong>: Fringe visibility amplitudes and phases (calibrated visibility amplitudes of the target, corresponding to 21 baselines)</p></li>
+<li><p><strong>OI_VIS2</strong>: Squared visibility amplitudes and phases (calibrated squared visibility of the target, corresponding to 21 baselines)</p></li>
+<li><p><strong>OI_T3</strong>: Triple product amplitudes and phases (calibrated closure phases of the target corresponding to 35 triangles between sub-apertures)</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Display OIFITS file information</span>
 <span class="n">fits</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">calib_oifits</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <p>
-           The primary header tells us some information about the contents, such as the telescope (JWST), aperture mask design used (g7s6), the name of the target (AB Dor), and the name of the calibrator (HD37093):
-          </p>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># Display primary header contents</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The primary header tells us some information about the contents, such as the telescope (JWST), aperture mask design used (g7s6), the name of the target (AB Dor), and the name of the calibrator (HD37093):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Display primary header contents</span>
 <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">calib_oifits</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-         </section>
-         <section id="examine-the-data">
-          <h2>
-           Examine the data
-           <a class="headerlink" href="#examine-the-data" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <p>
-           First, we will plot the interferometric observables we will be fitting with Fouriever. These are the 35 closure phases and 21 squared visibilities of the AB Dor observation, calibrated by our reference star HD 37093. We will plot observables against
-           <span class="math notranslate nohighlight">
-            \(B_{max}/\lambda\)
-           </span>
-           , where
-           <span class="math notranslate nohighlight">
-            \(B_{max}\)
-           </span>
-           is the baseline between the centers of two sub-apertures (for squared visibility) or the longest of the three baselines between three sub-apertures (for closure phase) and
-           <span class="math notranslate nohighlight">
-            \(\lambda\)
-           </span>
-           is the central wavelength of the filter (4.82
-           <span class="math notranslate nohighlight">
-            \(\mu\)
-           </span>
-           m)
-          </p>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># Your input data is an oifits file</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="examine-the-data">
+<h2>Examine the data<a class="headerlink" href="#examine-the-data" title="Permalink to this heading">#</a></h2>
+<p>First, we will plot the interferometric observables we will be fitting with Fouriever. These are the 35 closure phases and 21 squared visibilities of the AB Dor observation, calibrated by our reference star HD 37093. We will plot observables against <span class="math notranslate nohighlight">\(B_{max}/\lambda\)</span>, where <span class="math notranslate nohighlight">\(B_{max}\)</span> is the baseline between the centers of two sub-apertures (for squared visibility) or the longest of the three baselines between three sub-apertures (for closure phase) and <span class="math notranslate nohighlight">\(\lambda\)</span> is the central wavelength of the filter (4.82 <span class="math notranslate nohighlight">\(\mu\)</span>m)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your input data is an oifits file</span>
 <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">calib_oifits</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
-    <span class="n">cp_ext</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="s1">'OI_T3'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">sqvis_ext</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="s1">'OI_VIS2'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">oiarray</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="s1">'OI_ARRAY'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">wavel</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="s1">'OI_WAVELENGTH'</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'EFF_WAVE'</span><span class="p">]</span>
-    <span class="n">pscale</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="s1">'OI_ARRAY'</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">'PSCALE'</span><span class="p">]</span>
-    <span class="n">pav3</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">'PA'</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'Wavelength: </span><span class="si">%.2e</span><span class="s1"> m'</span> <span class="o">%</span> <span class="n">wavel</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'V3 PA: </span><span class="si">%.2f</span><span class="s1"> degrees'</span> <span class="o">%</span> <span class="n">pav3</span><span class="p">)</span>
-<span class="n">cp</span> <span class="o">=</span> <span class="n">cp_ext</span><span class="p">[</span><span class="s1">'T3PHI'</span><span class="p">]</span>
-<span class="n">cp_err</span> <span class="o">=</span> <span class="n">cp_ext</span><span class="p">[</span><span class="s1">'T3PHIERR'</span><span class="p">]</span>
-<span class="n">tri_idx</span> <span class="o">=</span> <span class="n">cp_ext</span><span class="p">[</span><span class="s1">'STA_INDEX'</span><span class="p">]</span>
+    <span class="n">cp_ext</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="s1">&#39;OI_T3&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">sqvis_ext</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="s1">&#39;OI_VIS2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">oiarray</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="s1">&#39;OI_ARRAY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">wavel</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="s1">&#39;OI_WAVELENGTH&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;EFF_WAVE&#39;</span><span class="p">]</span>
+    <span class="n">pscale</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="s1">&#39;OI_ARRAY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PSCALE&#39;</span><span class="p">]</span>
+    <span class="n">pav3</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PA&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Wavelength: </span><span class="si">%.2e</span><span class="s1"> m&#39;</span> <span class="o">%</span> <span class="n">wavel</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;V3 PA: </span><span class="si">%.2f</span><span class="s1"> degrees&#39;</span> <span class="o">%</span> <span class="n">pav3</span><span class="p">)</span>
+<span class="n">cp</span> <span class="o">=</span> <span class="n">cp_ext</span><span class="p">[</span><span class="s1">&#39;T3PHI&#39;</span><span class="p">]</span>
+<span class="n">cp_err</span> <span class="o">=</span> <span class="n">cp_ext</span><span class="p">[</span><span class="s1">&#39;T3PHIERR&#39;</span><span class="p">]</span>
+<span class="n">tri_idx</span> <span class="o">=</span> <span class="n">cp_ext</span><span class="p">[</span><span class="s1">&#39;STA_INDEX&#39;</span><span class="p">]</span>
 
-<span class="n">sqvis</span> <span class="o">=</span> <span class="n">sqvis_ext</span><span class="p">[</span><span class="s1">'VIS2DATA'</span><span class="p">]</span>
-<span class="n">sqvis_err</span> <span class="o">=</span> <span class="n">sqvis_ext</span><span class="p">[</span><span class="s1">'VIS2ERR'</span><span class="p">]</span>
-<span class="n">bl_idx</span> <span class="o">=</span> <span class="n">sqvis_ext</span><span class="p">[</span><span class="s1">'STA_INDEX'</span><span class="p">]</span>
+<span class="n">sqvis</span> <span class="o">=</span> <span class="n">sqvis_ext</span><span class="p">[</span><span class="s1">&#39;VIS2DATA&#39;</span><span class="p">]</span>
+<span class="n">sqvis_err</span> <span class="o">=</span> <span class="n">sqvis_ext</span><span class="p">[</span><span class="s1">&#39;VIS2ERR&#39;</span><span class="p">]</span>
+<span class="n">bl_idx</span> <span class="o">=</span> <span class="n">sqvis_ext</span><span class="p">[</span><span class="s1">&#39;STA_INDEX&#39;</span><span class="p">]</span>
 
-<span class="n">hole_ctrs</span> <span class="o">=</span> <span class="n">oiarray</span><span class="p">[</span><span class="s1">'STAXYZ'</span><span class="p">]</span>
-<span class="n">hole_idx</span> <span class="o">=</span> <span class="n">oiarray</span><span class="p">[</span><span class="s1">'STA_INDEX'</span><span class="p">]</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># Calculate the length of the baseline [m] for each pair</span>
+<span class="n">hole_ctrs</span> <span class="o">=</span> <span class="n">oiarray</span><span class="p">[</span><span class="s1">&#39;STAXYZ&#39;</span><span class="p">]</span>
+<span class="n">hole_idx</span> <span class="o">=</span> <span class="n">oiarray</span><span class="p">[</span><span class="s1">&#39;STA_INDEX&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate the length of the baseline [m] for each pair</span>
 <span class="n">baselines</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">bl</span> <span class="ow">in</span> <span class="n">bl_idx</span><span class="p">:</span>
     <span class="n">hole1</span><span class="p">,</span> <span class="n">hole2</span> <span class="o">=</span> <span class="p">(</span><span class="n">bl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="n">bl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
@@ -1109,272 +707,180 @@ OIFITS files are multi-extension FITS binary tables.
 <span class="c1"># Label baselines and triangles</span>
 <span class="n">bl_strings</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">bl_idx</span><span class="p">:</span>
-    <span class="n">bl_strings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="s1">'_'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">bl_strings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
 <span class="n">tri_strings</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">tri_idx</span><span class="p">:</span>
-    <span class="n">tri_strings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="s1">'_'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="s1">'_'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># Plot closure phases, square visibilities</span>
+    <span class="n">tri_strings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot closure phases, square visibilities</span>
 <span class="c1"># Label which point corresponds to which hole pair or triple</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">bmaxlambda_cp</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">cp_err</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">'go'</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">'$B_</span><span class="si">{max}</span><span class="s1">/\lambda$'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Closure phase [deg]'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Calibrated Closure Phase'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">bmaxlambda_cp</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">cp_err</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;go&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$B_</span><span class="si">{max}</span><span class="s1">/\lambda$&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Closure phase [deg]&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Calibrated Closure Phase&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">tri</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tri_strings</span><span class="p">):</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">tri</span><span class="p">,</span>
                  <span class="p">(</span><span class="n">bmaxlambda_cp</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span> <span class="n">cp</span><span class="p">[</span><span class="n">ii</span><span class="p">]),</span>
                  <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="n">bmaxlambda_cp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span><span class="o">+</span><span class="mi">10000</span><span class="p">,</span> <span class="n">cp</span><span class="p">[</span><span class="n">ii</span><span class="p">]))</span>
 
-<span class="n">ax2</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">bmaxlambda_sqvis</span><span class="p">,</span> <span class="n">sqvis</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">sqvis_err</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">'go'</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Calibrated Squared Visibility'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">'$B_</span><span class="si">{max}</span><span class="s1">/\lambda$'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Squared visibility amplitude'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">bmaxlambda_sqvis</span><span class="p">,</span> <span class="n">sqvis</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">sqvis_err</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;go&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Calibrated Squared Visibility&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$B_</span><span class="si">{max}</span><span class="s1">/\lambda$&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Squared visibility amplitude&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">bl</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">bl_strings</span><span class="p">):</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">bl</span><span class="p">,</span>
                  <span class="p">(</span><span class="n">bmaxlambda_sqvis</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span>
                   <span class="n">sqvis</span><span class="p">[</span><span class="n">ii</span><span class="p">]),</span>
                  <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="n">bmaxlambda_sqvis</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span><span class="o">+</span><span class="mi">10000</span><span class="p">,</span> <span class="n">sqvis</span><span class="p">[</span><span class="n">ii</span><span class="p">]))</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <p>
-           The above plots show the calibrated closure phases (left) and the calibrated squared visibilities (right). Each quantity is plotted against
-           <span class="math notranslate nohighlight">
-            \(B_{max}/\lambda\)
-           </span>
-           , the baseline length divided by the wavelength of the observation. In the case of closure phases, where the triangle is formed by three baselines, the longest one is selected.
-          </p>
-          <p>
-           For a monochromatic observation of a point source, we would expect all 35 closure phases to be zero, and all 21 squared visibilities to be unity. Asymmetries in the target caused by e.g. an unresolved companion cause the closure phases and visibilities corresponding to the baselines between affected sub-apertures to diverge from zero or unity. We can now use the set of calibrated observables to model the most probable location and contrast ratio of the companion.
-          </p>
-         </section>
-         <section id="perform-the-binary-parameter-extraction">
-          <h2>
-           Perform the binary parameter extraction
-           <a class="headerlink" href="#perform-the-binary-parameter-extraction" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <p>
-           Fouriever performs a search for faint companions over a coarse grid of starting points for the position of the companion and companion/star flux ratio. A multiparameter fit is performed for each starting position, and the companion position and flux ratio are adjusted, leading to a local
-           <span class="math notranslate nohighlight">
-            \(\chi^2\)
-           </span>
-           minimum. Based on the distance each starting point must travel to reach the local minima, Fouriever creates a finer search grid and repeats the process. This iterative process eventually identifies a global minimum in the
-           <span class="math notranslate nohighlight">
-            \(\chi^2\)
-           </span>
-           map. Fouriever also accounts for correlations between observables and bandwidth smearing effects.
-          </p>
-          <p>
-           Each point on the grid is fitted with a model of a resolved primary star with a point-source companion. The interferometric observables are estimated using a least-squares minimization between the data and model. The significance (
-           <span class="math notranslate nohighlight">
-            \(n\sigma\)
-           </span>
-           ) of the detection is capped at
-           <span class="math notranslate nohighlight">
-            \(8\sigma\)
-           </span>
-           .
-          </p>
-          <section id="utilize-the-fouriever-package">
-           <h3>
-            Utilize the Fouriever package
-            <a class="headerlink" href="#utilize-the-fouriever-package" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Set up parameters for the binary search grid and output files</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The above plots show the calibrated closure phases (left) and the calibrated squared visibilities (right). Each quantity is plotted against <span class="math notranslate nohighlight">\(B_{max}/\lambda\)</span>, the baseline length divided by the wavelength of the observation. In the case of closure phases, where the triangle is formed by three baselines, the longest one is selected.</p>
+<p>For a monochromatic observation of a point source, we would expect all 35 closure phases to be zero, and all 21 squared visibilities to be unity. Asymmetries in the target caused by e.g. an unresolved companion cause the closure phases and visibilities corresponding to the baselines between affected sub-apertures to diverge from zero or unity. We can now use the set of calibrated observables to model the most probable location and contrast ratio of the companion.</p>
+</section>
+<section id="perform-the-binary-parameter-extraction">
+<h2>Perform the binary parameter extraction<a class="headerlink" href="#perform-the-binary-parameter-extraction" title="Permalink to this heading">#</a></h2>
+<p>Fouriever performs a search for faint companions over a coarse grid of starting points for the position of the companion and companion/star flux ratio. A multiparameter fit is performed for each starting position, and the companion position and flux ratio are adjusted, leading to a local <span class="math notranslate nohighlight">\(\chi^2\)</span> minimum. Based on the distance each starting point must travel to reach the local minima, Fouriever creates a finer search grid and repeats the process. This iterative process eventually identifies a global minimum in the  <span class="math notranslate nohighlight">\(\chi^2\)</span> map. Fouriever also accounts for correlations between observables and bandwidth smearing effects.</p>
+<p>Each point on the grid is fitted with a model of a resolved primary star with a point-source companion. The interferometric observables are estimated using a least-squares minimization between the data and model. The significance (<span class="math notranslate nohighlight">\(n\sigma\)</span>) of the detection is capped at <span class="math notranslate nohighlight">\(8\sigma\)</span>.</p>
+<section id="utilize-the-fouriever-package">
+<h3>Utilize the Fouriever package<a class="headerlink" href="#utilize-the-fouriever-package" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set up parameters for the binary search grid and output files</span>
 
 <span class="n">rmin</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># inner search angle [mas]</span>
 <span class="n">rmax</span> <span class="o">=</span> <span class="mi">500</span> <span class="c1"># outer search angle [mas]</span>
 <span class="n">step</span> <span class="o">=</span> <span class="mi">25</span> <span class="c1"># grid step size [mas]</span>
 
-<span class="n">obase1</span> <span class="o">=</span> <span class="s1">'ami_binary_smear_cov.png'</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Load data for covariance calculation</span>
+<span class="n">obase1</span> <span class="o">=</span> <span class="s1">&#39;ami_binary_smear_cov.png&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load data for covariance calculation</span>
 <span class="n">basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">calib_oifits</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">intercorr</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">idir</span><span class="o">=</span><span class="n">datadir</span><span class="o">+</span><span class="s1">'/'</span><span class="p">,</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">intercorr</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">idir</span><span class="o">=</span><span class="n">datadir</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="p">,</span>
                       <span class="n">fitsfiles</span><span class="o">=</span><span class="p">[</span><span class="n">basename</span><span class="p">])</span>
 <span class="c1"># Add observable covariances</span>
 <span class="n">data</span><span class="o">.</span><span class="n">clear_cov</span><span class="p">()</span>
 <span class="n">data</span><span class="o">.</span><span class="n">add_cpcov</span><span class="p">(</span><span class="n">odir</span><span class="o">=</span><span class="n">datadir</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Load data for fitting</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load data for fitting</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">uvfit</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">idir</span><span class="o">=</span><span class="n">datadir</span><span class="p">,</span>
                   <span class="n">fitsfiles</span><span class="o">=</span><span class="p">[</span><span class="n">basename</span><span class="p">])</span>
 
 <span class="c1"># Compute chi-squared map.</span>
-<span class="n">fit</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">chi2map</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">'bin'</span><span class="p">,</span> <span class="c1"># fit unresolved companion</span>
+<span class="n">fit</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">chi2map</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="c1"># fit unresolved companion</span>
                    <span class="n">cov</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># this data set has covariance</span>
                    <span class="n">sep_range</span><span class="o">=</span><span class="p">(</span><span class="n">rmin</span><span class="p">,</span> <span class="n">rmax</span><span class="p">),</span> <span class="c1"># use custom separation range</span>
                    <span class="n">step_size</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="c1"># use custom step size</span>
                    <span class="n">smear</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="c1"># use bandwidth smearing of 3</span>
                    <span class="n">ofile</span><span class="o">=</span><span class="n">obase1</span><span class="p">)</span> <span class="c1"># save figures</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Display the chi-squared map</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Display the chi-squared map</span>
 
-<span class="n">Image</span><span class="p">(</span><span class="n">obase1</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s1">'_chi2map.png'</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Run MCMC around best fit position.</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">obase1</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_chi2map.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run MCMC around best fit position.</span>
 <span class="n">fit</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">mcmc</span><span class="p">(</span><span class="n">fit</span><span class="o">=</span><span class="n">fit</span><span class="p">,</span> <span class="c1"># best fit from gridsearch</span>
                 <span class="n">temp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="c1"># use default temperature (reduced chi-squared of best fit)</span>
                 <span class="n">cov</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># this data set has covariance</span>
                 <span class="n">smear</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="c1"># use bandwidth smearing of 3</span>
                 <span class="n">ofile</span><span class="o">=</span><span class="n">obase1</span><span class="p">,</span> <span class="c1"># save figures</span>
-                <span class="n">sampler</span><span class="o">=</span><span class="s1">'emcee'</span><span class="p">)</span> <span class="c1"># sampling algorithm</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Display MCMC fit results</span>
+                <span class="n">sampler</span><span class="o">=</span><span class="s1">&#39;emcee&#39;</span><span class="p">)</span> <span class="c1"># sampling algorithm</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Display MCMC fit results</span>
 
-<span class="n">Image</span><span class="p">(</span><span class="n">obase1</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s1">'_mcmc_corner.png'</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <p>
-            The corner plot shows the 1D histograms and 2D contours of the posterior distributions of each pair of binary parameters.
-           </p>
-           <p>
-            Fouriever produces a plot of the closure phases from the best-fit binary model vs those extracted from the data, and the residual (difference between the data and model, normalized by
-            <span class="math notranslate nohighlight">
-             \(\sigma/\chi\)
-            </span>
-            ):
-           </p>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Display the closure phase model vs. data plot</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">obase1</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_mcmc_corner.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The corner plot shows the 1D histograms and 2D contours of the posterior distributions of each pair of binary parameters.</p>
+<p>Fouriever produces a plot of the closure phases from the best-fit binary model vs those extracted from the data, and the residual (difference between the data and model, normalized by <span class="math notranslate nohighlight">\(\sigma/\chi\)</span>):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Display the closure phase model vs. data plot</span>
 
-<span class="n">Image</span><span class="p">(</span><span class="n">obase1</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s1">'_cp_bin.png'</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Compute chi-squared map after subtracting best fit companion.</span>
-<span class="n">obase2</span> <span class="o">=</span> <span class="s1">'ami_binary_smear_cov_sub.png'</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">obase1</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_cp_bin.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute chi-squared map after subtracting best fit companion.</span>
+<span class="n">obase2</span> <span class="o">=</span> <span class="s1">&#39;ami_binary_smear_cov_sub.png&#39;</span>
 
 <span class="n">fit_sub</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">chi2map_sub</span><span class="p">(</span><span class="n">fit_sub</span><span class="o">=</span><span class="n">fit</span><span class="p">,</span> <span class="c1"># best fit from MCMC</span>
-                           <span class="n">model</span><span class="o">=</span><span class="s1">'bin'</span><span class="p">,</span> <span class="c1"># fit unresolved companion</span>
+                           <span class="n">model</span><span class="o">=</span><span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="c1"># fit unresolved companion</span>
                            <span class="n">cov</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># this data set has covariance</span>
                            <span class="n">sep_range</span><span class="o">=</span><span class="p">(</span><span class="n">rmin</span><span class="p">,</span> <span class="n">rmax</span><span class="p">),</span> <span class="c1"># use custom separation range</span>
                            <span class="n">step_size</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="c1"># use custom step size</span>
                            <span class="n">smear</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="c1"># use bandwidth smearing of 3</span>
                            <span class="n">ofile</span><span class="o">=</span><span class="n">obase2</span><span class="p">)</span> <span class="c1"># save figures</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Display chi-squared map after subtracting the best-fit companion</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Display chi-squared map after subtracting the best-fit companion</span>
 
-<span class="n">Image</span><span class="p">(</span><span class="n">obase2</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s1">'_chi2map.png'</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <p>
-            This “detection” after the companion is subtracted has a low
-            <span class="math notranslate nohighlight">
-             \(N_{\sigma}\)
-            </span>
-            and the symmetry in the map suggests Fourier aliasing at that location, so we do not believe there is a second companion detected here.
-           </p>
-          </section>
-          <section id="convert-ra-dec-flux-ratio-to-separation-pa-magnitude-difference">
-           <h3>
-            Convert RA, Dec, flux ratio to separation, PA, magnitude difference
-            <a class="headerlink" href="#convert-ra-dec-flux-ratio-to-separation-pa-magnitude-difference" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <p>
-            Fouriever provides the best-fit offset in right ascension and declination [mas], and the flux ratio of companion to primary. These are stored in the fit dictionary produced by Fouriever. We will convert these to position angle, separation, and contrast in magnitudes to compare with our expected values from above:
-           </p>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="k">def</span> <span class="nf">mag_diff</span><span class="p">(</span><span class="n">flux_ratio</span><span class="p">):</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">obase2</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_chi2map.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This “detection” after the companion is subtracted has a low <span class="math notranslate nohighlight">\(N_{\sigma}\)</span> and the symmetry in the map suggests Fourier aliasing at that location, so we do not believe there is a second companion detected here.</p>
+</section>
+<section id="convert-ra-dec-flux-ratio-to-separation-pa-magnitude-difference">
+<h3>Convert RA, Dec, flux ratio to separation, PA, magnitude difference<a class="headerlink" href="#convert-ra-dec-flux-ratio-to-separation-pa-magnitude-difference" title="Permalink to this heading">#</a></h3>
+<p>Fouriever provides the best-fit offset in right ascension and declination [mas], and the flux ratio of companion to primary. These are stored in the fit dictionary produced by Fouriever. We will convert these to position angle, separation, and contrast in magnitudes to compare with our expected values from above:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mag_diff</span><span class="p">(</span><span class="n">flux_ratio</span><span class="p">):</span>
     <span class="c1"># for flux ratio f_a/f_b, calculate magnitude difference m_a - m_b</span>
     <span class="k">return</span> <span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">flux_ratio</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">convert_params</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">ex</span><span class="p">,</span> <span class="n">ey</span><span class="p">,</span> <span class="n">ef</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">""" </span>
-<span class="sd">    'convert' binary params from ra, dec, flux ratio to sep,</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    &#39;convert&#39; binary params from ra, dec, flux ratio to sep,</span>
 <span class="sd">    pa, magnitude difference with appropriate errors.</span>
 <span class="sd">    Multiply errorbars by some sigma factor.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">sep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">pa</span> <span class="o">=</span> <span class="mi">360</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
     <span class="n">dm</span> <span class="o">=</span> <span class="n">mag_diff</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -1383,78 +889,42 @@ OIFITS files are multi-extension FITS binary tables.
     <span class="n">dm_upper</span> <span class="o">=</span> <span class="n">mag_diff</span><span class="p">(</span><span class="n">f</span> <span class="o">+</span> <span class="n">ef</span><span class="o">*</span><span class="n">sigma</span><span class="p">)</span>
     <span class="n">dm_lower</span> <span class="o">=</span> <span class="n">mag_diff</span><span class="p">(</span><span class="n">f</span> <span class="o">-</span> <span class="n">ef</span><span class="o">*</span><span class="n">sigma</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">sep</span><span class="p">,</span> <span class="n">pa</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="n">sep_unc</span><span class="p">,</span> <span class="n">pa_unc</span><span class="p">,</span> <span class="n">dm_upper</span><span class="p">,</span> <span class="n">dm_lower</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Get the best-fit parameters and uncertainties</span>
-<span class="n">x</span><span class="p">,</span> <span class="n">ex</span> <span class="o">=</span> <span class="n">fit</span><span class="p">[</span><span class="s2">"p"</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">fit</span><span class="p">[</span><span class="s2">"dp"</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">y</span><span class="p">,</span> <span class="n">ey</span> <span class="o">=</span> <span class="n">fit</span><span class="p">[</span><span class="s2">"p"</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">fit</span><span class="p">[</span><span class="s2">"dp"</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
-<span class="n">f</span><span class="p">,</span> <span class="n">ef</span> <span class="o">=</span> <span class="n">fit</span><span class="p">[</span><span class="s2">"p"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">fit</span><span class="p">[</span><span class="s2">"dp"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the best-fit parameters and uncertainties</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">ex</span> <span class="o">=</span> <span class="n">fit</span><span class="p">[</span><span class="s2">&quot;p&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">fit</span><span class="p">[</span><span class="s2">&quot;dp&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">y</span><span class="p">,</span> <span class="n">ey</span> <span class="o">=</span> <span class="n">fit</span><span class="p">[</span><span class="s2">&quot;p&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">fit</span><span class="p">[</span><span class="s2">&quot;dp&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">f</span><span class="p">,</span> <span class="n">ef</span> <span class="o">=</span> <span class="n">fit</span><span class="p">[</span><span class="s2">&quot;p&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">fit</span><span class="p">[</span><span class="s2">&quot;dp&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="n">sep_fit</span><span class="p">,</span> <span class="n">pa_fit</span><span class="p">,</span> <span class="n">dm_fit</span><span class="p">,</span> <span class="n">sep_unc</span><span class="p">,</span> <span class="n">pa_unc</span><span class="p">,</span> <span class="n">dm_upper</span><span class="p">,</span> <span class="n">dm_lower</span> <span class="o">=</span> <span class="n">convert_params</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">ex</span><span class="p">,</span> <span class="n">ey</span><span class="p">,</span> <span class="n">ef</span><span class="p">)</span>
 <span class="n">dm_unc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">dm</span><span class="o">-</span><span class="n">dm_upper</span><span class="p">,</span> <span class="n">dm_lower</span><span class="o">-</span><span class="n">dm</span><span class="p">])</span> <span class="c1"># symmetrical uncertainties for printing</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'             Expected      Model'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'Sep [mas]:   </span><span class="si">%.3f</span><span class="s1">      </span><span class="si">%.3f</span><span class="s1"> +/- </span><span class="si">%.2f</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">sep</span><span class="p">,</span> <span class="n">sep_fit</span><span class="p">,</span> <span class="n">sep_unc</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'Theta [deg]: </span><span class="si">%.3f</span><span class="s1">      </span><span class="si">%.3f</span><span class="s1"> +/- </span><span class="si">%.2f</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">pa_fit</span><span class="p">,</span> <span class="n">pa_unc</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'dm [mag]:    </span><span class="si">%.3f</span><span class="s1">        </span><span class="si">%.3f</span><span class="s1"> +/- </span><span class="si">%.2f</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">dm_fit</span><span class="p">,</span> <span class="n">dm_unc</span><span class="p">))</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <p>
-            We notice that there is a significant difference between the expected and retrieved binary parameters, most notably the separation. Since the expected parameters were derived from astrometric measurements of AB Dor, the most recent of which was in 2007 (HIP2), there were large uncertainties on these values. We think it is probable that the observed position is the real position of the companion.
-           </p>
-          </section>
-          <section id="calculate-the-contrast-limits">
-           <h3>
-            Calculate the contrast limits
-            <a class="headerlink" href="#calculate-the-contrast-limits" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <p>
-            Next, we will use Fouriever to find the detection limit at different angular separations. To do this, Fouriever subtracts the best-fit companion and then injects an additional companion at each grid position with different flux ratios and estimates the number of sigma for a theoretical detection at that point. It interpolates the flux ratio values at 3
-            <span class="math notranslate nohighlight">
-             \(\sigma\)
-            </span>
-            for all points in the grid to produce a 3
-            <span class="math notranslate nohighlight">
-             \(\sigma\)
-            </span>
-            detection map of the contrast (flux) ratio.
-           </p>
-           <p>
-            It also uses the Absil method, which differs slightly from the injection method in that it assumes that the uniform disk is the true model when evaluating the probability of a binary existing at a given grid position, while the injection method assumes the binary is the true model (see
-            <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2011A%26A...535A..68A/abstract">
-             Absil et al. 2011
-            </a>
-            ,
-            <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2015A%26A...579A..68G/abstract">
-             Gallenne et al. 2015
-            </a>
-            for more details).
-           </p>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Estimate detection limits using the injection and Absil methods</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;             Expected      Model&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Sep [mas]:   </span><span class="si">%.3f</span><span class="s1">      </span><span class="si">%.3f</span><span class="s1"> +/- </span><span class="si">%.2f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sep</span><span class="p">,</span> <span class="n">sep_fit</span><span class="p">,</span> <span class="n">sep_unc</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Theta [deg]: </span><span class="si">%.3f</span><span class="s1">      </span><span class="si">%.3f</span><span class="s1"> +/- </span><span class="si">%.2f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">pa_fit</span><span class="p">,</span> <span class="n">pa_unc</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;dm [mag]:    </span><span class="si">%.3f</span><span class="s1">        </span><span class="si">%.3f</span><span class="s1"> +/- </span><span class="si">%.2f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="n">dm_fit</span><span class="p">,</span> <span class="n">dm_unc</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We notice that there is a significant difference between the expected and retrieved binary parameters, most notably the separation. Since the expected parameters were derived from astrometric measurements of AB Dor, the most recent of which was in 2007 (HIP2), there were large uncertainties on these values. We think it is probable that the observed position is the real position of the companion.</p>
+</section>
+<section id="calculate-the-contrast-limits">
+<h3>Calculate the contrast limits<a class="headerlink" href="#calculate-the-contrast-limits" title="Permalink to this heading">#</a></h3>
+<p>Next, we will use Fouriever to find the detection limit at different angular separations. To do this, Fouriever subtracts the best-fit companion and then injects an additional companion at each grid position with different flux ratios and estimates the number of sigma for a theoretical detection at that point. It interpolates the flux ratio values at 3<span class="math notranslate nohighlight">\(\sigma\)</span> for all points in the grid to produce a 3<span class="math notranslate nohighlight">\(\sigma\)</span> detection map of the contrast (flux) ratio.</p>
+<p>It also uses the Absil method, which differs slightly from the injection method in that it assumes that the uniform disk is the true model when evaluating the probability of a binary existing at a given grid position, while the injection method assumes the binary is the true model (see <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2011A%26A...535A..68A/abstract">Absil et al. 2011</a>, <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2015A%26A...579A..68G/abstract">Gallenne et al. 2015</a> for more details).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Estimate detection limits using the injection and Absil methods</span>
 <span class="n">data</span><span class="o">.</span><span class="n">detlim</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mf">3.</span><span class="p">,</span> <span class="c1"># confidence level of detection limits</span>
             <span class="n">fit_sub</span><span class="o">=</span><span class="n">fit</span><span class="p">,</span> <span class="c1"># best fit from MCMC</span>
             <span class="n">cov</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># this data set has covariance</span>
@@ -1462,50 +932,27 @@ OIFITS files are multi-extension FITS binary tables.
             <span class="n">step_size</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="c1"># use custom step size</span>
             <span class="n">smear</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="c1"># use bandwidth smearing of 3</span>
             <span class="n">ofile</span><span class="o">=</span><span class="n">obase2</span><span class="p">)</span> <span class="c1"># save figures</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Display the detection limit plot</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Display the detection limit plot</span>
 
-<span class="n">Image</span><span class="p">(</span><span class="n">obase2</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s1">'_detlim.png'</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <p>
-            The top plots show the detection limit, in terms of contrast (
-            <span class="math notranslate nohighlight">
-             \(\Delta\)
-            </span>
-            Mag), at each location in the search grid based on the injection/detection of false companions using two slightly different methods. The lower plot shows an estimate of the same detection limit with respect to the angular separation [mas] from the primary target (azimuthally averaged from the top plots).
-           </p>
-          </section>
-          <section id="visually-compare-the-position">
-           <h3>
-            Visually compare the position
-            <a class="headerlink" href="#visually-compare-the-position" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <p>
-            We can now look at a simulated image with the faint companion artificially brightened, and we see that the position of the primary star at the center and its faint companion appear to match the position of the companion detected on the above
-            <span class="math notranslate nohighlight">
-             \(\chi^2\)
-            </span>
-            map output by Fouriever.
-           </p>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="n">bright_im</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">'./niriss_ami_binary3/jw01093001001_01101_00001_nis_uncal_F480M_NRM_final_seed_image_fakemag_4.8131.fits'</span><span class="p">)</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">obase2</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_detlim.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The top plots show the detection limit, in terms of contrast (<span class="math notranslate nohighlight">\(\Delta\)</span>Mag), at each location in the search grid based on the injection/detection of false companions using two slightly different methods. The lower plot shows an estimate of the same detection limit with respect to the angular separation [mas] from the primary target (azimuthally averaged from the top plots).</p>
+</section>
+<section id="visually-compare-the-position">
+<h3>Visually compare the position<a class="headerlink" href="#visually-compare-the-position" title="Permalink to this heading">#</a></h3>
+<p>We can now look at a simulated image with the faint companion artificially brightened, and we see that the position of the primary star at the center and its faint companion appear to match the position of the companion detected on the above <span class="math notranslate nohighlight">\(\chi^2\)</span> map output by Fouriever.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bright_im</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;./niriss_ami_binary3/jw01093001001_01101_00001_nis_uncal_F480M_NRM_final_seed_image_fakemag_4.8131.fits&#39;</span><span class="p">)</span>
 <span class="c1"># center and trim the image around the bright pixel before rotating</span>
 <span class="n">bright_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">bright_im</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">bright_im</span><span class="p">))</span>
 <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">bright_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">30</span><span class="p">,</span> <span class="n">bright_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">30</span>
@@ -1524,104 +971,45 @@ OIFITS files are multi-extension FITS binary tables.
 
 <span class="c1"># Plot the image on the same scale as Fouriever chi-squared maps above</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">rot_im</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="n">xmin</span><span class="p">,</span> <span class="o">-</span><span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">rot_im</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="n">xmin</span><span class="p">,</span> <span class="o">-</span><span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="mi">500</span><span class="p">,</span> <span class="o">-</span><span class="mi">500</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="o">-</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'AB Dor and Companion'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">'$\Delta\alpha$ [mas]'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">'$\Delta\delta$ [mas]'</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <p>
-            The above plot confirms the position of the faint companion relative to the target, shown here as change in right ascension and declination from the center of the target star.
-           </p>
-          </section>
-         </section>
-         <section id="additional-resources">
-          <h2>
-           Additional Resources
-           <a class="headerlink" href="#additional-resources" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <ul class="simple">
-           <li>
-            <p>
-             <a class="reference external" href="https://jwst-docs.stsci.edu/near-infrared-imager-and-slitless-spectrograph/niriss-observing-modes/niriss-aperture-masking-interferometry">
-              JWST NIRISS AMI documentation
-             </a>
-            </p>
-           </li>
-           <li>
-            <p>
-             Fouriever development papers:
-            </p>
-            <ul>
-             <li>
-              <p>
-               <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2019MNRAS.486..639K/abstract">
-                Kammerer et al. 2019
-               </a>
-              </p>
-             </li>
-             <li>
-              <p>
-               <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2020A%26A...644A.110K/abstract">
-                Kammerer et al. 2020
-               </a>
-              </p>
-             </li>
-             <li>
-              <p>
-               <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2021A%26A...646A..36K/abstract">
-                Kammerer et al. 2021a
-               </a>
-              </p>
-             </li>
-            </ul>
-           </li>
-           <li>
-            <p>
-             <a class="reference external" href="https://ui.adsabs.harvard.edu/link_gateway/2015A&amp;A...579A..68G/doi:10.1051/0004-6361/201525917">
-              CANDID paper (Galenne et al. 2015)
-             </a>
-            </p>
-           </li>
-          </ul>
-         </section>
-         <section id="about-this-notebook">
-          <h2>
-           About this notebook
-           <a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <p>
-           <strong>
-            Author:
-           </strong>
-           Rachel Cooper and Anand Sivaramakrishnan’s adaptation of example analysis scripts written by Jens Kammerer (STScI) and Anthony Soulain (University of Sydney).
-           <strong>
-            Updated On:
-           </strong>
-           2022-20-12
-          </p>
-          <hr class="docutils"/>
-          <p>
-           <span class="xref myst">
-            Top of Page
-           </span>
-           <a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png">
-            <img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;"/>
-           </a>
-          </p>
-         </section>
-        </section>
-        <script type="text/x-thebe-config">
-         {
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;AB Dor and Companion&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\Delta\alpha$ [mas]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\Delta\delta$ [mas]&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The above plot confirms the position of the faint companion relative to the target, shown here as change in right ascension and declination from the center of the target star.</p>
+</section>
+</section>
+<section id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://jwst-docs.stsci.edu/near-infrared-imager-and-slitless-spectrograph/niriss-observing-modes/niriss-aperture-masking-interferometry">JWST NIRISS AMI documentation</a></p></li>
+<li><p>Fouriever development papers:</p>
+<ul>
+<li><p><a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2019MNRAS.486..639K/abstract">Kammerer et al. 2019</a></p></li>
+<li><p><a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2020A%26A...644A.110K/abstract">Kammerer et al. 2020</a></p></li>
+<li><p><a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2021A%26A...646A..36K/abstract">Kammerer et al. 2021a</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://ui.adsabs.harvard.edu/link_gateway/2015A&amp;A...579A..68G/doi:10.1051/0004-6361/201525917">CANDID paper (Galenne et al. 2015)</a></p></li>
+</ul>
+</section>
+<section id="about-this-notebook">
+<h2>About this notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">#</a></h2>
+<p><strong>Author:</strong> Rachel Cooper and Anand Sivaramakrishnan’s adaptation of example analysis scripts written by Jens Kammerer (STScI) and Anthony Soulain (University of Sydney).
+<strong>Updated On:</strong> 2022-20-12</p>
+<hr class="docutils" />
+<p><span class="xref myst">Top of Page</span>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
         requestKernel: true,
         binderOptions: {
             repo: "spacetelescope/jdat_notebooks",
@@ -1637,129 +1025,104 @@ OIFITS files are multi-extension FITS binary tables.
         },
         predefinedOutput: true
     }
-        </script>
-        <script>
-         kernelName = 'python3'
-        </script>
-       </article>
-       <footer class="prev-next-footer d-print-none">
-        <div class="prev-next-area">
-        </div>
-       </footer>
-      </div>
-      <div class="bd-sidebar-secondary bd-toc">
-       <div class="sidebar-secondary-items sidebar-secondary__inner">
-        <div class="sidebar-secondary-item">
-         <div class="page-toc tocsection onthispage">
-          <i class="fa-solid fa-list">
-          </i>
-          Contents
-         </div>
-         <nav class="bd-toc-nav page-toc">
-          <ul class="visible nav section-nav flex-column">
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#introduction">
-             Introduction
-            </a>
-            <ul class="nav section-nav flex-column">
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#defining-terms">
-               Defining terms
-              </a>
-             </li>
-            </ul>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#imports">
-             Imports
-            </a>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#loading-data">
-             Loading data
-            </a>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#file-information">
-             File Information
-            </a>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#examine-the-data">
-             Examine the data
-            </a>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#perform-the-binary-parameter-extraction">
-             Perform the binary parameter extraction
-            </a>
-            <ul class="nav section-nav flex-column">
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#utilize-the-fouriever-package">
-               Utilize the Fouriever package
-              </a>
-             </li>
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#convert-ra-dec-flux-ratio-to-separation-pa-magnitude-difference">
-               Convert RA, Dec, flux ratio to separation, PA, magnitude difference
-              </a>
-             </li>
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#calculate-the-contrast-limits">
-               Calculate the contrast limits
-              </a>
-             </li>
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#visually-compare-the-position">
-               Visually compare the position
-              </a>
-             </li>
-            </ul>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#additional-resources">
-             Additional Resources
-            </a>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#about-this-notebook">
-             About this notebook
-            </a>
-           </li>
-          </ul>
-         </nav>
-        </div>
-       </div>
-      </div>
-     </div>
-     <footer class="bd-footer-content">
-      <div class="bd-footer-content__inner container">
-       <div class="footer-item">
-        <p class="component-author">
-         By STScI
-        </p>
-       </div>
-       <div class="footer-item">
-        <p class="copyright">
-         © Copyright 2022-2024.
-         <br/>
-        </p>
-       </div>
-       <div class="footer-item">
-       </div>
-       <div class="footer-item">
-       </div>
-      </div>
-     </footer>
-    </main>
-   </div>
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
   </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-terms">Defining terms</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">Loading data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#file-information">File Information</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examine-the-data">Examine the data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perform-the-binary-parameter-extraction">Perform the binary parameter extraction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#utilize-the-fouriever-package">Utilize the Fouriever package</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convert-ra-dec-flux-ratio-to-separation-pa-magnitude-difference">Convert RA, Dec, flux ratio to separation, PA, magnitude difference</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-the-contrast-limits">Calculate the contrast limits</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visually-compare-the-position">Visually compare the position</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this notebook</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341">
-  </script>
-  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341">
-  </script>
+  <script src="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
   <footer class="bd-footer">
   </footer>
- </body>
+  </body>
 </html>

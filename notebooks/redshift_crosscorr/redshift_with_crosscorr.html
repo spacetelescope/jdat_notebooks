@@ -1,700 +1,540 @@
+
+
 <!DOCTYPE html>
-<html data-content_root="" lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <meta content="Docutils 0.18.1: http://docutils.sourceforge.net/" name="generator"/>
-  <title>
-   Measuring Galaxy Redshifts with Cross-correlation — STScI JDAT Notebooks
-  </title>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Measuring Galaxy Redshifts with Cross-correlation &#8212; STScI JDAT Notebooks</title>
+  
+  
+  
   <script data-cfasync="false">
-   document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet"/>
-  <link href="../../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet"/>
-  <link href="../../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet"/>
-  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet"/>
-  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
-  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
-  <link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
-  <link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/togglebutton.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/copybutton.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/sphinx-thebe.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/main.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/main.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" rel="preload"/>
-  <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" rel="preload"/>
-  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341">
-  </script>
-  <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js">
-  </script>
-  <script src="../../_static/jquery.js">
-  </script>
-  <script src="../../_static/underscore.js">
-  </script>
-  <script src="../../_static/_sphinx_javascript_frameworks_compat.js">
-  </script>
-  <script src="../../_static/doctools.js">
-  </script>
-  <script src="../../_static/clipboard.min.js">
-  </script>
-  <script src="../../_static/copybutton.js">
-  </script>
-  <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824">
-  </script>
-  <script>
-   let toggleHintShow = 'Click to show';
-  </script>
-  <script>
-   let toggleHintHide = 'Click to hide';
-  </script>
-  <script>
-   let toggleOpenOnPrint = 'true';
-  </script>
-  <script src="../../_static/togglebutton.js">
-  </script>
-  <script>
-   var togglebuttonSelector = '.toggle, .admonition.dropdown';
-  </script>
-  <script src="../../_static/design-tabs.js">
-  </script>
-  <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3">
-  </script>
-  <script>
-   window.dataLayer = window.dataLayer || [];
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
                 function gtag(){ dataLayer.push(arguments); }
                 gtag('js', new Date());
                 gtag('config', 'G-D46G4HKJY3');
-  </script>
-  <script>
-   const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
-  </script>
-  <script async="async" src="../../_static/sphinx-thebe.js">
-  </script>
-  <script>
-   DOCUMENTATION_OPTIONS.pagename = 'notebooks/redshift_crosscorr/redshift_with_crosscorr';
-  </script>
-  <link href="../../genindex.html" rel="index" title="Index"/>
-  <link href="../../search.html" rel="search" title="Search"/>
-  <meta content="width=device-width, initial-scale=1" name="viewport"/>
-  <meta content="en" name="docsearch:language"/>
- </head>
- <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
-  <div class="skip-link d-print-none" id="pst-skip-link">
-   <a href="#main-content">
-    Skip to main content
-   </a>
-  </div>
-  <div id="pst-scroll-pixel-helper">
-  </div>
-  <button class="btn rounded-pill" id="pst-back-to-top" type="button">
-   <i class="fa-solid fa-arrow-up">
-   </i>
-   Back to top
-  </button>
-  <input class="sidebar-toggle" id="pst-primary-sidebar-checkbox" type="checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox">
-  </label>
-  <input class="sidebar-toggle" id="pst-secondary-sidebar-checkbox" type="checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox">
-  </label>
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/redshift_crosscorr/redshift_with_crosscorr';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
   <div class="search-button__wrapper">
-   <div class="search-button__overlay">
-   </div>
-   <div class="search-button__search-container">
-    <form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
-     <i class="fa-solid fa-magnifying-glass">
-     </i>
-     <input aria-label="Search this book..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search this book..." spellcheck="false" type="search"/>
-     <span class="search-button__kbd-shortcut">
-      <kbd class="kbd-shortcut__modifier">
-       Ctrl
-      </kbd>
-      +
-      <kbd>
-       K
-      </kbd>
-     </span>
-    </form>
-   </div>
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
   </div>
+
   <div class="pst-async-banner-revealer d-none">
-   <aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning">
-   </aside>
-  </div>
-  <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
-  </header>
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
   <div class="bd-container">
-   <div class="bd-container__inner bd-page-width">
-    <div class="bd-sidebar-primary bd-sidebar">
-     <div class="sidebar-header-items sidebar-primary__section">
-     </div>
-     <div class="sidebar-primary-items__start sidebar-primary__section">
-      <div class="sidebar-primary-item">
-       <a class="navbar-brand logo" href="../../intro.html">
-        <img alt="STScI JDAT Notebooks - Home" class="logo__image only-light" src="../../_static/stsci_logo2.png"/>
-        <script>
-         document.write(`<img src="../../_static/stsci_logo2.png" class="logo__image only-dark" alt="STScI JDAT Notebooks - Home"/>`);
-        </script>
-       </a>
-      </div>
-      <div class="sidebar-primary-item">
-       <nav aria-label="Main" class="bd-links" id="bd-docs-nav">
-        <div class="bd-toc-item navbar-nav active">
-         <ul class="nav bd-sidenav bd-sidenav__home-link">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../intro.html">
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           General
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../index.html">
-            Home
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../install.html">
-            Installation
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/notebook_development_workflow.html">
-            Notebook Development Workflow
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           Development
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/submitting_notebooks.html">
-            Submitting Notebooks
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/requirements.html">
-            Requirements file
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/notebooks.html">
-            Jupyter Notebooks
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/data_files.html">
-            Data Files
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           GitHub Guidelines
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/github_setup.html">
-            GitHub Setup
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/github_workflow.html">
-            GitHub Workflow
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../../docs/github_pr.html">
-            GitHub PR
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           Cross-Instrument
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../asdf_example/asdf_example.html">
-            ASDF Example
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../background_estimation_imaging/Imaging_Sky_Background_Estimation.html">
-            Complex 2D Background
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">
-            Composite Model Spectral Fitting
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">
-            MAST Query
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../rgb_imviz/imviz_rgb_carina.html">
-            RGB images with Imviz
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">
-            Specviz Simple Demo
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           MIRI
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">
-            MRS Mstar - Run Pipeline
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">
-            MRS Detector Based Extraction
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">
-            MRS Mstar - Data Analysis
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">
-            IFU of YSOs in LMC
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../MIRI_LRS_spectral_extraction/miri_lrs_advanced_extraction_part1.html">
-            LRS Optimal Spectral Extraction
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           NIRCam
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">
-            Point Source Aperture Photometry
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRCam_photometry/NIRCam_multiband_photometry.html">
-            Extended Aperture Photometry
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">
-            Cross-Filter PSF Matching
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">
-            PSF Photometry
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           NIRISS
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">
-            WFSS Spectra - Optimal Extraction
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">
-            WFSS Spectra - Combine and Normalize 1D Spectra
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">
-            WFSS Spectra - Cross-Correlation Template
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">
-            WFSS Spectra - Emission Line Map
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../niriss_imaging/niriss-imaging-tutorial.html">
-            NIRISS Imaging Tutorial
-           </a>
-          </li>
-         </ul>
-         <p aria-level="2" class="caption" role="heading">
-          <span class="caption-text">
-           NIRSpec
-          </span>
-         </p>
-         <ul class="nav bd-sidenav">
-          <li class="toctree-l1">
-           <a class="reference internal" href="../IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">
-            IFU Cube Fitting
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../cube_fitting/cube_fitting.html">
-            IFU Cube Modeling
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../ifu_optimal/ifu_optimal.html">
-            IFU Optimal Spectral Extraction
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../optimal_extraction/Spectral_Extraction-static.html">
-            MOS Optimal Extraction
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../mos_spectroscopy_advanced/MOSspec_advanced.html">
-            MOS Spectroscopy of Extragalactic Field
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">
-            BOTS Time Series Observations
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../galaxy_redshift/redshift_fitting.html">
-            Redshift and Template Fitting
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRSpec_NSClean/FS_NSClean_example.html">
-            FS Products with NSClean
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRSpec_NSClean/IFU_NSClean_example.html">
-            IFU Products with NSClean
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRSpec_NSClean/MOS_NSClean_example.html">
-            MOS Products with NSClean
-           </a>
-          </li>
-          <li class="toctree-l1">
-           <a class="reference internal" href="../NIRSpec_NSClean/BOTS_NSClean_example.html">
-            BOTS Products with NSClean
-           </a>
-          </li>
-         </ul>
-        </div>
-       </nav>
-      </div>
-     </div>
-     <div class="sidebar-primary-items__end sidebar-primary__section">
-     </div>
-     <div id="rtd-footer-container">
-     </div>
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/stsci_logo2.png" class="logo__image only-light" alt="STScI JDAT Notebooks - Home"/>
+    <script>document.write(`<img src="../../_static/stsci_logo2.png" class="logo__image only-dark" alt="STScI JDAT Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/notebook_development_workflow.html">Notebook Development Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../docs/submitting_notebooks.html">Submitting Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/requirements.html">Requirements file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/notebooks.html">Jupyter Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/data_files.html">Data Files</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">GitHub Guidelines</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../docs/github_setup.html">GitHub Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/github_workflow.html">GitHub Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/github_pr.html">GitHub PR</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cross-Instrument</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../asdf_example/asdf_example.html">ASDF Example</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../background_estimation_imaging/Imaging_Sky_Background_Estimation.html">Complex 2D Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">Composite Model Spectral Fitting</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">MAST Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rgb_imviz/imviz_rgb_carina.html">RGB images with Imviz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">Specviz Simple Demo</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">MIRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">MRS Mstar - Run Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">MRS Detector Based Extraction</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">MRS Mstar - Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">IFU of YSOs in LMC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../MIRI_LRS_spectral_extraction/miri_lrs_advanced_extraction_part1.html">LRS Optimal Spectral Extraction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRCam</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">Point Source Aperture Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRCam_photometry/NIRCam_multiband_photometry.html">Extended Aperture Photometry</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">Cross-Filter PSF Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">PSF Photometry</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRISS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">WFSS Spectra - Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">WFSS Spectra - Combine and Normalize 1D Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">WFSS Spectra - Cross-Correlation Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">WFSS Spectra - Emission Line Map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../niriss_imaging/niriss-imaging-tutorial.html">NIRISS Imaging Tutorial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRSpec</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">IFU Cube Fitting</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../cube_fitting/cube_fitting.html">IFU Cube Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ifu_optimal/ifu_optimal.html">IFU Optimal Spectral Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimal_extraction/Spectral_Extraction-static.html">MOS Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mos_spectroscopy_advanced/MOSspec_advanced.html">MOS Spectroscopy of Extragalactic Field</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">BOTS Time Series Observations</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../galaxy_redshift/redshift_fitting.html">Redshift and Template Fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_NSClean/FS_NSClean_example.html">FS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_NSClean/IFU_NSClean_example.html">IFU Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_NSClean/MOS_NSClean_example.html">MOS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_NSClean/BOTS_NSClean_example.html">BOTS Products with NSClean</a></li>
+</ul>
+
     </div>
-    <main class="bd-main" id="main-content" role="main">
-     <div class="sbt-scroll-pixel-helper">
-     </div>
-     <div class="bd-content">
-      <div class="bd-article-container">
-       <div class="bd-header-article d-print-none">
-        <div class="header-article-items header-article__inner">
-         <div class="header-article-items__start">
-          <div class="header-article-item">
-           <label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
-            <span class="fa-solid fa-bars">
-            </span>
-           </label>
-          </div>
-         </div>
-         <div class="header-article-items__end">
-          <div class="header-article-item">
-           <div class="article-header-buttons">
-            <div class="dropdown dropdown-launch-buttons">
-             <button aria-expanded="false" aria-label="Launch interactive content" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
-              <i class="fas fa-rocket">
-              </i>
-             </button>
-             <ul class="dropdown-menu">
-              <li>
-               <button class="btn btn-sm btn-launch-thebe dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" onclick="initThebeSBT()" title="Launch Thebe">
-                <span class="btn__icon-container">
-                 <i class="fas fa-play">
-                 </i>
-                </span>
-                <span class="btn__text-container">
-                 Live Code
-                </span>
-               </button>
-              </li>
-             </ul>
-            </div>
-            <div class="dropdown dropdown-source-buttons">
-             <button aria-expanded="false" aria-label="Source repositories" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
-              <i class="fab fa-github">
-              </i>
-             </button>
-             <ul class="dropdown-menu">
-              <li>
-               <a class="btn btn-sm btn-source-repository-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="https://github.com/spacetelescope/jdat_notebooks" target="_blank" title="Source repository">
-                <span class="btn__icon-container">
-                 <i class="fab fa-github">
-                 </i>
-                </span>
-                <span class="btn__text-container">
-                 Repository
-                </span>
-               </a>
-              </li>
-              <li>
-               <a class="btn btn-sm btn-source-issues-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/redshift_crosscorr/redshift_with_crosscorr.html&amp;body=Your%20issue%20content%20here." target="_blank" title="Open an issue">
-                <span class="btn__icon-container">
-                 <i class="fas fa-lightbulb">
-                 </i>
-                </span>
-                <span class="btn__text-container">
-                 Open issue
-                </span>
-               </a>
-              </li>
-             </ul>
-            </div>
-            <div class="dropdown dropdown-download-buttons">
-             <button aria-expanded="false" aria-label="Download this page" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
-              <i class="fas fa-download">
-              </i>
-             </button>
-             <ul class="dropdown-menu">
-              <li>
-               <a class="btn btn-sm btn-download-source-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="../../_sources/notebooks/redshift_crosscorr/redshift_with_crosscorr.ipynb" target="_blank" title="Download source file">
-                <span class="btn__icon-container">
-                 <i class="fas fa-file">
-                 </i>
-                </span>
-                <span class="btn__text-container">
-                 .ipynb
-                </span>
-               </a>
-              </li>
-              <li>
-               <button class="btn btn-sm btn-download-pdf-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" onclick="window.print()" title="Print to PDF">
-                <span class="btn__icon-container">
-                 <i class="fas fa-file-pdf">
-                 </i>
-                </span>
-                <span class="btn__text-container">
-                 .pdf
-                </span>
-               </button>
-              </li>
-             </ul>
-            </div>
-            <button class="btn btn-sm btn-fullscreen-button" data-bs-placement="bottom" data-bs-toggle="tooltip" onclick="toggleFullScreen()" title="Fullscreen mode">
-             <span class="btn__icon-container">
-              <i class="fas fa-expand">
-              </i>
-             </span>
-            </button>
-            <script>
-             document.write(`
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/redshift_crosscorr/redshift_with_crosscorr.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/notebooks/redshift_crosscorr/redshift_with_crosscorr.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
     <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
     <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
-            </script>
-            <script>
-             document.write(`
+</script>
+
+
+<script>
+document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
-            </script>
-            <label class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__secondary" title="Toggle secondary sidebar">
-             <span class="fa-solid fa-list">
-             </span>
-            </label>
-           </div>
-          </div>
-         </div>
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Measuring Galaxy Redshifts with Cross-correlation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib-setup-for-plotting">Matplotlib setup for plotting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#define-data-files">Define data files:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#read-observation-and-template">Read observation and template:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocess-spectra">Preprocess Spectra</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subtract-continuum">Subtract continuum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#smooth-observed-spectrum">Smooth observed spectrum</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-correlate">Cross correlate</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fit-correlation-peak">Fit correlation peak</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-check">Visual check</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-with-lower-resolution-observed-spectrum">Case with lower resolution observed spectrum</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Read observation and template:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Preprocess Spectra</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Subtract continuum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Smooth observed spectrum</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Cross correlate</a></li>
+</ul>
+            </nav>
         </div>
-       </div>
-       <div class="onlyprint" id="jb-print-docs-body">
-        <h1>
-         Measuring Galaxy Redshifts with Cross-correlation
-        </h1>
-        <!-- Table of contents -->
-        <div id="print-main-content">
-         <div id="jb-print-toc">
-          <div>
-           <h2>
-            Contents
-           </h2>
-          </div>
-          <nav aria-label="Page">
-           <ul class="visible nav section-nav flex-column">
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#matplotlib-setup-for-plotting">
-              Matplotlib setup for plotting
-             </a>
-             <ul class="nav section-nav flex-column">
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#define-data-files">
-                Define data files:
-               </a>
-              </li>
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#read-observation-and-template">
-                Read observation and template:
-               </a>
-              </li>
-             </ul>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#preprocess-spectra">
-              Preprocess Spectra
-             </a>
-             <ul class="nav section-nav flex-column">
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#subtract-continuum">
-                Subtract continuum
-               </a>
-              </li>
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#smooth-observed-spectrum">
-                Smooth observed spectrum
-               </a>
-              </li>
-             </ul>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#cross-correlate">
-              Cross correlate
-             </a>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#fit-correlation-peak">
-              Fit correlation peak
-             </a>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#visual-check">
-              Visual check
-             </a>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#case-with-lower-resolution-observed-spectrum">
-              Case with lower resolution observed spectrum
-             </a>
-             <ul class="nav section-nav flex-column">
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#id1">
-                Read observation and template:
-               </a>
-              </li>
-             </ul>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#id2">
-              Preprocess Spectra
-             </a>
-             <ul class="nav section-nav flex-column">
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#id3">
-                Subtract continuum
-               </a>
-              </li>
-              <li class="toc-h3 nav-item toc-entry">
-               <a class="reference internal nav-link" href="#id4">
-                Smooth observed spectrum
-               </a>
-              </li>
-             </ul>
-            </li>
-            <li class="toc-h2 nav-item toc-entry">
-             <a class="reference internal nav-link" href="#id5">
-              Cross correlate
-             </a>
-            </li>
-           </ul>
-          </nav>
-         </div>
-        </div>
-       </div>
-       <div id="searchbox">
-       </div>
-       <article class="bd-article">
-        <section class="tex2jax_ignore mathjax_ignore" id="measuring-galaxy-redshifts-with-cross-correlation">
-         <h1>
-          Measuring Galaxy Redshifts with Cross-correlation
-          <a class="headerlink" href="#measuring-galaxy-redshifts-with-cross-correlation" title="Permalink to this heading">
-           #
-          </a>
-         </h1>
-         <p>
-          This notebook attempts to follow the workflow that uses IRAF tasks, described here http://tdc-www.harvard.edu/iraf/rvsao/xcsao/xcsao.proc.html
-         </p>
-         <p>
-          Observed spectrum from LEGA-C: LEGA-C is a galaxy survey of about 3000 galaxies at z~0.8 and M* &gt; 10^10 M_sun in the COSMOS field. The spectra sample the rest-frame optical between ~3000A and 5000A at high resolution and very high signal-to-noise ratio. More information about the survey can be found here: http://www.mpia.de/home/legac/
-         </p>
-         <p>
-          Template from Pacifici et al. 2012.
-         </p>
-         <p>
-          <strong>
-           Developer Notes:
-          </strong>
-          - This workflow will be rendered in a few simple clicks in specviz
-- Preparing the template outside the correlation function allows for applications to different science cases
-         </p>
-         <p>
-          Author: Ivo Busko
-         </p>
-         <p>
-          <font color="red">
-           This notebook currently fails to execute, use as reference only
-          </font>
-         </p>
-         <div class="cell docutils container">
-          <div class="cell_input docutils container">
-           <div class="highlight-ipython3 notranslate">
-            <div class="highlight">
-             <pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="measuring-galaxy-redshifts-with-cross-correlation">
+<h1>Measuring Galaxy Redshifts with Cross-correlation<a class="headerlink" href="#measuring-galaxy-redshifts-with-cross-correlation" title="Permalink to this heading">#</a></h1>
+<p>This notebook attempts to follow the workflow that uses IRAF tasks, described here http://tdc-www.harvard.edu/iraf/rvsao/xcsao/xcsao.proc.html</p>
+<p>Observed spectrum from LEGA-C: LEGA-C is a galaxy survey of about 3000 galaxies at z~0.8 and M* &gt; 10^10 M_sun in the COSMOS field. The spectra sample the rest-frame optical between ~3000A and 5000A at high resolution and very high signal-to-noise ratio. More information about the survey can be found here: http://www.mpia.de/home/legac/</p>
+<p>Template from Pacifici et al. 2012.</p>
+<p><strong>Developer Notes:</strong>
+- This workflow will be rendered in a few simple clicks in specviz
+- Preparing the template outside the correlation function allows for applications to different science cases</p>
+<p>Author: Ivo Busko</p>
+<p><font color="red">This notebook currently fails to execute, use as reference only</font></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">scipy.signal.windows</span> <span class="kn">import</span> <span class="n">tukey</span>
@@ -719,56 +559,28 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="kn">from</span> <span class="nn">specutils.manipulation</span> <span class="kn">import</span> <span class="n">gaussian_smooth</span><span class="p">,</span> <span class="n">convolution_smooth</span>
 
 <span class="c1"># Check versions</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Numpy: "</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Astropy: "</span><span class="p">,</span><span class="n">astropy</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Specutils: "</span><span class="p">,</span><span class="n">specutils</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"They should be:"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Numpy:  1.18.1"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Astropy:  4.0"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Specutils:  1.0"</span><span class="p">)</span>
-</pre>
-            </div>
-           </div>
-          </div>
-         </div>
-         <section id="matplotlib-setup-for-plotting">
-          <h2>
-           Matplotlib setup for plotting
-           <a class="headerlink" href="#matplotlib-setup-for-plotting" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <p>
-           There are two versions
-          </p>
-          <ul class="simple">
-           <li>
-            <p>
-             <code class="docutils literal notranslate">
-              <span class="pre">
-               notebook
-              </span>
-             </code>
-             – gives interactive plots, but makes the overall notebook a bit harder to scroll
-            </p>
-           </li>
-           <li>
-            <p>
-             <code class="docutils literal notranslate">
-              <span class="pre">
-               inline
-              </span>
-             </code>
-             – gives non-interactive plots for better overall scrolling
-            </p>
-           </li>
-          </ul>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Numpy: &quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Astropy: &quot;</span><span class="p">,</span><span class="n">astropy</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Specutils: &quot;</span><span class="p">,</span><span class="n">specutils</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;They should be:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Numpy:  1.18.1&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Astropy:  4.0&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Specutils:  1.0&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="matplotlib-setup-for-plotting">
+<h2>Matplotlib setup for plotting<a class="headerlink" href="#matplotlib-setup-for-plotting" title="Permalink to this heading">#</a></h2>
+<p>There are two versions</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">notebook</span></code> – gives interactive plots, but makes the overall notebook a bit harder to scroll</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inline</span></code> – gives non-interactive plots for better overall scrolling</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="c1"># Use this version for non-interactive plots (easier scrolling of the notebook)</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
@@ -778,54 +590,38 @@ const thebe_selector_output = ".output, .cell_output"
 
 <span class="c1"># These gymnastics are needed to make the sizes of the figures</span>
 <span class="c1"># be the same in both the inline and notebook versions</span>
-<span class="o">%</span><span class="k">config</span> InlineBackend.print_figure_kwargs = {'bbox_inches': None}
+<span class="o">%</span><span class="k">config</span> InlineBackend.print_figure_kwargs = {&#39;bbox_inches&#39;: None}
 
-<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'savefig.dpi'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'figure.dpi'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <section id="define-data-files">
-           <h3>
-            Define data files:
-            <a class="headerlink" href="#define-data-files" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Files are on box</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;savefig.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="define-data-files">
+<h3>Define data files:<a class="headerlink" href="#define-data-files" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Files are on box</span>
 
 <span class="c1"># Observation and weight.</span>
-<span class="n">file1d</span> <span class="o">=</span> <span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/redshift_crosscorr/legac_M1_v3.7_spec1d_130902.fits'</span>
-<span class="n">file1dwht</span> <span class="o">=</span> <span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/redshift_crosscorr/legac_M1_v3.7_wht1d_130902.fits'</span>
+<span class="n">file1d</span> <span class="o">=</span> <span class="s1">&#39;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/redshift_crosscorr/legac_M1_v3.7_spec1d_130902.fits&#39;</span>
+<span class="n">file1dwht</span> <span class="o">=</span> <span class="s1">&#39;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/redshift_crosscorr/legac_M1_v3.7_wht1d_130902.fits&#39;</span>
 <span class="c1"># Template.</span>
-<span class="n">template_file</span> <span class="o">=</span> <span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/redshift_crosscorr/00006.dat'</span>
+<span class="n">template_file</span> <span class="o">=</span> <span class="s1">&#39;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/redshift_crosscorr/00006.dat&#39;</span>
 
 <span class="c1"># Plot limits</span>
 <span class="n">sp_xlim</span> <span class="o">=</span> <span class="p">[</span><span class="mf">3000.</span><span class="p">,</span> <span class="mf">9000.</span><span class="p">]</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-          </section>
-          <section id="read-observation-and-template">
-           <h3>
-            Read observation and template:
-            <a class="headerlink" href="#read-observation-and-template" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Observation</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="read-observation-and-template">
+<h3>Read observation and template:<a class="headerlink" href="#read-observation-and-template" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Observation</span>
 <span class="n">hdu1d</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file1d</span><span class="p">)</span>
 <span class="n">hdu1dwht</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file1dwht</span><span class="p">)</span>
 
@@ -834,141 +630,94 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="n">unc</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">wht</span><span class="p">)</span>
 <span class="n">wave</span> <span class="o">=</span> <span class="n">WCS</span><span class="p">(</span><span class="n">hdu1d</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">pixel_to_world</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hdu1d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)),</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-<span class="n">spec_unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="s1">'10^-19 erg s^-1 cm^-2 angstrom^-1'</span><span class="p">)</span>
+<span class="n">spec_unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="s1">&#39;10^-19 erg s^-1 cm^-2 angstrom^-1&#39;</span><span class="p">)</span>
 <span class="n">dataspec</span> <span class="o">=</span> <span class="n">QTable</span><span class="p">([</span><span class="n">wave</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">angstrom</span><span class="p">,</span> <span class="n">flux</span><span class="o">*</span><span class="n">spec_unit</span><span class="p">,</span> <span class="n">wht</span><span class="p">,</span> <span class="n">unc</span><span class="o">*</span><span class="n">spec_unit</span><span class="p">],</span> 
-                   <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">'wavelength'</span><span class="p">,</span><span class="s1">'flux'</span><span class="p">,</span><span class="s1">'weight'</span><span class="p">,</span><span class="s1">'uncertainty'</span><span class="p">))</span>
-<span class="n">dataspec_sub</span> <span class="o">=</span> <span class="n">dataspec</span><span class="p">[</span><span class="n">dataspec</span><span class="p">[</span><span class="s1">'weight'</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">0.</span><span class="p">]</span>
+                   <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">,</span><span class="s1">&#39;flux&#39;</span><span class="p">,</span><span class="s1">&#39;weight&#39;</span><span class="p">,</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">))</span>
+<span class="n">dataspec_sub</span> <span class="o">=</span> <span class="n">dataspec</span><span class="p">[</span><span class="n">dataspec</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">0.</span><span class="p">]</span>
 <span class="n">dataspec_sub</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Now make it into a Spectrum1D instance.</span>
-<span class="n">obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">'wavelength'</span><span class="p">],</span> 
-                 <span class="n">flux</span><span class="o">=</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">'flux'</span><span class="p">],</span> 
-                 <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">'uncertainty'</span><span class="p">]))</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Template</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Now make it into a Spectrum1D instance.</span>
+<span class="n">obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">],</span> 
+                 <span class="n">flux</span><span class="o">=</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">],</span> 
+                 <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Template</span>
 <span class="n">template</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">template_file</span><span class="p">)</span>
 <span class="n">factor</span> <span class="o">=</span> <span class="mf">2.E-5</span> <span class="o">*</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">unit</span> <span class="c1"># normalize template to a sensible range</span>
-<span class="n">template</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">template</span><span class="p">[</span><span class="s1">'col1'</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">AA</span><span class="p">,</span> 
-                      <span class="n">flux</span><span class="o">=</span><span class="n">template</span><span class="p">[</span><span class="s1">'col2'</span><span class="p">]</span><span class="o">*</span><span class="n">factor</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Note that in this and in subsequent plots, we are showing just the wavelength range of</span>
+<span class="n">template</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">template</span><span class="p">[</span><span class="s1">&#39;col1&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">AA</span><span class="p">,</span> 
+                      <span class="n">flux</span><span class="o">=</span><span class="n">template</span><span class="p">[</span><span class="s1">&#39;col2&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">factor</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note that in this and in subsequent plots, we are showing just the wavelength range of</span>
 <span class="c1"># interest. The template covers a significantly wider range.</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'obs'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'template'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Input data'</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-          </section>
-         </section>
-         <section id="preprocess-spectra">
-          <h2>
-           Preprocess Spectra
-           <a class="headerlink" href="#preprocess-spectra" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <section id="subtract-continuum">
-           <h3>
-            Subtract continuum
-            <a class="headerlink" href="#subtract-continuum" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="n">continuum_model</span> <span class="o">=</span> <span class="n">continuum</span><span class="o">.</span><span class="n">fit_generic_continuum</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Input data&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="preprocess-spectra">
+<h2>Preprocess Spectra<a class="headerlink" href="#preprocess-spectra" title="Permalink to this heading">#</a></h2>
+<section id="subtract-continuum">
+<h3>Subtract continuum<a class="headerlink" href="#subtract-continuum" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">continuum_model</span> <span class="o">=</span> <span class="n">continuum</span><span class="o">.</span><span class="n">fit_generic_continuum</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span> 
 <span class="n">p_obs</span> <span class="o">=</span> <span class="n">obs</span> <span class="o">-</span> <span class="n">continuum_model</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
 <span class="n">continuum_model</span> <span class="o">=</span> <span class="n">continuum</span><span class="o">.</span><span class="n">fit_generic_continuum</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Chebyshev1D</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span> 
 <span class="n">p_template</span> <span class="o">=</span> <span class="n">template</span> <span class="o">-</span> <span class="n">continuum_model</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'obs'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'template'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'After continuum subtraction'</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-          </section>
-          <section id="smooth-observed-spectrum">
-           <h3>
-            Smooth observed spectrum
-            <a class="headerlink" href="#smooth-observed-spectrum" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <p>
-            The IRAF task XCORR works in Fourier space. In there, it applies a cosine bell filter (raised-cosine filter) to the observed spectrum, before multiplying together the two Fourier transforms. Here, we are working in data space, thus we emulate the filter operation by convolving the observed spectrum with a windowed sinc smoothing function.
-           </p>
-           <p>
-            <strong>
-             Developer Notes:
-            </strong>
-           </p>
-           <ul class="simple">
-            <li>
-             <p>
-              We should implement this window function in specutils so the user doe
-sn’t have to: https://github.com/astropy/specutils/issues/636
-             </p>
-            </li>
-            <li>
-             <p>
-              We should implement a fourier-space version of the xcorr as well as t
-he current freq/wave-space version
-             </p>
-            </li>
-           </ul>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Smooth data with sinc kernel</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;After continuum subtraction&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="smooth-observed-spectrum">
+<h3>Smooth observed spectrum<a class="headerlink" href="#smooth-observed-spectrum" title="Permalink to this heading">#</a></h3>
+<p>The IRAF task XCORR works in Fourier space. In there, it applies a cosine bell filter (raised-cosine filter) to the observed spectrum, before multiplying together the two Fourier transforms. Here, we are working in data space, thus we emulate the filter operation by convolving the observed spectrum with a windowed sinc smoothing function.</p>
+<p><strong>Developer Notes:</strong></p>
+<ul class="simple">
+<li><p>We should implement this window function in specutils so the user doe
+sn’t have to: https://github.com/astropy/specutils/issues/636</p></li>
+<li><p>We should implement a fourier-space version of the xcorr as well as t
+he current freq/wave-space version</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Smooth data with sinc kernel</span>
 <span class="n">fc</span> <span class="o">=</span> <span class="mf">0.25</span>  <span class="c1"># Cutoff frequency as a fraction of the sampling rate (in (0, 0.5)).</span>
 <span class="n">b</span> <span class="o">=</span> <span class="mf">0.49</span>   <span class="c1"># Transition band, as a fraction of the sampling rate (in (0, 0.5)).</span>
 
@@ -992,41 +741,30 @@ he current freq/wave-space version
 
 <span class="c1"># Smooth</span>
 <span class="n">p_obs_smoothed</span> <span class="o">=</span> <span class="n">convolution_smooth</span><span class="p">(</span><span class="n">p_obs</span><span class="p">,</span> <span class="n">filt</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs_smoothed</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_obs_smoothed</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'obs'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'template'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs_smoothed</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_obs_smoothed</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'After smoothing'</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-          </section>
-         </section>
-         <section id="cross-correlate">
-          <h2>
-           Cross correlate
-           <a class="headerlink" href="#cross-correlate" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># Correlation. </span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;After smoothing&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="cross-correlate">
+<h2>Cross correlate<a class="headerlink" href="#cross-correlate" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Correlation. </span>
 <span class="c1">#</span>
 <span class="c1"># With no additional specifications, both the entire template and entire spectrum </span>
 <span class="c1"># will be included in the correlation computation. This in general will incur in </span>
@@ -1034,53 +772,39 @@ he current freq/wave-space version
 <span class="c1"># to work only on the useful region.</span>
 
 <span class="n">corr</span><span class="p">,</span> <span class="n">lag</span> <span class="o">=</span> <span class="n">correlation</span><span class="o">.</span><span class="n">template_correlate</span><span class="p">(</span><span class="n">p_obs_smoothed</span><span class="p">,</span> <span class="n">p_template</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">corr</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">300000</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">lag</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># Redshift based on maximum</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Redshift based on maximum</span>
 <span class="n">index_peak</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">corr</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">corr</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">v</span> <span class="o">=</span> <span class="n">lag</span><span class="p">[</span><span class="n">index_peak</span><span class="p">]</span>
-<span class="n">z</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">const</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">'km/s'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Peak maximum at: "</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Redshift from peak maximum: "</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-         </section>
-         <section id="fit-correlation-peak">
-          <h2>
-           Fit correlation peak
-           <a class="headerlink" href="#fit-correlation-peak" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># Redshift based on parabolic fit to mazimum</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">const</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;km/s&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Peak maximum at: &quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Redshift from peak maximum: &quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="fit-correlation-peak">
+<h2>Fit correlation peak<a class="headerlink" href="#fit-correlation-peak" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Redshift based on parabolic fit to mazimum</span>
 
 <span class="n">n</span> <span class="o">=</span> <span class="mi">8</span> <span class="c1"># points to the left or right of correlation maximum</span>
 
@@ -1090,194 +814,139 @@ he current freq/wave-space version
 <span class="n">roots</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roots</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
 <span class="n">v_fit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">roots</span><span class="p">)</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">km</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span> <span class="c1"># maximum lies at mid point between roots</span>
-<span class="n">z</span> <span class="o">=</span> <span class="n">v_fit</span> <span class="o">/</span> <span class="n">const</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">'km/s'</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">v_fit</span> <span class="o">/</span> <span class="n">const</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;km/s&#39;</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Parabolic fit with maximum at: "</span><span class="p">,</span> <span class="n">v_fit</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Redshift from parabolic fit: "</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-         </section>
-         <section id="visual-check">
-          <h2>
-           Visual check
-           <a class="headerlink" href="#visual-check" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parabolic fit with maximum at: &quot;</span><span class="p">,</span> <span class="n">v_fit</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Redshift from parabolic fit: &quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visual-check">
+<h2>Visual check<a class="headerlink" href="#visual-check" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
 <span class="c1"># plt.xlim(sp_xlim)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">peak_lags</span><span class="p">,</span> <span class="n">peak_vals</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'data'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">peak_lags</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">polyval</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">peak_lags</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'fit'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">peak_lags</span><span class="p">,</span> <span class="n">peak_vals</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">peak_lags</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">polyval</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">peak_lags</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;fit&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">lag</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Fit to correlation peak'</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="n">z_ref</span> <span class="o">=</span> <span class="mf">0.758</span> <span class="c1"># "true" redshift, corresponding to 227242.6 km/s</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Fit to correlation peak&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z_ref</span> <span class="o">=</span> <span class="mf">0.758</span> <span class="c1"># &quot;true&quot; redshift, corresponding to 227242.6 km/s</span>
 
 <span class="n">template_z</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="n">z</span><span class="p">),</span> <span class="n">flux</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">flux</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'obs'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template_z</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">template_z</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'template'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template_z</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">template_z</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Redshifted original template and original observed spectrum'</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="n">z_err</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="n">z_ref</span><span class="p">)</span> <span class="o">/</span> <span class="n">z_ref</span> <span class="o">*</span> <span class="mf">100.</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Error in the derived redshift: "</span><span class="p">,</span> <span class="n">z_err</span><span class="p">,</span> <span class="s2">"%"</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-         </section>
-         <section id="case-with-lower-resolution-observed-spectrum">
-          <h2>
-           Case with lower resolution observed spectrum
-           <a class="headerlink" href="#case-with-lower-resolution-observed-spectrum" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <section id="id1">
-           <h3>
-            Read observation and template:
-            <a class="headerlink" href="#id1" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Observation</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Redshifted original template and original observed spectrum&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z_err</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="n">z_ref</span><span class="p">)</span> <span class="o">/</span> <span class="n">z_ref</span> <span class="o">*</span> <span class="mf">100.</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error in the derived redshift: &quot;</span><span class="p">,</span> <span class="n">z_err</span><span class="p">,</span> <span class="s2">&quot;%&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="case-with-lower-resolution-observed-spectrum">
+<h2>Case with lower resolution observed spectrum<a class="headerlink" href="#case-with-lower-resolution-observed-spectrum" title="Permalink to this heading">#</a></h2>
+<section id="id1">
+<h3>Read observation and template:<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Observation</span>
 <span class="n">hdu1d</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file1d</span><span class="p">)</span>
 <span class="n">hdu1dwht</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file1dwht</span><span class="p">)</span>
 
 <span class="n">flux</span> <span class="o">=</span> <span class="n">hdu1d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="n">wht</span> <span class="o">=</span> <span class="n">hdu1dwht</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="n">unc</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">wht</span><span class="p">)</span>
-<span class="n">wave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">flux</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">hdu1d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">'CD1_1'</span><span class="p">]</span> <span class="o">+</span> <span class="n">hdu1d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">'CRVAL1'</span><span class="p">]</span>
+<span class="n">wave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">flux</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">hdu1d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CD1_1&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">hdu1d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CRVAL1&#39;</span><span class="p">]</span>
 
-<span class="n">spec_unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="s1">'10^-19 erg s^-1 cm^-2 angstrom^-1'</span><span class="p">)</span>
+<span class="n">spec_unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="s1">&#39;10^-19 erg s^-1 cm^-2 angstrom^-1&#39;</span><span class="p">)</span>
 <span class="n">dataspec</span> <span class="o">=</span> <span class="n">QTable</span><span class="p">([</span><span class="n">wave</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">angstrom</span><span class="p">,</span> <span class="n">flux</span><span class="o">*</span><span class="n">spec_unit</span><span class="p">,</span> <span class="n">wht</span><span class="p">,</span> <span class="n">unc</span><span class="o">*</span><span class="n">spec_unit</span><span class="p">],</span> 
-                   <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">'wavelength'</span><span class="p">,</span><span class="s1">'flux'</span><span class="p">,</span><span class="s1">'weight'</span><span class="p">,</span><span class="s1">'uncertainty'</span><span class="p">))</span>
-<span class="n">dataspec_sub</span> <span class="o">=</span> <span class="n">dataspec</span><span class="p">[</span><span class="n">dataspec</span><span class="p">[</span><span class="s1">'weight'</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">0.</span><span class="p">]</span>
+                   <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">,</span><span class="s1">&#39;flux&#39;</span><span class="p">,</span><span class="s1">&#39;weight&#39;</span><span class="p">,</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">))</span>
+<span class="n">dataspec_sub</span> <span class="o">=</span> <span class="n">dataspec</span><span class="p">[</span><span class="n">dataspec</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">0.</span><span class="p">]</span>
 <span class="n">dataspec_sub</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Now make it into a Spectrum1D instance.</span>
-<span class="n">obs_orig</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">'wavelength'</span><span class="p">],</span> 
-                 <span class="n">flux</span><span class="o">=</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">'flux'</span><span class="p">],</span> 
-                 <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">'uncertainty'</span><span class="p">]))</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Change resolution of spectrum</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Now make it into a Spectrum1D instance.</span>
+<span class="n">obs_orig</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">],</span> 
+                 <span class="n">flux</span><span class="o">=</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">],</span> 
+                 <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">dataspec_sub</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Change resolution of spectrum</span>
 <span class="n">obs</span> <span class="o">=</span> <span class="n">gaussian_smooth</span><span class="p">(</span><span class="n">obs_orig</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Template</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Template</span>
 <span class="n">template</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">template_file</span><span class="p">)</span>
 <span class="n">factor</span> <span class="o">=</span> <span class="mf">2.E-5</span> <span class="o">*</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">unit</span> <span class="c1"># normalize template to a sensible range</span>
-<span class="n">template</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">template</span><span class="p">[</span><span class="s1">'col1'</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">AA</span><span class="p">,</span> 
-                      <span class="n">flux</span><span class="o">=</span><span class="n">template</span><span class="p">[</span><span class="s1">'col2'</span><span class="p">]</span><span class="o">*</span><span class="n">factor</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Note that in this and in subsequent plots, we are showing just the wavelength range of</span>
+<span class="n">template</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">template</span><span class="p">[</span><span class="s1">&#39;col1&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">AA</span><span class="p">,</span> 
+                      <span class="n">flux</span><span class="o">=</span><span class="n">template</span><span class="p">[</span><span class="s1">&#39;col2&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">factor</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note that in this and in subsequent plots, we are showing just the wavelength range of</span>
 <span class="c1"># interest. The template covers a significantly wider range.</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'obs'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'template'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Input data'</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-          </section>
-         </section>
-         <section id="id2">
-          <h2>
-           Preprocess Spectra
-           <a class="headerlink" href="#id2" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <section id="id3">
-           <h3>
-            Subtract continuum
-            <a class="headerlink" href="#id3" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="n">continuum_model</span> <span class="o">=</span> <span class="n">continuum</span><span class="o">.</span><span class="n">fit_generic_continuum</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Input data&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="id2">
+<h2>Preprocess Spectra<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<section id="id3">
+<h3>Subtract continuum<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">continuum_model</span> <span class="o">=</span> <span class="n">continuum</span><span class="o">.</span><span class="n">fit_generic_continuum</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span> 
 <span class="n">p_obs</span> <span class="o">=</span> <span class="n">obs</span> <span class="o">-</span> <span class="n">continuum_model</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
 <span class="n">continuum_model</span> <span class="o">=</span> <span class="n">continuum</span><span class="o">.</span><span class="n">fit_generic_continuum</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Chebyshev1D</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span> 
 <span class="n">p_template</span> <span class="o">=</span> <span class="n">template</span> <span class="o">-</span> <span class="n">continuum_model</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">)</span>
@@ -1285,28 +954,20 @@ he current freq/wave-space version
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'obs'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'template'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'After continuum subtraction'</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-          </section>
-          <section id="id4">
-           <h3>
-            Smooth observed spectrum
-            <a class="headerlink" href="#id4" title="Permalink to this heading">
-             #
-            </a>
-           </h3>
-           <div class="cell docutils container">
-            <div class="cell_input docutils container">
-             <div class="highlight-ipython3 notranslate">
-              <div class="highlight">
-               <pre><span></span><span class="c1"># Smooth data with sinc kernel</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;After continuum subtraction&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id4">
+<h3>Smooth observed spectrum<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Smooth data with sinc kernel</span>
 <span class="n">fc</span> <span class="o">=</span> <span class="mf">0.25</span>  <span class="c1"># Cutoff frequency as a fraction of the sampling rate (in (0, 0.5)).</span>
 <span class="n">b</span> <span class="o">=</span> <span class="mf">0.49</span>   <span class="c1"># Transition band, as a fraction of the sampling rate (in (0, 0.5)).</span>
 
@@ -1334,50 +995,39 @@ he current freq/wave-space version
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs_smoothed</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_obs_smoothed</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'obs'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'template'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_obs_smoothed</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_obs_smoothed</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p_template</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">p_template</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'After smoothing'</span><span class="p">)</span>
-</pre>
-              </div>
-             </div>
-            </div>
-           </div>
-          </section>
-         </section>
-         <section id="id5">
-          <h2>
-           Cross correlate
-           <a class="headerlink" href="#id5" title="Permalink to this heading">
-            #
-           </a>
-          </h2>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="n">corr</span><span class="p">,</span> <span class="n">lag</span> <span class="o">=</span> <span class="n">correlation</span><span class="o">.</span><span class="n">template_correlate</span><span class="p">(</span><span class="n">p_obs_smoothed</span><span class="p">,</span> <span class="n">p_template</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;After smoothing&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="id5">
+<h2>Cross correlate<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">corr</span><span class="p">,</span> <span class="n">lag</span> <span class="o">=</span> <span class="n">correlation</span><span class="o">.</span><span class="n">template_correlate</span><span class="p">(</span><span class="n">p_obs_smoothed</span><span class="p">,</span> <span class="n">p_template</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">corr</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">300000</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">lag</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="c1"># Redshift based on maximum</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Redshift based on maximum</span>
 <span class="n">index_peak</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">corr</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">corr</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">v</span> <span class="o">=</span> <span class="n">lag</span><span class="p">[</span><span class="n">index_peak</span><span class="p">]</span>
-<span class="n">z</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">const</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">'km/s'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Peak maximum at: "</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Redshift from peak maximum: "</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">v</span> <span class="o">/</span> <span class="n">const</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;km/s&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Peak maximum at: &quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Redshift from peak maximum: &quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
 
 <span class="c1"># Redshift based on parabolic fit to mazimum</span>
 
@@ -1389,51 +1039,45 @@ he current freq/wave-space version
 <span class="n">roots</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roots</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
 <span class="n">v_fit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">roots</span><span class="p">)</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">km</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span> <span class="c1"># maximum lies at mid point between roots</span>
-<span class="n">z</span> <span class="o">=</span> <span class="n">v_fit</span> <span class="o">/</span> <span class="n">const</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">'km/s'</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">v_fit</span> <span class="o">/</span> <span class="n">const</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;km/s&#39;</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Parabolic fit with maximum at: "</span><span class="p">,</span> <span class="n">v_fit</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Redshift from parabolic fit: "</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="n">z_ref</span> <span class="o">=</span> <span class="mf">0.758</span> <span class="c1"># "true" redshift, corresponding to 227242.6 km/s</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parabolic fit with maximum at: &quot;</span><span class="p">,</span> <span class="n">v_fit</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Redshift from parabolic fit: &quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z_ref</span> <span class="o">=</span> <span class="mf">0.758</span> <span class="c1"># &quot;true&quot; redshift, corresponding to 227242.6 km/s</span>
 
 <span class="n">template_z</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="n">z</span><span class="p">),</span> <span class="n">flux</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">flux</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mf">8.</span><span class="p">,</span><span class="mf">4.</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">sp_xlim</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'obs'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template_z</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">template_z</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'template'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template_z</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">template_z</span><span class="o">.</span><span class="n">flux</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Redshifted original template and original observed spectrum'</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-          <div class="cell docutils container">
-           <div class="cell_input docutils container">
-            <div class="highlight-ipython3 notranslate">
-             <div class="highlight">
-              <pre><span></span><span class="n">z_err</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="n">z_ref</span><span class="p">)</span> <span class="o">/</span> <span class="n">z_ref</span> <span class="o">*</span> <span class="mf">100.</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Error in the derived redshift: "</span><span class="p">,</span> <span class="n">z_err</span><span class="p">,</span> <span class="s2">"%"</span><span class="p">)</span>
-</pre>
-             </div>
-            </div>
-           </div>
-          </div>
-         </section>
-        </section>
-        <script type="text/x-thebe-config">
-         {
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Redshifted original template and original observed spectrum&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z_err</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="n">z_ref</span><span class="p">)</span> <span class="o">/</span> <span class="n">z_ref</span> <span class="o">*</span> <span class="mf">100.</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error in the derived redshift: &quot;</span><span class="p">,</span> <span class="n">z_err</span><span class="p">,</span> <span class="s2">&quot;%&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
         requestKernel: true,
         binderOptions: {
             repo: "spacetelescope/jdat_notebooks",
@@ -1449,143 +1093,110 @@ he current freq/wave-space version
         },
         predefinedOutput: true
     }
-        </script>
-        <script>
-         kernelName = 'python3'
-        </script>
-       </article>
-       <footer class="prev-next-footer d-print-none">
-        <div class="prev-next-area">
-        </div>
-       </footer>
-      </div>
-      <div class="bd-sidebar-secondary bd-toc">
-       <div class="sidebar-secondary-items sidebar-secondary__inner">
-        <div class="sidebar-secondary-item">
-         <div class="page-toc tocsection onthispage">
-          <i class="fa-solid fa-list">
-          </i>
-          Contents
-         </div>
-         <nav class="bd-toc-nav page-toc">
-          <ul class="visible nav section-nav flex-column">
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#matplotlib-setup-for-plotting">
-             Matplotlib setup for plotting
-            </a>
-            <ul class="nav section-nav flex-column">
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#define-data-files">
-               Define data files:
-              </a>
-             </li>
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#read-observation-and-template">
-               Read observation and template:
-              </a>
-             </li>
-            </ul>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#preprocess-spectra">
-             Preprocess Spectra
-            </a>
-            <ul class="nav section-nav flex-column">
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#subtract-continuum">
-               Subtract continuum
-              </a>
-             </li>
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#smooth-observed-spectrum">
-               Smooth observed spectrum
-              </a>
-             </li>
-            </ul>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#cross-correlate">
-             Cross correlate
-            </a>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#fit-correlation-peak">
-             Fit correlation peak
-            </a>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#visual-check">
-             Visual check
-            </a>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#case-with-lower-resolution-observed-spectrum">
-             Case with lower resolution observed spectrum
-            </a>
-            <ul class="nav section-nav flex-column">
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#id1">
-               Read observation and template:
-              </a>
-             </li>
-            </ul>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#id2">
-             Preprocess Spectra
-            </a>
-            <ul class="nav section-nav flex-column">
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#id3">
-               Subtract continuum
-              </a>
-             </li>
-             <li class="toc-h3 nav-item toc-entry">
-              <a class="reference internal nav-link" href="#id4">
-               Smooth observed spectrum
-              </a>
-             </li>
-            </ul>
-           </li>
-           <li class="toc-h2 nav-item toc-entry">
-            <a class="reference internal nav-link" href="#id5">
-             Cross correlate
-            </a>
-           </li>
-          </ul>
-         </nav>
-        </div>
-       </div>
-      </div>
-     </div>
-     <footer class="bd-footer-content">
-      <div class="bd-footer-content__inner container">
-       <div class="footer-item">
-        <p class="component-author">
-         By STScI
-        </p>
-       </div>
-       <div class="footer-item">
-        <p class="copyright">
-         © Copyright 2022-2024.
-         <br/>
-        </p>
-       </div>
-       <div class="footer-item">
-       </div>
-       <div class="footer-item">
-       </div>
-      </div>
-     </footer>
-    </main>
-   </div>
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
   </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib-setup-for-plotting">Matplotlib setup for plotting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#define-data-files">Define data files:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#read-observation-and-template">Read observation and template:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocess-spectra">Preprocess Spectra</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subtract-continuum">Subtract continuum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#smooth-observed-spectrum">Smooth observed spectrum</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-correlate">Cross correlate</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fit-correlation-peak">Fit correlation peak</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-check">Visual check</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-with-lower-resolution-observed-spectrum">Case with lower resolution observed spectrum</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Read observation and template:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Preprocess Spectra</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Subtract continuum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Smooth observed spectrum</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Cross correlate</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341">
-  </script>
-  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341">
-  </script>
+  <script src="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
   <footer class="bd-footer">
   </footer>
- </body>
+  </body>
 </html>
