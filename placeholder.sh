@@ -7,7 +7,7 @@ cp jdaviz_placeholder_new.png _build/html
 ROOT_DIR="_build/html"
 
 # Line to search for
-SEARCH_STRING="vnd.jupyter.widget-state+json"
+SEARCH_STRING="vnd.jupyter.widget-view+json"
 
 # Replacement line
 REPLACEMENT_STRING='<img align="center" height="auto" width="50%" src="../../jdaviz_placeholder_new.png">'
