@@ -1,16 +1,30 @@
 #!/bin/bash
 
-# Define the directory and the placeholder image HTML
-directory="notebooks"
-placeholder='<img align="center" height="auto" width="50%" src="../../jdaviz_placeholder_new.png">'
-
 cp jdaviz_placeholder_new.png _build/html/
 
-# Use find to search for HTML files and process them with sed
-find "$directory" -type f -name "*.html" | while read -r file; do
-    sed -i "/vnd.jupyter.widget-view+json/c\\$placeholder" "$file"
-done
+# Directory to search within
+ROOT_DIR="_build/html"
 
-# Remove original tag
-find _build/html/notebooks -name "*.html" | xargs -I {} sed -i '/vnd.jupyter.widget-state+json/d' {}
+# Line to search for
+SEARCH_STRING="vnd.jupyter.widget-state+json"
 
+# Replacement line
+REPLACEMENT_STRING='<img align="center" height="auto" width="50%" src="../../jdaviz_placeholder_new.png">'
+
+# Function to replace lines in a file
+replace_lines_in_file() {
+    local file=$1
+    if grep -q "$SEARCH_STRING" "$file"; then
+        sed -i '' "s|.*$SEARCH_STRING.*|$REPLACEMENT_STRING|g" "$file"
+    fi
+}
+
+# Export the function to use it with find
+export -f replace_lines_in_file
+export SEARCH_STRING
+export REPLACEMENT_STRING
+
+# Search for all HTML files and replace lines
+find "$ROOT_DIR" -type f -name "*.html" -exec bash -c 'replace_lines_in_file "$0"' {} \;
+
+echo "Replacement complete."
