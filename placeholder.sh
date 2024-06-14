@@ -1,6 +1,7 @@
 #!/bin/bash
 
-cp jdaviz_placeholder_new.png _build/html/
+# Copy the placeholder image to the required directory
+cp jdaviz_placeholder_new.png _build/html
 
 # Directory to search within
 ROOT_DIR="_build/html"
@@ -15,7 +16,7 @@ REPLACEMENT_STRING='<img align="center" height="auto" width="50%" src="../../jda
 replace_lines_in_file() {
     local file=$1
     if grep -q "$SEARCH_STRING" "$file"; then
-        sed -i '' "s|.*$SEARCH_STRING.*|$REPLACEMENT_STRING|g" "$file"
+        sed -i "s|.*$SEARCH_STRING.*|$REPLACEMENT_STRING|g" "$file"
     fi
 }
 
