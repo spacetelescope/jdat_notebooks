@@ -1,0 +1,1522 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Run Image Pipeline and Create Source Catalog &#8212; STScI JDAT Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/main.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-D46G4HKJY3');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/NIRISS/NIRISS_WFSS_advanced/01_niriss_wfss_image2_image3';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Run spec2 pipeline" href="02_niriss_wfss_spec2.html" />
+    <link rel="prev" title="Download Wide Field Slittless Spectroscopy (WFSS) Data" href="00_niriss_mast_query_data_setup.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="STScI JDAT Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="STScI JDAT Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebook_development_workflow.html">Notebook Development Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/submitting_notebooks.html">Submitting Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/requirements.html">Requirements file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebooks.html">Jupyter Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/data_files.html">Data Files</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">GitHub Guidelines</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_setup.html">GitHub Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_workflow.html">GitHub Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_pr.html">GitHub PR</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cross-Instrument</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/asdf_example/asdf_example.html">ASDF Example</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/background_estimation_imaging/Imaging_Sky_Background_Estimation.html">Complex 2D Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/composite_model_fitting/specfit_demo_3.html">Composite Model Spectral Fitting</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">MAST Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/rgb_imviz/imviz_rgb_carina.html">RGB images with Imviz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">Specviz Simple Demo</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">MIRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">MRS Mstar - Run Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">MRS Detector Based Extraction</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">MRS Mstar - Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">IFU of YSOs in LMC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MIRI_LRS_spectral_extraction/miri_lrs_advanced_extraction_part1.html">LRS Optimal Spectral Extraction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRCam</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/aperture_photometry/NIRCam_Aperture_Photometry_Example.html">Point Source Aperture Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_photometry/NIRCam_multiband_photometry.html">Extended Aperture Photometry</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">Cross-Filter PSF Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/psf_photometry/NIRCam_PSF_Photometry_Example.html">PSF Photometry</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRISS</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">WFSS Spectra - Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">WFSS Spectra - Combine and Normalize 1D Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">WFSS Spectra - Cross-Correlation Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">WFSS Spectra - Emission Line Map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../niriss_imaging/niriss-imaging-tutorial.html">NIRISS Imaging Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="00_niriss_mast_query_data_setup.html">NIRISS MAST</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Direct imaging for WFSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_niriss_wfss_spec2.html">Spec2 pipeline for WFSS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRSpec</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">IFU Cube Fitting</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/cube_fitting/cube_fitting.html">IFU Cube Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/ifu_optimal/ifu_optimal.html">IFU Optimal Spectral Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/optimal_extraction/Spectral_Extraction-static.html">MOS Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/mos_spectroscopy_advanced/MOSspec_advanced.html">MOS Spectroscopy of Extragalactic Field</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">BOTS Time Series Observations</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/galaxy_redshift/redshift_fitting.html">Redshift and Template Fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/FS_NSClean_example.html">FS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/IFU_NSClean_example.html">IFU Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/MOS_NSClean_example.html">MOS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/BOTS_NSClean_example.html">BOTS Products with NSClean</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/NIRISS/NIRISS_WFSS_advanced/01_niriss_wfss_image2_image3.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/NIRISS/NIRISS_WFSS_advanced/01_niriss_wfss_image2_image3.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Run Image Pipeline and Create Source Catalog</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports-data-setup">Imports &amp; Data Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#default-imaging-pipeline-run">Default Imaging Pipeline Run</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-default-image2">Run Default Image2</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-in-a-level-2-imaging-association-file">Looking in a Level 2 Imaging Association File</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#run-image2">Run image2</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-default-image3">Run Default Image3</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-in-a-level-3-association-file">Looking in a Level 3 Association File</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#run-image3">Run image3</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspecting-default-results">Inspecting Default Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib">Matplotlib</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#imviz">ImViz</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-imaging-pipeline-run">Custom Imaging Pipeline Run</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#image3">Image3</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspecting-custom-results">Inspecting Custom Results</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#refining-the-source-catalog-further">Refining the Source Catalog Further</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matching-source-ids-across-catalogs">Matching Source IDs Across Catalogs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manually-editing-the-source-catalog">Manually Editing the Source Catalog</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="run-image-pipeline-and-create-source-catalog">
+<h1>Run Image Pipeline and Create Source Catalog<a class="headerlink" href="#run-image-pipeline-and-create-source-catalog" title="Permalink to this heading">#</a></h1>
+<p>In this run, we are starting from the rate files which have already been calibrated with the detector1 pipeline. This will save time as we do not need to edit any of the steps being performed as part of detector1. Therefore, the first calibration that should be done as part of a WFSS run is to run the rate files direct images through the Image2 and Image3 steps of the JWST pipeline. This includes creating a source catalog, which most likely will need to be adjusted from the pipeline default values. <strong>Not having a good source catalog will result in non optimal extraction of sources in the dispersed, WFSS, images.</strong></p>
+<p><strong>Use case</strong>: The default parameters for the pipeline do not extract the expected sources, so custom parameters need to be set to obtain new combined image and source catalog.<br>
+<strong>Data</strong>: JWST/NIRISS images and spectra from program 2079 observation 004. This should be stored in a single directory <code class="docutils literal notranslate"><span class="pre">data</span></code>, and can be downloaded from the previous notebook, 00_niriss_mast_query_data_setup.ipynb.<br>
+<strong>Tools</strong>: astropy, crds, glob, jdaviz, json, jwst, matplotlib, numpy, os, pandas, urllib, warnings, zipfile<br>
+<strong>Cross-instrument</strong>: NIRISS<br></p>
+<p><strong>Content</strong></p>
+<ul class="simple">
+<li><p><span class="xref myst">Imports &amp; Data Setup</span></p></li>
+<li><p><span class="xref myst">Default Imaging Pipeline Run</span></p>
+<ul>
+<li><p><span class="xref myst">Image2</span></p></li>
+<li><p><span class="xref myst">Image3</span></p></li>
+<li><p><span class="xref myst">Inspecting Default Results</span></p></li>
+</ul>
+</li>
+<li><p><span class="xref myst">Custom Imaging Pipeline Run</span></p>
+<ul>
+<li><p><span class="xref myst">Image3</span></p></li>
+<li><p><span class="xref myst">Inspecting Custom Results</span></p></li>
+</ul>
+</li>
+<li><p><span class="xref myst">Refining the Source Catalog Further</span></p>
+<ul>
+<li><p><span class="xref myst">Matching Source IDs Across Catalogs</span></p></li>
+<li><p><span class="xref myst">Manually Editing the Source Catalog</span></p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Author</strong>: Rachel Plesha (rplesha&#64;stsci.edu), Camilla Pacifici (cpacifici&#64;stsci.edu), JWebbinar notebooks.<br>
+<strong>First Published</strong>: May 2024 <br>
+<strong>Last tested</strong>: This notebook was last tested with JWST pipeline version 1.12.5 and the CRDS context jwst_1225.pmap.</p>
+<p><a id='imports'></a></p>
+<section id="imports-data-setup">
+<h2>Imports &amp; Data Setup<a class="headerlink" href="#imports-data-setup" title="Permalink to this heading">#</a></h2>
+<p><a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/user_documentation/reference_files_crds.html#crds">CRDS Documentation</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Update the CRDS path to your local directory</span>
+<span class="o">%</span><span class="k">env</span> CRDS_PATH=crds_cache
+<span class="o">%</span><span class="k">env</span> CRDS_SERVER_URL=https://jwst-crds.stsci.edu
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">zipfile</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">SkyCoord</span>
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
+
+<span class="kn">from</span> <span class="nn">jdaviz</span> <span class="kn">import</span> <span class="n">Imviz</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> widget
+<span class="c1"># %matplotlib inline</span>
+
+<span class="kn">from</span> <span class="nn">jwst.pipeline</span> <span class="kn">import</span> <span class="n">Image2Pipeline</span>
+<span class="kn">from</span> <span class="nn">jwst.pipeline</span> <span class="kn">import</span> <span class="n">Image3Pipeline</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Check what version of the JWST pipeline you are using. To see what the latest version of the pipeline is available or install a previous version, check <a class="reference external" href="https://github.com/spacetelescope/jwst#software-vs-dms-build-version-map%22">GitHub</a>. Also verify what <a class="reference external" href="https://jwst-crds.stsci.edu/">CRDS version</a> you are using. <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/user_documentation/reference_files_crds.html">CRDS documentation</a> explains how to set a specific context to use in the JWST pipeline. If either of these values are different from the last tested note above there may be differences in this notebook.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jwst</span>
+<span class="kn">import</span> <span class="nn">crds</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;JWST Pipeliene Version:&#39;</span><span class="p">,</span> <span class="n">jwst</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;CRDS Context:&#39;</span><span class="p">,</span> <span class="n">crds</span><span class="o">.</span><span class="n">get_context_name</span><span class="p">(</span><span class="s1">&#39;jwst&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The data directory, <code class="docutils literal notranslate"><span class="pre">data_dir</span></code> here should contain all of the association and rate files in a single, flat directory. <code class="docutils literal notranslate"><span class="pre">default_run_image3</span></code> and <code class="docutils literal notranslate"><span class="pre">custom_run_image3</span></code> are directories that we will use later for our calibrated data. They are separated so that we can compare the two outputs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_dir</span> <span class="o">=</span> <span class="s1">&#39;data&#39;</span>
+<span class="n">default_run_image3</span> <span class="o">=</span> <span class="s1">&#39;default_image3_calibrated&#39;</span> <span class="c1"># where the results of the default image3 run will be saved (inside of data_dir)</span>
+<span class="n">custom_run_image3</span> <span class="o">=</span> <span class="s1">&#39;custom_image3_calibrated&#39;</span><span class="c1"># where the results of the custom image3 run will be saved (inside of data_dir)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The association files expect that 1) all of the data are in the same directory and 2) that you are performing the pipeline call also in that directory. Because of that, we need to change into the data directory to run the imaging pipelines.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># if you have not downloaded the data from notebook 00, run this cell. Otherwise, feel free to skip it.</span>
+
+<span class="c1"># Download uncalibrated data from Box into the data directory:</span>
+<span class="n">boxlink</span> <span class="o">=</span> <span class="s1">&#39;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/niriss_wfss_advanced/niriss_wfss_advanced_01_input.zip&#39;</span>
+<span class="n">boxfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">boxlink</span><span class="p">)</span>
+<span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
+
+<span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">zf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">data_dir</span><span class="p">)</span>
+
+<span class="c1"># move the files downloaded from the box file into the top level data directory</span>
+<span class="n">box_download_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">boxfile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.zip&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">box_download_dir</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="s1">&#39;.csv&#39;</span> <span class="ow">in</span> <span class="n">filename</span><span class="p">:</span>
+        <span class="c1"># move to the current directory</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># move to the data directory </span>
+        <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">)))</span>
+
+<span class="c1"># remove unnecessary files now</span>
+<span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">boxfile</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="n">box_download_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the csv file we created earlier, find a list of all of the grism observations we will want to calibrate with spec2</span>
+<span class="n">listrate_file</span> <span class="o">=</span> <span class="s1">&#39;list_ngdeep_rate.csv&#39;</span>
+<span class="n">rate_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">listrate_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span> <span class="c1"># get the current working directory </span>
+<span class="k">if</span> <span class="n">cwd</span> <span class="o">!=</span> <span class="n">data_dir</span><span class="p">:</span> <span class="c1"># if you are not already in the location of the data, change into it</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not able to change into: </span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">Remaining in: </span><span class="si">{</span><span class="n">cwd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">temp_dir</span> <span class="ow">in</span> <span class="p">[</span><span class="n">default_run_image3</span><span class="p">,</span> <span class="n">custom_run_image3</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='default'></a></p>
+</section>
+<section id="default-imaging-pipeline-run">
+<h2>Default Imaging Pipeline Run<a class="headerlink" href="#default-imaging-pipeline-run" title="Permalink to this heading">#</a></h2>
+<p>To start, run the default image2 and image3 steps of the pipeline on all direct images observed with the WFSS data.</p>
+<p><a id='default_image2'></a></p>
+<section id="run-default-image2">
+<h3>Run Default Image2<a class="headerlink" href="#run-default-image2" title="Permalink to this heading">#</a></h3>
+<p>Image2 is run on the direct image rate files. While your program should have valid association files to download from MAST, if for any reason you need to make your own association file, see <span class="xref myst">Creating Custom ASN Files</span>.</p>
+<section id="looking-in-a-level-2-imaging-association-file">
+<h4>Looking in a Level 2 Imaging Association File<a class="headerlink" href="#looking-in-a-level-2-imaging-association-file" title="Permalink to this heading">#</a></h4>
+<p>First, take a look inside the association (ASN) files to better understand everything that is contained in them.</p>
+<p>For image2 association files, there should be one asn file for each dither position in an observing sequence which is set by the <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-near-infrared-imager-and-slitless-spectrograph/niriss-observing-strategies/niriss-wfss-recommended-strategies">exposure strategy</a>. In this case, that should match the number of direct images (<code class="docutils literal notranslate"><span class="pre">FILTER=CLEAR</span></code>) in <code class="docutils literal notranslate"><span class="pre">rate_df</span></code> because each direct image is at a unique dither position (XOFFSET, YOFFSET) within an observing sequence. For this program and observation, there is one direct image before a grism change with only one dither, another direct image with four dithers between the change in grisms, and a direct image at the end of a sequence with three dithers. This leads to a total of eight images per observing sequence, with five observing sequences in the observation using the blocking filters F115W -&gt; F115W -&gt; F150W -&gt; F150W -&gt; F200W.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image2_asns</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*image2*asn*.json&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">image2_asns</span><span class="p">),</span> <span class="s1">&#39;Image2 ASN files&#39;</span><span class="p">)</span> <span class="c1"># there should be 40 asn files for image2</span>
+
+<span class="c1"># the number of association files should match the number of rate files</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rate_df</span><span class="p">[</span><span class="n">rate_df</span><span class="p">[</span><span class="s1">&#39;FILTER&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;CLEAR&#39;</span><span class="p">]),</span> <span class="s1">&#39;Direct Image rate files&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># look at one of the association files</span>
+<span class="n">asn_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">image2_asns</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">asn_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>From this association, we can tell many things about the observation:</p>
+<ol class="arabic simple">
+<li><p>From <code class="docutils literal notranslate"><span class="pre">asn_type</span></code> and <code class="docutils literal notranslate"><span class="pre">asn_rule</span></code>, we can see that this is an image2 association</p></li>
+<li><p>From <code class="docutils literal notranslate"><span class="pre">degraded_status</span></code> we can see that there are no exposures to not be included in the calibration.</p></li>
+<li><p>From <code class="docutils literal notranslate"><span class="pre">constraints</span></code>, we can see this is not a time series observation (TSO), the observation is part of program 2079, observed with NIRISS with the CLEAR (i.e. imaging for WFSS) and F150W filters.</p></li>
+<li><p>From <code class="docutils literal notranslate"><span class="pre">products</span></code> we can see there is only one exposure associated. This is typical for image2 where there is usually only one exposure per dither per observing sequence.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># in particular, take a closer look at the product filenames with the association file:</span>
+<span class="k">for</span> <span class="n">product</span> <span class="ow">in</span> <span class="n">asn_data</span><span class="p">[</span><span class="s1">&#39;products&#39;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">product</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;members&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">member</span><span class="p">[</span><span class="s1">&#39;expname&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">member</span><span class="p">[</span><span class="s1">&#39;exptype&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="run-image2">
+<h4>Run image2<a class="headerlink" href="#run-image2" title="Permalink to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">rate.fits</span></code> products will be calibrated into <code class="docutils literal notranslate"><span class="pre">cal.fits</span></code> files. More information about the steps performed in the Image2 part of the pipeline can be found in the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/pipeline/calwebb_image2.html">Image2 pipeline documentation</a>.</p>
+<p>In this case, we’re saving the outputs to the same directory we are running the pipeline in so that we can then use the output <code class="docutils literal notranslate"><span class="pre">cal</span></code> files to run the Image3 pipeline</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">img2_asn</span> <span class="ow">in</span> <span class="n">image2_asns</span><span class="p">:</span>
+    <span class="c1"># check if the calibrated file already exists</span>
+    <span class="n">asn_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">img2_asn</span><span class="p">))</span>
+    <span class="n">cal_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">asn_data</span><span class="p">[</span><span class="s1">&#39;products&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_cal.fits&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cal_file</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">cal_file</span><span class="p">,</span> <span class="s1">&#39;cal file already exists.&#39;</span><span class="p">)</span>
+        <span class="k">continue</span>
+    <span class="c1"># if not, calibrated with image2</span>
+    <span class="n">img2</span> <span class="o">=</span> <span class="n">Image2Pipeline</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">img2_asn</span><span class="p">,</span> <span class="n">save_results</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='default_image3'></a></p>
+</section>
+</section>
+<section id="run-default-image3">
+<h3>Run Default Image3<a class="headerlink" href="#run-default-image3" title="Permalink to this heading">#</a></h3>
+<section id="looking-in-a-level-3-association-file">
+<h4>Looking in a Level 3 Association File<a class="headerlink" href="#looking-in-a-level-3-association-file" title="Permalink to this heading">#</a></h4>
+<p>The contents are quite similar to image2, but notice now that there are many more members that are associated together, and they use the individual pointing cal files from image2. Image3 resamples and combines images of the same blocking filter (PUPIL for NIRISS WFSS) from all dither and observing sequences to form a single image, which leads to fewer image3 association files.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image3_asns</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*image3*asn*.json&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">image3_asns</span><span class="p">),</span> <span class="s1">&#39;Image3 ASN files&#39;</span><span class="p">)</span> <span class="c1"># there should be 3 image3 association files</span>
+
+<span class="c1"># the number of image3 association files should match the number of unique blocking filters used</span>
+<span class="n">uniq_filters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">rate_df</span><span class="p">[</span><span class="n">rate_df</span><span class="p">[</span><span class="s1">&#39;FILTER&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;CLEAR&#39;</span><span class="p">][</span><span class="s1">&#39;PUPIL&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">uniq_filters</span><span class="p">)</span><span class="si">}</span><span class="s2"> unique filters used: </span><span class="si">{</span><span class="n">uniq_filters</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># look at one of the association files</span>
+<span class="n">image3_asn_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">image3_asns</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">image3_asn_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># in particular, take a closer look at the product filenames with the association file:</span>
+<span class="k">for</span> <span class="n">product</span> <span class="ow">in</span> <span class="n">image3_asn_data</span><span class="p">[</span><span class="s1">&#39;products&#39;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">product</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;members&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">member</span><span class="p">[</span><span class="s1">&#39;expname&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">member</span><span class="p">[</span><span class="s1">&#39;exptype&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="run-image3">
+<h4>Run image3<a class="headerlink" href="#run-image3" title="Permalink to this heading">#</a></h4>
+<p>In Image3, the <code class="docutils literal notranslate"><span class="pre">cal.fits</span></code> individual pointing files will be calibrated into a single combined <code class="docutils literal notranslate"><span class="pre">i2d.fits</span></code> image. The Image3 step is also where the final source catalog is created, so we can change some input paramters to obtain a more refined output source catalog. This is done below in the <span class="xref myst">Custom Imaging Pipeline Run</span> section. However, we will first calibrate the data with the default parameters. More information about the steps performed in the Image3 part of the pipeline can be found in the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/pipeline/calwebb_image3.html">Image3 pipeline documentation</a>.</p>
+<p><strong>Note: Image3 can take a while to run</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">img3_asn</span> <span class="ow">in</span> <span class="n">image3_asns</span><span class="p">:</span>
+    <span class="c1"># check if the calibrated file already exists</span>
+    <span class="n">asn_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">img3_asn</span><span class="p">))</span>
+    <span class="n">cal_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">default_run_image3</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">asn_data</span><span class="p">[</span><span class="s1">&#39;products&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_i2d.fits&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cal_file</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">cal_file</span><span class="p">,</span> <span class="s1">&#39;cal file already exists.&#39;</span><span class="p">)</span>
+        <span class="k">continue</span>
+    <span class="c1"># if not, calibrated with image3</span>
+    <span class="n">img3</span> <span class="o">=</span> <span class="n">Image3Pipeline</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">img3_asn</span><span class="p">,</span> <span class="n">save_results</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">default_run_image3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># remove unnecessary files to save disk space</span>
+<span class="k">for</span> <span class="n">crf</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">default_run_image3</span><span class="p">,</span> <span class="s1">&#39;*crf.fits&#39;</span><span class="p">)):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">crf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='view_default'></a></p>
+</section>
+</section>
+<section id="inspecting-default-results">
+<h3>Inspecting Default Results<a class="headerlink" href="#inspecting-default-results" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># These are all resuts from the Image3 pipeline</span>
+<span class="n">image3_i2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">default_run_image3</span><span class="p">,</span> <span class="s1">&#39;*i2d.fits&#39;</span><span class="p">)))</span> <span class="c1"># combined image over multiple dithers/mosaic</span>
+<span class="n">image3_segm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">default_run_image3</span><span class="p">,</span> <span class="s1">&#39;*segm.fits&#39;</span><span class="p">)))</span> <span class="c1"># segmentation map that defines the extent of a source</span>
+<span class="n">image3_cat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">default_run_image3</span><span class="p">,</span> <span class="s1">&#39;*cat.ecsv&#39;</span><span class="p">)))</span> <span class="c1"># Source catalog that defines the RA/Dec of a source at a particular pixel</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="matplotlib">
+<h4>Matplotlib<a class="headerlink" href="#matplotlib" title="Permalink to this heading">#</a></h4>
+<p>Matplotlib has limitations where ImViz might better suite your needs – especially if you like to look at things in WCS coordinates. For the notebook purposes, we are highlighting a few key areas using the matplotlib package instead.</p>
+<p>Using the <code class="docutils literal notranslate"><span class="pre">i2d</span></code> combined image and the source catalog produced by Image3, we can visually inspect if we’re happy with where the pipeline found the sources. In the following figures, what has been defined as an extended source by the pipeline is shown in orange-red, and what has been defined as a point source by the pipeline is shown in grey. This definition affects the extraction box in the WFSS images.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="n">cols</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">image3_i2d</span><span class="p">)</span> <span class="o">/</span> <span class="n">cols</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">plt_num</span><span class="p">,</span> <span class="n">img</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">image3_i2d</span><span class="p">):</span>
+
+    <span class="c1"># determine where the subplot should be</span>
+    <span class="n">xpos</span> <span class="o">=</span> <span class="p">(</span><span class="n">plt_num</span> <span class="o">%</span> <span class="mi">40</span><span class="p">)</span> <span class="o">%</span> <span class="n">cols</span>
+    <span class="n">ypos</span> <span class="o">=</span> <span class="p">((</span><span class="n">plt_num</span> <span class="o">%</span> <span class="mi">40</span><span class="p">)</span> <span class="o">//</span> <span class="n">cols</span><span class="p">)</span> <span class="c1"># // to make it an int.</span>
+
+    <span class="c1"># make the subplot</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot2grid</span><span class="p">((</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">),</span> <span class="p">(</span><span class="n">ypos</span><span class="p">,</span> <span class="n">xpos</span><span class="p">))</span>
+
+    <span class="c1"># plot the image</span>
+    <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">img</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;obs</span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;OBSERVTN&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PUPIL&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># also plot the associated catalog</span>
+    <span class="n">cat</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;i2d.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;cat.ecsv&#39;</span><span class="p">))</span>
+    <span class="n">extended_sources</span> <span class="o">=</span> <span class="n">cat</span><span class="p">[</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;is_extended&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># 1 is True; i.e. is extended</span>
+    <span class="n">point_sources</span> <span class="o">=</span> <span class="n">cat</span><span class="p">[</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;is_extended&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># 0 is False; i.e. is a point source</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">extended_sources</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">],</span> <span class="n">extended_sources</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">facecolors</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;orangered&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">point_sources</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">],</span> <span class="n">point_sources</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">facecolors</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;dimgrey&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+
+<span class="c1"># Helps to make the axes not overlap ; you can also set this manually if this doesn&#39;t work</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The segmentation maps are also a product of the Image3 pipeline, and they are used the help determine the source catalog. Let’s take a look at those to ensure we are happy with what it is defining as a source.</p>
+<p>In the segmentation map, each blue blob should correspond to a physical target. There are cases where sources can be blended, in which case the parameters for making the semgentation map and source catalog should be changed. An example of this can be seen below in the observation 004 F200W filter image where two galaxies at ~(1600, 1300) have been blended into one source. This is discussed in more detail below in <span class="xref myst">Custom Imaging Pipeline Run</span>.</p>
+<p><em>Note that because of the <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-near-infrared-imager-and-slitless-spectrograph/niriss-instrumentation/niriss-gr150-grisms#NIRISSGR150Grisms-Blockingfilters">filter offset difference</a> the field of views for the shown in the cutouts below differs for each filter.</em></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># we will look at this multiple times, so let&#39;s define this as a function</span>
+<span class="k">def</span> <span class="nf">plot_image_and_segmentation_map</span><span class="p">(</span><span class="n">i2d_images</span><span class="p">,</span> <span class="n">segm_images</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="mi">1250</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="mi">1750</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">1250</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mi">1750</span><span class="p">,</span> <span class="n">cat_suffix</span><span class="o">=</span><span class="s1">&#39;cat.ecsv&#39;</span><span class="p">):</span>
+        
+    <span class="n">cols</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">i2d_images</span><span class="p">)</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="o">*</span><span class="p">(</span><span class="n">rows</span><span class="o">/</span><span class="mi">2</span><span class="p">)))</span>
+
+    <span class="k">for</span> <span class="n">plt_num</span><span class="p">,</span> <span class="n">img</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">segm_images</span><span class="p">,</span> <span class="n">i2d_images</span><span class="p">]))):</span>
+    
+        <span class="c1"># determine where the subplot should be</span>
+        <span class="n">xpos</span> <span class="o">=</span> <span class="p">(</span><span class="n">plt_num</span> <span class="o">%</span> <span class="mi">40</span><span class="p">)</span> <span class="o">%</span> <span class="n">cols</span>
+        <span class="n">ypos</span> <span class="o">=</span> <span class="p">((</span><span class="n">plt_num</span> <span class="o">%</span> <span class="mi">40</span><span class="p">)</span> <span class="o">//</span> <span class="n">cols</span><span class="p">)</span> <span class="c1"># // to make it an int.</span>
+
+        <span class="c1"># make the subplot</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot2grid</span><span class="p">((</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">),</span> <span class="p">(</span><span class="n">ypos</span><span class="p">,</span> <span class="n">xpos</span><span class="p">))</span>
+    
+        <span class="k">if</span> <span class="s1">&#39;i2d&#39;</span> <span class="ow">in</span> <span class="n">img</span><span class="p">:</span>
+            <span class="n">cat</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;i2d.fits&#39;</span><span class="p">,</span> <span class="n">cat_suffix</span><span class="p">))</span>
+            <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;gist_gray&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;tab20c_r&#39;</span>
+            
+        <span class="c1"># plot the image</span>
+        <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">img</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;obs</span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;OBSERVTN&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PUPIL&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+        <span class="c1"># also plot the associated catalog</span>
+        <span class="n">extended_sources</span> <span class="o">=</span> <span class="n">cat</span><span class="p">[</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;is_extended&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># 1 is True; i.e. is extended</span>
+        <span class="n">point_sources</span> <span class="o">=</span> <span class="n">cat</span><span class="p">[</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;is_extended&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># 0 is False; i.e. is a point source</span>
+        
+        <span class="k">for</span> <span class="n">color</span><span class="p">,</span> <span class="n">sources</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s1">&#39;darkred&#39;</span><span class="p">,</span> <span class="s1">&#39;black&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">extended_sources</span><span class="p">,</span> <span class="n">point_sources</span><span class="p">]):</span>
+            <span class="c1"># plotting the sources</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">sources</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">],</span> <span class="n">sources</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">facecolors</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+    
+            <span class="c1"># adding source labels </span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">source_num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sources</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]):</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">source_num</span><span class="p">,</span> 
+                            <span class="p">(</span><span class="n">sources</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">sources</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="mf">0.5</span><span class="p">),</span> 
+                            <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;i2d&#39;</span> <span class="ow">in</span> <span class="n">img</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2"> combined image&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2"> segmentation map&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># zooming in on a smaller region</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
+    
+    <span class="c1"># Helps to make the axes not overlap ; you can also set this manually if this doesn&#39;t work</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">fig</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">default_fig</span> <span class="o">=</span> <span class="n">plot_image_and_segmentation_map</span><span class="p">(</span><span class="n">image3_i2d</span><span class="p">,</span> <span class="n">image3_segm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="imviz">
+<h4>ImViz<a class="headerlink" href="#imviz" title="Permalink to this heading">#</a></h4>
+<p>Similarly to DS9, ImViz allows you to interactively view these images and the corresponding source catalog as well.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">imviz</span> <span class="o">=</span> <span class="n">Imviz</span><span class="p">()</span>
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">imviz</span><span class="o">.</span><span class="n">default_viewer</span>
+
+<span class="c1"># plot each i2d image</span>
+<span class="n">catalogs</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># for plotting the catalogs</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># for plotting the catalogs</span>
+<span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">image3_i2d</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Plotting: </span><span class="si">{</span><span class="n">img</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;obs</span><span class="si">{</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;OBSERVTN&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;PUPIL&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+        <span class="n">imviz</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">data_label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+
+    <span class="c1"># save info to plot the catalogs next</span>
+    <span class="n">catalogs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;i2d.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;cat.ecsv&#39;</span><span class="p">))</span>
+    <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+
+<span class="c1"># this aligns the image to use the WCS coordinates; </span>
+<span class="c1">#   the images need to be loaded first, but before adding markers</span>
+<span class="n">imviz</span><span class="o">.</span><span class="n">link_data</span><span class="p">(</span><span class="n">link_type</span><span class="o">=</span><span class="s1">&#39;wcs&#39;</span><span class="p">)</span>
+
+<span class="c1"># also plot the associated catalog</span>
+<span class="c1">#   this needs to be a separate loop due to linking in imviz when using sky coordinates</span>
+<span class="k">for</span> <span class="n">catname</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">catalogs</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+    <span class="n">cat</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">catname</span><span class="p">)</span>
+    
+    <span class="c1"># format the table into the format imviz expects</span>
+    <span class="n">sky_coords</span> <span class="o">=</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;coord&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">SkyCoord</span><span class="p">(</span><span class="n">ra</span><span class="o">=</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;sky_centroid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">degree</span><span class="p">,</span>
+                                           <span class="n">dec</span><span class="o">=</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;sky_centroid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dec</span><span class="o">.</span><span class="n">degree</span><span class="p">,</span>
+                                           <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;deg&quot;</span><span class="p">)]})</span>
+
+    <span class="n">viewer</span><span class="o">.</span><span class="n">marker</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;markersize&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;fill&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+    <span class="n">viewer</span><span class="o">.</span><span class="n">add_markers</span><span class="p">(</span><span class="n">sky_coords</span><span class="p">,</span> <span class="n">use_skycoord</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">marker_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2"> catalog&quot;</span><span class="p">)</span>
+
+<span class="c1"># This changes the stretch of all of the images</span>
+<span class="n">plotopt</span> <span class="o">=</span> <span class="n">imviz</span><span class="o">.</span><span class="n">plugins</span><span class="p">[</span><span class="s1">&#39;Plot Options&#39;</span><span class="p">]</span>
+<span class="n">plotopt</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">viewers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plotopt</span><span class="o">.</span><span class="n">stretch_preset</span> <span class="o">=</span> <span class="s1">&#39;99.5%&#39;</span>
+    
+<span class="n">imviz</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='custom'></a></p>
+</section>
+</section>
+</section>
+<section id="custom-imaging-pipeline-run">
+<h2>Custom Imaging Pipeline Run<a class="headerlink" href="#custom-imaging-pipeline-run" title="Permalink to this heading">#</a></h2>
+<p><a id='custom_image3'></a></p>
+<section id="image3">
+<h3>Image3<a class="headerlink" href="#image3" title="Permalink to this heading">#</a></h3>
+<p>Try editing a few parameters and compare the outcomes to the default run above, at first for a single file.</p>
+<p>When we call the image3 pipeline, we can add modifications to a specific step of the pipeline. In this case we’re going to edit the <code class="docutils literal notranslate"><span class="pre">source_catalog</span></code> and <code class="docutils literal notranslate"><span class="pre">tweakreg</span></code> steps of the pipeline. An explanation of the different parameters to tweak can be found in the further information below, while the default values are a combination of both the default pipeline values listed in there, and the parameter reference files that are supplied.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/api/jwst.source_catalog.SourceCatalogStep.html">source_catalog Further Information</a></p></li>
+<li><p><a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/api/jwst.tweakreg.tweakreg_step.TweakRegStep.html">tweakreg Futher Information</a></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image3_asns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*image3*asn*.json&#39;</span><span class="p">))</span>
+<span class="n">test_asn</span> <span class="o">=</span> <span class="n">image3_asns</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># check if the calibrated file already exists</span>
+<span class="n">asn_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">test_asn</span><span class="p">))</span>
+<span class="n">i2d_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">custom_run_image3</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">asn_data</span><span class="p">[</span><span class="s1">&#39;products&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_i2d.fits&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">i2d_file</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">i2d_file</span><span class="p">,</span> <span class="s1">&#39;i2d file already exists.&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># call the image3 pipeline in the same way as before, but add a few new modifications</span>
+    <span class="n">cust_img3</span> <span class="o">=</span> <span class="n">Image3Pipeline</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">test_asn</span><span class="p">,</span>
+                                    <span class="n">steps</span><span class="o">=</span><span class="p">{</span>
+                                           <span class="s1">&#39;source_catalog&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;kernel_fwhm&#39;</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
+                                                              <span class="s1">&#39;snr_threshold&#39;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
+                                                              <span class="s1">&#39;npixels&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+                                                              <span class="s1">&#39;deblend&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                                                              <span class="p">},</span>
+                                           <span class="s1">&#39;tweakreg&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;snr_threshold&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+                                                        <span class="s1">&#39;abs_refcat&#39;</span><span class="p">:</span> <span class="s1">&#39;GAIADR3&#39;</span><span class="p">,</span>
+                                                        <span class="s1">&#39;save_catalogs&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                                                        <span class="s1">&#39;searchrad&#39;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span>
+                                                        <span class="s1">&#39;kernel_fwhm&#39;</span><span class="p">:</span> <span class="mf">2.302</span><span class="p">,</span>
+                                                        <span class="s1">&#39;fitgeometry&#39;</span><span class="p">:</span> <span class="s1">&#39;shift&#39;</span><span class="p">,</span>
+                                                        <span class="p">},</span>
+                                           <span class="p">},</span>
+                                    <span class="n">save_results</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">output_dir</span><span class="o">=</span><span class="n">custom_run_image3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># remove unnecessary files to save disk space</span>
+<span class="k">for</span> <span class="n">crf</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">custom_run_image3</span><span class="p">,</span> <span class="s1">&#39;*crf.fits&#39;</span><span class="p">)):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">crf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='view_custom'></a></p>
+</section>
+<section id="inspecting-custom-results">
+<h3>Inspecting Custom Results<a class="headerlink" href="#inspecting-custom-results" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">default_i2d</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">default_run_image3</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">i2d_file</span><span class="p">))</span>
+<span class="n">compare_i2ds</span> <span class="o">=</span> <span class="p">[</span><span class="n">i2d_file</span><span class="p">,</span> <span class="n">default_i2d</span><span class="p">]</span>
+<span class="n">compare_segm</span> <span class="o">=</span> <span class="p">[</span><span class="n">i2d_file</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;i2d.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;segm.fits&#39;</span><span class="p">),</span> <span class="n">default_i2d</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;i2d.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;segm.fits&#39;</span><span class="p">)]</span>
+
+<span class="n">compare_fig</span> <span class="o">=</span> <span class="n">plot_image_and_segmentation_map</span><span class="p">(</span><span class="n">compare_i2ds</span><span class="p">,</span> <span class="n">compare_segm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The cell below shows similar information using Imviz instead to visualize this.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">imviz</span> <span class="o">=</span> <span class="n">Imviz</span><span class="p">()</span>
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">imviz</span><span class="o">.</span><span class="n">default_viewer</span>
+
+<span class="k">for</span> <span class="n">img</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="n">i2d_file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">default_run_image3</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">i2d_file</span><span class="p">))],</span> <span class="p">[</span><span class="s1">&#39;custom&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Plotting: </span><span class="si">{</span><span class="n">img</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2"> obs</span><span class="si">{</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;OBSERVTN&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;PUPIL&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+        <span class="n">imviz</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">data_label</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+
+    <span class="c1"># this aligns the image to use the WCS coordinates</span>
+    <span class="n">linking</span> <span class="o">=</span> <span class="n">imviz</span><span class="o">.</span><span class="n">plugins</span><span class="p">[</span><span class="s1">&#39;Links Control&#39;</span><span class="p">]</span>
+    <span class="n">linking</span><span class="o">.</span><span class="n">link_type</span> <span class="o">=</span> <span class="s1">&#39;WCS&#39;</span>
+
+    <span class="c1"># also plot the associated catalog</span>
+    <span class="n">cat</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;i2d.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;cat.ecsv&#39;</span><span class="p">))</span>
+    <span class="c1"># format the table into the format imviz expects</span>
+    <span class="n">t_xy</span> <span class="o">=</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">cat</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">],</span>
+                  <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">cat</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">]})</span>
+    <span class="n">viewer</span><span class="o">.</span><span class="n">marker</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;markersize&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;fill&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+    <span class="n">viewer</span><span class="o">.</span><span class="n">add_markers</span><span class="p">(</span><span class="n">t_xy</span><span class="p">,</span> <span class="n">marker_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2"> catalog&quot;</span><span class="p">)</span>
+
+<span class="c1"># This changes the stretch of all of the images</span>
+<span class="n">plotopt</span> <span class="o">=</span> <span class="n">imviz</span><span class="o">.</span><span class="n">plugins</span><span class="p">[</span><span class="s1">&#39;Plot Options&#39;</span><span class="p">]</span>
+<span class="n">plotopt</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">viewers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plotopt</span><span class="o">.</span><span class="n">stretch_preset</span> <span class="o">=</span> <span class="s1">&#39;99.5%&#39;</span>
+    
+<span class="n">imviz</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Calibrate the remaining images if you are happy with the above results</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image3_asns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*image3*asn*.json&#39;</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">img3_asn</span> <span class="ow">in</span> <span class="n">image3_asns</span><span class="p">:</span>
+    <span class="c1"># check if the calibrated file already exists</span>
+    <span class="n">asn_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">img3_asn</span><span class="p">))</span>
+    <span class="n">i2d_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">custom_run_image3</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">asn_data</span><span class="p">[</span><span class="s1">&#39;products&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_i2d.fits&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">i2d_file</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i2d_file</span><span class="p">,</span> <span class="s1">&#39;cal file already exists.&#39;</span><span class="p">)</span>
+        <span class="k">continue</span>
+    <span class="c1"># call the image3 pipeline in the same way as before, but add a few new modifications</span>
+    <span class="n">cust_img3</span> <span class="o">=</span> <span class="n">Image3Pipeline</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">img3_asn</span><span class="p">,</span>
+                                    <span class="n">steps</span><span class="o">=</span><span class="p">{</span>
+                                           <span class="s1">&#39;source_catalog&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;kernel_fwhm&#39;</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
+                                                              <span class="s1">&#39;snr_threshold&#39;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
+                                                              <span class="s1">&#39;npixels&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+                                                              <span class="s1">&#39;deblend&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                                                              <span class="p">},</span>
+                                           <span class="s1">&#39;tweakreg&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;snr_threshold&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+                                                        <span class="s1">&#39;abs_refcat&#39;</span><span class="p">:</span> <span class="s1">&#39;GAIADR3&#39;</span><span class="p">,</span>
+                                                        <span class="s1">&#39;save_catalogs&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                                                        <span class="s1">&#39;searchrad&#39;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span>
+                                                        <span class="s1">&#39;kernel_fwhm&#39;</span><span class="p">:</span> <span class="mf">2.302</span><span class="p">,</span>
+                                                        <span class="s1">&#39;fitgeometry&#39;</span><span class="p">:</span> <span class="s1">&#39;shift&#39;</span><span class="p">,</span>
+                                                        <span class="p">},</span>
+                                           <span class="p">},</span>
+                                    <span class="n">save_results</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">output_dir</span><span class="o">=</span><span class="n">custom_run_image3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># remove unnecessary files to save disk space</span>
+<span class="k">for</span> <span class="n">crf</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">custom_run_image3</span><span class="p">,</span> <span class="s1">&#39;*crf.fits&#39;</span><span class="p">)):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">crf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># These are all resuts from the Image3 pipeline</span>
+<span class="n">cust_image3_i2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">custom_run_image3</span><span class="p">,</span> <span class="s1">&#39;*i2d.fits&#39;</span><span class="p">)))</span> <span class="c1"># combined image over multiple dithers/mosaic</span>
+<span class="n">cust_image3_segm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">custom_run_image3</span><span class="p">,</span> <span class="s1">&#39;*segm.fits&#39;</span><span class="p">)))</span> <span class="c1"># segmentation map that defines the extent of a source</span>
+
+<span class="n">custom_fig</span> <span class="o">=</span> <span class="n">plot_image_and_segmentation_map</span><span class="p">(</span><span class="n">cust_image3_i2d</span><span class="p">,</span> <span class="n">cust_image3_segm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='source_cat'></a></p>
+</section>
+</section>
+<section id="refining-the-source-catalog-further">
+<h2>Refining the Source Catalog Further<a class="headerlink" href="#refining-the-source-catalog-further" title="Permalink to this heading">#</a></h2>
+<p>In the above cases, we have modified the results using the pipeline directly. It might be the case that perhaps you want to use someone else’s custom source catalog, or modify the source catalog even further from what was output by the pipeline. In these cases, we will then need to modify the spec2 ASN files to point to the new source catalog, which will be discussed in the spec2 notebook. Additionally, it can be useful to match all of the source IDs across the different catalogs. In this case, there are three different catalogs created by the pipeline that identify the same RA/Dec or X/Y pixel location as a different source ID, so we will edit those to have the same source ID values across the catalogs. These extra steps aren’t always necessary, but could be helpful in analyses of NIRISS WFSS data.</p>
+<p><a id='match_sources'></a></p>
+<section id="matching-source-ids-across-catalogs">
+<h3>Matching Source IDs Across Catalogs<a class="headerlink" href="#matching-source-ids-across-catalogs" title="Permalink to this heading">#</a></h3>
+<p>In the above figures, you can see that the same source has multiple source IDs. Here we want to match all of the source IDs across all observations to be sure we are talking about the same source regardless of which filter or observation we look at. To do this, we use the astropy <code class="docutils literal notranslate"><span class="pre">match_to_catalog_3d</span></code> function and rebase the labels.</p>
+<p>The first step is to decide on a base catalog to match all of the other catalogs to. Here we’ll use the the observation 004 F115W filter.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">custom_cats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">custom_run_image3</span><span class="p">,</span> <span class="s1">&#39;*niriss_clear-f????_cat.ecsv&#39;</span><span class="p">)))</span> <span class="c1"># cat filename format from image3 results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All image3 catalogs:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">custom_cats</span><span class="p">)</span>
+
+<span class="n">base_cat</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">custom_cats</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># save out the base catalog with a new name to be consistent</span>
+<span class="n">base_cat_name</span> <span class="o">=</span> <span class="n">custom_cats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;cat.ecsv&#39;</span><span class="p">,</span> <span class="s1">&#39;source-match_cat.ecsv&#39;</span><span class="p">)</span>
+<span class="n">base_cat</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">base_cat_name</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Base catalog:&quot;</span><span class="p">,</span> <span class="n">base_cat_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Loop through the remaining catalogs to match the IDs based off of sky coordinates matching to within 1 arcsecond.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">max_sep</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">arcsec</span> <span class="c1"># adjust if necessary</span>
+
+<span class="n">base_sky</span> <span class="o">=</span> <span class="n">base_cat</span><span class="p">[</span><span class="s1">&#39;sky_centroid&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">to_match_cat</span> <span class="ow">in</span> <span class="n">custom_cats</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+    <span class="c1"># read in the catalog</span>
+    <span class="n">other_cat</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">to_match_cat</span><span class="p">)</span>
+    <span class="n">other_sky</span> <span class="o">=</span> <span class="n">other_cat</span><span class="p">[</span><span class="s1">&#39;sky_centroid&#39;</span><span class="p">]</span>
+
+    <span class="c1"># find the matching sources between the two catalogs based on sky coordinates</span>
+    <span class="n">idx</span><span class="p">,</span> <span class="n">d2d</span><span class="p">,</span> <span class="n">d3d</span> <span class="o">=</span> <span class="n">base_sky</span><span class="o">.</span><span class="n">match_to_catalog_3d</span><span class="p">(</span><span class="n">other_sky</span><span class="p">)</span>
+    <span class="n">sep_constraint</span> <span class="o">=</span> <span class="n">d2d</span> <span class="o">&lt;</span> <span class="n">max_sep</span>
+    <span class="n">base_matches</span> <span class="o">=</span> <span class="n">base_cat</span><span class="p">[</span><span class="n">sep_constraint</span><span class="p">]</span>
+    <span class="n">other_matches</span> <span class="o">=</span> <span class="n">other_cat</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="n">sep_constraint</span><span class="p">]]</span>
+
+    <span class="c1"># rebase the ID values to be the same</span>
+    <span class="n">other_matches</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base_matches</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>
+
+    <span class="c1"># save out the new catalog</span>
+    <span class="n">match_cat_name</span> <span class="o">=</span> <span class="n">to_match_cat</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;cat.ecsv&#39;</span><span class="p">,</span> <span class="s1">&#39;source-match_cat.ecsv&#39;</span><span class="p">)</span>
+    <span class="n">other_matches</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">match_cat_name</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saved:&#39;</span><span class="p">,</span> <span class="n">match_cat_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Look at the new source label numbers. They should match!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_cat_fig</span> <span class="o">=</span> <span class="n">plot_image_and_segmentation_map</span><span class="p">(</span><span class="n">cust_image3_i2d</span><span class="p">,</span> <span class="n">cust_image3_segm</span><span class="p">,</span> <span class="n">cat_suffix</span><span class="o">=</span><span class="s1">&#39;source-match_cat.ecsv&#39;</span><span class="p">,</span>
+                                              <span class="n">xmin</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mi">1300</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='manual_cat'></a></p>
+</section>
+<section id="manually-editing-the-source-catalog">
+<h3>Manually Editing the Source Catalog<a class="headerlink" href="#manually-editing-the-source-catalog" title="Permalink to this heading">#</a></h3>
+<p>Looking ahead to the WFSS extraction, it might be that we only really care about one or two sources at any particular moment. In this case, it’s helpful to pair down the source catalog to just that source to make it easier to look at the extracted 1-D spectrum in the WFSS data.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/source_catalog/main.html#output-products">Source Catalog Column Information</a></p></li>
+</ul>
+<p>To start, look at the current custom source catalog for one of the filters to get an idea of what is contained in the catalogs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># first, look at the current, custom source catalog for the F200W filter</span>
+<span class="n">cat_name</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">custom_run_image3</span><span class="p">,</span> <span class="s1">&#39;*source-match_cat.ecsv&#39;</span><span class="p">)))[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">cat</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">cat_name</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">cat_name</span><span class="p">)</span>
+<span class="n">cat</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>There may be multiple ways to look for a source, so shown below are three options:</p>
+<ol class="arabic simple">
+<li><p>With a known RA/Dec of an object</p></li>
+<li><p>A known x/y location of an object</p></li>
+<li><p>With a source ID of an object. Note that we are using the rebased source catalogs here for the IDs.</p></li>
+</ol>
+<p>This same concept can be extended to filter by any of the columns contained in the source catalog.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># with a known RA/Dec</span>
+<span class="n">desired_ra</span> <span class="o">=</span> <span class="mf">53.15437048946369</span>
+<span class="n">desired_dec</span> <span class="o">=</span> <span class="o">-</span><span class="mf">27.771689847051736</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="n">ra</span><span class="o">=</span><span class="n">desired_ra</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">degree</span><span class="p">,</span> <span class="n">dec</span><span class="o">=</span><span class="n">desired_dec</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">degree</span><span class="p">)</span>
+<span class="n">nearest_id</span><span class="p">,</span> <span class="n">distance_2d</span><span class="p">,</span> <span class="n">distance_3d</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">match_to_catalog_sky</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;sky_centroid&#39;</span><span class="p">])</span> 
+
+<span class="n">cat</span><span class="p">[[</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;xcentroid&#39;</span><span class="p">,</span> <span class="s1">&#39;ycentroid&#39;</span><span class="p">,</span> <span class="s1">&#39;sky_centroid&#39;</span><span class="p">,</span> <span class="s1">&#39;is_extended&#39;</span><span class="p">,</span> <span class="s1">&#39;isophotal_abmag&#39;</span><span class="p">,</span> <span class="s1">&#39;isophotal_vegamag&#39;</span><span class="p">]][</span><span class="n">nearest_id</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># alternatively with a known X/Y pixel location in the F200W image (based on what you&#39;ve defined cat to be)</span>
+<span class="n">known_x</span> <span class="o">=</span> <span class="mi">1880</span>
+<span class="n">known_y</span> <span class="o">=</span> <span class="mi">1100</span>
+
+<span class="n">nearest_pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">known_x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">known_y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">],</span> <span class="n">cat</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">])]</span>
+
+<span class="n">wh_nearest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nearest_pos</span><span class="p">)</span> <span class="o">==</span> <span class="nb">min</span><span class="p">(</span><span class="n">nearest_pos</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">cat</span><span class="p">[[</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;xcentroid&#39;</span><span class="p">,</span> <span class="s1">&#39;ycentroid&#39;</span><span class="p">,</span> <span class="s1">&#39;sky_centroid&#39;</span><span class="p">,</span> <span class="s1">&#39;is_extended&#39;</span><span class="p">,</span> <span class="s1">&#39;isophotal_abmag&#39;</span><span class="p">,</span> <span class="s1">&#39;isophotal_vegamag&#39;</span><span class="p">]][</span><span class="n">wh_nearest</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># alternatively with a known source number</span>
+<span class="c1"># note that this number might be different for you depending on pipeline versions and parameters changed.</span>
+<span class="n">source</span> <span class="o">=</span> <span class="mi">118</span>
+
+<span class="n">wh_source</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">source</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">cat</span><span class="p">[[</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;xcentroid&#39;</span><span class="p">,</span> <span class="s1">&#39;ycentroid&#39;</span><span class="p">,</span> <span class="s1">&#39;sky_centroid&#39;</span><span class="p">,</span> <span class="s1">&#39;is_extended&#39;</span><span class="p">,</span> <span class="s1">&#39;isophotal_abmag&#39;</span><span class="p">,</span> <span class="s1">&#39;isophotal_vegamag&#39;</span><span class="p">]][</span><span class="n">wh_source</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Using any of the three methods above, write out the new catalog.</p>
+<ul class="simple">
+<li><p>with RA/Dec: <code class="docutils literal notranslate"><span class="pre">new_cat</span> <span class="pre">=</span> <span class="pre">Table(cat[nearest_id])</span></code></p></li>
+<li><p>with x/y: <code class="docutils literal notranslate"><span class="pre">new_cat</span> <span class="pre">=</span> <span class="pre">Table(cat[wh_nearest])</span></code></p></li>
+<li><p>with source ID: <code class="docutils literal notranslate"><span class="pre">new_cat</span> <span class="pre">=</span> <span class="pre">Table(cat[wh_source])</span></code></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_cat</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="n">wh_source</span><span class="p">])</span> <span class="c1"># turn the row instance into a dataframe again</span>
+
+<span class="c1"># save the new catalog with a unique name</span>
+<span class="n">new_cat_name</span> <span class="o">=</span> <span class="n">cat_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;cat.ecsv&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;source</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s1">_cat.ecsv&#39;</span><span class="p">)</span>
+<span class="n">new_cat</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">new_cat_name</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saved:&#39;</span><span class="p">,</span> <span class="n">new_cat_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Once we have an updated source catalog that we are content with, we can move on to the spec2 step of the pipeline. It likely will be necessary to come back to this step after running spec2. Let’s take a quick look at the source that we will be extracting in the following notebook with spec2.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">cust_image3_i2d</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    
+<span class="n">cat</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">new_cat_name</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">]:</span>
+    <span class="c1"># plot the image</span>
+    <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">img</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;obs</span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;OBSERVTN&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PUPIL&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        
+    <span class="c1"># also plot the associated catalog</span>
+    <span class="n">extended_sources</span> <span class="o">=</span> <span class="n">cat</span><span class="p">[</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;is_extended&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># 1 is True; i.e. is extended</span>
+    <span class="n">point_sources</span> <span class="o">=</span> <span class="n">cat</span><span class="p">[</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;is_extended&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># 0 is False; i.e. is a point source</span>
+            
+    <span class="k">for</span> <span class="n">color</span><span class="p">,</span> <span class="n">sources</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s1">&#39;darkred&#39;</span><span class="p">,</span> <span class="s1">&#39;black&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">extended_sources</span><span class="p">,</span> <span class="n">point_sources</span><span class="p">]):</span>
+        <span class="c1"># plotting the sources</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">sources</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">],</span> <span class="n">sources</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">facecolors</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+    
+        <span class="c1"># adding source labels </span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">source_num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sources</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]):</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">source_num</span><span class="p">,</span> 
+                        <span class="p">(</span><span class="n">sources</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">sources</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="mf">0.5</span><span class="p">),</span> 
+                        <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                        <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Speicifc Source to Extract with Spec2&quot;</span><span class="p">)</span>
+
+<span class="c1"># zooming in on a smaller region</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">known_x</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="n">known_x</span><span class="o">+</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">known_y</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="n">known_y</span><span class="o">+</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<a class="reference internal image-reference" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/jdat_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/NIRISS/NIRISS_WFSS_advanced"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="00_niriss_mast_query_data_setup.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Download Wide Field Slittless Spectroscopy (WFSS) Data</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="02_niriss_wfss_spec2.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Run spec2 pipeline</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports-data-setup">Imports &amp; Data Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#default-imaging-pipeline-run">Default Imaging Pipeline Run</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-default-image2">Run Default Image2</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-in-a-level-2-imaging-association-file">Looking in a Level 2 Imaging Association File</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#run-image2">Run image2</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-default-image3">Run Default Image3</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-in-a-level-3-association-file">Looking in a Level 3 Association File</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#run-image3">Run image3</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspecting-default-results">Inspecting Default Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib">Matplotlib</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#imviz">ImViz</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-imaging-pipeline-run">Custom Imaging Pipeline Run</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#image3">Image3</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspecting-custom-results">Inspecting Custom Results</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#refining-the-source-catalog-further">Refining the Source Catalog Further</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matching-source-ids-across-catalogs">Matching Source IDs Across Catalogs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manually-editing-the-source-catalog">Manually Editing the Source Catalog</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

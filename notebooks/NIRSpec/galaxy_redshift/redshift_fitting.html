@@ -1,0 +1,1098 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Redshift and Template Fitting &#8212; STScI JDAT Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/main.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-D46G4HKJY3');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/NIRSpec/galaxy_redshift/redshift_fitting';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Cleaning Residual 1/f Noise in NIRSpec FS Products with NSClean" href="../NIRSpec_NSClean/FS_NSClean_example.html" />
+    <link rel="prev" title="BOTS Time Series Observations" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="STScI JDAT Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="STScI JDAT Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebook_development_workflow.html">Notebook Development Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/submitting_notebooks.html">Submitting Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/requirements.html">Requirements file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebooks.html">Jupyter Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/data_files.html">Data Files</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">GitHub Guidelines</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_setup.html">GitHub Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_workflow.html">GitHub Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_pr.html">GitHub PR</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cross-Instrument</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/asdf_example/asdf_example.html">ASDF Example</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/background_estimation_imaging/Imaging_Sky_Background_Estimation.html">Complex 2D Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/composite_model_fitting/specfit_demo_3.html">Composite Model Spectral Fitting</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">MAST Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/rgb_imviz/imviz_rgb_carina.html">RGB images with Imviz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">Specviz Simple Demo</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">MIRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">MRS Mstar - Run Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">MRS Detector Based Extraction</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">MRS Mstar - Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">IFU of YSOs in LMC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MIRI_LRS_spectral_extraction/miri_lrs_advanced_extraction_part1.html">LRS Optimal Spectral Extraction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRCam</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/aperture_photometry/NIRCam_Aperture_Photometry_Example.html">Point Source Aperture Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_photometry/NIRCam_multiband_photometry.html">Extended Aperture Photometry</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">Cross-Filter PSF Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/psf_photometry/NIRCam_PSF_Photometry_Example.html">PSF Photometry</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRISS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">WFSS Spectra - Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">WFSS Spectra - Combine and Normalize 1D Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">WFSS Spectra - Cross-Correlation Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">WFSS Spectra - Emission Line Map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/niriss_imaging/niriss-imaging-tutorial.html">NIRISS Imaging Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/00_niriss_mast_query_data_setup.html">NIRISS MAST</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/01_niriss_wfss_image2_image3.html">Direct imaging for WFSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/02_niriss_wfss_spec2.html">Spec2 pipeline for WFSS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRSpec</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">IFU Cube Fitting</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../cube_fitting/cube_fitting.html">IFU Cube Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ifu_optimal/ifu_optimal.html">IFU Optimal Spectral Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimal_extraction/Spectral_Extraction-static.html">MOS Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mos_spectroscopy_advanced/MOSspec_advanced.html">MOS Spectroscopy of Extragalactic Field</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">BOTS Time Series Observations</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Redshift and Template Fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_NSClean/FS_NSClean_example.html">FS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_NSClean/IFU_NSClean_example.html">IFU Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_NSClean/MOS_NSClean_example.html">MOS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_NSClean/BOTS_NSClean_example.html">BOTS Products with NSClean</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/NIRSpec/galaxy_redshift/redshift_fitting.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/NIRSpec/galaxy_redshift/redshift_fitting.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Redshift and Template Fitting</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resources-and-documentation">Resources and documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#versions">Versions:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fetch-the-example-data">Fetch the example data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#by-eye-redshift-measurement-with-specviz">“By eye” redshift measurement with Specviz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#redshift-measurement-with-cross-correlation-method">Redshift measurement with cross-correlation method</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-a-template-and-prepare-it-for-use">Get a template and prepare it for use</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subtract-the-continuum-from-the-observed-spectrum">Subtract the continuum from the observed spectrum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clean-up-the-spectrum">Clean up the spectrum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-cross-correlation-function">Run the cross correlation function</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="redshift-and-template-fitting">
+<h1>Redshift and Template Fitting<a class="headerlink" href="#redshift-and-template-fitting" title="Permalink to this heading">#</a></h1>
+<p>This notebook covers basic examples on how a user can measure the redshift of a source using the visualization tool <a class="reference external" href="https://jdaviz.readthedocs.io/en/latest/">Jdaviz</a> or programmatically with <a class="reference external" href="https://specutils.readthedocs.io/en/latest/">Specutils</a>.</p>
+<p><strong>Use case:</strong> measure the redshift of a galaxy from its spectrum using 2 different methods.<br />
+<strong>Data:</strong> JWST/NIRSpec spectrum from program 2736.<br />
+<strong>Tools:</strong> jdaviz, specutils.<br />
+<strong>Cross-instrument:</strong> NIRISS, NIRCam.</p>
+<p><strong>Content</strong></p>
+<ul class="simple">
+<li><p><span class="xref myst">Resources and documentation</span></p></li>
+<li><p><span class="xref myst">Installation</span></p></li>
+<li><p><span class="xref myst">Imports</span></p></li>
+<li><p><span class="xref myst">Fetch the example data</span></p></li>
+<li><p><span class="xref myst">“By eye” redshift measurement with Specviz</span></p></li>
+<li><p><span class="xref myst">Redshift measurement with cross-correlation method</span></p>
+<ul>
+<li><p><span class="xref myst">Get a template and prepare it for use</span></p></li>
+<li><p><span class="xref myst">Subtract the continuum from the observed spectrum</span></p></li>
+<li><p><span class="xref myst">Clean up the spectrum</span></p></li>
+<li><p><span class="xref myst">Run the cross correlation function</span></p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Author</strong>: Camilla Pacifici (cpacifici&#64;stsci.edu)<br>
+<strong>Updated</strong>: September 14, 2023</p>
+<p><a id='resources'></a></p>
+<section id="resources-and-documentation">
+<h2>Resources and documentation<a class="headerlink" href="#resources-and-documentation" title="Permalink to this heading">#</a></h2>
+<p>This notebook uses functionality from <a class="reference external" href="https://specutils.readthedocs.io/en/stable/">Specutils</a> and <a class="reference external" href="https://jdaviz.readthedocs.io/en/latest/">Jdaviz</a>. Developers at the Space Telescope Science Institute are available to answer questions and resolve problems through the <a class="reference external" href="https://jwsthelp.stsci.edu/">JWST Help Desk</a>. If you wish to send feedback or report problems, you can also submit an issue directly on Github, both for <a class="reference external" href="https://github.com/astropy/specutils">Specutils</a> and for <a class="reference external" href="https://github.com/spacetelescope/jdaviz">Jdaviz</a>.</p>
+<p><a id='installation'></a></p>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
+<p>This notebook was extracted from the <a class="reference external" href="https://www.stsci.edu/jwst/science-execution/jwebbinars">JWebbinar material</a>.
+To run this notebook, you will need to create an environment that includes the jdaviz package with the following instructions.<br />
+<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">create</span> <span class="pre">-n</span> <span class="pre">jdaviz</span> <span class="pre">python=3.11</span></code><br />
+<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">jdaviz</span></code><br />
+from the latest release<br />
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">jdaviz</span></code><br />
+or from git<br />
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">git+https://github.com/spacetelescope/jdaviz.git</span></code></p>
+<p><a id='imports'></a></p>
+</section>
+<section id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># general os</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="c1"># numpy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># astroquery</span>
+<span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
+
+<span class="c1"># specviz</span>
+<span class="kn">import</span> <span class="nn">jdaviz</span> <span class="c1"># this is needed to get the version number later</span>
+<span class="kn">from</span> <span class="nn">jdaviz</span> <span class="kn">import</span> <span class="n">Specviz</span>
+
+<span class="c1"># astropy</span>
+<span class="kn">import</span> <span class="nn">astropy</span> <span class="c1"># again for the version number</span>
+<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">ascii</span><span class="p">,</span> <span class="n">fits</span>
+<span class="kn">from</span> <span class="nn">astropy.utils.data</span> <span class="kn">import</span> <span class="n">download_file</span>
+<span class="kn">from</span> <span class="nn">astropy.modeling.models</span> <span class="kn">import</span> <span class="n">Linear1D</span>
+<span class="kn">from</span> <span class="nn">astropy.nddata</span> <span class="kn">import</span> <span class="n">StdDevUncertainty</span>
+
+<span class="c1"># specutils</span>
+<span class="kn">import</span> <span class="nn">specutils</span> <span class="c1"># again for the version number</span>
+<span class="kn">from</span> <span class="nn">specutils</span> <span class="kn">import</span> <span class="n">Spectrum1D</span><span class="p">,</span> <span class="n">SpectralRegion</span>
+<span class="kn">from</span> <span class="nn">specutils.fitting</span> <span class="kn">import</span> <span class="n">fit_generic_continuum</span>
+<span class="kn">from</span> <span class="nn">specutils.analysis</span> <span class="kn">import</span> <span class="n">correlation</span>
+<span class="kn">from</span> <span class="nn">specutils.manipulation</span> <span class="kn">import</span> <span class="n">extract_region</span>
+
+<span class="c1"># glue</span>
+<span class="kn">from</span> <span class="nn">glue.core.roi</span> <span class="kn">import</span> <span class="n">XRangeROI</span>
+
+<span class="c1"># matplotlib</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="c1"># display</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">HTML</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># customization of matplotlib style</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;legend.fontsize&#39;</span><span class="p">:</span> <span class="s1">&#39;18&#39;</span><span class="p">,</span> <span class="s1">&#39;axes.labelsize&#39;</span><span class="p">:</span> <span class="s1">&#39;18&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;axes.titlesize&#39;</span><span class="p">:</span> <span class="s1">&#39;18&#39;</span><span class="p">,</span> <span class="s1">&#39;xtick.labelsize&#39;</span><span class="p">:</span> <span class="s1">&#39;18&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;ytick.labelsize&#39;</span><span class="p">:</span> <span class="s1">&#39;18&#39;</span><span class="p">,</span> <span class="s1">&#39;lines.linewidth&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+          <span class="s1">&#39;axes.linewidth&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;animation.html&#39;</span><span class="p">:</span> <span class="s1">&#39;html5&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">)}</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.max_open_warning&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+<span class="c1"># This ensures that our notebook is using the full width of the browser</span>
+<span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="s2">&quot;&lt;style&gt;.container { width:100% !important; }&lt;/style&gt;&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="versions">
+<h3>Versions:<a class="headerlink" href="#versions" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;jdaviz:&quot;</span><span class="p">,</span> <span class="n">jdaviz</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;astropy:&quot;</span><span class="p">,</span> <span class="n">astropy</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;specutils:&quot;</span><span class="p">,</span> <span class="n">specutils</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='data'></a></p>
+</section>
+</section>
+<section id="fetch-the-example-data">
+<h2>Fetch the example data<a class="headerlink" href="#fetch-the-example-data" title="Permalink to this heading">#</a></h2>
+<p>Here we download a spectrum from the <a class="reference external" href="https://www.stsci.edu/jwst/science-execution/approved-programs/webb-first-image-observations">Early Release Observation data</a> program 2736 and a model spectrum we will use as template for the redshift measurement. The template is based on a combination of Simple Stellar Population models including emission lines as done in <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2012MNRAS.421.2002P/abstract">Pacifici et al. (2012)</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Select a specific directory on your machine or a temporary directory</span>
+<span class="n">data_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
+<span class="c1"># Get the file from MAST</span>
+<span class="n">fn</span> <span class="o">=</span> <span class="s2">&quot;jw02736-o007_s09239_nirspec_f170lp-g235m_x1d.fits&quot;</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_file</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mast:JWST/product/</span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">local_path</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">fn_template</span> <span class="o">=</span> <span class="n">download_file</span><span class="p">(</span><span class="s1">&#39;https://stsci.box.com/shared/static/3rkurzwl0l79j70ddemxafhpln7ljle7.dat&#39;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Jdaviz will read by default the surface brightness extension (in MJy/sr), but I prefer the flux extension (in Jy). I create a Spectrum1D object reading the file myself.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">wave</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;TUNIT1&#39;</span><span class="p">])</span>
+<span class="n">flux</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;FLUX&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;TUNIT2&#39;</span><span class="p">])</span>
+<span class="c1"># std = hdu[1].data[&#39;FLUX_ERROR&#39;] * u.Unit(hdu[1].header[&#39;TUNIT3&#39;]) # These are all nan. Define an artificial uncertainty</span>
+
+<span class="n">fluxobs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave</span><span class="p">,</span>
+                     <span class="n">flux</span><span class="o">=</span><span class="n">flux</span><span class="p">,</span>
+                     <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="mf">0.1</span><span class="o">*</span><span class="n">flux</span><span class="p">))</span>
+<span class="n">fluxobs</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='byeye'></a></p>
+</section>
+<section id="by-eye-redshift-measurement-with-specviz">
+<h2>“By eye” redshift measurement with Specviz<a class="headerlink" href="#by-eye-redshift-measurement-with-specviz" title="Permalink to this heading">#</a></h2>
+<p>Specviz will allow you to match line wavelengths to the emission lines you see in the spectrum. You will be able to do this using the <a class="reference external" href="https://jdaviz.readthedocs.io/en/latest/specviz/plugins.html#redshift-slider">redshift slider</a> in the Line List plugin. But first, let us <a class="reference external" href="https://jdaviz.readthedocs.io/en/latest/specviz/import_data.html">open the spectrum in Specviz</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Call the app</span>
+<span class="n">viz</span> <span class="o">=</span> <span class="n">Specviz</span><span class="p">()</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load spectrum</span>
+<span class="c1"># viz.load_data(f&#39;{data_dir}/{fn}&#39;, data_label=&quot;NIRSpec&quot;) # To load the surface brightness directly from file</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">fluxobs</span><span class="p">,</span> <span class="n">data_label</span><span class="o">=</span><span class="s1">&#39;NIRSpec&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we need to:</p>
+<ul class="simple">
+<li><p>Open the <a class="reference external" href="https://jdaviz.readthedocs.io/en/latest/specviz/plugins.html?highlight=plugin#line-lists">“line list” plugin</a>
+<a class="reference internal" href="../../../_images/line_list.png"><img alt="The line list plugin is in the menu to the right" src="../../../_images/line_list.png" style="width: 500px;" /></a></p></li>
+<li><p>Choose pre-loaded lines or add custom lines (the lines will not show in the viewer because they are plotted at restframe)</p>
+<ul>
+<li><p>Hint: select Ha and the surrounding NII lines
+<a class="reference internal" href="../../../_images/select_list.png"><img alt="Select the SDSS list" src="../../../_images/select_list.png" style="width: 500px;" /></a>
+<a class="reference internal" href="../../../_images/select_three_lines.png"><img alt="Select the two [NII] lines and the H alpha line" src="../../../_images/select_three_lines.png" style="width: 500px;" /></a></p></li>
+</ul>
+</li>
+<li><p>Input a guess redshift
+<a class="reference internal" href="../../../_images/guess_redshift.png"><img alt="Input a guess for the redshift (redshift=2.4)" src="../../../_images/guess_redshift.png" style="width: 500px;" /></a></p></li>
+<li><p>Move the slider to get a better match
+<a class="reference internal" href="../../../_images/adjust_redshift_slider.png"><img alt="Adjust the redshift using the slider to match the emission lines in the spectrum" src="../../../_images/adjust_redshift_slider.png" style="width: 500px;" /></a></p></li>
+<li><p>Use the <a class="reference external" href="https://jdaviz.readthedocs.io/en/latest/specviz/displaying.html#pan-zoom">zoom tool</a> to get an even better match
+<a class="reference internal" href="../../../_images/precise_adjust_with_zoom.png"><img alt="Use the zoom tool to find a better match to the emission lines" src="../../../_images/precise_adjust_with_zoom.png" style="width: 500px;" /></a></p></li>
+</ul>
+<p><a id='crosscorr'></a></p>
+</section>
+<section id="redshift-measurement-with-cross-correlation-method">
+<h2>Redshift measurement with cross-correlation method<a class="headerlink" href="#redshift-measurement-with-cross-correlation-method" title="Permalink to this heading">#</a></h2>
+<p>It is very common in astronomy to measure a redshift using a cross-correlation algorithm. IRAF uses this methodology in its <a class="reference external" href="http://tdc-www.harvard.edu/iraf/rvsao/xcsao/xcsao.html">xcsao</a> task. Here, we use the Specutils <a class="reference external" href="https://specutils.readthedocs.io/en/stable/analysis.html#template-cross-correlation">template cross-correlation</a> function to derive the redshift of our source. There are a couple of things that we need to do before we run the correlation algorithm:</p>
+<ul class="simple">
+<li><p>Get a template spectrum for the correlation</p></li>
+<li><p>Subtract the continuum from both the template and the observed spectrum</p></li>
+<li><p>Make sure the spectra have some overlap in wavelength</p></li>
+</ul>
+<p><a id='get_template'></a></p>
+<section id="get-a-template-and-prepare-it-for-use">
+<h3>Get a template and prepare it for use<a class="headerlink" href="#get-a-template-and-prepare-it-for-use" title="Permalink to this heading">#</a></h3>
+<p>The template is used for cross correlation, so it can be renormalized for convenience. The units have to match the units of the observed spectrum. We can do the continuum subtraction in erg/(s cm^2 A) since the continuum is close to linear and then run it by Jdaviz to get the appropriate conversion.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define unit</span>
+<span class="n">spec_unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">erg</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">s</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">cm</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">AA</span>
+
+<span class="c1"># Read spectrum with the ascii function</span>
+<span class="n">template</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fn_template</span><span class="p">)</span>
+<span class="c1"># Create Spectrum1D object</span>
+<span class="n">template</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">template</span><span class="p">[</span><span class="s1">&#39;col1&#39;</span><span class="p">]</span><span class="o">/</span><span class="mf">1E4</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span> 
+                      <span class="n">flux</span><span class="o">=</span><span class="p">(</span><span class="n">template</span><span class="p">[</span><span class="s1">&#39;col2&#39;</span><span class="p">]</span><span class="o">/</span><span class="mf">1E24</span><span class="p">)</span><span class="o">*</span><span class="n">spec_unit</span><span class="p">)</span> <span class="c1"># Normalize to something close to the observed spectrum</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cut to useful range - template and obs MUST overlap, so we go to 2.4um.</span>
+<span class="n">use_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="mf">0.45</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mf">2.4</span><span class="p">)</span>
+<span class="n">template_cut</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">[</span><span class="n">use_tmp</span><span class="p">],</span> <span class="n">flux</span><span class="o">=</span><span class="n">template</span><span class="o">.</span><span class="n">flux</span><span class="p">[</span><span class="n">use_tmp</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Look at spectrum</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template_cut</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">template_cut</span><span class="o">.</span><span class="n">flux</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;wavelength ({:latex})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">template_cut</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;flux ({:latex})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">template_cut</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Template&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This diagram shows the template spectrum (flux vs wavelength) out to 2.4 micron to allow for some wavelength overlap with the observed spectrum.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Subtract continuum</span>
+<span class="n">mask_temp</span> <span class="o">=</span> <span class="p">((</span><span class="n">template_cut</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="mf">0.70</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">template_cut</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mf">2.40</span><span class="p">))</span>
+
+<span class="n">template_forcont</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">template_cut</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">[</span><span class="n">mask_temp</span><span class="p">],</span> <span class="n">flux</span><span class="o">=</span><span class="n">template_cut</span><span class="o">.</span><span class="n">flux</span><span class="p">[</span><span class="n">mask_temp</span><span class="p">])</span>
+
+<span class="c1"># Use fit_generic_continuum</span>
+<span class="n">fit_temp</span> <span class="o">=</span> <span class="n">fit_generic_continuum</span><span class="p">(</span><span class="n">template_forcont</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Linear1D</span><span class="p">())</span>
+<span class="n">cont_temp</span> <span class="o">=</span> <span class="n">fit_temp</span><span class="p">(</span><span class="n">template_cut</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">)</span>
+<span class="n">template_sub</span> <span class="o">=</span> <span class="n">template_cut</span> <span class="o">-</span> <span class="n">cont_temp</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template_cut</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">template_cut</span><span class="o">.</span><span class="n">flux</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template_cut</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">cont_temp</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;wavelength ({:latex})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">template_sub</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;flux ({:latex})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">template_sub</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Plot template and continuum&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The diagram shows the template spectrum and the best-fitting continuum.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print Spectrum1D object</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">template_sub</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Look at spectrum</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">template_sub</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">template_sub</span><span class="o">.</span><span class="n">flux</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;wavelength ({:latex})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">template_sub</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;flux ({:latex})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">template_sub</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Continuum subtracted template&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This diagram shows the template spectrum (flux vs wavelength) after subtracting the fitted continuum.</p>
+<p><a id='continuum'></a></p>
+</section>
+<section id="subtract-the-continuum-from-the-observed-spectrum">
+<h3>Subtract the continuum from the observed spectrum<a class="headerlink" href="#subtract-the-continuum-from-the-observed-spectrum" title="Permalink to this heading">#</a></h3>
+<p>We can use a different approach and do it with <a class="reference external" href="https://specutils.readthedocs.io/en/stable/spectral_regions.html">SpectralRegion</a> here. We also need to include an uncertianty to the observed spectrum, if it is not included.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define Spectral Region</span>
+<span class="n">region</span> <span class="o">=</span> <span class="n">SpectralRegion</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span> <span class="mf">3.0</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
+<span class="c1"># Extract region</span>
+<span class="n">spec1d_cont</span> <span class="o">=</span> <span class="n">extract_region</span><span class="p">(</span><span class="n">fluxobs</span><span class="p">,</span> <span class="n">region</span><span class="p">)</span>
+<span class="c1"># Run fitting function</span>
+<span class="n">fit_obs</span> <span class="o">=</span> <span class="n">fit_generic_continuum</span><span class="p">(</span><span class="n">spec1d_cont</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">Linear1D</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="c1"># Apply to spectral axis</span>
+<span class="n">cont_obs</span> <span class="o">=</span> <span class="n">fit_obs</span><span class="p">(</span><span class="n">fluxobs</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">)</span>
+
+<span class="c1"># Subtract continuum</span>
+<span class="n">spec1d_sub</span> <span class="o">=</span> <span class="n">fluxobs</span> <span class="o">-</span> <span class="n">cont_obs</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Look at spectrum</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">spec1d_sub</span><span class="o">.</span><span class="n">spectral_axis</span><span class="p">,</span> <span class="n">spec1d_sub</span><span class="o">.</span><span class="n">flux</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;wavelength ({:latex})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">spec1d_sub</span><span class="o">.</span><span class="n">spectral_axis</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;flux ({:latex})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">spec1d_sub</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Continuum subtracted observed spectrum&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This diagram shows the observed spectrum (flux vs wavelength) after subtracting the fitted continuum.</p>
+<p><a id='cleanup'></a></p>
+</section>
+<section id="clean-up-the-spectrum">
+<h3>Clean up the spectrum<a class="headerlink" href="#clean-up-the-spectrum" title="Permalink to this heading">#</a></h3>
+<p>It is best to remove artifacts that can look like emission/absorption lines and remove big gaps. The selection of the clean part of the spectrum can be done using the GUI. If this is not performed manually, the following cell takes care of it programmatically.
+<a class="reference internal" href="../../../_images/select_region.png"><img alt="Select a clean region of the spectrum" src="../../../_images/select_region.png" style="width: 500px;" /></a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">viz2</span> <span class="o">=</span> <span class="n">Specviz</span><span class="p">()</span>
+<span class="n">viz2</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">spec1d_sub</span><span class="p">,</span> <span class="n">data_label</span><span class="o">=</span><span class="s1">&#39;spectrum continuum subtracted&#39;</span><span class="p">)</span>
+<span class="n">viz2</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a subset in the area of interest if it has not been created manually</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">region1</span> <span class="o">=</span> <span class="n">viz2</span><span class="o">.</span><span class="n">get_spectra</span><span class="p">(</span><span class="n">data_label</span><span class="o">=</span><span class="s1">&#39;spectrum continuum subtracted&#39;</span><span class="p">,</span> <span class="n">subset_to_apply</span><span class="o">=</span><span class="s1">&#39;Subset 1&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">region1</span><span class="p">)</span>
+    <span class="n">region1_exists</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;There are no subsets selected.&quot;</span><span class="p">)</span>
+    <span class="n">region1_exists</span> <span class="o">=</span> <span class="kc">False</span>
+    
+<span class="c1"># Spectral region for masking artifacts</span>
+<span class="k">if</span> <span class="n">region1_exists</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+    <span class="n">sv</span> <span class="o">=</span> <span class="n">viz2</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get_viewer</span><span class="p">(</span><span class="s1">&#39;spectrum-viewer&#39;</span><span class="p">)</span>
+    <span class="n">sv</span><span class="o">.</span><span class="n">toolbar_active_subset</span><span class="o">.</span><span class="n">selected</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">sv</span><span class="o">.</span><span class="n">apply_roi</span><span class="p">(</span><span class="n">XRangeROI</span><span class="p">(</span><span class="mf">2.24</span><span class="p">,</span> <span class="mf">3.13</span><span class="p">))</span>  
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get spectrum out with mask</span>
+<span class="n">spec1d_region</span> <span class="o">=</span> <span class="n">viz2</span><span class="o">.</span><span class="n">get_spectral_regions</span><span class="p">()</span>
+<span class="n">spec1d_masked</span> <span class="o">=</span> <span class="n">extract_region</span><span class="p">(</span><span class="n">spec1d_sub</span><span class="p">,</span> <span class="n">spec1d_region</span><span class="p">[</span><span class="s1">&#39;Subset 1&#39;</span><span class="p">],</span> <span class="n">return_single_spectrum</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We visualize the observed and template continuum-subtracted spectra in a new instance of Specviz. Hit the Home button to see the entire wavelength range. The template spectrum will change unit to match the observed spectrum.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">viz3</span> <span class="o">=</span> <span class="n">Specviz</span><span class="p">()</span>
+<span class="n">viz3</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">spec1d_masked</span><span class="p">,</span> <span class="n">data_label</span><span class="o">=</span><span class="s1">&#39;observation&#39;</span><span class="p">)</span>
+<span class="n">viz3</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">template_sub</span><span class="p">,</span> <span class="n">data_label</span><span class="o">=</span><span class="s1">&#39;template&#39;</span><span class="p">)</span>
+<span class="n">viz3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">template_newunit</span> <span class="o">=</span> <span class="n">viz3</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s1">&#39;template&#39;</span><span class="p">,</span> <span class="n">use_display_units</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">template_newunit</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='run_crosscorr'></a></p>
+</section>
+<section id="run-the-cross-correlation-function">
+<h3>Run the cross correlation function<a class="headerlink" href="#run-the-cross-correlation-function" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Call the function</span>
+<span class="n">corr</span><span class="p">,</span> <span class="n">lag</span> <span class="o">=</span> <span class="n">correlation</span><span class="o">.</span><span class="n">template_correlate</span><span class="p">(</span><span class="n">spec1d_masked</span><span class="p">,</span> <span class="n">template_newunit</span><span class="p">,</span> <span class="n">lag_units</span><span class="o">=</span><span class="n">u</span><span class="o">.</span><span class="n">one</span><span class="p">)</span>
+
+<span class="c1"># Plot the correlation</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">corr</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Redshift&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Correlation&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This diagram shows the correlation value vs the redshift. The spike (around redshift of 2.5) indicates the value where the observed and template spectra correlate best.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Redshift based on maximum</span>
+<span class="n">index_peak</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">corr</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">lag</span><span class="p">[</span><span class="n">index_peak</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Redshift from peak maximum: &quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Redshifted template_sub</span>
+<span class="n">template_sub_z</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">template_sub</span><span class="o">.</span><span class="n">spectral_axis</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">z</span><span class="p">),</span>
+                            <span class="n">flux</span><span class="o">=</span><span class="n">template_sub</span><span class="o">.</span><span class="n">flux</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualize the redshifted template and the observed spectrum</span>
+<span class="n">viz4</span> <span class="o">=</span> <span class="n">Specviz</span><span class="p">()</span>
+<span class="n">viz4</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">spec1d_masked</span><span class="p">,</span> <span class="n">data_label</span><span class="o">=</span><span class="s1">&#39;Observed spectrum&#39;</span><span class="p">)</span>
+<span class="n">viz4</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">template_sub_z</span><span class="p">,</span> <span class="n">data_label</span><span class="o">=</span><span class="s1">&#39;Redshifted best template&#39;</span><span class="p">)</span>
+<span class="n">viz4</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<a class="reference internal image-reference" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/jdat_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/NIRSpec/galaxy_redshift"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">BOTS Time Series Observations</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../NIRSpec_NSClean/FS_NSClean_example.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Cleaning Residual 1/f Noise in NIRSpec FS Products with NSClean</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resources-and-documentation">Resources and documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#versions">Versions:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fetch-the-example-data">Fetch the example data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#by-eye-redshift-measurement-with-specviz">“By eye” redshift measurement with Specviz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#redshift-measurement-with-cross-correlation-method">Redshift measurement with cross-correlation method</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-a-template-and-prepare-it-for-use">Get a template and prepare it for use</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subtract-the-continuum-from-the-observed-spectrum">Subtract the continuum from the observed spectrum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clean-up-the-spectrum">Clean up the spectrum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-cross-correlation-function">Run the cross correlation function</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1656 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>WFSS Spectra Part 0: Optimal Extraction &#8212; STScI JDAT Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/main.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-D46G4HKJY3');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/NIRISS/NIRISS_WFSS_postpipeline/00_Optimal_extraction';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="WFSS Spectra Part 1: Combine and Normalize 1D Spectra" href="01_Combine_and_normalize_1D_spectra.html" />
+    <link rel="prev" title="PSF Photometry" href="../../NIRCam/psf_photometry/NIRCam_PSF_Photometry_Example.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="STScI JDAT Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="STScI JDAT Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebook_development_workflow.html">Notebook Development Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/submitting_notebooks.html">Submitting Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/requirements.html">Requirements file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebooks.html">Jupyter Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/data_files.html">Data Files</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">GitHub Guidelines</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_setup.html">GitHub Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_workflow.html">GitHub Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_pr.html">GitHub PR</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cross-Instrument</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/asdf_example/asdf_example.html">ASDF Example</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/background_estimation_imaging/Imaging_Sky_Background_Estimation.html">Complex 2D Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/composite_model_fitting/specfit_demo_3.html">Composite Model Spectral Fitting</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">MAST Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/rgb_imviz/imviz_rgb_carina.html">RGB images with Imviz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">Specviz Simple Demo</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">MIRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">MRS Mstar - Run Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">MRS Detector Based Extraction</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">MRS Mstar - Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">IFU of YSOs in LMC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MIRI_LRS_spectral_extraction/miri_lrs_advanced_extraction_part1.html">LRS Optimal Spectral Extraction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRCam</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/aperture_photometry/NIRCam_Aperture_Photometry_Example.html">Point Source Aperture Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_photometry/NIRCam_multiband_photometry.html">Extended Aperture Photometry</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">Cross-Filter PSF Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/psf_photometry/NIRCam_PSF_Photometry_Example.html">PSF Photometry</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRISS</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">WFSS Spectra - Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_Combine_and_normalize_1D_spectra.html">WFSS Spectra - Combine and Normalize 1D Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_Cross_correlation_template.html">WFSS Spectra - Cross-Correlation Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_Spatially_resolved_emission_line_map.html">WFSS Spectra - Emission Line Map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../niriss_imaging/niriss-imaging-tutorial.html">NIRISS Imaging Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_advanced/00_niriss_mast_query_data_setup.html">NIRISS MAST</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_advanced/01_niriss_wfss_image2_image3.html">Direct imaging for WFSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_advanced/02_niriss_wfss_spec2.html">Spec2 pipeline for WFSS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRSpec</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">IFU Cube Fitting</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/cube_fitting/cube_fitting.html">IFU Cube Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/ifu_optimal/ifu_optimal.html">IFU Optimal Spectral Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/optimal_extraction/Spectral_Extraction-static.html">MOS Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/mos_spectroscopy_advanced/MOSspec_advanced.html">MOS Spectroscopy of Extragalactic Field</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">BOTS Time Series Observations</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/galaxy_redshift/redshift_fitting.html">Redshift and Template Fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/FS_NSClean_example.html">FS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/IFU_NSClean_example.html">IFU Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/MOS_NSClean_example.html">MOS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/BOTS_NSClean_example.html">BOTS Products with NSClean</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/NIRISS/NIRISS_WFSS_postpipeline/00_Optimal_extraction.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/NIRISS/NIRISS_WFSS_postpipeline/00_Optimal_extraction.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>WFSS Spectra Part 0: Optimal Extraction</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-version-should-be">The version should be</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-and-load-data">0.Download and load data:</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-a-broadband-flux-catalog">Make a broadband flux catalog.</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#for-now-we-use-an-input-catalog">For now, we use an input catalog.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-2d-spectrum">1.Load 2D spectrum;</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wfss-grism-is-dispersed-in-a-direction-of-x-axis-in-the-plot-below">WFSS grism is dispersed in a direction of x-axis in the plot below.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#get-light-profile-at-different-x-position-this-will-be-used-for-optimal-extraction">2.Get light profile at different x position — This will be used for optimal extraction.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-dimensional-extraction">3.One-dimensional extraction;</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#show-pipeline-1d-extraction-as-an-example">Show pipeline 1D extraction as an example;</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimal-extraction">Optimal extraction;</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#write-1d-spectrum-out-to-a-file">4.Write 1d spectrum out to a file;</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#light-profile-along-x-axis-resolution-of-dispersed-spectrum">5.Light profile along x-axis = Resolution of dispersed spectrum;</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unless-you-are-interested-in-spatially-resolved-spectra-you-can-stack-and-get-light-profile-as-a-good-approximation">*Unless you are interested in spatially resolved spectra, you can stack and get light profile as a good approximation.</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fit-with-a-moffat-function">Fit with a moffat function;</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#repeat-for-other-filters-other-objects">Repeat for other filters, other objects.</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-following-big-colum-executes-the-same-processes-above-for-other-filters-and-dither-position">The following big colum executes the same processes above for other filters and dither position.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#another-object">Another object;</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="wfss-spectra-part-0-optimal-extraction">
+<h1>WFSS Spectra Part 0: Optimal Extraction<a class="headerlink" href="#wfss-spectra-part-0-optimal-extraction" title="Permalink to this heading">#</a></h1>
+<p><strong>Use case:</strong> optimal extraction of grism spectra; redshift measurement; emission-line maps.  Simplified version of <a class="reference external" href="https://jwst-docs.stsci.edu/near-infrared-imager-and-slitless-spectrograph/niriss-example-science-programs/niriss-wfss-with-nircam-parallel-imaging-of-galaxies-in-lensing-clusters">JDox Science Use Case # 33</a>.<br>
+<strong>Data:</strong> JWST simulated NIRISS images from <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-other-tools/mirage-data-simulator">MIRAGE</a>, run through the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/">JWST calibration pipeline</a>; galaxy cluster.<br>
+<strong>Tools:</strong>  specutils, astropy, pandas, emcee, lmfit, corner, h5py.<br>
+<strong>Cross-intrument:</strong> NIRSpec <br>
+<strong>Documentation:</strong> This notebook is part of a STScI’s larger <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis">post-pipeline Data Analysis Tools Ecosystem</a>.<br></p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<p>This notebook is 1 of 4 in a set focusing on NIRISS WFSS data:
+1. 1D optimal extraction since the JWST pipeline only provides a box extraction.  Optimal extraction improves S/N of spectra for faint sources.
+2. Combine and normalize 1D spectra.
+3. Cross correlate galaxy with template to get redshift.
+4. Spatially resolved emission line map.</p>
+<p>This notebook will start with <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-data-reduction-pipeline">post-pipeline</a> products of NIRISS WFSS, 2D rectified spectra, from spec level3.</p>
+<p>Optimal extraction requires source morphology along the cross-dispersion direction, which will be retrieved from direct images taken along with WFSS observations.  Morphology along dispersion direction is also essential to infer the spectral resolution, which will be obtained using template fitting to get redshift and stellar population in notebook #3 of this set.</p>
+<p><strong>Note:</strong> We here assume reduction of the 2D rectified spectrum has been performed at a decent level, i.e. there is no contaminating flux from other sources on the target 2D spectrum, and that background is already subtracted.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">rotate</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
+<span class="kn">import</span> <span class="nn">astropy.wcs</span> <span class="k">as</span> <span class="nn">wcs</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">ascii</span>
+
+<span class="kn">from</span> <span class="nn">specutils</span> <span class="kn">import</span> <span class="n">Spectrum1D</span>
+<span class="kn">from</span> <span class="nn">astropy.nddata</span> <span class="kn">import</span> <span class="n">StdDevUncertainty</span>
+
+<span class="kn">import</span> <span class="nn">specutils</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;specutils&#39;</span><span class="p">,</span> <span class="n">specutils</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">astropy</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;astropy&#39;</span><span class="p">,</span> <span class="n">astropy</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>specutils 1.15.0
+astropy 6.1.1
+</pre></div>
+</div>
+</div>
+</div>
+<section id="the-version-should-be">
+<h3>The version should be<a class="headerlink" href="#the-version-should-be" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>specutils 1.11.0</p></li>
+<li><p>astropy 5.3.4</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;savefig.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="download-and-load-data">
+<h2>0.Download and load data:<a class="headerlink" href="#download-and-load-data" title="Permalink to this heading">#</a></h2>
+<p>These include pipeline processed data for NIRISS, as well as photometric catalog from image step3.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;./pipeline_products&#39;</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">zipfile</span>
+    <span class="kn">import</span> <span class="nn">urllib.request</span>
+    <span class="n">boxlink</span> <span class="o">=</span> <span class="s1">&#39;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/NIRISS_lensing_cluster/pipeline_products.zip&#39;</span>
+    <span class="n">boxfile</span> <span class="o">=</span> <span class="s1">&#39;./pipeline_products.zip&#39;</span>
+    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
+    <span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">zf</span><span class="o">.</span><span class="n">extractall</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DIR_DATA</span> <span class="o">=</span> <span class="s1">&#39;./pipeline_products/&#39;</span>
+
+<span class="c1"># Output directory;</span>
+<span class="n">DIR_OUT</span> <span class="o">=</span> <span class="s1">&#39;./output/&#39;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">)</span>
+
+<span class="c1"># Filter for detection and science image;</span>
+<span class="n">filt_det</span> <span class="o">=</span> <span class="s1">&#39;f200w&#39;</span>
+
+<span class="c1"># Image array from direct image. This is for optimal extraction and masking.</span>
+<span class="c1"># This image should already be sky-subtracted; otherwise, you will encounter a wrong result with optimal extraction.</span>
+
+<span class="n">infile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_DATA</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt_det</span><span class="si">}</span><span class="s1">_i2d_skysub.fits&#39;</span>
+<span class="n">hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
+
+<span class="c1"># This is just for error array;</span>
+<span class="n">infile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_DATA</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt_det</span><span class="si">}</span><span class="s1">_i2d.fits&#39;</span>
+<span class="n">hdu_err</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">imwcs</span> <span class="o">=</span> <span class="n">wcs</span><span class="o">.</span><span class="n">WCS</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">,</span> <span class="n">hdu</span><span class="p">)</span>
+
+<span class="n">err</span> <span class="o">=</span> <span class="n">hdu_err</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">weight</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+
+<span class="c1"># Segmentation map;</span>
+<span class="c1"># This can be prepared by running Photutils, if the pipeline does not generate one.</span>
+<span class="n">segfile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_DATA</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt_det</span><span class="si">}</span><span class="s1">_i2d_seg.fits&#39;</span>
+<span class="n">seghdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">segfile</span><span class="p">)</span>
+<span class="n">segdata</span> <span class="o">=</span> <span class="n">seghdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_1875/874489203.py:25: RuntimeWarning: divide by zero encountered in divide
+  weight = 1/np.square(err)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load catalog from image level3;</span>
+<span class="c1"># to obtain source position in pixel coordinate.</span>
+<span class="n">catfile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_DATA</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt_det</span><span class="si">}</span><span class="s1">_cat.ecsv&#39;</span>
+<span class="n">fd</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">catfile</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fd</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>QTable length=7</i>
+<table id="table140594325247952" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>xcentroid</th><th>ycentroid</th><th>sky_centroid</th><th>aper_bkg_flux</th><th>aper_bkg_flux_err</th><th>aper30_flux</th><th>aper30_flux_err</th><th>aper50_flux</th><th>aper50_flux_err</th><th>aper70_flux</th><th>aper70_flux_err</th><th>aper_total_flux</th><th>aper_total_flux_err</th><th>aper30_abmag</th><th>aper30_abmag_err</th><th>aper50_abmag</th><th>aper50_abmag_err</th><th>aper70_abmag</th><th>aper70_abmag_err</th><th>aper_total_abmag</th><th>aper_total_abmag_err</th><th>aper30_vegamag</th><th>aper30_vegamag_err</th><th>aper50_vegamag</th><th>aper50_vegamag_err</th><th>aper70_vegamag</th><th>aper70_vegamag_err</th><th>aper_total_vegamag</th><th>aper_total_vegamag_err</th><th>CI_30_50</th><th>CI_50_70</th><th>CI_30_70</th><th>is_star</th><th>sharpness</th><th>roundness</th><th>nn_dist</th><th>nn_abmag</th><th>isophotal_flux</th><th>isophotal_flux_err</th><th>isophotal_abmag</th><th>isophotal_abmag_err</th><th>isophotal_vegamag</th><th>isophotal_vegamag_err</th><th>isophotal_area</th><th>semimajor_sigma</th><th>semiminor_sigma</th><th>ellipticity</th><th>orientation</th><th>sky_orientation</th><th>sky_bbox_ll</th><th>sky_bbox_ul</th><th>sky_bbox_lr</th><th>sky_bbox_ur</th></tr></thead>
+<thead><tr><th></th><th>pix</th><th>pix</th><th>deg,deg</th><th>Jy</th><th>Jy</th><th>Jy</th><th>Jy</th><th>Jy</th><th>Jy</th><th>Jy</th><th>Jy</th><th>Jy</th><th>Jy</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th>pix</th><th></th><th>Jy</th><th>Jy</th><th></th><th></th><th></th><th></th><th>pix2</th><th>pix</th><th>pix</th><th></th><th>deg</th><th>deg</th><th>deg,deg</th><th>deg,deg</th><th>deg,deg</th><th>deg,deg</th></tr></thead>
+<thead><tr><th>int64</th><th>float64</th><th>float64</th><th>SkyCoord</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float32</th><th>float64</th><th>float64</th><th>float64</th><th>float32</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>SkyCoord</th><th>SkyCoord</th><th>SkyCoord</th><th>SkyCoord</th></tr></thead>
+<tr><td>1</td><td>1901.4791</td><td>616.6617</td><td>3.569653944921018,-30.405070186723776</td><td>3.483045e-08</td><td>nan</td><td>8.130363e-08</td><td>nan</td><td>1.921404e-07</td><td>nan</td><td>3.765590e-07</td><td>nan</td><td>nan</td><td>nan</td><td>26.624725</td><td>nan</td><td>25.690953</td><td>nan</td><td>24.960418</td><td>nan</td><td>nan</td><td>nan</td><td>24.915445</td><td>nan</td><td>23.981673</td><td>nan</td><td>23.251138</td><td>nan</td><td>nan</td><td>nan</td><td>0.9338</td><td>0.7305</td><td>1.6643</td><td>nan</td><td>0.643053</td><td>0.050833</td><td>687.142856</td><td>22.245099</td><td>3.217875e-06</td><td>nan</td><td>22.631077</td><td>nan</td><td>20.921797</td><td>nan</td><td>83.0</td><td>2.300009</td><td>2.249340</td><td>0.022030</td><td>-68.272405</td><td>22.344833</td><td>3.569758007135362,-30.405165289935546</td><td>3.5697605503538763,-30.404964734861768</td><td>3.56952547091111,-30.405163096272904</td><td>3.5695280146070885,-30.404962541203844</td></tr>
+<tr><td>2</td><td>1215.5473</td><td>657.4411</td><td>3.5841636319830568,-30.40446267443482</td><td>4.591611e-08</td><td>nan</td><td>1.550019e-07</td><td>nan</td><td>3.638838e-07</td><td>nan</td><td>6.725310e-07</td><td>nan</td><td>nan</td><td>nan</td><td>25.924158</td><td>nan</td><td>24.997593</td><td>nan</td><td>24.330719</td><td>nan</td><td>nan</td><td>nan</td><td>24.214878</td><td>nan</td><td>23.288313</td><td>nan</td><td>22.621439</td><td>nan</td><td>nan</td><td>nan</td><td>0.9266</td><td>0.6669</td><td>1.5934</td><td>nan</td><td>0.666481</td><td>0.076069</td><td>687.142856</td><td>22.631077</td><td>4.591563e-06</td><td>nan</td><td>22.245099</td><td>nan</td><td>20.535819</td><td>nan</td><td>95.0</td><td>2.968964</td><td>1.778262</td><td>0.401050</td><td>89.747234</td><td>180.364471</td><td>3.5842476045730627,-30.404590023798825</td><td>3.5842510319996697,-30.404316539215852</td><td>3.5840573485032308,-30.404588250016765</td><td>3.58406077646256,-30.404314765438812</td></tr>
+<tr><td>3</td><td>381.9250</td><td>984.5165</td><td>3.601859711428753,-30.398662437780448</td><td>4.268341e-08</td><td>nan</td><td>1.404209e-07</td><td>nan</td><td>3.172360e-07</td><td>nan</td><td>6.277053e-07</td><td>nan</td><td>nan</td><td>nan</td><td>26.031420</td><td>nan</td><td>25.146544</td><td>nan</td><td>24.405610</td><td>nan</td><td>nan</td><td>nan</td><td>24.322140</td><td>nan</td><td>23.437264</td><td>nan</td><td>22.696330</td><td>nan</td><td>nan</td><td>nan</td><td>0.8849</td><td>0.7409</td><td>1.6258</td><td>nan</td><td>0.672185</td><td>0.331872</td><td>673.406986</td><td>16.320658</td><td>4.647145e-06</td><td>nan</td><td>22.232034</td><td>nan</td><td>20.522754</td><td>nan</td><td>101.0</td><td>2.880019</td><td>1.989674</td><td>0.309146</td><td>-89.237463</td><td>1.379775</td><td>3.6019516675347565,-30.39879122365138</td><td>3.601955045183127,-30.39851773861101</td><td>3.6017402841066257,-30.398789281273874</td><td>3.60174366234683,-30.398515796238758</td></tr>
+<tr><td>4</td><td>1100.5677</td><td>1408.4408</td><td>3.5867654957418873,-30.390792851961756</td><td>4.182255e-08</td><td>nan</td><td>1.977441e-07</td><td>nan</td><td>4.634087e-07</td><td>nan</td><td>8.557904e-07</td><td>nan</td><td>nan</td><td>nan</td><td>25.659741</td><td>nan</td><td>24.735090</td><td>nan</td><td>24.069081</td><td>nan</td><td>nan</td><td>nan</td><td>23.950461</td><td>nan</td><td>23.025810</td><td>nan</td><td>22.359801</td><td>nan</td><td>nan</td><td>nan</td><td>0.9247</td><td>0.6660</td><td>1.5907</td><td>nan</td><td>0.675891</td><td>0.239616</td><td>759.750606</td><td>22.245099</td><td>4.479109e-06</td><td>nan</td><td>22.272021</td><td>nan</td><td>20.562741</td><td>nan</td><td>78.0</td><td>2.864331</td><td>1.524197</td><td>0.467870</td><td>89.968483</td><td>180.585720</td><td>3.586849890460872,-30.390920199626773</td><td>3.586853310121526,-30.390646714975425</td><td>3.586659660970119,-30.390918429617493</td><td>3.586663081163341,-30.39064494497111</td></tr>
+<tr><td>5</td><td>662.4288</td><td>1685.1702</td><td>3.596088874688556,-30.385833272645225</td><td>3.108490e-08</td><td>nan</td><td>6.850841e-07</td><td>nan</td><td>1.445057e-06</td><td>nan</td><td>2.486505e-06</td><td>nan</td><td>nan</td><td>nan</td><td>24.310640</td><td>nan</td><td>23.500287</td><td>nan</td><td>22.911026</td><td>nan</td><td>nan</td><td>nan</td><td>22.601360</td><td>nan</td><td>21.791007</td><td>nan</td><td>21.201746</td><td>nan</td><td>nan</td><td>nan</td><td>0.8104</td><td>0.5893</td><td>1.3996</td><td>nan</td><td>0.584634</td><td>-0.067064</td><td>334.076772</td><td>20.727265</td><td>5.441945e-06</td><td>nan</td><td>22.060615</td><td>nan</td><td>20.351335</td><td>nan</td><td>71.0</td><td>1.874113</td><td>1.820229</td><td>0.028752</td><td>10.431093</td><td>101.048330</td><td>3.5961919899951726,-30.38591938323127</td><td>3.5961942522168715,-30.385737059975185</td><td>3.5959594989853887,-30.38591723639035</td><td>3.5959617616410102,-30.38573491313818</td></tr>
+<tr><td>6</td><td>319.4990</td><td>1885.3035</td><td>3.60338188710553,-30.382251101963146</td><td>3.326749e-08</td><td>nan</td><td>6.893335e-07</td><td>nan</td><td>1.514847e-06</td><td>nan</td><td>2.523116e-06</td><td>nan</td><td>nan</td><td>nan</td><td>24.303927</td><td>nan</td><td>23.449078</td><td>nan</td><td>22.895157</td><td>nan</td><td>nan</td><td>nan</td><td>22.594647</td><td>nan</td><td>21.739798</td><td>nan</td><td>21.185877</td><td>nan</td><td>nan</td><td>nan</td><td>0.8548</td><td>0.5539</td><td>1.4088</td><td>nan</td><td>0.581781</td><td>0.158721</td><td>111.504109</td><td>22.028328</td><td>5.666923e-06</td><td>nan</td><td>22.016632</td><td>nan</td><td>20.307352</td><td>nan</td><td>75.0</td><td>1.894424</td><td>1.866322</td><td>0.014834</td><td>14.267744</td><td>104.884981</td><td>3.603486459620283,-30.38233965159385</td><td>3.603488932995949,-30.382139095884135</td><td>3.6032539769794103,-30.38233751766547</td><td>3.6032564508323546,-30.382136961959965</td></tr>
+<tr><td>7</td><td>266.9182</td><td>1983.6317</td><td>3.604515260247416,-30.380468545121307</td><td>3.310798e-08</td><td>nan</td><td>7.155692e-07</td><td>nan</td><td>1.476385e-06</td><td>nan</td><td>2.520043e-06</td><td>nan</td><td>nan</td><td>nan</td><td>24.263371</td><td>nan</td><td>23.477001</td><td>nan</td><td>22.896480</td><td>nan</td><td>nan</td><td>nan</td><td>22.554091</td><td>nan</td><td>21.767721</td><td>nan</td><td>21.187200</td><td>nan</td><td>nan</td><td>nan</td><td>0.7864</td><td>0.5805</td><td>1.3669</td><td>nan</td><td>0.593763</td><td>0.061278</td><td>111.504109</td><td>22.016632</td><td>5.606203e-06</td><td>nan</td><td>22.028328</td><td>nan</td><td>20.319048</td><td>nan</td><td>74.0</td><td>1.893807</td><td>1.847921</td><td>0.024230</td><td>89.641888</td><td>180.259126</td><td>3.6046074836711655,-30.380562964468123</td><td>3.6046099547002646,-30.380362408741654</td><td>3.6043961396388418,-30.38056102635311</td><td>3.6043986111017956,-30.38036047063047</td></tr>
+</table></div></div></div>
+</div>
+<section id="make-a-broadband-flux-catalog">
+<h3>Make a broadband flux catalog.<a class="headerlink" href="#make-a-broadband-flux-catalog" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>For a convenient reason, here we compile catalogs into a flux catalog, which will be used in the following notebook (01b).</p></li>
+<li><p>To run this cell, you will need a photometric catalog of sources, that list sources position and flux for each filter. For now, I use this catalog prepared in another notebook. (“sources_extend_01.cat”)</p></li>
+<li><p>This catalog can also be used for generic phot-z/SED fitting softwares, like EAZY and gsf (see notebook No.04).</p></li>
+</ul>
+<section id="for-now-we-use-an-input-catalog">
+<h4>For now, we use an input catalog.<a class="headerlink" href="#for-now-we-use-an-input-catalog" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;f115w&#39;</span><span class="p">,</span> <span class="s1">&#39;f150w&#39;</span><span class="p">,</span> <span class="s1">&#39;f200w&#39;</span><span class="p">,</span> <span class="s1">&#39;f090w&#39;</span><span class="p">,</span> <span class="s1">&#39;f435w&#39;</span><span class="p">,</span> <span class="s1">&#39;f606w&#39;</span><span class="p">,</span> <span class="s1">&#39;f814w&#39;</span><span class="p">,</span> <span class="s1">&#39;f105w&#39;</span><span class="p">,</span> <span class="s1">&#39;f125w&#39;</span><span class="p">,</span> <span class="s1">&#39;f140w&#39;</span><span class="p">,</span> <span class="s1">&#39;f160w&#39;</span><span class="p">]</span>
+<span class="n">eazy_filts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">309</span><span class="p">,</span> <span class="mi">310</span><span class="p">,</span> <span class="mi">311</span><span class="p">,</span> <span class="mi">308</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">202</span><span class="p">,</span> <span class="mi">203</span><span class="p">,</span> <span class="mi">204</span><span class="p">,</span> <span class="mi">205</span><span class="p">]</span>
+<span class="n">magzp</span> <span class="o">=</span> <span class="mf">25.0</span> <span class="c1"># magnitude zeropoint in the catalog.</span>
+
+<span class="c1"># Read catalog;</span>
+<span class="n">fd_input</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_DATA</span><span class="si">}</span><span class="s1">sources_extend_01.cat&#39;</span><span class="p">)</span>
+<span class="n">ra_input</span> <span class="o">=</span> <span class="n">fd_input</span><span class="p">[</span><span class="s1">&#39;x_or_RA&#39;</span><span class="p">]</span>
+<span class="n">dec_input</span> <span class="o">=</span> <span class="n">fd_input</span><span class="p">[</span><span class="s1">&#39;y_or_Dec&#39;</span><span class="p">]</span>
+
+<span class="c1"># Header;</span>
+<span class="n">fw</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_flux.cat&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# id&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ff</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filts</span><span class="p">)):</span>
+    <span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; F</span><span class="si">{</span><span class="n">eazy_filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]</span><span class="si">}</span><span class="s1"> E</span><span class="si">{</span><span class="n">eazy_filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># Contents;</span>
+<span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fd</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])):</span>
+    
+    <span class="n">rtmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">fd</span><span class="p">[</span><span class="s1">&#39;sky_centroid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">-</span> <span class="n">ra_input</span><span class="p">[:])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">fd</span><span class="p">[</span><span class="s1">&#39;sky_centroid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dec</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">-</span> <span class="n">dec_input</span><span class="p">[:])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">iix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">rtmp</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">ff</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filts</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">ff</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fd</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">ii</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">mag</span> <span class="o">=</span> <span class="n">fd_input</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;niriss_</span><span class="si">{</span><span class="n">filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]</span><span class="si">}</span><span class="s1">_magnitude&#39;</span><span class="p">][</span><span class="n">iix</span><span class="p">]</span>
+        <span class="n">flux_nu</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">((</span><span class="n">mag</span><span class="o">-</span><span class="n">magzp</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span><span class="p">))</span>
+
+        <span class="c1"># Currently, the catalog does not provide proper error;</span>
+        <span class="c1"># Assuming a 5% error for flux.</span>
+        
+        <span class="n">flux_err_nu</span> <span class="o">=</span> <span class="n">flux_nu</span> <span class="o">*</span> <span class="mf">0.05</span>
+
+        <span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="n">flux_nu</span><span class="si">:</span><span class="s1">.5e</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">flux_err_nu</span><span class="si">:</span><span class="s1">.5e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> 
+
+    <span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">fw</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="load-2d-spectrum">
+<h2>1.Load 2D spectrum;<a class="headerlink" href="#load-2d-spectrum" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Which filter, grating, and object?</span>
+<span class="n">filt</span> <span class="o">=</span> <span class="s1">&#39;f200w&#39;</span>
+
+<span class="c1"># grism = &#39;G150R&#39;</span>
+<span class="n">grism</span> <span class="o">=</span> <span class="s1">&#39;G150C&#39;</span>
+
+<span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;00004&#39;</span>
+
+<span class="c1"># Zero-indexed number for dither --- the test data here has two dither positions, so 0 or 1.</span>
+<span class="n">ndither</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">file_2d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_DATA</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_cal.fits&#39;</span>
+<span class="n">hdu_2d</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_2d</span><span class="p">)</span>
+
+<span class="c1"># Align grism direction</span>
+<span class="c1">#   - x-direction = Dispersion (wavelength) direction.</span>
+<span class="c1">#   - y-direction = Cross-dispersion.</span>
+<span class="c1"># in this notebook.</span>
+    
+<span class="k">if</span> <span class="n">grism</span> <span class="o">==</span> <span class="s1">&#39;G150C&#39;</span><span class="p">:</span>
+    <span class="c1"># If spectrum is horizontal;</span>
+    <span class="n">data_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">dq_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">err_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">wave_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">data_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+    <span class="n">dq_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+    <span class="n">err_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+    <span class="n">wave_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+
+<span class="c1"># Get position angle of observation;</span>
+<span class="n">hd_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+<span class="n">PA_V3</span> <span class="o">=</span> <span class="n">hd_2d</span><span class="p">[</span><span class="s1">&#39;PA_V3&#39;</span><span class="p">]</span>
+<span class="n">PA_V3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data_2d</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fdeaad47f50&gt;
+</pre></div>
+</div>
+<img alt="../../../_images/d2c8bca1a1d0b51ac343bcfb811b9f5cf03c59286dc1a5c5d8d5d32b2f4af642.png" src="../../../_images/d2c8bca1a1d0b51ac343bcfb811b9f5cf03c59286dc1a5c5d8d5d32b2f4af642.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get light profile of the source;</span>
+
+<span class="c1"># Again, y is for cross-dispersion, and x is for dispersion directions.</span>
+<span class="n">y2d</span><span class="p">,</span> <span class="n">x2d</span> <span class="o">=</span> <span class="n">data_2d</span><span class="o">.</span><span class="n">shape</span><span class="p">[:]</span>
+
+<span class="c1"># Cut out segmentation map;</span>
+<span class="n">iix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">fd</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Target position from image 3 catalog;</span>
+<span class="n">ycen</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">][</span><span class="n">iix</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+<span class="n">xcen</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">][</span><span class="n">iix</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+
+<span class="c1"># Cutout size = y direction of 2D spectrum;</span>
+<span class="n">rsq</span> <span class="o">=</span> <span class="n">y2d</span>
+
+<span class="n">sci_cut</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)]</span>
+<span class="n">seg_cut</span> <span class="o">=</span> <span class="n">segdata</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)]</span>
+
+<span class="c1"># Rotate image for PA of Grism observation;</span>
+<span class="k">if</span> <span class="n">grism</span> <span class="o">==</span> <span class="s1">&#39;G150C&#39;</span><span class="p">:</span>
+    <span class="n">sci_rot</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">sci_cut</span><span class="p">,</span> <span class="n">PA_V3</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">sci_rot</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">sci_cut</span><span class="p">,</span> <span class="n">PA_V3</span><span class="o">+</span><span class="mi">90</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="wfss-grism-is-dispersed-in-a-direction-of-x-axis-in-the-plot-below">
+<h3>WFSS grism is dispersed in a direction of x-axis in the plot below.<a class="headerlink" href="#wfss-grism-is-dispersed-in-a-direction-of-x-axis-in-the-plot-below" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Direct image&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength direction &gt;&gt;&gt;&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Cross-dispersion direction &gt;&gt;&gt;&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;Cross-dispersion direction &gt;&gt;&gt;&#39;)
+</pre></div>
+</div>
+<img alt="../../../_images/8a9b86a5e1b32e6c8673a78e4ca63365e6ead07d7295fae7ddc29c628ed1a5cb.png" src="../../../_images/8a9b86a5e1b32e6c8673a78e4ca63365e6ead07d7295fae7ddc29c628ed1a5cb.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="get-light-profile-at-different-x-position-this-will-be-used-for-optimal-extraction">
+<h2>2.Get light profile at different x position — This will be used for optimal extraction.<a class="headerlink" href="#get-light-profile-at-different-x-position-this-will-be-used-for-optimal-extraction" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+    <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">sci_rot</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span>
+    <span class="n">xx_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_tmp</span><span class="p">,</span> <span class="n">flux_tmp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;x=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ii</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fdea7b3aed0&gt;
+</pre></div>
+</div>
+<img alt="../../../_images/b192d182f5d64f090b3cb44776297c07c6da4a3085e290247c0f77b711fbcd8e.png" src="../../../_images/b192d182f5d64f090b3cb44776297c07c6da4a3085e290247c0f77b711fbcd8e.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sum along x (disperse) direction</span>
+<span class="n">flux_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">flux_y</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:])</span>
+
+<span class="c1"># Sky subtraction, if needed.</span>
+<span class="c1"># sky = np.mean([flux_y[0], flux_y[-1]])</span>
+
+<span class="c1"># Normalize;</span>
+<span class="n">flux_y</span><span class="p">[:]</span> <span class="o">/=</span> <span class="n">flux_y</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_tmp</span><span class="p">,</span> <span class="n">flux_y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;y-position&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Source Flux&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;Source Flux&#39;)
+</pre></div>
+</div>
+<img alt="../../../_images/8a11dd90dcbb20bfc7a605845476b5b816034db0d8cd35b48d52ccd0bc1a337c.png" src="../../../_images/8a11dd90dcbb20bfc7a605845476b5b816034db0d8cd35b48d52ccd0bc1a337c.png" />
+</div>
+</div>
+</section>
+<section id="one-dimensional-extraction">
+<h2>3.One-dimensional extraction;<a class="headerlink" href="#one-dimensional-extraction" title="Permalink to this heading">#</a></h2>
+<section id="show-pipeline-1d-extraction-as-an-example">
+<h3>Show pipeline 1D extraction as an example;<a class="headerlink" href="#show-pipeline-1d-extraction-as-an-example" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Normal extraction;</span>
+<span class="n">flux_disp1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+<span class="n">err_disp1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+<span class="n">wave_disp1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    
+<span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x2d</span><span class="p">):</span> <span class="c1"># Wavelength direction.</span>
+    <span class="n">mask_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="n">dq_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Sum within a box;</span>
+    <span class="n">flux_disp1</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">][</span><span class="n">mask_tmp</span><span class="p">])</span> 
+    <span class="n">err_disp1</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">][</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> 
+    <span class="n">wave_disp1</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">wave_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ii</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_disp1</span><span class="p">,</span> <span class="n">flux_disp1</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">err_disp1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.7, 2.3)
+</pre></div>
+</div>
+<img alt="../../../_images/438626eaa7587289aa362ab7a9c81224b8232adf415c5798a33f98cba052f648.png" src="../../../_images/438626eaa7587289aa362ab7a9c81224b8232adf415c5798a33f98cba052f648.png" />
+</div>
+</div>
+</section>
+<section id="optimal-extraction">
+<h3>Optimal extraction;<a class="headerlink" href="#optimal-extraction" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Following Horne(1986, PASP, 98, 609);</span>
+<span class="n">flux_disp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+<span class="n">err_disp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+<span class="n">wave_disp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+
+<span class="c1"># Sigma clipping.</span>
+<span class="n">sig</span> <span class="o">=</span> <span class="mf">5.0</span>
+
+<span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x2d</span><span class="p">):</span> <span class="c1"># ii : wavelength element.</span>
+    <span class="c1"># Mask; </span>
+    <span class="c1"># 1. DQ array</span>
+    <span class="c1"># 2. error value</span>
+    <span class="c1"># 3. CR detection</span>
+    <span class="n">mask_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="n">dq_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">((</span><span class="n">data_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">-</span> <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">*</span> <span class="n">flux_disp1</span><span class="p">[</span><span class="n">ii</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">&lt;</span> <span class="n">sig</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ivar</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="n">num</span> <span class="o">=</span> <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">*</span> <span class="n">data_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="n">ivar</span>
+    <span class="n">den</span> <span class="o">=</span> <span class="n">flux_y</span><span class="p">[:]</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ivar</span>
+    <span class="n">flux_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">den</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">err_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">den</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">wave_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">wave_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ii</span><span class="p">]</span>
+    
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_disp</span><span class="p">,</span> <span class="n">flux_disp</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">err_disp</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.7, 2.3)
+</pre></div>
+</div>
+<img alt="../../../_images/832de4293c06f0fe336d60fff685f0e47990d3190f98b0e750a3a019ec1abe6c.png" src="../../../_images/832de4293c06f0fe336d60fff685f0e47990d3190f98b0e750a3a019ec1abe6c.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compare;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_disp</span><span class="p">,</span> <span class="n">flux_disp</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">err_disp</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Optimal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_disp1</span><span class="p">,</span> <span class="n">flux_disp1</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">err_disp1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Box&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;Wavelength&#39;)
+</pre></div>
+</div>
+<img alt="../../../_images/da5c88f03a1a07b964c7f7ba5b686c7ab2c7dfa88870ba137a2e67d7bd8ae18e.png" src="../../../_images/da5c88f03a1a07b964c7f7ba5b686c7ab2c7dfa88870ba137a2e67d7bd8ae18e.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="write-1d-spectrum-out-to-a-file">
+<h2>4.Write 1d spectrum out to a file;<a class="headerlink" href="#write-1d-spectrum-out-to-a-file" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_1d_opt.fits&#39;</span>
+
+<span class="c1"># Now make it into a Spectrum1D instance.</span>
+<span class="n">obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave_disp</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span>
+                 <span class="n">flux</span><span class="o">=</span><span class="n">flux_disp</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">MJy</span><span class="p">,</span>
+                 <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">err_disp</span><span class="p">),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;MJy&#39;</span><span class="p">)</span>
+<span class="n">obs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_1d</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;tabular-fits&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="light-profile-along-x-axis-resolution-of-dispersed-spectrum">
+<h2>5.Light profile along x-axis = Resolution of dispersed spectrum;<a class="headerlink" href="#light-profile-along-x-axis-resolution-of-dispersed-spectrum" title="Permalink to this heading">#</a></h2>
+<p>As WFSS does not have a slit, any dispersed spectrum is affected by source morphology. The estimate on the effective spectral resolution will be needed in the following notebook. And we here try to estimate it beforehand;</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">xx_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]),</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_tmp</span><span class="p">,</span> <span class="n">flux_tmp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;y=</span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength direction&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Source light profile along dispersed direction&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Source light profile along dispersed direction&#39;)
+</pre></div>
+</div>
+<img alt="../../../_images/9bd3d16c04721638f4a0960d445059f1a8282db7d66f37aec32b256c718a3c59.png" src="../../../_images/9bd3d16c04721638f4a0960d445059f1a8282db7d66f37aec32b256c718a3c59.png" />
+</div>
+</div>
+<section id="unless-you-are-interested-in-spatially-resolved-spectra-you-can-stack-and-get-light-profile-as-a-good-approximation">
+<h3>*Unless you are interested in spatially resolved spectra, you can stack and get light profile as a good approximation.<a class="headerlink" href="#unless-you-are-interested-in-spatially-resolved-spectra-you-can-stack-and-get-light-profile-as-a-good-approximation" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sum along cross-disperse direction</span>
+<span class="n">flux_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">flux_x</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">])</span>
+
+<span class="c1"># Normalize;</span>
+<span class="n">flux_x</span><span class="p">[:]</span> <span class="o">/=</span> <span class="n">flux_x</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx_tmp</span><span class="p">,</span> <span class="n">flux_x</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Convolution kernel&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fdea7b42ed0&gt;
+</pre></div>
+</div>
+<img alt="../../../_images/3bf96a4adc856625502a335355927b3067e7326b80cf9a10762dcaad63535726.png" src="../../../_images/3bf96a4adc856625502a335355927b3067e7326b80cf9a10762dcaad63535726.png" />
+</div>
+</div>
+</section>
+<section id="fit-with-a-moffat-function">
+<h3>Fit with a moffat function;<a class="headerlink" href="#fit-with-a-moffat-function" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fitting function with Moffat</span>
+<span class="c1"># Moffat fnc.</span>
+
+<span class="k">def</span> <span class="nf">moffat</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">alp</span><span class="p">):</span>
+    <span class="n">yy</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="p">(</span><span class="n">xx</span><span class="o">-</span><span class="n">x0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">gamma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">alp</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">yy</span>
+
+
+<span class="k">def</span> <span class="nf">fit_mof</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">lsf</span><span class="p">):</span>
+    <span class="c1"># xx = lsf * 0</span>
+    <span class="c1"># for ii in range(len(lsf)):</span>
+    <span class="c1">#    xx[ii] = ii - len(lsf)/2.</span>
+    <span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">moffat</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">lsf</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">popt</span>
+
+
+<span class="k">def</span> <span class="nf">LSF_mof</span><span class="p">(</span><span class="n">xsf</span><span class="p">,</span> <span class="n">lsf</span><span class="p">,</span> <span class="n">f_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Input:</span>
+<span class="sd">    =======</span>
+<span class="sd">    xsf : x axis for the profile.</span>
+<span class="sd">    lsf : light profile.    </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="c1"># for ii in range(len(sci[0, :])):</span>
+    <span class="c1">#    lsf[ii] = np.mean(sci_rot[int(height/2.-5):int(height/2.+5), ii])</span>
+    <span class="c1">#    xsf[ii] = ii - len(lsf)/2.</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">A</span><span class="p">,</span> <span class="n">xm</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">fit_mof</span><span class="p">(</span><span class="n">xsf</span><span class="p">,</span> <span class="n">lsf</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Fitting failed.&#39;</span><span class="p">)</span>
+        <span class="n">A</span><span class="p">,</span> <span class="n">xm</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">pass</span>
+
+    <span class="k">if</span> <span class="n">A</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">lsf_mod</span> <span class="o">=</span> <span class="n">moffat</span><span class="p">(</span><span class="n">xsf</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="n">f_plot</span><span class="p">:</span>
+        <span class="n">yy</span> <span class="o">=</span> <span class="n">moffat</span><span class="p">(</span><span class="n">xsf</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">xm</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xsf</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="s1">&#39;r.&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Data&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xsf</span><span class="p">,</span> <span class="n">lsf_mod</span><span class="p">,</span> <span class="s1">&#39;b+&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Model: gamma=</span><span class="si">{</span><span class="n">gamma</span><span class="si">:</span><span class="s1">2f</span><span class="si">}</span><span class="se">\n</span><span class="s1">alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">:</span><span class="s1">2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">A</span><span class="p">,</span> <span class="n">xm</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">alpha</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># LSF, line spread function</span>
+<span class="n">iix_peak</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">flux_x</span><span class="p">)</span>
+<span class="n">xx_tmp_shift</span> <span class="o">=</span> <span class="n">xx_tmp</span> <span class="o">-</span> <span class="n">xx_tmp</span><span class="p">[</span><span class="n">iix_peak</span><span class="p">]</span>
+<span class="n">A</span><span class="p">,</span> <span class="n">xm</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">LSF_mof</span><span class="p">(</span><span class="n">xx_tmp_shift</span><span class="p">,</span> <span class="n">flux_x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/93843c2ea67d91b3e9720ff8f8f2bed9ac261c801c3f26b73230c4936e93b8a8.png" src="../../../_images/93843c2ea67d91b3e9720ff8f8f2bed9ac261c801c3f26b73230c4936e93b8a8.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Write it down;</span>
+<span class="c1"># Tha parameters are in unit of pixel.</span>
+<span class="n">fm</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_moffat.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# A x0 gamma alp</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# Moffat function</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">A</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">xm</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">gamma</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">alpha</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">fm</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="repeat-for-other-filters-other-objects">
+<h2>Repeat for other filters, other objects.<a class="headerlink" href="#repeat-for-other-filters-other-objects" title="Permalink to this heading">#</a></h2>
+<section id="the-following-big-colum-executes-the-same-processes-above-for-other-filters-and-dither-position">
+<h3>The following big colum executes the same processes above for other filters and dither position.<a class="headerlink" href="#the-following-big-colum-executes-the-same-processes-above-for-other-filters-and-dither-position" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grism</span> <span class="o">=</span> <span class="s1">&#39;G150C&#39;</span>
+<span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;00004&#39;</span>
+<span class="n">DIR_OUT</span> <span class="o">=</span> <span class="s1">&#39;./output/&#39;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">DIR_OUT</span><span class="p">)</span>
+
+<span class="n">filts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;f115w&#39;</span><span class="p">,</span> <span class="s1">&#39;f150w&#39;</span><span class="p">,</span> <span class="s1">&#39;f200w&#39;</span><span class="p">]</span>
+<span class="n">ndithers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">sig</span> <span class="o">=</span> <span class="mf">5.0</span>
+
+<span class="k">for</span> <span class="n">filt</span> <span class="ow">in</span> <span class="n">filts</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">filt</span><span class="p">)</span>
+    
+    <span class="c1"># 2d spectrum;</span>
+    <span class="n">file_2d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_DATA</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_cal.fits&#39;</span>
+    <span class="n">hdu_2d</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_2d</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ndither</span> <span class="ow">in</span> <span class="n">ndithers</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">ndither</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">grism</span> <span class="o">==</span> <span class="s1">&#39;G150C&#39;</span><span class="p">:</span>
+            <span class="c1"># If spectrum is horizontal;</span>
+            <span class="n">data_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">dq_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">err_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">wave_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+            <span class="n">dq_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+            <span class="n">err_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+            <span class="n">wave_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+
+        <span class="n">y2d</span><span class="p">,</span> <span class="n">x2d</span> <span class="o">=</span> <span class="n">data_2d</span><span class="o">.</span><span class="n">shape</span><span class="p">[:]</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data_2d</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+        <span class="c1"># Re-extract 2d image;</span>
+        <span class="c1"># if ndither == 0:</span>
+        <span class="n">rsq</span> <span class="o">=</span> <span class="n">y2d</span>
+        <span class="n">sci_cut</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)]</span>
+        <span class="n">seg_cut</span> <span class="o">=</span> <span class="n">segdata</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)]</span>
+
+        <span class="c1"># Not sure if the offset in extractioin box is bug ;</span>
+        <span class="k">if</span> <span class="n">grism</span> <span class="o">==</span> <span class="s1">&#39;G150C&#39;</span><span class="p">:</span>
+            <span class="n">sci_rot</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">sci_cut</span><span class="p">,</span> <span class="n">PA_V3</span><span class="o">+</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sci_rot</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">sci_cut</span><span class="p">,</span> <span class="n">PA_V3</span><span class="o">+</span><span class="mi">0</span><span class="o">+</span><span class="mi">90</span><span class="p">)</span>
+
+        <span class="c1"># This is for spectral resolution;</span>
+        <span class="c1"># Get light profile along the x-axis</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">xx_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]),</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Sum along cross-disperse direction</span>
+        <span class="n">flux_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">flux_x</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:])</span>
+
+        <span class="c1"># Normalize;</span>
+        <span class="n">flux_x</span><span class="p">[:]</span> <span class="o">/=</span> <span class="n">flux_x</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="c1"># LSF</span>
+        <span class="n">iix_peak</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">flux_x</span><span class="p">)</span>
+        <span class="n">xx_tmp_shift</span> <span class="o">=</span> <span class="n">xx_tmp</span> <span class="o">-</span> <span class="n">xx_tmp</span><span class="p">[</span><span class="n">iix_peak</span><span class="p">]</span>
+        <span class="n">A</span><span class="p">,</span> <span class="n">xm</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">LSF_mof</span><span class="p">(</span><span class="n">xx_tmp_shift</span><span class="p">,</span> <span class="n">flux_x</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ndither</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Write it down;</span>
+            <span class="n">fm</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_moffat.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+            <span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# A x0 gamma alp</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# Moffat function</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">A</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">xm</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">gamma</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">alpha</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">fm</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># This is for Optimal extraction;</span>
+        <span class="c1"># Sum along x (disperse) direction</span>
+        <span class="n">flux_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">flux_y</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:])</span>
+            
+        <span class="c1"># Normalize;</span>
+        <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">/=</span> <span class="n">flux_y</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="c1"># Following Horne;</span>
+        <span class="n">flux_disp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="n">err_disp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="n">wave_disp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x2d</span><span class="p">):</span>
+            <span class="c1"># Mask; </span>
+            <span class="c1"># 1. DQ array</span>
+            <span class="c1"># 2. error value</span>
+            <span class="c1"># 3. CR detection</span>
+            <span class="n">mask_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="n">dq_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">ivar</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+
+            <span class="n">num</span> <span class="o">=</span> <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">*</span> <span class="n">data_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="n">ivar</span> 
+            <span class="n">den</span> <span class="o">=</span> <span class="n">flux_y</span><span class="p">[:]</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ivar</span>
+            <span class="n">flux_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="n">den</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">err_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">den</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+            <span class="n">wave_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">wave_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ii</span><span class="p">]</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">con_plot</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave_disp</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_disp</span><span class="p">[</span><span class="n">con_plot</span><span class="p">],</span> <span class="n">flux_disp</span><span class="p">[</span><span class="n">con_plot</span><span class="p">],</span> <span class="n">yerr</span><span class="o">=</span><span class="n">err_disp</span><span class="p">[</span><span class="n">con_plot</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3000</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+        <span class="c1"># Wirte:</span>
+        <span class="c1"># Now make it into a Spectrum1D instance.</span>
+        <span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_ndither</span><span class="si">{</span><span class="n">ndither</span><span class="si">}</span><span class="s1">_1d_opt.fits&#39;</span>
+
+        <span class="k">if</span> <span class="n">wave_disp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">wave_disp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave_disp</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span>
+                             <span class="n">flux</span><span class="o">=</span><span class="n">flux_disp</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">MJy</span><span class="p">,</span>
+                             <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">err_disp</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;MJy&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave_disp</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span>
+                             <span class="n">flux</span><span class="o">=</span><span class="n">flux_disp</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">MJy</span><span class="p">,</span>
+                             <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">err_disp</span><span class="p">),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;MJy&#39;</span><span class="p">)</span>
+            
+        <span class="n">obs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_1d</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;tabular-fits&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>f115w
+0
+</pre></div>
+</div>
+<img alt="../../../_images/de6647b4dded3f29f76943be1a0600587558f017a3a82414e411bbebab08d050.png" src="../../../_images/de6647b4dded3f29f76943be1a0600587558f017a3a82414e411bbebab08d050.png" />
+<img alt="../../../_images/120ee15a12fa6ee216a135858fb8d8bea3a683391b4f0091976c60f2e1baa7fa.png" src="../../../_images/120ee15a12fa6ee216a135858fb8d8bea3a683391b4f0091976c60f2e1baa7fa.png" />
+<img alt="../../../_images/e7e2f5e6c5076b138152e4204680f9f74626acbd8b9b49c639d4a251a1b83800.png" src="../../../_images/e7e2f5e6c5076b138152e4204680f9f74626acbd8b9b49c639d4a251a1b83800.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
+</pre></div>
+</div>
+<img alt="../../../_images/c873330b746d7a4ed06b04f7317b6cb62cd5214ae13a2782e536b7a52b187e74.png" src="../../../_images/c873330b746d7a4ed06b04f7317b6cb62cd5214ae13a2782e536b7a52b187e74.png" />
+<img alt="../../../_images/120ee15a12fa6ee216a135858fb8d8bea3a683391b4f0091976c60f2e1baa7fa.png" src="../../../_images/120ee15a12fa6ee216a135858fb8d8bea3a683391b4f0091976c60f2e1baa7fa.png" />
+<img alt="../../../_images/86021fb2c1d42fbf05aa9139c2aadcbdee8feba202c2bf449cfd8a22d25e5cbd.png" src="../../../_images/86021fb2c1d42fbf05aa9139c2aadcbdee8feba202c2bf449cfd8a22d25e5cbd.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>f150w
+0
+</pre></div>
+</div>
+<img alt="../../../_images/7a0c2af540d65ed76d7f0b4a3bec51402bdd44b49f347c54e8f0fc40d804fd08.png" src="../../../_images/7a0c2af540d65ed76d7f0b4a3bec51402bdd44b49f347c54e8f0fc40d804fd08.png" />
+<img alt="../../../_images/120ee15a12fa6ee216a135858fb8d8bea3a683391b4f0091976c60f2e1baa7fa.png" src="../../../_images/120ee15a12fa6ee216a135858fb8d8bea3a683391b4f0091976c60f2e1baa7fa.png" />
+<img alt="../../../_images/bc397b5e28817ee93721f46507cf9517d8866c49646fe391f2e8402eb23f1258.png" src="../../../_images/bc397b5e28817ee93721f46507cf9517d8866c49646fe391f2e8402eb23f1258.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
+</pre></div>
+</div>
+<img alt="../../../_images/171e4972d8fe3674826d23a932a1ecd2e43a174b2f757d5f00c85a907689d1a1.png" src="../../../_images/171e4972d8fe3674826d23a932a1ecd2e43a174b2f757d5f00c85a907689d1a1.png" />
+<img alt="../../../_images/120ee15a12fa6ee216a135858fb8d8bea3a683391b4f0091976c60f2e1baa7fa.png" src="../../../_images/120ee15a12fa6ee216a135858fb8d8bea3a683391b4f0091976c60f2e1baa7fa.png" />
+<img alt="../../../_images/76561c94b33f4d23d4139908684321e932136f12b2d320e5f8dd7de6a060505b.png" src="../../../_images/76561c94b33f4d23d4139908684321e932136f12b2d320e5f8dd7de6a060505b.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>f200w
+0
+</pre></div>
+</div>
+<img alt="../../../_images/b5d94fb2a936eaed9f35298dde88b548daea28dab5c31f482a0e28603b6d7079.png" src="../../../_images/b5d94fb2a936eaed9f35298dde88b548daea28dab5c31f482a0e28603b6d7079.png" />
+<img alt="../../../_images/98b942ba54fa5a6250c88928ac666631f818062ae7bacd96eb40571a23d10258.png" src="../../../_images/98b942ba54fa5a6250c88928ac666631f818062ae7bacd96eb40571a23d10258.png" />
+<img alt="../../../_images/b906e485eff14cd5e969b6d3ab0301dcb41e5395d979f3210efa1a6c93683051.png" src="../../../_images/b906e485eff14cd5e969b6d3ab0301dcb41e5395d979f3210efa1a6c93683051.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
+</pre></div>
+</div>
+<img alt="../../../_images/9afdc9b1ed02663e0448b54a8221a38ef7df9b1b4fcc25bdc145e5325e95a9f9.png" src="../../../_images/9afdc9b1ed02663e0448b54a8221a38ef7df9b1b4fcc25bdc145e5325e95a9f9.png" />
+<img alt="../../../_images/120ee15a12fa6ee216a135858fb8d8bea3a683391b4f0091976c60f2e1baa7fa.png" src="../../../_images/120ee15a12fa6ee216a135858fb8d8bea3a683391b4f0091976c60f2e1baa7fa.png" />
+<img alt="../../../_images/397dae30cf5075164b7620d8d6e99b76fe12ca515d6aad0fe825bf6f4f81d751.png" src="../../../_images/397dae30cf5075164b7620d8d6e99b76fe12ca515d6aad0fe825bf6f4f81d751.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="another-object">
+<h2>Another object;<a class="headerlink" href="#another-object" title="Permalink to this heading">#</a></h2>
+<p>Absorption line galaxy</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grism</span> <span class="o">=</span> <span class="s1">&#39;G150C&#39;</span>
+<span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;00003&#39;</span>
+<span class="n">DIR_OUT</span> <span class="o">=</span> <span class="s1">&#39;./output/&#39;</span>
+
+<span class="n">filts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;f115w&#39;</span><span class="p">,</span> <span class="s1">&#39;f150w&#39;</span><span class="p">,</span> <span class="s1">&#39;f200w&#39;</span><span class="p">]</span>
+<span class="n">ndithers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># There are four dithers in the data set;</span>
+
+<span class="n">sig</span> <span class="o">=</span> <span class="mf">5.0</span>
+
+<span class="k">for</span> <span class="n">filt</span> <span class="ow">in</span> <span class="n">filts</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">filt</span><span class="p">)</span>
+    <span class="c1"># 2d spectrum;</span>
+    <span class="n">file_2d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_DATA</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_cal.fits&#39;</span>
+    <span class="n">hdu_2d</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_2d</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ndither</span> <span class="ow">in</span> <span class="n">ndithers</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">ndither</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">grism</span> <span class="o">==</span> <span class="s1">&#39;G150C&#39;</span><span class="p">:</span>
+            <span class="c1"># If spectrum is horizontal;</span>
+            <span class="n">data_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">dq_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">err_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">wave_2d</span> <span class="o">=</span> <span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+            <span class="n">dq_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+            <span class="n">err_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+            <span class="n">wave_2d</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">hdu_2d</span><span class="p">[</span><span class="n">ndither</span><span class="o">*</span><span class="mi">7</span><span class="o">+</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+
+        <span class="n">y2d</span><span class="p">,</span> <span class="n">x2d</span> <span class="o">=</span> <span class="n">data_2d</span><span class="o">.</span><span class="n">shape</span><span class="p">[:]</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data_2d</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+        <span class="c1"># Re-extract 2d image;</span>
+        <span class="c1"># if ndither == 0:</span>
+        <span class="n">rsq</span> <span class="o">=</span> <span class="n">y2d</span>
+        <span class="n">sci_cut</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)]</span>
+        <span class="n">seg_cut</span> <span class="o">=</span> <span class="n">segdata</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">ycen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">-</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">xcen</span><span class="o">+</span><span class="n">rsq</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)]</span>
+
+        <span class="c1"># Not sure if the offset in extraction box is bug ;</span>
+        <span class="k">if</span> <span class="n">grism</span> <span class="o">==</span> <span class="s1">&#39;G150C&#39;</span><span class="p">:</span>
+            <span class="n">sci_rot</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">sci_cut</span><span class="p">,</span> <span class="n">PA_V3</span><span class="o">+</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sci_rot</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">sci_cut</span><span class="p">,</span> <span class="n">PA_V3</span><span class="o">+</span><span class="mi">0</span><span class="o">+</span><span class="mi">90</span><span class="p">)</span>
+
+        <span class="c1"># This is for spectral resolution;</span>
+        <span class="c1"># Get light profile along the x-axis</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">xx_tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:]),</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Sum along cross-disperse direction</span>
+        <span class="n">flux_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">flux_x</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:])</span>
+
+        <span class="c1"># Normalize;</span>
+        <span class="n">flux_x</span><span class="p">[:]</span> <span class="o">/=</span> <span class="n">flux_x</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="c1"># LSF</span>
+        <span class="n">iix_peak</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">flux_x</span><span class="p">)</span>
+        <span class="n">xx_tmp_shift</span> <span class="o">=</span> <span class="n">xx_tmp</span> <span class="o">-</span> <span class="n">xx_tmp</span><span class="p">[</span><span class="n">iix_peak</span><span class="p">]</span>
+        <span class="n">A</span><span class="p">,</span> <span class="n">xm</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">LSF_mof</span><span class="p">(</span><span class="n">xx_tmp_shift</span><span class="p">,</span> <span class="n">flux_x</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ndither</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Write it down;</span>
+            <span class="n">fm</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_moffat.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+            <span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# A x0 gamma alp</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# Moffat function</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">fm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">A</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">xm</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">gamma</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">alpha</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">fm</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># This is for Optimal extraction;</span>
+        <span class="c1"># Sum along x (disperse) direction</span>
+        <span class="n">flux_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sci_rot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">flux_y</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sci_rot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span> <span class="p">:])</span>
+    
+        <span class="c1"># Normalize;</span>
+        <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">/=</span> <span class="n">flux_y</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="c1"># Following Horne;</span>
+        <span class="n">flux_disp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="n">err_disp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="n">wave_disp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x2d</span><span class="p">):</span>
+            <span class="c1"># Mask; </span>
+            <span class="c1"># 1. DQ array</span>
+            <span class="c1"># 2. error value</span>
+            <span class="c1"># 3. CR detection</span>
+            <span class="n">mask_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="n">dq_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> 
+            <span class="n">ivar</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">err_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+
+            <span class="n">num</span> <span class="o">=</span> <span class="n">flux_y</span><span class="p">[:]</span> <span class="o">*</span> <span class="n">data_2d</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="n">ivar</span> 
+            <span class="n">den</span> <span class="o">=</span> <span class="n">flux_y</span><span class="p">[:]</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ivar</span>
+            <span class="n">flux_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="n">den</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">err_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">den</span><span class="p">[</span><span class="n">mask_tmp</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+            <span class="n">wave_disp</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">wave_2d</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ii</span><span class="p">]</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">con_plot</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave_disp</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">wave_disp</span><span class="p">[</span><span class="n">con_plot</span><span class="p">],</span> <span class="n">flux_disp</span><span class="p">[</span><span class="n">con_plot</span><span class="p">],</span> <span class="n">yerr</span><span class="o">=</span><span class="n">err_disp</span><span class="p">[</span><span class="n">con_plot</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+        <span class="c1"># Write:</span>
+        <span class="c1"># Now, make it into a Spectrum1D instance.</span>
+        <span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_ndither</span><span class="si">{</span><span class="n">ndither</span><span class="si">}</span><span class="s1">_1d_opt.fits&#39;</span>
+
+        <span class="k">if</span> <span class="n">wave_disp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">wave_disp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave_disp</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span>
+                             <span class="n">flux</span><span class="o">=</span><span class="n">flux_disp</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">MJy</span><span class="p">,</span>
+                             <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">err_disp</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;MJy&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave_disp</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span>
+                             <span class="n">flux</span><span class="o">=</span><span class="n">flux_disp</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">MJy</span><span class="p">,</span>
+                             <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">err_disp</span><span class="p">),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;MJy&#39;</span><span class="p">)</span>
+
+        <span class="n">obs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_1d</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;tabular-fits&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>    
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>f115w
+0
+</pre></div>
+</div>
+<img alt="../../../_images/a8223b96ffa1cadb4f89955ce1711519d5d683a3a40197e7fa2a407bbeda2d7e.png" src="../../../_images/a8223b96ffa1cadb4f89955ce1711519d5d683a3a40197e7fa2a407bbeda2d7e.png" />
+<img alt="../../../_images/fae01c79054c4b75ba4d2cf60e442c9b0eb00f455b1bbe8dc134f18a71df38d8.png" src="../../../_images/fae01c79054c4b75ba4d2cf60e442c9b0eb00f455b1bbe8dc134f18a71df38d8.png" />
+<img alt="../../../_images/74b2a12f81d7ed2e167cf72a31d74a3f10adb65d2c6ad6f649c357d8f8e0c5fa.png" src="../../../_images/74b2a12f81d7ed2e167cf72a31d74a3f10adb65d2c6ad6f649c357d8f8e0c5fa.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
+</pre></div>
+</div>
+<img alt="../../../_images/b71836c78057c0a08e25967e34d6a03ebe3e8c572df3add33a2c662ac36b9440.png" src="../../../_images/b71836c78057c0a08e25967e34d6a03ebe3e8c572df3add33a2c662ac36b9440.png" />
+<img alt="../../../_images/fae01c79054c4b75ba4d2cf60e442c9b0eb00f455b1bbe8dc134f18a71df38d8.png" src="../../../_images/fae01c79054c4b75ba4d2cf60e442c9b0eb00f455b1bbe8dc134f18a71df38d8.png" />
+<img alt="../../../_images/763e6a067b4c2961d807714917ee3a350cb7243db5ae368b7b97d3caeed577d3.png" src="../../../_images/763e6a067b4c2961d807714917ee3a350cb7243db5ae368b7b97d3caeed577d3.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>f150w
+0
+</pre></div>
+</div>
+<img alt="../../../_images/2fee79a7e32046699ba5dee7e657597c235d55d16dc09e8650cca7119050e6c9.png" src="../../../_images/2fee79a7e32046699ba5dee7e657597c235d55d16dc09e8650cca7119050e6c9.png" />
+<img alt="../../../_images/fae01c79054c4b75ba4d2cf60e442c9b0eb00f455b1bbe8dc134f18a71df38d8.png" src="../../../_images/fae01c79054c4b75ba4d2cf60e442c9b0eb00f455b1bbe8dc134f18a71df38d8.png" />
+<img alt="../../../_images/2b26650527f511a950c849cb8909e369538c8a263cde295d83c75d7383842af2.png" src="../../../_images/2b26650527f511a950c849cb8909e369538c8a263cde295d83c75d7383842af2.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
+</pre></div>
+</div>
+<img alt="../../../_images/a5d9a85f62e626f51447149a9ab83bfea462a6d96e96ce9ecfccdc9640911c26.png" src="../../../_images/a5d9a85f62e626f51447149a9ab83bfea462a6d96e96ce9ecfccdc9640911c26.png" />
+<img alt="../../../_images/49ba48ed87633669a53962d0c29c8ccc903dae504bde627b6286ac6b1f757c60.png" src="../../../_images/49ba48ed87633669a53962d0c29c8ccc903dae504bde627b6286ac6b1f757c60.png" />
+<img alt="../../../_images/bf9e7da28705a872d49be041ced75d793e9448fc2a17e12801f6e8fdeaa3e957.png" src="../../../_images/bf9e7da28705a872d49be041ced75d793e9448fc2a17e12801f6e8fdeaa3e957.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>f200w
+0
+</pre></div>
+</div>
+<img alt="../../../_images/c54bc7796f0bc4aab87b0adf920b5b400f0f2f17f5b879f0433b6cb9723ab23d.png" src="../../../_images/c54bc7796f0bc4aab87b0adf920b5b400f0f2f17f5b879f0433b6cb9723ab23d.png" />
+<img alt="../../../_images/fae01c79054c4b75ba4d2cf60e442c9b0eb00f455b1bbe8dc134f18a71df38d8.png" src="../../../_images/fae01c79054c4b75ba4d2cf60e442c9b0eb00f455b1bbe8dc134f18a71df38d8.png" />
+<img alt="../../../_images/00eab39b5da4541496e5ba33c576866960d99417ff4222dc5202752d873d679a.png" src="../../../_images/00eab39b5da4541496e5ba33c576866960d99417ff4222dc5202752d873d679a.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
+</pre></div>
+</div>
+<img alt="../../../_images/1c0c28fee5f44ce577a0c83e478b458df5a81d41f15ff6c224569ee35c3f72fd.png" src="../../../_images/1c0c28fee5f44ce577a0c83e478b458df5a81d41f15ff6c224569ee35c3f72fd.png" />
+<img alt="../../../_images/fae01c79054c4b75ba4d2cf60e442c9b0eb00f455b1bbe8dc134f18a71df38d8.png" src="../../../_images/fae01c79054c4b75ba4d2cf60e442c9b0eb00f455b1bbe8dc134f18a71df38d8.png" />
+<img alt="../../../_images/ddb5240f8b5d8101953eb937084f5a6e665afe9711a25211d9c55fbe080d5b28.png" src="../../../_images/ddb5240f8b5d8101953eb937084f5a6e665afe9711a25211d9c55fbe080d5b28.png" />
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/jdat_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/NIRISS/NIRISS_WFSS_postpipeline"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../../NIRCam/psf_photometry/NIRCam_PSF_Photometry_Example.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">PSF Photometry</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="01_Combine_and_normalize_1D_spectra.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">WFSS Spectra Part 1: Combine and Normalize 1D Spectra</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-version-should-be">The version should be</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-and-load-data">0.Download and load data:</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-a-broadband-flux-catalog">Make a broadband flux catalog.</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#for-now-we-use-an-input-catalog">For now, we use an input catalog.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-2d-spectrum">1.Load 2D spectrum;</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wfss-grism-is-dispersed-in-a-direction-of-x-axis-in-the-plot-below">WFSS grism is dispersed in a direction of x-axis in the plot below.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#get-light-profile-at-different-x-position-this-will-be-used-for-optimal-extraction">2.Get light profile at different x position — This will be used for optimal extraction.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-dimensional-extraction">3.One-dimensional extraction;</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#show-pipeline-1d-extraction-as-an-example">Show pipeline 1D extraction as an example;</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimal-extraction">Optimal extraction;</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#write-1d-spectrum-out-to-a-file">4.Write 1d spectrum out to a file;</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#light-profile-along-x-axis-resolution-of-dispersed-spectrum">5.Light profile along x-axis = Resolution of dispersed spectrum;</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unless-you-are-interested-in-spatially-resolved-spectra-you-can-stack-and-get-light-profile-as-a-good-approximation">*Unless you are interested in spatially resolved spectra, you can stack and get light profile as a good approximation.</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fit-with-a-moffat-function">Fit with a moffat function;</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#repeat-for-other-filters-other-objects">Repeat for other filters, other objects.</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-following-big-colum-executes-the-same-processes-above-for-other-filters-and-dither-position">The following big colum executes the same processes above for other filters and dither position.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#another-object">Another object;</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

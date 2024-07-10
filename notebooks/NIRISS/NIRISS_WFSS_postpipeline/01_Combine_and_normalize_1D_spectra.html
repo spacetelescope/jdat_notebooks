@@ -1,0 +1,1128 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>WFSS Spectra Part 1: Combine and Normalize 1D Spectra &#8212; STScI JDAT Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/main.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-D46G4HKJY3');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/NIRISS/NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="WFSS Spectra - Part 2: Cross Correlation to Determine Redshift" href="02_Cross_correlation_template.html" />
+    <link rel="prev" title="WFSS Spectra Part 0: Optimal Extraction" href="00_Optimal_extraction.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="STScI JDAT Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="STScI JDAT Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebook_development_workflow.html">Notebook Development Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/submitting_notebooks.html">Submitting Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/requirements.html">Requirements file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebooks.html">Jupyter Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/data_files.html">Data Files</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">GitHub Guidelines</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_setup.html">GitHub Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_workflow.html">GitHub Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_pr.html">GitHub PR</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cross-Instrument</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/asdf_example/asdf_example.html">ASDF Example</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/background_estimation_imaging/Imaging_Sky_Background_Estimation.html">Complex 2D Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/composite_model_fitting/specfit_demo_3.html">Composite Model Spectral Fitting</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">MAST Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/rgb_imviz/imviz_rgb_carina.html">RGB images with Imviz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">Specviz Simple Demo</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">MIRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">MRS Mstar - Run Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">MRS Detector Based Extraction</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">MRS Mstar - Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">IFU of YSOs in LMC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MIRI_LRS_spectral_extraction/miri_lrs_advanced_extraction_part1.html">LRS Optimal Spectral Extraction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRCam</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/aperture_photometry/NIRCam_Aperture_Photometry_Example.html">Point Source Aperture Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_photometry/NIRCam_multiband_photometry.html">Extended Aperture Photometry</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">Cross-Filter PSF Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/psf_photometry/NIRCam_PSF_Photometry_Example.html">PSF Photometry</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRISS</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="00_Optimal_extraction.html">WFSS Spectra - Optimal Extraction</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">WFSS Spectra - Combine and Normalize 1D Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_Cross_correlation_template.html">WFSS Spectra - Cross-Correlation Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_Spatially_resolved_emission_line_map.html">WFSS Spectra - Emission Line Map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../niriss_imaging/niriss-imaging-tutorial.html">NIRISS Imaging Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_advanced/00_niriss_mast_query_data_setup.html">NIRISS MAST</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_advanced/01_niriss_wfss_image2_image3.html">Direct imaging for WFSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRISS_WFSS_advanced/02_niriss_wfss_spec2.html">Spec2 pipeline for WFSS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRSpec</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">IFU Cube Fitting</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/cube_fitting/cube_fitting.html">IFU Cube Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/ifu_optimal/ifu_optimal.html">IFU Optimal Spectral Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/optimal_extraction/Spectral_Extraction-static.html">MOS Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/mos_spectroscopy_advanced/MOSspec_advanced.html">MOS Spectroscopy of Extragalactic Field</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">BOTS Time Series Observations</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/galaxy_redshift/redshift_fitting.html">Redshift and Template Fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/FS_NSClean_example.html">FS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/IFU_NSClean_example.html">IFU Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/MOS_NSClean_example.html">MOS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/BOTS_NSClean_example.html">BOTS Products with NSClean</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/NIRISS/NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/NIRISS/NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>WFSS Spectra Part 1: Combine and Normalize 1D Spectra</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-notebook-01-products">0. Download notebook 01 products</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combine-spectra-from-different-dithers">1.Combine spectra from different dithers;</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-weighted-average-of-the-two-spectra-from-different-dither-positions">Make weighted-average of the two spectra from different dither positions;</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#continuum-normalization">2.Continuum normalization;</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#repeat-1-2-for-other-filters-too">Repeat 1&amp;2 for other filters too;</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#results">Results;</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#repeat-for-another-target">Repeat for another target;</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="wfss-spectra-part-1-combine-and-normalize-1d-spectra">
+<h1>WFSS Spectra Part 1: Combine and Normalize 1D Spectra<a class="headerlink" href="#wfss-spectra-part-1-combine-and-normalize-1d-spectra" title="Permalink to this heading">#</a></h1>
+<p><strong>Use case:</strong> optimal extraction of grism spectra; redshift measurement; emission-line maps.  Simplified version of <a class="reference external" href="https://jwst-docs.stsci.edu/near-infrared-imager-and-slitless-spectrograph/niriss-example-science-programs/niriss-wfss-with-nircam-parallel-imaging-of-galaxies-in-lensing-clusters">JDox Science Use Case # 33</a>.<br>
+<strong>Data:</strong> JWST simulated NIRISS images from <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-other-tools/mirage-data-simulator">MIRAGE</a>, run through the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/">JWST calibration pipeline</a>; galaxy cluster.<br>
+<strong>Tools:</strong>  specutils, astropy, pandas, emcee, lmfit, corner, h5py.<br>
+<strong>Cross-intrument:</strong> NIRSpec <br>
+<strong>Documentation:</strong> This notebook is part of a STScI’s larger <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis">post-pipeline Data Analysis Tools Ecosystem</a>.<br></p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<p>This notebook is 2 of 4 in a set focusing on NIRISS WFSS data:
+1. 1D optimal extraction since the JWST pipeline only provides a box extraction.  Optimal extraction improves S/N of spectra for faint sources.
+2. Combine and normalize 1D spectra.
+3. Cross correlate galaxy with template to get redshift.
+4. Spatially resolved emission line map.</p>
+<p>This notebook will first combine optimally extracted 1D spectra (from #1) at different dither positions.  The combined spectrum will then be normalized by flux estimated from direct images (i.e. broadband photometry).</p>
+<p>This notebook will start with an optimally extracted 1D spectrum in the previous notebook, saved in a file with a name similar to “l3_nis_f115w_G150C_s00002_ndither0_1d_opt.fits”.  The various one-dimensional spectra from each dither will be combined and saved into a single file, named like “l3_nis_f115w_G150C_s00004_combine_1d_opt.fits”.</p>
+<p><strong>Note:</strong> The procedure is not intended to combine spectra from the two different orientations (C&amp;R), as each has a different spectral resolution depending on source morphology.</p>
+<p><strong>Note:</strong> Normalization of grism spectrum to each broadband filter photometry will improve zeropoint calibration, which is critical in continuum fitting over multiple filters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">simps</span>
+<span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlretrieve</span>
+<span class="kn">import</span> <span class="nn">tarfile</span>
+
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">ascii</span>
+
+<span class="kn">import</span> <span class="nn">astropy</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;astropy&#39;</span><span class="p">,</span> <span class="n">astropy</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+
+<span class="c1"># These gymnastics are needed to make the sizes of the figures</span>
+<span class="c1"># be the same in both the inline and notebook versions</span>
+<span class="o">%</span><span class="k">config</span> InlineBackend.print_figure_kwargs = {&#39;bbox_inches&#39;: None}
+
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;savefig.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">specutils</span>
+<span class="kn">from</span> <span class="nn">specutils.spectra.spectrum1d</span> <span class="kn">import</span> <span class="n">Spectrum1D</span>
+<span class="kn">from</span> <span class="nn">astropy.nddata</span> <span class="kn">import</span> <span class="n">StdDevUncertainty</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Specutils: &quot;</span><span class="p">,</span> <span class="n">specutils</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="download-notebook-01-products">
+<h3>0. Download notebook 01 products<a class="headerlink" href="#download-notebook-01-products" title="Permalink to this heading">#</a></h3>
+<p>These can be also obtained by running the notebooks.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;./output&#39;</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">zipfile</span>
+    <span class="kn">import</span> <span class="nn">urllib.request</span>
+    <span class="n">boxlink</span> <span class="o">=</span> <span class="s1">&#39;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/NIRISS_lensing_cluster/output.zip&#39;</span>
+    <span class="n">boxfile</span> <span class="o">=</span> <span class="s1">&#39;./output.zip&#39;</span>
+    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
+    <span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">zf</span><span class="o">.</span><span class="n">extractall</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Already exists&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Which data set?;</span>
+<span class="n">DIR_OUT</span> <span class="o">=</span> <span class="s1">&#39;./output/&#39;</span>
+<span class="n">filt</span> <span class="o">=</span> <span class="s1">&#39;f200w&#39;</span>
+<span class="n">grism</span> <span class="o">=</span> <span class="s1">&#39;G150C&#39;</span>
+<span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;00004&#39;</span>
+<span class="n">ndither</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># Number of dithering positions.</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="combine-spectra-from-different-dithers">
+<h3>1.Combine spectra from different dithers;<a class="headerlink" href="#combine-spectra-from-different-dithers" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dithers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ndither</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">dither</span> <span class="ow">in</span> <span class="n">dithers</span><span class="p">:</span>
+    <span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_ndither</span><span class="si">{</span><span class="n">dither</span><span class="si">}</span><span class="s1">_1d_opt.fits&#39;</span>
+    <span class="n">fd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">if</span> <span class="n">dither</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">wave</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span>
+        <span class="n">flux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ndither</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="n">flux_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ndither</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+        <span class="n">flux</span><span class="p">[</span><span class="n">dither</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span>
+        <span class="n">flux_err</span><span class="p">[</span><span class="n">dither</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">wave_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span>
+        <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span>
+        <span class="n">flux_err_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]</span>
+        
+        <span class="n">flux</span><span class="p">[</span><span class="n">dither</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">wave_tmp</span><span class="p">,</span> <span class="n">flux_tmp</span><span class="p">)</span>
+        <span class="n">flux_err</span><span class="p">[</span><span class="n">dither</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">wave_tmp</span><span class="p">,</span> <span class="n">flux_err_tmp</span><span class="p">[:]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">flux</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;dither1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">flux</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;dither2&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="make-weighted-average-of-the-two-spectra-from-different-dither-positions">
+<h3>Make weighted-average of the two spectra from different dither positions;<a class="headerlink" href="#make-weighted-average-of-the-two-spectra-from-different-dither-positions" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flux_combine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+<span class="n">flux_err_combine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)):</span>
+    <span class="n">flux_combine</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">flux</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">flux_err</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">flux_err</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> 
+    <span class="n">flux_err_combine</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">flux_err</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">flux_err</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">flux</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;dither1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">flux</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;dither2&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">flux_combine</span><span class="p">[:],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Combined&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="continuum-normalization">
+<h3>2.Continuum normalization;<a class="headerlink" href="#continuum-normalization" title="Permalink to this heading">#</a></h3>
+<p>Since NIRISS spectra may be affected background subtraction &amp; contamination, which could lead to mismatch between filters, here we aim to normaliza spectra from filter to its broadband magnitude.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Open broadband flux catalog from Notebook 01a;</span>
+
+<span class="c1"># Flux are already in Fnu, with magzp = 25.0;</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">DIR_OUT</span> <span class="o">+</span> <span class="s1">&#39;l3_nis_flux.cat&#39;</span>
+
+<span class="n">fd_cat</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+<span class="n">id_cat</span> <span class="o">=</span> <span class="n">fd_cat</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+<span class="n">magzp</span> <span class="o">=</span> <span class="mf">25.0</span>
+
+<span class="n">fd_cat</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Retrieve filter curves for NIRISS images;</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://jwst-docs.stsci.edu/files/97978948/97978953/1/1596073225227/NIRISS_Filters_2017May.tar.gz&#39;</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;tmp.tar.gz&#39;</span>
+<span class="n">urlretrieve</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+<span class="n">my_tar</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<span class="n">my_tar</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load fiter response:</span>
+<span class="n">DIR_FIL</span> <span class="o">=</span> <span class="s1">&#39;./NIRISS_Filters/DATA/&#39;</span>
+
+<span class="c1"># The number corresponds to F200W in EAZY filter response;</span>
+<span class="n">eazy_filt</span> <span class="o">=</span> <span class="mi">311</span>
+
+<span class="c1"># Read transmission data;</span>
+<span class="n">filt_data</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_FIL</span><span class="si">}</span><span class="s1">/NIRISS_</span><span class="si">{</span><span class="n">filt</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">filt_data</span><span class="p">)</span>
+<span class="n">wave_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">&#39;Wavelength&#39;</span><span class="p">]</span>
+<span class="n">flux_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">&#39;FilterTrans&#39;</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave_filt</span><span class="p">,</span> <span class="n">flux_filt</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;NIRISS </span><span class="si">{</span><span class="n">filt</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;response&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a small function for flux convolution with filters;</span>
+<span class="k">def</span> <span class="nf">filconv</span><span class="p">(</span><span class="n">lfil</span><span class="p">,</span> <span class="n">ffil</span><span class="p">,</span> <span class="n">l0</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="n">DIR</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">3e18</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    lfil : Wave array for filter response curve.</span>
+<span class="sd">    ffil : Flux array for filter response curve.</span>
+
+<span class="sd">    l0 : Wave array for spectrum, in f_nu, not f_lam</span>
+<span class="sd">    f0 : Flux array for spectrum, in f_nu, not f_lam</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">fhalf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ffil</span><span class="p">)</span><span class="o">/</span><span class="mf">2.0</span>
+    <span class="n">con</span> <span class="o">=</span> <span class="p">(</span><span class="n">ffil</span> <span class="o">&gt;</span> <span class="n">fhalf</span><span class="p">)</span>
+    <span class="n">lfwhml</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">lfil</span><span class="p">[</span><span class="n">con</span><span class="p">])</span>
+    <span class="n">lfwhmr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">lfil</span><span class="p">[</span><span class="n">con</span><span class="p">])</span>
+    <span class="n">lcen</span> <span class="o">=</span> <span class="p">(</span><span class="n">lfwhmr</span> <span class="o">+</span> <span class="n">lfwhml</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span>
+
+    <span class="n">lamS</span><span class="p">,</span> <span class="n">spec</span> <span class="o">=</span> <span class="n">l0</span><span class="p">,</span> <span class="n">f0</span>  <span class="c1"># Two columns with wavelength and flux density</span>
+    <span class="n">lamF</span><span class="p">,</span> <span class="n">filt</span> <span class="o">=</span> <span class="n">lfil</span><span class="p">,</span> <span class="n">ffil</span>  <span class="c1"># Two columns with wavelength and response in the range [0,1]</span>
+    <span class="n">filt_int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">lamS</span><span class="p">,</span> <span class="n">lamF</span><span class="p">,</span> <span class="n">filt</span><span class="p">)</span>  <span class="c1"># Interpolate Filter to common(spectra) wavelength axis</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lamS</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">I1</span> <span class="o">=</span> <span class="n">simps</span><span class="p">(</span><span class="n">spec</span> <span class="o">/</span> <span class="n">lamS</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">filt_int</span> <span class="o">*</span> <span class="n">lamS</span><span class="p">,</span> <span class="n">lamS</span><span class="p">)</span>  <span class="c1"># Denominator for Fnu</span>
+        <span class="n">I2</span> <span class="o">=</span> <span class="n">simps</span><span class="p">(</span><span class="n">filt_int</span><span class="o">/</span><span class="n">lamS</span><span class="p">,</span> <span class="n">lamS</span><span class="p">)</span> <span class="c1"># Numerator</span>
+        <span class="n">fnu</span> <span class="o">=</span> <span class="n">I1</span><span class="o">/</span><span class="n">I2</span><span class="o">/</span><span class="n">c</span> <span class="c1"># Average flux density</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">I1</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">I2</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">fnu</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">return</span> <span class="n">lcen</span><span class="p">,</span> <span class="n">fnu</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convolve observed spectrum with the filter response.</span>
+<span class="c1"># The input flux need to be in Fnu with magzp=25;</span>
+
+<span class="c1"># Cut edge of observed flux;</span>
+<span class="n">con</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&gt;</span> <span class="mf">1.75</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&lt;</span> <span class="mf">2.25</span><span class="p">)</span>
+<span class="n">lcen</span><span class="p">,</span> <span class="n">fnu</span> <span class="o">=</span> <span class="n">filconv</span><span class="p">(</span><span class="n">wave_filt</span><span class="p">,</span> <span class="n">flux_filt</span><span class="p">,</span> <span class="n">wave</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">flux_combine</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">DIR</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Central wavelength and total flux are ;&#39;</span><span class="p">,</span> <span class="n">lcen</span><span class="p">,</span> <span class="n">fnu</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get normalization factor;</span>
+<span class="n">iix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">id_cat</span><span class="p">[:]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+<span class="n">Cnorm</span> <span class="o">=</span> <span class="n">fd_cat</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;F</span><span class="si">{</span><span class="n">eazy_filt</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="n">iix</span><span class="p">]</span> <span class="o">/</span> <span class="n">fnu</span> 
+<span class="n">Cnorm</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Wirte the normalized spectrum:</span>
+<span class="c1"># Make it into a Spectrum1D instance.</span>
+<span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_ndither</span><span class="si">{</span><span class="n">dither</span><span class="si">}</span><span class="s1">_1d_opt.fits&#39;</span>
+
+<span class="n">obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span>
+                 <span class="n">flux</span><span class="o">=</span><span class="n">flux_combine</span> <span class="o">*</span> <span class="n">Cnorm</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">dimensionless_unscaled</span><span class="p">,</span>
+                 <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">flux_err_combine</span> <span class="o">*</span> <span class="n">Cnorm</span><span class="p">),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="n">obs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_1d</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;tabular-fits&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="repeat-1-2-for-other-filters-too">
+<h3>Repeat 1&amp;2 for other filters too;<a class="headerlink" href="#repeat-1-2-for-other-filters-too" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DIR_FIL</span> <span class="o">=</span> <span class="s1">&#39;./NIRISS_Filters/DATA/&#39;</span>
+<span class="n">filts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;f115w&#39;</span><span class="p">,</span> <span class="s1">&#39;f150w&#39;</span><span class="p">,</span> <span class="s1">&#39;f200w&#39;</span><span class="p">]</span>
+<span class="c1"># The number corresponds to NIRISS filters in EAZY filter response;</span>
+<span class="n">eazy_filts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">309</span><span class="p">,</span> <span class="mi">310</span><span class="p">,</span> <span class="mi">311</span><span class="p">]</span>
+
+<span class="c1"># Masks for problematic flux at edge;</span>
+<span class="n">mask_lw</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.35</span><span class="p">,</span> <span class="mf">1.75</span><span class="p">]</span>
+<span class="n">mask_uw</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.65</span><span class="p">,</span> <span class="mf">2.23</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">ff</span><span class="p">,</span> <span class="n">filt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">filts</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">dither</span> <span class="ow">in</span> <span class="n">dithers</span><span class="p">:</span>
+        <span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_ndither</span><span class="si">{</span><span class="n">dither</span><span class="si">}</span><span class="s1">_1d_opt.fits&#39;</span>
+        <span class="n">fd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">if</span> <span class="n">dither</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">wave</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span>
+            <span class="n">flux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ndither</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+            <span class="n">flux_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ndither</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+
+            <span class="n">flux</span><span class="p">[</span><span class="n">dither</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span>
+            <span class="n">flux_err</span><span class="p">[</span><span class="n">dither</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">wave_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span>
+            <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span>
+            <span class="n">flux_err_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]</span>
+
+            <span class="n">flux</span><span class="p">[</span><span class="n">dither</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">wave_tmp</span><span class="p">,</span> <span class="n">flux_tmp</span><span class="p">)</span>
+            <span class="n">flux_err</span><span class="p">[</span><span class="n">dither</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">wave_tmp</span><span class="p">,</span> <span class="n">flux_err_tmp</span><span class="p">[:]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="c1"># Combine;</span>
+    <span class="n">flux_combine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="n">flux_err_combine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)):</span>
+        <span class="n">flux_combine</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">flux</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">flux_err</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">flux_err</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> 
+        <span class="n">flux_err_combine</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">flux_err</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">flux_err</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">])</span>
+
+    <span class="c1"># Normalize;</span>
+    <span class="n">filt_data</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_FIL</span><span class="si">}</span><span class="s1">/NIRISS_</span><span class="si">{</span><span class="n">filt</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">)</span>
+    <span class="n">wave_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">&#39;Wavelength&#39;</span><span class="p">]</span>
+    <span class="n">flux_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">&#39;FilterTrans&#39;</span><span class="p">]</span>
+
+    <span class="n">con</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&gt;</span> <span class="n">mask_lw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&lt;</span> <span class="n">mask_uw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span>
+    <span class="n">lcen</span><span class="p">,</span> <span class="n">fnu</span> <span class="o">=</span> <span class="n">filconv</span><span class="p">(</span><span class="n">wave_filt</span><span class="p">,</span> <span class="n">flux_filt</span><span class="p">,</span> <span class="n">wave</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">flux_combine</span><span class="p">[</span><span class="n">con</span><span class="p">])</span>
+    <span class="n">iix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">id_cat</span><span class="p">[:]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+    <span class="n">Cnorm</span> <span class="o">=</span> <span class="n">fd_cat</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;F</span><span class="si">{</span><span class="n">eazy_filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="n">iix</span><span class="p">]</span> <span class="o">/</span> <span class="n">fnu</span>
+
+    <span class="c1"># Write:</span>
+    <span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_combine_1d_opt.fits&#39;</span> 
+    
+    <span class="n">obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span>
+                     <span class="n">flux</span><span class="o">=</span><span class="n">flux_combine</span> <span class="o">*</span> <span class="n">Cnorm</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">dimensionless_unscaled</span><span class="p">,</span>
+                     <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">flux_err_combine</span> <span class="o">*</span> <span class="n">Cnorm</span><span class="p">),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">obs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_1d</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;tabular-fits&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="results">
+<h3>Results;<a class="headerlink" href="#results" title="Permalink to this heading">#</a></h3>
+<p>The spectra are align with each other, as they are matched to BB photometry.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;f115w&#39;</span><span class="p">,</span> <span class="s1">&#39;f150w&#39;</span><span class="p">,</span> <span class="s1">&#39;f200w&#39;</span><span class="p">]</span>
+<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lightblue&#39;</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="s1">&#39;purple&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">ff</span><span class="p">,</span> <span class="n">filt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">filts</span><span class="p">):</span>
+    <span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_combine_1d_opt.fits&#39;</span> 
+    <span class="n">fd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">wave</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span>
+    <span class="n">flux</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span>
+    <span class="n">flux_err</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]</span>
+
+    <span class="n">con</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&gt;</span> <span class="n">mask_lw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&lt;</span> <span class="n">mask_uw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">flux</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span>
+
+    <span class="n">filt_data</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_FIL</span><span class="si">}</span><span class="s1">/NIRISS_</span><span class="si">{</span><span class="n">filt</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">)</span>
+    <span class="n">wave_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">&#39;Wavelength&#39;</span><span class="p">]</span>
+    <span class="n">flux_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">&#39;FilterTrans&#39;</span><span class="p">]</span>
+
+    <span class="n">con</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&gt;</span> <span class="n">mask_lw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&lt;</span> <span class="n">mask_uw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span>
+    <span class="n">lcen</span><span class="p">,</span> <span class="n">fnu</span> <span class="o">=</span> <span class="n">filconv</span><span class="p">(</span><span class="n">wave_filt</span><span class="p">,</span> <span class="n">flux_filt</span><span class="p">,</span> <span class="n">wave</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">flux</span><span class="p">[</span><span class="n">con</span><span class="p">])</span>
+    <span class="n">iix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">id_cat</span><span class="p">[:]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">lcen</span><span class="p">,</span> <span class="n">fd_cat</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;F</span><span class="si">{</span><span class="n">eazy_filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="n">iix</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="n">ff</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;BB </span><span class="si">{</span><span class="n">filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;flux&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="repeat-for-another-target">
+<h3>Repeat for another target;<a class="headerlink" href="#repeat-for-another-target" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;00003&#39;</span>
+
+<span class="n">filts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;f115w&#39;</span><span class="p">,</span> <span class="s1">&#39;f150w&#39;</span><span class="p">,</span> <span class="s1">&#39;f200w&#39;</span><span class="p">]</span>
+<span class="n">eazy_filts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">309</span><span class="p">,</span> <span class="mi">310</span><span class="p">,</span> <span class="mi">311</span><span class="p">]</span>
+<span class="n">DIR_FIL</span> <span class="o">=</span> <span class="s1">&#39;./NIRISS_Filters/DATA/&#39;</span>
+
+<span class="c1"># Masks for problematic flux at edge;</span>
+<span class="n">mask_lw</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.35</span><span class="p">,</span> <span class="mf">1.75</span><span class="p">]</span>
+<span class="n">mask_uw</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.65</span><span class="p">,</span> <span class="mf">2.23</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">ff</span><span class="p">,</span> <span class="n">filt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">filts</span><span class="p">):</span>
+        
+    <span class="k">for</span> <span class="n">dither</span> <span class="ow">in</span> <span class="n">dithers</span><span class="p">:</span>
+        <span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_ndither</span><span class="si">{</span><span class="n">dither</span><span class="si">}</span><span class="s1">_1d_opt.fits&#39;</span>
+        <span class="n">fd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">if</span> <span class="n">dither</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">wave</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span>
+            <span class="n">flux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ndither</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+            <span class="n">flux_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ndither</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+
+            <span class="n">flux</span><span class="p">[</span><span class="n">dither</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span>
+            <span class="n">flux_err</span><span class="p">[</span><span class="n">dither</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">wave_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span>
+            <span class="n">flux_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span>
+            <span class="n">flux_err_tmp</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]</span>
+
+            <span class="n">flux</span><span class="p">[</span><span class="n">dither</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">wave_tmp</span><span class="p">,</span> <span class="n">flux_tmp</span><span class="p">)</span>
+            <span class="n">flux_err</span><span class="p">[</span><span class="n">dither</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">wave_tmp</span><span class="p">,</span> <span class="n">flux_err_tmp</span><span class="p">[:]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="c1"># Combine;</span>
+    <span class="n">flux_combine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+    <span class="n">flux_err_combine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">),</span> <span class="s1">&#39;float&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)):</span>
+        <span class="n">flux_combine</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">flux</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">flux_err</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">flux_err</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> 
+        <span class="n">flux_err_combine</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">flux_err</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">flux_err</span><span class="p">[:,</span> <span class="n">ii</span><span class="p">])</span>
+
+    <span class="c1"># Normalize;</span>
+    <span class="n">filt_data</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_FIL</span><span class="si">}</span><span class="s1">/NIRISS_</span><span class="si">{</span><span class="n">filt</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">)</span>
+    <span class="n">wave_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">&#39;Wavelength&#39;</span><span class="p">]</span>
+    <span class="n">flux_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">&#39;FilterTrans&#39;</span><span class="p">]</span>
+
+    <span class="n">con</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&gt;</span> <span class="n">mask_lw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&lt;</span> <span class="n">mask_uw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span>
+    <span class="n">lcen</span><span class="p">,</span> <span class="n">fnu</span> <span class="o">=</span> <span class="n">filconv</span><span class="p">(</span><span class="n">wave_filt</span><span class="p">,</span> <span class="n">flux_filt</span><span class="p">,</span> <span class="n">wave</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">flux_combine</span><span class="p">[</span><span class="n">con</span><span class="p">])</span>
+    <span class="n">iix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">id_cat</span><span class="p">[:]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+    <span class="n">Cnorm</span> <span class="o">=</span> <span class="n">fd_cat</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;F</span><span class="si">{</span><span class="n">eazy_filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="n">iix</span><span class="p">]</span> <span class="o">/</span> <span class="n">fnu</span>
+        
+    <span class="c1"># Write:</span>
+    <span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_combine_1d_opt.fits&#39;</span>
+    <span class="n">obs</span> <span class="o">=</span> <span class="n">Spectrum1D</span><span class="p">(</span><span class="n">spectral_axis</span><span class="o">=</span><span class="n">wave</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">,</span>
+                     <span class="n">flux</span><span class="o">=</span><span class="n">flux_combine</span> <span class="o">*</span> <span class="n">Cnorm</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">dimensionless_unscaled</span><span class="p">,</span>
+                     <span class="n">uncertainty</span><span class="o">=</span><span class="n">StdDevUncertainty</span><span class="p">(</span><span class="n">flux_err_combine</span> <span class="o">*</span> <span class="n">Cnorm</span><span class="p">),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">obs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_1d</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;tabular-fits&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;f115w&#39;</span><span class="p">,</span> <span class="s1">&#39;f150w&#39;</span><span class="p">,</span> <span class="s1">&#39;f200w&#39;</span><span class="p">]</span>
+<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lightblue&#39;</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="s1">&#39;purple&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">ff</span><span class="p">,</span> <span class="n">filt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">filts</span><span class="p">):</span>
+    <span class="n">file_1d</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_OUT</span><span class="si">}</span><span class="s1">l3_nis_</span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1">_s</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">_combine_1d_opt.fits&#39;</span> 
+    <span class="n">fd</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_1d</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">wave</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span>
+    <span class="n">flux</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span>
+    <span class="n">flux_err</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]</span>
+
+    <span class="n">con</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&gt;</span> <span class="n">mask_lw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&lt;</span> <span class="n">mask_uw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wave</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">flux</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">grism</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span>
+
+    <span class="n">filt_data</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">DIR_FIL</span><span class="si">}</span><span class="s1">/NIRISS_</span><span class="si">{</span><span class="n">filt</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">)</span>
+    <span class="n">wave_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">&#39;Wavelength&#39;</span><span class="p">]</span>
+    <span class="n">flux_filt</span> <span class="o">=</span> <span class="n">filt_data</span><span class="p">[</span><span class="s1">&#39;FilterTrans&#39;</span><span class="p">]</span>
+
+    <span class="n">con</span> <span class="o">=</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&gt;</span> <span class="n">mask_lw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wave</span> <span class="o">&lt;</span> <span class="n">mask_uw</span><span class="p">[</span><span class="n">ff</span><span class="p">])</span>
+    <span class="n">lcen</span><span class="p">,</span> <span class="n">fnu</span> <span class="o">=</span> <span class="n">filconv</span><span class="p">(</span><span class="n">wave_filt</span><span class="p">,</span> <span class="n">flux_filt</span><span class="p">,</span> <span class="n">wave</span><span class="p">[</span><span class="n">con</span><span class="p">],</span> <span class="n">flux</span><span class="p">[</span><span class="n">con</span><span class="p">])</span>
+    <span class="n">iix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">id_cat</span><span class="p">[:]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">lcen</span><span class="p">,</span> <span class="n">fd_cat</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;F</span><span class="si">{</span><span class="n">eazy_filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="n">iix</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="n">ff</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;BB </span><span class="si">{</span><span class="n">filts</span><span class="p">[</span><span class="n">ff</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;flux&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/jdat_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/NIRISS/NIRISS_WFSS_postpipeline"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="00_Optimal_extraction.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">WFSS Spectra Part 0: Optimal Extraction</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="02_Cross_correlation_template.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">WFSS Spectra - Part 2: Cross Correlation to Determine Redshift</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-notebook-01-products">0. Download notebook 01 products</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combine-spectra-from-different-dithers">1.Combine spectra from different dithers;</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-weighted-average-of-the-two-spectra-from-different-dither-positions">Make weighted-average of the two spectra from different dither positions;</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#continuum-normalization">2.Continuum normalization;</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#repeat-1-2-for-other-filters-too">Repeat 1&amp;2 for other filters too;</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#results">Results;</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#repeat-for-another-target">Repeat for another target;</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
