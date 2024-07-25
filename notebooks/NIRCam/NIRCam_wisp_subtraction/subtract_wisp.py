@@ -45,11 +45,11 @@ from astropy.io import fits
 from astropy.stats import median_absolute_deviation, sigma_clipped_stats
 from astropy.wcs import WCS
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from photutils.segmentation import detect_sources, detect_threshold
 from scipy.ndimage import binary_dilation, generate_binary_structure
+matplotlib.use('Agg')
 
 warnings.filterwarnings('ignore', message="Input data contains invalid values*")  # nan values expected throughout code
 warnings.filterwarnings('ignore', message="All-NaN slice encountered*")
@@ -133,7 +133,7 @@ def make_segmap(f, seg_from_lw=True, sigma=0.8, npixels=10, dilate_segmap=5, sav
     if (seg_from_lw) & ('long' not in detector):
         segmap_tmp = np.zeros(segmap_data.shape).astype(int)
         wcs = WCS(fits.getheader(f_lw, 'SCI'))  # lw cal wcs
-        seg_y, seg_x = np.where(segmap_data!=0)
+        seg_y, seg_x = np.where(segmap_data != 0)
         sky_coords = wcs.pixel_to_world(seg_x, seg_y)
         wcs = WCS(fits.getheader(f_sw, 'SCI'))  # sw cal wcs
         coords = wcs.world_to_pixel(sky_coords)
@@ -378,7 +378,7 @@ def subtract_wisp(f, wisp_data, segmap_data=None, sub_wisp=True, gauss_smooth_wi
         data_masked = np.copy(data)
         wisp_data_masked = np.copy(wisp_data)
         data_masked[(dq & 1 != 0) | (segmap_data != 0) | (wisp_mask == 0)] = np.nan
-        wisp_data_masked[(dq & 1 != 0) | (segmap_data != 0) |(wisp_mask == 0)] = np.nan
+        wisp_data_masked[(dq & 1 != 0) | (segmap_data != 0) | (wisp_mask == 0)] = np.nan
 
         # Make a version of the original data where only good pixels outside 
         # the wisp region are unmasked.
