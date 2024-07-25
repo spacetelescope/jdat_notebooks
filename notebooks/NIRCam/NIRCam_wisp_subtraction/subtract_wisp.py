@@ -39,10 +39,6 @@ from functools import partial
 import multiprocessing
 import os
 import warnings
-warnings.filterwarnings('ignore', message="Input data contains invalid values*")  # nan values expected throughout code
-warnings.filterwarnings('ignore', message="All-NaN slice encountered*")
-warnings.filterwarnings('ignore', message="'obsfix' made the change*")  # from astropy wcs during lw segmap blotting
-warnings.filterwarnings('ignore', message="'datfix' made the change*")  # from astropy wcs during lw segmap blotting
 
 from astropy.convolution import convolve, Gaussian2DKernel
 from astropy.io import fits
@@ -55,7 +51,14 @@ import numpy as np
 from photutils.segmentation import detect_sources, detect_threshold
 from scipy.ndimage import binary_dilation, generate_binary_structure
 
+warnings.filterwarnings('ignore', message="Input data contains invalid values*")  # nan values expected throughout code
+warnings.filterwarnings('ignore', message="All-NaN slice encountered*")
+warnings.filterwarnings('ignore', message="'obsfix' made the change*")  # from astropy wcs during lw segmap blotting
+warnings.filterwarnings('ignore', message="'datfix' made the change*")  # from astropy wcs during lw segmap blotting
+
+
 # -----------------------------------------------------------------------------
+
 
 def make_segmap(f, seg_from_lw=True, sigma=0.8, npixels=10, dilate_segmap=5, save_segmap=False):
     """
@@ -116,15 +119,15 @@ def make_segmap(f, seg_from_lw=True, sigma=0.8, npixels=10, dilate_segmap=5, sav
     # Make the segmentation map
     threshold = detect_threshold(data, sigma)
     g = Gaussian2DKernel(x_stddev=3)
-    data_conv = convolve(data, g, mask=dq&1!=0)  # Smooth input image before detecting sources
-    seg = detect_sources(data_conv, threshold, npixels=npixels, mask=dq&1!=0)  # avoid bad pixels as sources
+    data_conv = convolve(data, g, mask=dq & 1 != 0)  # Smooth input image before detecting sources
+    seg = detect_sources(data_conv, threshold, npixels=npixels, mask=dq & 1 != 0)  # avoid bad pixels as sources
     segmap_data = seg.data
-    segmap_data[segmap_data!=0] = 1
+    segmap_data[segmap_data != 0] = 1
 
     # Dilate the segmap outwards
     if dilate_segmap != 0:
         segmap_data = binary_dilation(segmap_data, iterations=dilate_segmap, structure=generate_binary_structure(2, 2))
-        segmap_data[segmap_data!=0] = 1
+        segmap_data[segmap_data != 0] = 1
     
     # Blot LW segmap back onto SW detector space
     if (seg_from_lw) & ('long' not in detector):
@@ -135,9 +138,9 @@ def make_segmap(f, seg_from_lw=True, sigma=0.8, npixels=10, dilate_segmap=5, sav
         wcs = WCS(fits.getheader(f_sw, 'SCI'))  # sw cal wcs
         coords = wcs.world_to_pixel(sky_coords)
         for i in np.arange(len(coords[0])):
-            y,x = int(coords[1][i]), int(coords[0][i])
-            if (y<2048) & (x<2048) & (y>=0) & (x>=0):
-                segmap_tmp[y,x] = 1
+            y, x = int(coords[1][i]), int(coords[0][i])
+            if (y < 2048) & (x < 2048) & (y >= 0) & (x >= 0):
+                segmap_tmp[y, x] = 1
         # Dilate to compensate for y,x rounding due to different lw/sw pixel scales
         segmap_data = binary_dilation(segmap_tmp, iterations=1, structure=generate_binary_structure(2, 2)).astype(int)
 
@@ -148,7 +151,9 @@ def make_segmap(f, seg_from_lw=True, sigma=0.8, npixels=10, dilate_segmap=5, sav
 
     return segmap_data
 
+
 # -----------------------------------------------------------------------------
+
 
 def process_file(f, wisp_dir='./', create_segmap=True, seg_from_lw=True, sigma=0.8, npixels=10, dilate_segmap=5,
                  save_segmap=False, sub_wisp=True, gauss_smooth_wisp=False, gauss_stddev=3.0, scale_wisp=True,
@@ -186,16 +191,17 @@ def process_file(f, wisp_dir='./', create_segmap=True, seg_from_lw=True, sigma=0
         segmap_data = np.zeros(wisp_data.shape).astype(int)
 
     # Scale and subtract wisp template
-    results = subtract_wisp(f, wisp_data=wisp_data, segmap_data=segmap_data, sub_wisp=sub_wisp, 
-                            gauss_smooth_wisp=gauss_smooth_wisp, gauss_stddev=gauss_stddev, 
-                            scale_wisp=scale_wisp, scale_method=scale_method, poly_degree=poly_degree, 
-                            factor_min=factor_min, factor_max=factor_max, factor_step=factor_step, 
-                            min_wisp=min_wisp, flag_wisp_thresh=flag_wisp_thresh, dq_val=dq_val, 
-                            correct_rows=correct_rows, correct_cols=correct_cols, save_data=save_data, 
-                            save_model=save_model, plot=plot, show_plot=show_plot, suffix=suffix)
+    _ = subtract_wisp(f, wisp_data=wisp_data, segmap_data=segmap_data, sub_wisp=sub_wisp, 
+                      gauss_smooth_wisp=gauss_smooth_wisp, gauss_stddev=gauss_stddev, 
+                      scale_wisp=scale_wisp, scale_method=scale_method, poly_degree=poly_degree, 
+                      factor_min=factor_min, factor_max=factor_max, factor_step=factor_step, 
+                      min_wisp=min_wisp, flag_wisp_thresh=flag_wisp_thresh, dq_val=dq_val, 
+                      correct_rows=correct_rows, correct_cols=correct_cols, save_data=save_data, 
+                      save_model=save_model, plot=plot, show_plot=show_plot, suffix=suffix)
     print('Processing complete for {}'.format(f))
 
 # -----------------------------------------------------------------------------
+
 
 def process_files(files, nproc=6, **kwargs):
     """"Wrapper around the process_file() function to allow for multiprocessing."""
@@ -207,11 +213,13 @@ def process_files(files, nproc=6, **kwargs):
     # Proess the files
     process_file_partial = partial(process_file, **kwargs)
     p = multiprocessing.Pool(nproc)
-    results = p.map(process_file_partial, files)
+    _ = p.map(process_file_partial, files)
     p.close()
     p.join()
 
+
 # -----------------------------------------------------------------------------
+
 
 def subtract_wisp(f, wisp_data, segmap_data=None, sub_wisp=True, gauss_smooth_wisp=False, gauss_stddev=3.0, scale_wisp=True,
                   scale_method='mad', poly_degree=5, factor_min=0.0, factor_max=2.0, factor_step=0.01, min_wisp=None, 
@@ -369,13 +377,13 @@ def subtract_wisp(f, wisp_data, segmap_data=None, sub_wisp=True, gauss_smooth_wi
         # pixels in the wisp region are unmasked.
         data_masked = np.copy(data)
         wisp_data_masked = np.copy(wisp_data)
-        data_masked[(dq&1!=0) | (segmap_data!=0) | (wisp_mask==0)] = np.nan
-        wisp_data_masked[(dq&1!=0) | (segmap_data!=0) |(wisp_mask==0)] = np.nan
+        data_masked[(dq & 1 != 0) | (segmap_data != 0) | (wisp_mask == 0)] = np.nan
+        wisp_data_masked[(dq & 1 != 0) | (segmap_data != 0) |(wisp_mask == 0)] = np.nan
 
         # Make a version of the original data where only good pixels outside 
         # the wisp region are unmasked.
         data_masked_ff = np.copy(data)
-        data_masked_ff[(dq&1!=0) | (segmap_data!=0) | (wisp_mask!=0)] = np.nan
+        data_masked_ff[(dq & 1 != 0) | (segmap_data != 0) | (wisp_mask != 0)] = np.nan
 
         # Correct median-collapsed row/column offsets, representing the 1/f residuals 
         # and odd-even column residuals and amp offsets, respectively.
@@ -388,8 +396,7 @@ def subtract_wisp(f, wisp_data, segmap_data=None, sub_wisp=True, gauss_smooth_wi
             collapsed_cols = np.nanmedian(data_masked_ff - med, axis=0)
         else:
             collapsed_cols = np.zeros(2048)
-        correction_image = np.tile(collapsed_cols, (2048, 1)) + \
-                        np.swapaxes(np.tile(collapsed_rows, (2048, 1)), 0, 1)
+        correction_image = np.tile(collapsed_cols, (2048, 1)) + np.swapaxes(np.tile(collapsed_rows, (2048, 1)), 0, 1)
         data_masked = data_masked - correction_image        
         data_masked_ff = data_masked_ff - correction_image
         med = np.nanmedian(data_masked_ff)
@@ -422,12 +429,12 @@ def subtract_wisp(f, wisp_data, segmap_data=None, sub_wisp=True, gauss_smooth_wi
 
     # Only subtract wisp values above the specified threshold
     if min_wisp is not None:
-        wisp_model[wisp_model<min_wisp] = 0
+        wisp_model[wisp_model < min_wisp] = 0
 
     # Flag wisp values above the specified thereshold in DQ array
     if flag_wisp_thresh is not None:
         new_dq = np.copy(dq)
-        new_dq[(dq&dq_val==0) & (wisp_model>flag_wisp_thresh)] += dq_val
+        new_dq[(dq & dq_val == 0) & (wisp_model > flag_wisp_thresh)] += dq_val
     else:
         new_dq = dq
 
@@ -448,7 +455,7 @@ def subtract_wisp(f, wisp_data, segmap_data=None, sub_wisp=True, gauss_smooth_wi
 
     # Make diagnostic plots
     if plot:
-        fig, axes = plt.subplots(1, 4, figsize=(60,10))
+        fig, axes = plt.subplots(1, 4, figsize=(60, 10))
         for ax in axes:
             ax.tick_params(axis='both', which='major', labelsize=20)
         # Plot original image
@@ -485,8 +492,10 @@ def subtract_wisp(f, wisp_data, segmap_data=None, sub_wisp=True, gauss_smooth_wi
 
     return new_data, wisp_model, factors, residuals, factor
 
+
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
+
 
 def parse_args():
     """
@@ -546,11 +555,13 @@ def parse_args():
 
     return args
 
+
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
+
 if __name__ == '__main__':
-    
+
     # Get the command line arguments
     args = parse_args()
 
