@@ -1,0 +1,20 @@
+name: Manual Single File Execute w/OS matrix
+on:
+  workflow_dispatch:
+    inputs:
+      filename:
+        description: 'Notebook file name:'
+        required: true
+        default: 'notebook.ipynb'
+
+jobs:
+  GenerateHTML:
+   uses: spacetelescope/notebook-ci-actions/.github/workflows/ci_execute_single.yml@multi_dev
+   with:
+      python-version: ${{ vars.PYTHON_VERSION }}
+      filename: ${{ github.event.inputs.filename }}
+   secrets:
+      CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
+      CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
+   permissions:
+     contents: write
