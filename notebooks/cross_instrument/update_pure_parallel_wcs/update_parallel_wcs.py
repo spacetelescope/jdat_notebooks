@@ -2,6 +2,7 @@ import os
 import sys
 import astropy.io.fits as pyfits
 
+
 def log_comment(LOGFILE, comment, verbose=False, show_date=False, mode='a'):
 
     """
@@ -25,6 +26,7 @@ def log_comment(LOGFILE, comment, verbose=False, show_date=False, mode='a'):
         print(msg[:-1])
 
     return msg
+
 
 def update_pure_parallel_wcs(file, logfile="pure_parallel_wcs_logfile",
                              fix_vtype='PARALLEL_PURE', verbose=True):
@@ -141,6 +143,7 @@ def update_pure_parallel_wcs(file, logfile="pure_parallel_wcs_logfile",
         im.flush()
     
     return True
+
 
 if __name__ == "__main__":
     
