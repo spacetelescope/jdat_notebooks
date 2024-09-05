@@ -1,18 +1,16 @@
-import os, sys
-import shutil
-import glob
-from astropy.io import ascii
+import os
+import sys
 import astropy.io.fits as pyfits
-import numpy as np
 
 def log_comment(LOGFILE, comment, verbose=False, show_date=False, mode='a'):
+
     """
     Log a message to a file, optionally including a date tag
     """
     import time
 
     if show_date:
-        msg = '# ({0})\n'.format(nowtime())
+        msg = '# ({0})\n'.format(time.ctime())
     else:
         msg = ''
 
@@ -30,6 +28,7 @@ def log_comment(LOGFILE, comment, verbose=False, show_date=False, mode='a'):
 
 def update_pure_parallel_wcs(file, logfile="pure_parallel_wcs_logfile",
                              fix_vtype='PARALLEL_PURE', verbose=True):
+
     """
     Update pointing-related keywords of pure parallel exposures using the
     pointing info from the FGS (and the prime exposures) from the MAST database
@@ -121,11 +120,11 @@ def update_pure_parallel_wcs(file, logfile="pure_parallel_wcs_logfile",
     
     msg = f"PureParallelUtils.update_pure_parallel_wcs: File: {file}"
     msg += '\n' + f"PureParallelUtils.update_pure_parallel_wcs: FGS: {gs['fileName']} "
-    msg += '\n' + f"PureParallelUtils.update_pure_parallel_wcs: original crval "
+    msg += '\n' + "PureParallelUtils.update_pure_parallel_wcs: original crval "
     msg += f"{crval_init[0]:.7f} {crval_init[1]:.7f}"
-    msg += '\n' + f"PureParallelUtils.update_pure_parallel_wcs:      new crval "
+    msg += '\n' + "PureParallelUtils.update_pure_parallel_wcs:      new crval "
     msg += f"{crval_fix[0]:.7f} {crval_fix[1]:.7f}"
-    msg += '\n' + f"PureParallelUtils.update_pure_parallel_wcs:           dpix "
+    msg += '\n' + "PureParallelUtils.update_pure_parallel_wcs:           dpix "
     msg += f"{crpix[0] - crpix_init[0]:6.3f} {crpix[1] - crpix_init[1]:6.3f}"
     
     _ = log_comment(logfile, msg, verbose=verbose)
@@ -144,6 +143,7 @@ def update_pure_parallel_wcs(file, logfile="pure_parallel_wcs_logfile",
     return True
 
 if __name__ == "__main__":
+    
     if len(sys.argv) < 2:
         print('Syntax: update_parallel_wcs.py fitsfile <verbose>')
         print('        where fitsfile is typically a _rate.fits or _rateints.fits file')
