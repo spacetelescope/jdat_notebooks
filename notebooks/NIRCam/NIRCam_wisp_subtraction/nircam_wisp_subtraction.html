@@ -1,0 +1,1083 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>NIRCam Wisp Removal &#8212; STScI JDAT Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/main.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-D46G4HKJY3');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/NIRCam/NIRCam_wisp_subtraction/nircam_wisp_subtraction';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="STScI JDAT Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="STScI JDAT Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebook_development_workflow.html">Notebook Development Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/submitting_notebooks.html">Submitting Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/requirements.html">Requirements file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebooks.html">Jupyter Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/data_files.html">Data Files</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">GitHub Guidelines</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_setup.html">GitHub Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_workflow.html">GitHub Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_pr.html">GitHub PR</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cross-Instrument</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/asdf_example/asdf_example.html">ASDF Example</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/background_estimation_imaging/Imaging_Sky_Background_Estimation.html">Complex 2D Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/composite_model_fitting/specfit_demo_3.html">Composite Model Spectral Fitting</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">MAST Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/rgb_imviz/imviz_rgb_carina.html">RGB images with Imviz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">Specviz Simple Demo</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">MIRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">MRS Mstar - Run Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">MRS Detector Based Extraction</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">MRS Mstar - Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">IFU of YSOs in LMC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MIRI_LRS_spectral_extraction/miri_lrs_advanced_extraction_part1.html">LRS Optimal Spectral Extraction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRCam</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">Point Source Aperture Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRCam_photometry/NIRCam_multiband_photometry.html">Extended Aperture Photometry</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">Cross-Filter PSF Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">PSF Photometry</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRISS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">WFSS Spectra - Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">WFSS Spectra - Combine and Normalize 1D Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">WFSS Spectra - Cross-Correlation Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">WFSS Spectra - Emission Line Map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/niriss_imaging/niriss-imaging-tutorial.html">NIRISS Imaging Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/00_niriss_mast_query_data_setup.html">NIRISS MAST</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/01_niriss_wfss_image2_image3.html">Direct imaging for WFSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/02_niriss_wfss_spec2.html">Spec2 pipeline for WFSS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRSpec</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">IFU Cube Fitting</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/cube_fitting/cube_fitting.html">IFU Cube Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/ifu_optimal/ifu_optimal.html">IFU Optimal Spectral Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/optimal_extraction/Spectral_Extraction-static.html">MOS Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/mos_spectroscopy_advanced/MOSspec_advanced.html">MOS Spectroscopy of Extragalactic Field</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">BOTS Time Series Observations</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/galaxy_redshift/redshift_fitting.html">Redshift and Template Fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/FS_NSClean_example.html">FS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/IFU_NSClean_example.html">IFU Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/MOS_NSClean_example.html">MOS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/BOTS_NSClean_example.html">BOTS Products with NSClean</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/NIRCam/NIRCam_wisp_subtraction/nircam_wisp_subtraction.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/NIRCam/NIRCam_wisp_subtraction/nircam_wisp_subtraction.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>NIRCam Wisp Removal</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-id-data-a-data"><a id="data"></a>Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-id-wisp-sub-a-run-the-wisp-subtraction-code"><a id="wisp_sub"></a>Run the wisp subtraction code</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-wisp-subtraction-code-using-custom-settings">Run the wisp subtraction code using custom settings</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-new-wisp-scaling-method">Example 1: New wisp scaling method</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-data-quality-flagging">Example 2: Data quality flagging</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-other-misc-settings">Example 3: Other misc settings</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-custom-wisp-templates">Using custom wisp templates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runing-the-code-in-pieces">Runing the code in pieces</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="nircam-wisp-removal">
+<h1>NIRCam Wisp Removal<a class="headerlink" href="#nircam-wisp-removal" title="Permalink to this heading">#</a></h1>
+<hr class="docutils" />
+<p><strong>Author</strong>: Ben Sunnquist (bsunnquist&#64;stsci.edu) <br>
+<strong>Latest Update</strong>: 24 July 2024<br>
+<strong>Use case</strong>: NIRCam Imaging detectors A3, A4, B3, and B4. <br>
+<strong>Data</strong>: PID 1063 Obs 6 Imaging Flats<br>
+<strong>Test Pipeline Version</strong>: 1.15.1</p>
+<p><a id='intro'></a></p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<p>This notebook demonstrates how to remove
+<a class="reference external" href="https://jwst-docs.stsci.edu/known-issues-with-jwst-data/nircam-known-issues/nircam-scattered-light-artifacts#NIRCamScatteredLightArtifacts-wispsWisps">wisps</a> from NIRCam imaging data. Wisps are a scattered light feature affecting detectors A3, A4, B3, and B4. For a given filter, wisps appear in the same detector location with only their brightness varying between exposures; therefore, they can be removed from science data by scaling and subtracting a wisp template (i.e. a median combination of all wisp appearances).</p>
+<p>The wisp templates used in this notebook will be downloaded in the <span class="xref myst">Data</span> section, but they are also available in the “version3” folder within the <a class="reference external" href="https://stsci.box.com/s/1bymvf1lkrqbdn9rnkluzqk30e8o2bne">NIRCam wisp template Box folder</a>. Future updates to these templates will be added to this same Box folder, and users are encouraged to check this folder regularly to ensure they have the latest version.</p>
+<p>This notebook uses the <code class="docutils literal notranslate"><span class="pre">subtract_wisp.py</span></code> code to scale and subtract the wisps. That code can be used by itself within python, and is preferred if calibrating a large number of files in parallel, but this notebook will be used to demonstrate the various parameters available to optimize wisp removal. For each notebook cell, we’ll also show the corresponding command to run the equivalent in python.</p>
+<p><a id='top'></a></p>
+</section>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><span class="xref myst">Imports</span></p></li>
+<li><p><span class="xref myst">Data</span></p></li>
+<li><p><span class="xref myst">Run the wisp subtraction code</span></p></li>
+<li><p><span class="xref myst">Run the wisp subtraction code using custom settings</span></p>
+<ul>
+<li><p><span class="xref myst">New wisp scaling settings</span></p></li>
+<li><p><span class="xref myst">Data quality flagging</span></p></li>
+<li><p><span class="xref myst">Other misc settings</span></p></li>
+</ul>
+</li>
+<li><p><span class="xref myst">Using custom wisp templates</span></p></li>
+<li><p><span class="xref myst">Running the code in pieces</span></p></li>
+</ul>
+<p><a id='imports'></a></p>
+</section>
+<section id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
+<p>How to make an environment to run this notebook:</p>
+<CODE>
+conda create -n jwst1140 python=3.11 notebook
+source activate jwst1140
+pip install -r requirements.txt
+</CODE>
+<BR>
+The version of the pipeline used by this notebook can be updated in the `requirments.txt` file before installation.<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load functions from the subtract_wisp.py code </span>
+<span class="kn">from</span> <span class="nn">subtract_wisp</span> <span class="kn">import</span> <span class="n">make_segmap</span><span class="p">,</span> <span class="n">process_file</span><span class="p">,</span> <span class="n">subtract_wisp</span>
+
+<span class="c1"># load important packages</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Mast</span><span class="p">,</span> <span class="n">Observations</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a-id-data-a-data">
+<h2><a id='data'></a>Data<a class="headerlink" href="#a-id-data-a-data" title="Permalink to this heading">#</a></h2>
+<p>We’ll use F200W imaging data from program 1063 observation 6 taken on
+detectors A3, A4, B3, and B4. These are 6 images of sparse fields that
+are affected by bright wisps. We’ll also use the corresponding
+longwave images for source detection since the longwave is not impacted by wisps.</p>
+<p>Download the relevant data from MAST using
+<a class="reference external" href="https://astroquery.readthedocs.io/en/latest/mast/mast.html">astroquery</a>.<br></p>
+<div class="alert alert-block alert-warning">
+Warning: If this notebook is halted during this step the downloaded
+file may be incomplete, and cause crashes later on!
+</div><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Select the data relevant data from MAST</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="s2">&quot;dataURI, filename, exp_type&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;paramName&quot;</span><span class="p">:</span> <span class="s2">&quot;program&quot;</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1063&#39;</span><span class="p">]},</span>
+                      <span class="p">{</span><span class="s2">&quot;paramName&quot;</span><span class="p">:</span> <span class="s2">&quot;observtn&quot;</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;6&#39;</span><span class="p">]},</span>
+                      <span class="p">{</span><span class="s2">&quot;paramName&quot;</span><span class="p">:</span> <span class="s2">&quot;exposure&quot;</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;00005&#39;</span><span class="p">]},</span>
+                      <span class="p">{</span><span class="s2">&quot;paramName&quot;</span><span class="p">:</span> <span class="s2">&quot;visit&quot;</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;004&#39;</span><span class="p">]},</span>
+                      <span class="p">{</span><span class="s2">&quot;paramName&quot;</span><span class="p">:</span> <span class="s2">&quot;detector&quot;</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;NRCA3&#39;</span><span class="p">,</span> <span class="s1">&#39;NRCA4&#39;</span><span class="p">,</span> <span class="s1">&#39;NRCB3&#39;</span><span class="p">,</span> <span class="s1">&#39;NRCB4&#39;</span><span class="p">,</span> <span class="s1">&#39;NRCALONG&#39;</span><span class="p">,</span> <span class="s1">&#39;NRCBLONG&#39;</span><span class="p">]},</span>
+                      <span class="p">{</span><span class="s2">&quot;paramName&quot;</span><span class="p">:</span> <span class="s2">&quot;productLevel&quot;</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;2b&#39;</span><span class="p">]}]}</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">Mast</span><span class="p">()</span><span class="o">.</span><span class="n">service_request</span><span class="p">(</span><span class="s1">&#39;Mast.Jwst.Filtered.Nircam&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">t</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">&#39;_cal&#39;</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]:</span>  <span class="c1"># only want cal files</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Observations</span><span class="p">()</span><span class="o">.</span><span class="n">download_file</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;dataURI&#39;</span><span class="p">],</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01063006004_02101_00005_nrca4_cal.fits to /home/runner/work/jdat_notebooks/jdat_notebooks/notebooks/NIRCam/NIRCam_wisp_subtraction/jw01063006004_02101_00005_nrca4_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01063006004_02101_00005_nrcalong_cal.fits to /home/runner/work/jdat_notebooks/jdat_notebooks/notebooks/NIRCam/NIRCam_wisp_subtraction/jw01063006004_02101_00005_nrcalong_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01063006004_02101_00005_nrca3_cal.fits to /home/runner/work/jdat_notebooks/jdat_notebooks/notebooks/NIRCam/NIRCam_wisp_subtraction/jw01063006004_02101_00005_nrca3_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01063006004_02101_00005_nrcb4_cal.fits to /home/runner/work/jdat_notebooks/jdat_notebooks/notebooks/NIRCam/NIRCam_wisp_subtraction/jw01063006004_02101_00005_nrcb4_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01063006004_02101_00005_nrcb3_cal.fits to /home/runner/work/jdat_notebooks/jdat_notebooks/notebooks/NIRCam/NIRCam_wisp_subtraction/jw01063006004_02101_00005_nrcb3_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01063006004_02101_00005_nrcblong_cal.fits to /home/runner/work/jdat_notebooks/jdat_notebooks/notebooks/NIRCam/NIRCam_wisp_subtraction/jw01063006004_02101_00005_nrcblong_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we’ll download the wisp templates. These templates are equivalent to those in the “version3” folder within the <a class="reference external" href="https://stsci.box.com/s/1bymvf1lkrqbdn9rnkluzqk30e8o2bne">NIRCam wisp template Box folder</a>. Users are encouraged to check this folder regularly for any updates. For this notebook, only the F200W templates are needed:</p>
+<ul class="simple">
+<li><p>WISP_NRCA3_F200W_CLEAR.fits</p></li>
+<li><p>WISP_NRCA4_F200W_CLEAR.fits</p></li>
+<li><p>WISP_NRCB3_F200W_CLEAR.fits</p></li>
+<li><p>WISP_NRCB4_F200W_CLEAR.fits</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download the wisp templates</span>
+<span class="n">boxlink</span> <span class="o">=</span> <span class="s1">&#39;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/nircam_wisp_templates/&#39;</span>
+
+<span class="k">for</span> <span class="n">detector</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;NRCA3&#39;</span><span class="p">,</span> <span class="s1">&#39;NRCA4&#39;</span><span class="p">,</span> <span class="s1">&#39;NRCB3&#39;</span><span class="p">,</span> <span class="s1">&#39;NRCB4&#39;</span><span class="p">]:</span>
+    <span class="n">boxfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="s1">&#39;WISP_</span><span class="si">{}</span><span class="s1">_F200W_CLEAR.fits&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">detector</span><span class="p">))</span>
+    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">boxfile</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check if template files are downloaded</span>
+<span class="n">template_files</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;WISP_NRCA3_F200W_CLEAR.fits&#39;</span><span class="p">,</span>  <span class="s1">&#39;WISP_NRCA4_F200W_CLEAR.fits&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;WISP_NRCB3_F200W_CLEAR.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;WISP_NRCB4_F200W_CLEAR.fits&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">tem_file</span> <span class="ow">in</span> <span class="n">template_files</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">tem_file</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;file </span><span class="si">{</span><span class="n">tem_file</span><span class="si">}</span><span class="s1"> does not exist, please downoad it from Box&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a-id-wisp-sub-a-run-the-wisp-subtraction-code">
+<h2><a id='wisp_sub'></a>Run the wisp subtraction code<a class="headerlink" href="#a-id-wisp-sub-a-run-the-wisp-subtraction-code" title="Permalink to this heading">#</a></h2>
+<p>In this section, we show how to run the wisp subtraction code on all of the shortwave images using the default parameters. The exception is we set <code class="docutils literal notranslate"><span class="pre">show_plot=True</span></code> to allow the diagnostic plots to display in the notebook.</p>
+<p>The main processing function <code class="docutils literal notranslate"><span class="pre">process_file()</span></code> combines the segmap creation and wisp scaling/subtraction steps together. The basic process the code uses is the following:</p>
+<ol class="arabic simple">
+<li><p>Generate a source mask using the corresponding longwave image, since the longwave isn’t affected by wisps. Ignore these pixels going forward. Occurs in the <code class="docutils literal notranslate"><span class="pre">make_segmap()</span></code> function.</p></li>
+<li><p>Load the relevant wisp template.</p></li>
+<li><p>Apply a series of scale factors to the template. For each scale factor, multiply it onto the wisp template and subtract the result from the input science data. Record the residual noise within the wisp region for each of the scale factors tested. A correction to residual 1/f (horizontal) noise is applied during this step to help with the fitting. Fit a polynomial to the residuals, and choose the scale factor with the lowest noise based on this fit. Occurs in the <code class="docutils literal notranslate"><span class="pre">subtract_wisp()</span></code> function.</p></li>
+<li><p>Multiply the chosen wisp factor onto the wisp template to generate the final wisp model. Occurs in the <code class="docutils literal notranslate"><span class="pre">subtract_wisp()</span></code> function.</p></li>
+<li><p>Subtract the final wisp model from the input data, and write out the wisp-subtracted data, the wisp model, and diagnostic plots summarizing the results. Occurs in the <code class="docutils literal notranslate"><span class="pre">subtract_wisp()</span></code> function.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Collect all the science data files </span>
+<span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*_cal.fits&#39;</span><span class="p">)</span>
+
+<span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">cal_file</span> <span class="k">for</span> <span class="n">cal_file</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="s1">&#39;long&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cal_file</span><span class="p">]</span>  <span class="c1"># only want shortwave files</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Run the <code class="docutils literal notranslate"><span class="pre">process_file()</span></code> function in each dataset. The code generates the following:</p>
+<ul class="simple">
+<li><p>A wisp-corrected version of the input file, with the same name as the input file besides a <I>_wisp</I> suffix added (note: the suffix used here can be changed using the <code class="docutils literal notranslate"><span class="pre">suffix</span></code> argument, which can also be set to an empty string to overwrite the input file).</p></li>
+<li><p>The wisp model subtracted from the input image, with the same name as the input file besides a <I>_wisp_model</I> suffix added.</p></li>
+<li><p>A diagnostic plot showing the original image, the wisp-corrected image, the wisp model subtracted, and a plot showing all of the wisp scale factors tested along with their corresponding residual noise. The factor with the lowest noise is the one applied to the wisp template to generate the wisp model.</p></li>
+</ul>
+<p>Note: calling <code class="docutils literal notranslate"><span class="pre">process_files()</span></code> rather than <code class="docutils literal notranslate"><span class="pre">process_file()</span></code> will process the files in parallel. This will save time, but the plots won’t display inline in the notebook.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Remove wisps from the science data</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">process_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing jw01063006004_02101_00005_nrca3_cal.fits
+Making segmap for jw01063006004_02101_00005_nrca3_cal.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Applying wisp template to jw01063006004_02101_00005_nrca3_cal.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing complete for jw01063006004_02101_00005_nrca3_cal.fits
+Processing jw01063006004_02101_00005_nrcb3_cal.fits
+Making segmap for jw01063006004_02101_00005_nrcb3_cal.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Applying wisp template to jw01063006004_02101_00005_nrcb3_cal.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing complete for jw01063006004_02101_00005_nrcb3_cal.fits
+Processing jw01063006004_02101_00005_nrcb4_cal.fits
+Making segmap for jw01063006004_02101_00005_nrcb4_cal.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Applying wisp template to jw01063006004_02101_00005_nrcb4_cal.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing complete for jw01063006004_02101_00005_nrcb4_cal.fits
+Processing jw01063006004_02101_00005_nrca4_cal.fits
+Making segmap for jw01063006004_02101_00005_nrca4_cal.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Applying wisp template to jw01063006004_02101_00005_nrca4_cal.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing complete for jw01063006004_02101_00005_nrca4_cal.fits
+</pre></div>
+</div>
+<img alt="../../../_images/a86bc54690e66b32bb485a54ffe30e5f8bcec2f371c87f5b965229482ad6e4c4.png" src="../../../_images/a86bc54690e66b32bb485a54ffe30e5f8bcec2f371c87f5b965229482ad6e4c4.png" />
+<img alt="../../../_images/e8c5ee60f8e4fa1162f37d7d0560a7c7d6e27921cd8d02224968245a0343ab12.png" src="../../../_images/e8c5ee60f8e4fa1162f37d7d0560a7c7d6e27921cd8d02224968245a0343ab12.png" />
+<img alt="../../../_images/0e9c26db0497cf9ce930324399059502270b3bd736bc83067a811e28ae506aa5.png" src="../../../_images/0e9c26db0497cf9ce930324399059502270b3bd736bc83067a811e28ae506aa5.png" />
+<img alt="../../../_images/ae75286f2cd7e925df640a7936600ee10e55da292fcb597fbdebc779fedbb2c9.png" src="../../../_images/ae75286f2cd7e925df640a7936600ee10e55da292fcb597fbdebc779fedbb2c9.png" />
+</div>
+</div>
+<p>Python equivalent:
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">subtract_wisp.py</span> <span class="pre">--files</span> <span class="pre">*_cal.fits</span></code></p>
+<p><a id='wisp_sub_custom'></a></p>
+</section>
+<section id="run-the-wisp-subtraction-code-using-custom-settings">
+<h2>Run the wisp subtraction code using custom settings<a class="headerlink" href="#run-the-wisp-subtraction-code-using-custom-settings" title="Permalink to this heading">#</a></h2>
+<p>In this section, we’ll run the wisp subtraction code using custom settings that may be helpful to optimize the wisp removal. The different settings shown here can be used in combination with those from other examples or as a standalone.</p>
+<p><a id='ex1'></a></p>
+<section id="example-1-new-wisp-scaling-method">
+<h3>Example 1: New wisp scaling method<a class="headerlink" href="#example-1-new-wisp-scaling-method" title="Permalink to this heading">#</a></h3>
+<p>By default, the wisp factor is decided based on that which results in the lowest residual noise. However, the scaling can instead be based on minimizing the overall signal level differences inside and outside the wisp-affected detector regions by setting <code class="docutils literal notranslate"><span class="pre">scale_method='median'</span></code>. For this scaling method, it’s recommended to also turn off the polynomial fitting on the residuals (<code class="docutils literal notranslate"><span class="pre">poly_degree=0</span></code>) to simply choose the factor that results in the lowest difference.</p>
+<p>During the scaling, residual 1/f noise is corrected by default (<code class="docutils literal notranslate"><span class="pre">correct_rows=True</span></code>); however, for datasets that have strong e.g. amp offsets or odd-even column residuals, this same correction can be applied in the vertical direction as well (<code class="docutils literal notranslate"><span class="pre">correct_cols=True</span></code>). Note that these corrections aren’t subtracted in the output file, they are only used to help the wisp scaling procedure.</p>
+<p>Below, we perform a new run using these settings.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Remove wisps using the scaling method</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">process_file</span><span class="p">(</span><span class="s1">&#39;jw01063006004_02101_00005_nrcb4_cal.fits&#39;</span><span class="p">,</span>
+                       <span class="n">scale_method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">poly_degree</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+                       <span class="n">correct_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing jw01063006004_02101_00005_nrcb4_cal.fits
+Making segmap for jw01063006004_02101_00005_nrcb4_cal.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Applying wisp template to jw01063006004_02101_00005_nrcb4_cal.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing complete for jw01063006004_02101_00005_nrcb4_cal.fits
+</pre></div>
+</div>
+<img alt="../../../_images/d381a67a651c71d7ec5c5698a57f153b87d6a53fe029b638cd15e1061945dba2.png" src="../../../_images/d381a67a651c71d7ec5c5698a57f153b87d6a53fe029b638cd15e1061945dba2.png" />
+</div>
+</div>
+<p>Python equivalent: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">subtract_wisp.py</span> <span class="pre">--files</span> <span class="pre">jw01063006004_02101_00005_nrcb4_cal.fits</span> <span class="pre">--scale_method</span> <span class="pre">median</span> <span class="pre">--poly_degree</span> <span class="pre">0</span> <span class="pre">--correct_cols</span></code></p>
+<p>Sometimes, e.g. for crowded fields, there may not be enough empty regions to scale the wisp properly. In this case, simply subtracting the  wisp template with no scaling may provide the best results (<code class="docutils literal notranslate"><span class="pre">scale_wisp=False</span></code>, or similarly, in python <code class="docutils literal notranslate"><span class="pre">--no-scale_wisp</span></code>).</p>
+<p><a id='ex2'></a></p>
+</section>
+<section id="example-2-data-quality-flagging">
+<h3>Example 2: Data quality flagging<a class="headerlink" href="#example-2-data-quality-flagging" title="Permalink to this heading">#</a></h3>
+<p>Another option is to flag any pixels with wisp signals above a certain threshold in the image’s data quality array, but not subtract the wisp itself from the science data. This may be useful if you want to ignore these pixels when combining several images into a mosaic or flag them while performing photometry. This can be accomplished by setting <code class="docutils literal notranslate"><span class="pre">flag_wisp_thresh</span></code> to the chosen wisp signal threshold (units are assumed to be the same as the input file) and <code class="docutils literal notranslate"><span class="pre">sub_wisp=False</span></code>. The data quality value used here is set by the <code class="docutils literal notranslate"><span class="pre">dq_val</span></code> parameter.</p>
+<p>The default value of <code class="docutils literal notranslate"><span class="pre">dq_val</span></code> is 1, which is equivalent to the JWST Pipeline DO_NOT_USE flag, and it is ignored by default during image3 drizzling. If you would prefer the pixels to be flagged, but not ignored during that step, another option is using <code class="docutils literal notranslate"><span class="pre">dq_val=1073741824</span></code>, which is equivalent to the JWST Pipeine OTHER_BAD_PIXEL flag. More details on the various data quality flags can be found <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/references_general/references_general.html#data-quality-flags">here</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Do not remove wisps, just flag them</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">process_file</span><span class="p">(</span><span class="s1">&#39;jw01063006004_02101_00005_nrcb4_cal.fits&#39;</span><span class="p">,</span>
+                       <span class="n">flag_wisp_thresh</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">dq_val</span><span class="o">=</span><span class="mi">1073741824</span><span class="p">,</span>
+                       <span class="n">sub_wisp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing jw01063006004_02101_00005_nrcb4_cal.fits
+Making segmap for jw01063006004_02101_00005_nrcb4_cal.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Applying wisp template to jw01063006004_02101_00005_nrcb4_cal.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing complete for jw01063006004_02101_00005_nrcb4_cal.fits
+</pre></div>
+</div>
+<img alt="../../../_images/db4a77cfb58d95f4cfc34b53e095f17be2dd2a079e5167169f58adcb7bd73cf5.png" src="../../../_images/db4a77cfb58d95f4cfc34b53e095f17be2dd2a079e5167169f58adcb7bd73cf5.png" />
+</div>
+</div>
+<p>Python equivalent: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">subtract_wisp.py</span> <span class="pre">--files</span> <span class="pre">jw01063006004_02101_00005_nrcb4_cal.fits</span> <span class="pre">--flag_wisp_thresh</span> <span class="pre">0.03</span> <span class="pre">--dq_val</span> <span class="pre">1073741824</span> <span class="pre">--no-sub_wisp</span></code></p>
+<p>Check that the data quality array in this file was updated appropriately</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check data quality (DQ) array </span>
+<span class="n">dq</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;jw01063006004_02101_00005_nrcb4_cal_wisp.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;DQ&#39;</span><span class="p">)</span>
+
+<span class="c1"># Show  pixels flagged as OTHER_BAD_PIXEL</span>
+<span class="n">dq</span> <span class="o">=</span> <span class="p">(</span><span class="n">dq</span> <span class="o">&amp;</span> <span class="mi">1073741824</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="c1"># only want to see pixels with dq_val 1073741824</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">dq</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fb2747dce10&gt;
+</pre></div>
+</div>
+<img alt="../../../_images/6ad5a09a476cb135121e707884afe1017af5dc86cb58ff55d1d02f5e61666320.png" src="../../../_images/6ad5a09a476cb135121e707884afe1017af5dc86cb58ff55d1d02f5e61666320.png" />
+</div>
+</div>
+<p><a id='ex3'></a></p>
+</section>
+<section id="example-3-other-misc-settings">
+<h3>Example 3: Other misc settings<a class="headerlink" href="#example-3-other-misc-settings" title="Permalink to this heading">#</a></h3>
+<p>This example will show a variety of other settings that may be
+useful either used alone or in combination with any of the
+other settings shown above. The full list of optional settings
+can be seen in the <code class="docutils literal notranslate"><span class="pre">make_segmap()</span></code> and <code class="docutils literal notranslate"><span class="pre">subtract_wisp()</span></code> docstrings.</p>
+<p>In this example, we’ll do the source-finding on the input image
+itself (rather than the corresponding longwave image) by
+setting <code class="docutils literal notranslate"><span class="pre">seg_from_lw=False</span></code>. We’ll increase the source
+detection <code class="docutils literal notranslate"><span class="pre">sigma</span></code> to help avoid flagging the wisp itself, and
+we’ll save the resulting segmentation mask by setting
+<code class="docutils literal notranslate"><span class="pre">save_segmap=True</span></code> for inspection. The segmentation mask
+filename is the same as the input file, just with the
+<I>_seg</I> suffix added.</p>
+<p>We’ll also only subtract wisp signals above 0.01 MJy/sr
+(<code class="docutils literal notranslate"><span class="pre">min_wisp=0.01</span></code>). To save a little time, we’ll only test wispscale factors between 0.5 and 1.5 in 0.05 steps.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get full list of optional settings for make_segmap() using help(make_segmap)</span>
+<span class="c1">#</span>
+<span class="c1"># Use special settings</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">process_file</span><span class="p">(</span><span class="s1">&#39;jw01063006004_02101_00005_nrcb4_cal.fits&#39;</span><span class="p">,</span>
+                       <span class="n">seg_from_lw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">save_segmap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+                       <span class="n">min_wisp</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">factor_min</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">factor_max</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
+                       <span class="n">factor_step</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing jw01063006004_02101_00005_nrcb4_cal.fits
+Making segmap for jw01063006004_02101_00005_nrcb4_cal.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Applying wisp template to jw01063006004_02101_00005_nrcb4_cal.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing complete for jw01063006004_02101_00005_nrcb4_cal.fits
+</pre></div>
+</div>
+<img alt="../../../_images/58c53a09373889a7ebae9d38e671aa1bd68dfa41bb782926cdbf87d809386e1b.png" src="../../../_images/58c53a09373889a7ebae9d38e671aa1bd68dfa41bb782926cdbf87d809386e1b.png" />
+</div>
+</div>
+<p>Python equivalent: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">subtract_wisp.py</span> <span class="pre">--files</span> <span class="pre">jw01063006004_02101_00005_nrcb4_cal.fits</span> <span class="pre">--no-seg_from_lw</span> <span class="pre">--sigma</span> <span class="pre">1.5</span> <span class="pre">--save_segmap</span> <span class="pre">--min_wisp</span> <span class="pre">0.01</span> <span class="pre">--factor_min</span> <span class="pre">0.5</span> <span class="pre">--factor_max</span> <span class="pre">1.5</span> <span class="pre">--factor_step</span> <span class="pre">0.05</span></code></p>
+<p>As seen above, these custom settings resulted in an oversubtraction. This is likely due to poor source finding in the wisp region (e.g. the wisp itself being flagged as a source), and why source finding using the longwave image is recommended. We can confirm this by inspecting the generated segmentation map.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;jw01063006004_02101_00005_nrcb4_cal.fits&#39;</span><span class="p">)</span>
+<span class="n">segmap</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;jw01063006004_02101_00005_nrcb4_cal_seg.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># Show the images</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">segmap</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fb274519f90&gt;
+</pre></div>
+</div>
+<img alt="../../../_images/ce0660fed37f83f6b81dd9121a4244419d48d4e8650e8089c2a640c36e0902ea.png" src="../../../_images/ce0660fed37f83f6b81dd9121a4244419d48d4e8650e8089c2a640c36e0902ea.png" />
+</div>
+</div>
+<p><a id='custom_templates'></a></p>
+</section>
+</section>
+<section id="using-custom-wisp-templates">
+<h2>Using custom wisp templates<a class="headerlink" href="#using-custom-wisp-templates" title="Permalink to this heading">#</a></h2>
+<p>This section shows how you can incorporate custom wisp templates while still using the wisp subtraction procedure contained in the main code. This may be useful if you have your own wisp templates or want to apply a manual scale factor to the existing templates.</p>
+<p>In this example, we’ll use the existing template, but multiply it by our own scale factor and turn the scaling procedure off (<code class="docutils literal notranslate"><span class="pre">scale_wisp=False</span></code>) so the code simply applies the wisp model as given. Note that turning off the scaling procedure is not required when using a custom template; users can both provide a custom template and still keep the scaling procedure on. Since the scaling procedure is off in this example, the source finding is irrelevant, and so we can skip the segmap creation function <code class="docutils literal notranslate"><span class="pre">make_segmap()</span></code> and run <code class="docutils literal notranslate"><span class="pre">subtract_wisp()</span></code> directly.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the wisp template and apply a manual scale factor</span>
+<span class="n">wisp_data</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;WISP_NRCB4_F200W_CLEAR.fits&#39;</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.05</span>
+
+<span class="c1"># Process the file with the custom wisp template</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">subtract_wisp</span><span class="p">(</span><span class="s1">&#39;jw01063006004_02101_00005_nrcb4_cal.fits&#39;</span><span class="p">,</span> <span class="n">wisp_data</span><span class="p">,</span> <span class="n">scale_wisp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Applying wisp template to jw01063006004_02101_00005_nrcb4_cal.fits
+Warning: No segmap data given for jw01063006004_02101_00005_nrcb4_cal.fits. Assuming no sources.
+</pre></div>
+</div>
+<img alt="../../../_images/d58543af6a3588ef976ebe3b3df24f8f782336c0d9c5a43c0b74bc4e30047e2f.png" src="../../../_images/d58543af6a3588ef976ebe3b3df24f8f782336c0d9c5a43c0b74bc4e30047e2f.png" />
+</div>
+</div>
+<p><a id='pieces'></a></p>
+</section>
+<section id="runing-the-code-in-pieces">
+<h2>Runing the code in pieces<a class="headerlink" href="#runing-the-code-in-pieces" title="Permalink to this heading">#</a></h2>
+<p>In this section, we’ll show how to run the full wisp removal process in pieces. This may be useful to provide more flexibility or when finding the optimal settings to use for your data. We’ll use a variety of custom settings - see the function docstrings for more details.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The file to process</span>
+<span class="n">cal_file</span> <span class="o">=</span> <span class="s1">&#39;jw01063006004_02101_00005_nrcb4_cal.fits&#39;</span>
+
+<span class="c1"># The wisp template to use. We&#39;ll use a &quot;custom&quot; template again.</span>
+<span class="n">wisp_data</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;WISP_NRCB4_F200W_CLEAR.fits&#39;</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.05</span>
+
+<span class="c1"># Generate the segmentation map</span>
+<span class="n">segmap_data</span> <span class="o">=</span> <span class="n">make_segmap</span><span class="p">(</span><span class="n">cal_file</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">npixels</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">dilate_segmap</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Scale and subtract the wisp template</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">subtract_wisp</span><span class="p">(</span><span class="n">cal_file</span><span class="p">,</span> <span class="n">wisp_data</span><span class="o">=</span><span class="n">wisp_data</span><span class="p">,</span> <span class="n">segmap_data</span><span class="o">=</span><span class="n">segmap_data</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Making segmap for jw01063006004_02101_00005_nrcb4_cal.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Applying wisp template to jw01063006004_02101_00005_nrcb4_cal.fits
+</pre></div>
+</div>
+<img alt="../../../_images/98edc5db1c7e54ef7f240f7eb2a802b43f5fb25ddba0c672dfd53abe1de5e78a.png" src="../../../_images/98edc5db1c7e54ef7f240f7eb2a802b43f5fb25ddba0c672dfd53abe1de5e78a.png" />
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/jdat_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/NIRCam/NIRCam_wisp_subtraction"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-id-data-a-data"><a id="data"></a>Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-id-wisp-sub-a-run-the-wisp-subtraction-code"><a id="wisp_sub"></a>Run the wisp subtraction code</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-wisp-subtraction-code-using-custom-settings">Run the wisp subtraction code using custom settings</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-new-wisp-scaling-method">Example 1: New wisp scaling method</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-data-quality-flagging">Example 2: Data quality flagging</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-other-misc-settings">Example 3: Other misc settings</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-custom-wisp-templates">Using custom wisp templates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runing-the-code-in-pieces">Runing the code in pieces</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
