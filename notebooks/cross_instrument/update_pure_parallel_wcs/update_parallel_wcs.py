@@ -120,14 +120,16 @@ def update_pure_parallel_wcs(file, logfile="pure_parallel_wcs_logfile",
     
     crval_fix = par_aper.sci_to_sky(*crpix)
     
-    msg = f"PureParallelUtils.update_pure_parallel_wcs: File: {file}"
-    msg += '\n' + f"PureParallelUtils.update_pure_parallel_wcs: FGS: {gs['fileName']} "
-    msg += '\n' + "PureParallelUtils.update_pure_parallel_wcs: original crval "
-    msg += f"{crval_init[0]:.7f} {crval_init[1]:.7f}"
-    msg += '\n' + "PureParallelUtils.update_pure_parallel_wcs:      new crval "
-    msg += f"{crval_fix[0]:.7f} {crval_fix[1]:.7f}"
-    msg += '\n' + "PureParallelUtils.update_pure_parallel_wcs:           dpix "
-    msg += f"{crpix[0] - crpix_init[0]:6.3f} {crpix[1] - crpix_init[1]:6.3f}"
+    msg = (
+        f"PureParallelUtils.update_pure_parallel_wcs: File: {file}\n"
+        f"PureParallelUtils.update_pure_parallel_wcs: FGS: {gs['fileName']}\n"
+        f"PureParallelUtils.update_pure_parallel_wcs: original crval: "
+        f"{crval_init[0]:.7f} {crval_init[1]:.7f}\n"
+        f"PureParallelUtils.update_pure_parallel_wcs:      new crval: "
+        f"{crval_fix[0]:.7f} {crval_fix[1]:.7f}\n"
+        f"PureParallelUtils.update_pure_parallel_wcs:         d(pix): "
+        f"{crpix[0] - crpix_init[0]:6.3f} {crpix[1] - crpix_init[1]:6.3f}"
+    )
     
     _ = log_comment(logfile, msg, verbose=verbose)
     
