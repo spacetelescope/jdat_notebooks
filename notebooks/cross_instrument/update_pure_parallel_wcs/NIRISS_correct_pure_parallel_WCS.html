@@ -1,0 +1,990 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Improving Accuracy of World Coordinate System of Pure Parallel Dataset &#8212; STScI JDAT Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/main.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-D46G4HKJY3');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/cross_instrument/update_pure_parallel_wcs/NIRISS_correct_pure_parallel_WCS';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="MRS Pipeline" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html" />
+    <link rel="prev" title="Specviz Simple Demo" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="STScI JDAT Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="STScI JDAT Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebook_development_workflow.html">Notebook Development Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/submitting_notebooks.html">Submitting Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/requirements.html">Requirements file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebooks.html">Jupyter Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/data_files.html">Data Files</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">GitHub Guidelines</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_setup.html">GitHub Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_workflow.html">GitHub Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_pr.html">GitHub PR</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cross-Instrument</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../asdf_example/asdf_example.html">ASDF Example</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../background_estimation_imaging/Imaging_Sky_Background_Estimation.html">Complex 2D Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../composite_model_fitting/specfit_demo_3.html">Composite Model Spectral Fitting</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">MAST Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rgb_imviz/imviz_rgb_carina.html">RGB images with Imviz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">Specviz Simple Demo</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Improving Accuracy of WCS of Pure Parallel Dataset</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">MIRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html">MRS Mstar - Run Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_PointSourceDetectorBasedExtraction.html">MRS Detector Based Extraction</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">MRS Mstar - Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">IFU of YSOs in LMC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MIRI_LRS_spectral_extraction/miri_lrs_advanced_extraction_part1.html">LRS Optimal Spectral Extraction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRCam</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/aperture_photometry/NIRCam_Aperture_Photometry_Example.html">Point Source Aperture Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_photometry/NIRCam_multiband_photometry.html">Extended Aperture Photometry</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">Cross-Filter PSF Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/psf_photometry/NIRCam_PSF_Photometry_Example.html">PSF Photometry</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRISS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">WFSS Spectra - Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">WFSS Spectra - Combine and Normalize 1D Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">WFSS Spectra - Cross-Correlation Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">WFSS Spectra - Emission Line Map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/niriss_imaging/niriss-imaging-tutorial.html">NIRISS Imaging Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/00_niriss_mast_query_data_setup.html">NIRISS MAST</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/01_niriss_wfss_image2_image3.html">Direct imaging for WFSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/02_niriss_wfss_spec2.html">Spec2 pipeline for WFSS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRSpec</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">IFU Cube Fitting</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/cube_fitting/cube_fitting.html">IFU Cube Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/ifu_optimal/ifu_optimal.html">IFU Optimal Spectral Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/optimal_extraction/Spectral_Extraction-static.html">MOS Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/mos_spectroscopy_advanced/MOSspec_advanced.html">MOS Spectroscopy of Extragalactic Field</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">BOTS Time Series Observations</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/galaxy_redshift/redshift_fitting.html">Redshift and Template Fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/FS_NSClean_example.html">FS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/IFU_NSClean_example.html">IFU Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/MOS_NSClean_example.html">MOS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/BOTS_NSClean_example.html">BOTS Products with NSClean</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/cross_instrument/update_pure_parallel_wcs/NIRISS_correct_pure_parallel_WCS.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/cross_instrument/update_pure_parallel_wcs/NIRISS_correct_pure_parallel_WCS.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Improving Accuracy of World Coordinate System of Pure Parallel Dataset</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-pipeline-and-other-required-packages">Install pipeline and other required packages</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#define-a-few-functions">Define a few functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-sky-coordinates-of-a-list-of-gaia-targets-around-the-pointing-of-the-pure-parallel-image">Get sky coordinates of a list of GAIA targets around the pointing of the pure parallel image</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convert-those-sky-coordinates-to-x-y-in-the-image-according-to-its-wcs-then-show-them-on-image">Convert those sky coordinates to (x, y) in the image according to its WCS, then show them on image</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#now-apply-the-update-parallel-wcs-py-script-to-correct-the-wcs-note-the-offset-in-pixel-coordinates-calculated-by-the-script">Now apply the update_parallel_wcs.py script to correct the WCS. Note the offset in pixel coordinates calculated by the script:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-x-y-for-the-gaia-targets-in-the-updated-fits-file-and-print-the-updated-x-y-coordinates">Calculate (x, y) for the GAIA targets in the updated fits file and print the updated (x, y) coordinates:</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="improving-accuracy-of-world-coordinate-system-of-pure-parallel-dataset">
+<h1>Improving Accuracy of World Coordinate System of Pure Parallel Dataset<a class="headerlink" href="#improving-accuracy-of-world-coordinate-system-of-pure-parallel-dataset" title="Permalink to this heading">#</a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<p>In this notebook, we will go through the steps needed to improve the accuracy of the World Coordinate System (WCS) in the headers of pure parallel datasets that were observed with JWST prior to the installation of DMS 10.2 (April 2024). The example dataset is jw01571078001_03201_00001_nis_rate.fits, which is a direct image from pure parallel Program ID 1571 (PI: Malkan). Note that the <code class="docutils literal notranslate"><span class="pre">update_parallel_wcs.py</span></code> script has to be run on all individual datasets taken during a pure parallel visit in order to get the improved WCS for that visit.</p>
+<p>In this notebook, we assume that all relevant files are located in the current working directory.</p>
+<section id="install-pipeline-and-other-required-packages">
+<h3>Install pipeline and other required packages<a class="headerlink" href="#install-pipeline-and-other-required-packages" title="Permalink to this heading">#</a></h3>
+<p>The required packages are in the provided file <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>. We generally recommend to create a fresh conda environment followed by the installation of those required packages:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">improve_pure_parallel_wcs</span>
+<span class="n">conda</span> <span class="n">activate</span> <span class="n">improve_pure_parallel_wcs</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>Date last published: September 17, 2024</p>
+</section>
+<section id="imports">
+<h3>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h3>
+<p>The imports in the next cell are needed to run this notebook.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">jwst.datamodels</span> <span class="k">as</span> <span class="nn">dm</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">ascii</span>
+<span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">units</span> <span class="k">as</span> <span class="n">u</span>
+<span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">SkyCoord</span>
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span> <span class="nn">astropy.time</span> <span class="kn">import</span> <span class="n">Time</span>
+<span class="kn">from</span> <span class="nn">astropy.convolution</span> <span class="kn">import</span> <span class="n">interpolate_replace_nans</span><span class="p">,</span> <span class="n">Gaussian2DKernel</span>
+<span class="kn">import</span> <span class="nn">astropy.io.fits</span> <span class="k">as</span> <span class="nn">pyfits</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">patches</span>
+<span class="kn">import</span> <span class="nn">pysiaf</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span>
+<span class="kn">from</span> <span class="nn">astroquery.gaia</span> <span class="kn">import</span> <span class="n">Gaia</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="define-a-few-functions">
+<h3>Define a few functions<a class="headerlink" href="#define-a-few-functions" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># This example is to show the (mis-)alignment of the World Coordinate System of a Pure Parallel imaging dataset </span>
+<span class="c1"># taken before the installation of DMS 10.2, relative to GAIA DR3, and how the application of the </span>
+<span class="c1"># &quot;update_parallel_wcs.py&quot; script improves that alignment.</span>
+<span class="c1">#</span>
+<span class="c1"># First some functions to obtain a catalog of GAIA stars near a certain sky position:</span>
+<span class="c1">#</span>
+<span class="k">def</span> <span class="nf">query_gaia</span><span class="p">(</span><span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Execute a Gaia DR3 query using astroquery, return the table of sources.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    ra:   a float value, the right ascension in decimal degrees</span>
+
+<span class="sd">    dec:  a float value, the declination in decimal degrees</span>
+
+<span class="sd">    radius:  an optional float value, the search radius in arc-seconds, </span>
+<span class="sd">             default 1.0</span>
+
+<span class="sd">    epoch:   an optional float value, the epoch for the positions in decimal </span>
+<span class="sd">             years (2023.197588611 for example, for 2021-05-24T17:46:12.814) </span>
+<span class="sd">             if given, the proper motion is allowed for in the positions that </span>
+<span class="sd">             are returned</span>
+
+<span class="sd">    verbose:  an optional boolean value, if True print a list of the sources</span>
+
+<span class="sd">    filename:  an optional string value, used as the output file name if </span>
+<span class="sd">               the verbose flag is set (if None, print only to the terminal)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    gaiadata1:  an Astropy Table containing the catalogue of sources</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">coord</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="n">ra</span><span class="o">=</span><span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="o">=</span><span class="n">dec</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">degree</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">degree</span><span class="p">),</span>
+                     <span class="n">frame</span><span class="o">=</span><span class="s1">&#39;icrs&#39;</span><span class="p">)</span>
+    <span class="n">radius</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">Quantity</span><span class="p">(</span><span class="n">radius</span><span class="o">/</span><span class="mf">3600.0</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">)</span>
+    <span class="n">Gaia</span><span class="o">.</span><span class="n">ROW_LIMIT</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">Gaia</span><span class="o">.</span><span class="n">MAIN_GAIA_TABLE</span> <span class="o">=</span> <span class="s2">&quot;gaiadr3.gaia_source&quot;</span>
+    <span class="n">gaiadata1</span> <span class="o">=</span> <span class="n">Gaia</span><span class="o">.</span><span class="n">query_object_async</span><span class="p">(</span><span class="n">coordinate</span><span class="o">=</span><span class="n">coord</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">radius</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">radius</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">gphot</span> <span class="o">=</span> <span class="n">gaiadata1</span><span class="p">[</span><span class="s1">&#39;phot_g_mean_mag&#39;</span><span class="p">]</span>
+        <span class="n">gbphot</span> <span class="o">=</span> <span class="n">gaiadata1</span><span class="p">[</span><span class="s1">&#39;phot_bp_mean_mag&#39;</span><span class="p">]</span>
+        <span class="n">grphot</span> <span class="o">=</span> <span class="n">gaiadata1</span><span class="p">[</span><span class="s1">&#39;phot_rp_mean_mag&#39;</span><span class="p">]</span>
+        <span class="n">parallax</span> <span class="o">=</span> <span class="n">gaiadata1</span><span class="p">[</span><span class="s1">&#39;parallax&#39;</span><span class="p">]</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="n">gaiadata1</span><span class="p">[</span><span class="s1">&#39;DESIGNATION&#39;</span><span class="p">]</span>
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+            <span class="n">gabs</span> <span class="o">=</span> <span class="n">gphot</span><span class="o">-</span><span class="mf">5.</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">1000.</span><span class="o">/</span><span class="n">parallax</span><span class="p">)</span><span class="o">+</span><span class="mf">5.</span>
+            <span class="n">gcol</span> <span class="o">=</span> <span class="n">gbphot</span> <span class="o">-</span> <span class="n">grphot</span>
+        <span class="k">if</span> <span class="n">epoch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">epoch</span> <span class="o">=</span> <span class="mf">2016.0</span>
+        <span class="n">gaiadata2</span> <span class="o">=</span> <span class="n">apply_precession</span><span class="p">(</span><span class="n">gaiadata1</span><span class="p">,</span> <span class="n">epoch</span><span class="o">-</span><span class="mf">2016.0</span><span class="p">)</span>
+        <span class="n">ra</span> <span class="o">=</span> <span class="n">gaiadata2</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">]</span>
+        <span class="n">dec</span> <span class="o">=</span> <span class="n">gaiadata2</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">]</span>
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ra</span><span class="p">)):</span>
+                <span class="n">g_col</span> <span class="o">=</span> <span class="n">gcol</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">gbphot</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">90.</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">grphot</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">90.</span><span class="p">)</span> <span class="k">else</span> <span class="mf">0.0</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ra</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">:</span><span class="s2">12.8f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">dec</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">:</span><span class="s2">13.8f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">gphot</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">:</span><span class="s2">10.6f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">gbphot</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">:</span><span class="s2">10.6f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">grphot</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">:</span><span class="s2">10.6f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">parallax</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">:</span><span class="s2">10.3f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">gabs</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">:</span><span class="s2">10.4f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">g_col</span><span class="si">:</span><span class="s2">10.4f</span><span class="si">}</span><span class="s2"> &#39;</span><span class="si">{</span><span class="n">names</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">,</span> <span class="s1">&#39;0.0&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;          RA           DEC          g        gbp        grp   parallax      abs_g    gbp_grp               GAIA_Designation&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">outfile</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ra</span><span class="p">)):</span>
+                        <span class="n">g_col</span> <span class="o">=</span> <span class="n">gcol</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">gbphot</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">90.</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">grphot</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">90.</span><span class="p">)</span> <span class="k">else</span> <span class="mf">0.0</span>
+                        <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ra</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">:</span><span class="s2">12.8f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">dec</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">:</span><span class="s2">13.8f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">gphot</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">:</span><span class="s2">10.6f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">gbphot</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">:</span><span class="s2">10.6f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">grphot</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">:</span><span class="s2">10.6f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">parallax</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">:</span><span class="s2">10.3f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">gabs</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">:</span><span class="s2">10.4f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">g_col</span><span class="si">:</span><span class="s2">10.4f</span><span class="si">}</span><span class="s2"> &#39;</span><span class="si">{</span><span class="n">names</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">,</span> <span class="s1">&#39;0.0&#39;</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">outfile</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">gaiadata2</span>
+
+
+<span class="k">def</span> <span class="nf">apply_precession</span><span class="p">(</span><span class="n">catalog</span><span class="p">,</span> <span class="n">deltat</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply precession to update a catalog of values.  Uses astropy.SkyCoord </span>
+<span class="sd">    apply_space_motion to update the positions.</span>
+
+<span class="sd">    Parameters:</span>
+
+<span class="sd">    catalog:     a numpy Table type variable with elements &#39;ra&#39;, &#39;dec&#39;, &#39;pmra&#39;, </span>
+<span class="sd">                 and &#39;pmdec&#39; as per the Gaia DR3 catalog; sky coordinates </span>
+<span class="sd">                 must be in degrees and the proper motions must be in mas/year</span>
+
+<span class="sd">    deltat:      a float value, the time change in decimal years for the motion</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    newcatalog:  a copy of catalog with &#39;newra&#39;, &#39;newdec&#39; elements with the </span>
+<span class="sd">                 revised sky positions; if no proper motion data are </span>
+<span class="sd">                 available then newra = ra and newdec = dec</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">newcatalog</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">catalog</span><span class="p">)</span>
+    <span class="n">newcatalog</span><span class="p">[</span><span class="s1">&#39;newra&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">]</span>
+    <span class="n">newcatalog</span><span class="p">[</span><span class="s1">&#39;newdec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">]</span>
+    <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+        <span class="n">sky_coords</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">],</span> <span class="n">catalog</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">],</span> 
+                              <span class="n">unit</span><span class="o">=</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">),</span>
+                              <span class="n">pm_ra_cosdec</span><span class="o">=</span><span class="n">catalog</span><span class="p">[</span><span class="s1">&#39;pmra&#39;</span><span class="p">],</span> 
+                              <span class="n">pm_dec</span><span class="o">=</span><span class="n">catalog</span><span class="p">[</span><span class="s1">&#39;pmdec&#39;</span><span class="p">],</span>
+                              <span class="n">obstime</span><span class="o">=</span><span class="n">Time</span><span class="p">(</span><span class="s1">&#39;2016-01-01 00:00:00.0&#39;</span><span class="p">))</span>
+        <span class="n">newpos</span> <span class="o">=</span> <span class="n">sky_coords</span><span class="o">.</span><span class="n">apply_space_motion</span><span class="p">(</span><span class="n">dt</span><span class="o">=</span><span class="n">deltat</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">yr</span><span class="p">)</span>
+    <span class="n">newra</span> <span class="o">=</span> <span class="n">newpos</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">newdec</span> <span class="o">=</span> <span class="n">newpos</span><span class="o">.</span><span class="n">dec</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">newcatalog</span><span class="p">[</span><span class="s1">&#39;newra&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">newra</span>
+    <span class="n">newcatalog</span><span class="p">[</span><span class="s1">&#39;newdec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">newdec</span>
+    <span class="n">inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">newra</span><span class="p">)</span>
+    <span class="n">newcatalog</span><span class="p">[</span><span class="s1">&#39;newra&#39;</span><span class="p">][</span><span class="n">inds</span><span class="p">]</span> <span class="o">=</span> <span class="n">newcatalog</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">][</span><span class="n">inds</span><span class="p">]</span>
+    <span class="n">newcatalog</span><span class="p">[</span><span class="s1">&#39;newdec&#39;</span><span class="p">][</span><span class="n">inds</span><span class="p">]</span> <span class="o">=</span> <span class="n">newcatalog</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">][</span><span class="n">inds</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">newcatalog</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="get-sky-coordinates-of-a-list-of-gaia-targets-around-the-pointing-of-the-pure-parallel-image">
+<h3>Get sky coordinates of a list of GAIA targets around the pointing of the pure parallel image<a class="headerlink" href="#get-sky-coordinates-of-a-list-of-gaia-targets-around-the-pointing-of-the-pure-parallel-image" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Now get such a list around pointing of NIRISS pure parallel image jw01571078001_03201_00001_nis_rate.fits</span>
+<span class="c1"># downloaded from the MAST archive. </span>
+<span class="c1"># Note: files downloaded or created here will be placed in the current working directory.</span>
+<span class="n">boxlink</span> <span class="o">=</span> <span class="s1">&#39;https://stsci.box.com/shared/static/ydxn3hhndwup0qr85fuyqro6suufa6fx.fits&#39;</span>
+<span class="n">boxfile</span> <span class="o">=</span> <span class="s1">&#39;jw01571078001_03201_00002_nis_rate.fits&#39;</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error downloading file: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">imfile</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">boxfile</span><span class="p">)</span> 
+    <span class="n">hdr1</span> <span class="o">=</span> <span class="n">imfile</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+    <span class="n">ra</span><span class="p">,</span> <span class="n">dec</span> <span class="o">=</span> <span class="n">hdr1</span><span class="p">[</span><span class="s1">&#39;CRVAL1&#39;</span><span class="p">],</span> <span class="n">hdr1</span><span class="p">[</span><span class="s1">&#39;CRVAL2&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;RA = </span><span class="si">{</span><span class="n">ra</span><span class="si">}</span><span class="s1">, DEC = </span><span class="si">{</span><span class="n">dec</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error opening FITS file: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">mygaia</span> <span class="o">=</span> <span class="n">query_gaia</span><span class="p">(</span><span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="p">,</span> <span class="mf">65.</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="mf">2022.9968</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;gaiacoords.out&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RA = 150.41048088035956, DEC = 2.4050524643551943
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Query finished. [astroquery.utils.tap.core]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="convert-those-sky-coordinates-to-x-y-in-the-image-according-to-its-wcs-then-show-them-on-image">
+<h3>Convert those sky coordinates to (x, y) in the image according to its WCS, then show them on image<a class="headerlink" href="#convert-those-sky-coordinates-to-x-y-in-the-image-according-to-its-wcs-then-show-them-on-image" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;gaiacoords.out&#39;</span><span class="p">)</span>
+<span class="n">ra</span><span class="p">,</span> <span class="n">dec</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">])</span>
+<span class="n">ratefile</span> <span class="o">=</span> <span class="s1">&#39;jw01571078001_03201_00002_nis_rate.fits&#39;</span>
+<span class="n">instr</span> <span class="o">=</span> <span class="n">imfile</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;INSTRUME&#39;</span><span class="p">]</span>
+<span class="n">aperture</span> <span class="o">=</span> <span class="n">imfile</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;APERNAME&#39;</span><span class="p">]</span>
+<span class="n">siaf</span> <span class="o">=</span> <span class="n">pysiaf</span><span class="o">.</span><span class="n">Siaf</span><span class="p">(</span><span class="n">instr</span><span class="p">)</span>
+<span class="n">myaper</span> <span class="o">=</span> <span class="n">siaf</span><span class="p">[</span><span class="n">aperture</span><span class="p">]</span>
+<span class="n">mod</span> <span class="o">=</span> <span class="n">dm</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ratefile</span><span class="p">)</span>
+<span class="n">am</span> <span class="o">=</span> <span class="n">pysiaf</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">rotations</span><span class="o">.</span><span class="n">attitude_matrix</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mod</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">pointing</span><span class="o">.</span><span class="n">ra_v1</span><span class="p">,</span>
+                                            <span class="n">mod</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">pointing</span><span class="o">.</span><span class="n">dec_v1</span><span class="p">,</span>
+                                            <span class="n">mod</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">pointing</span><span class="o">.</span><span class="n">pa_v3</span><span class="p">)</span>
+<span class="n">myaper</span><span class="o">.</span><span class="n">set_attitude_matrix</span><span class="p">(</span><span class="n">am</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">myaper</span><span class="o">.</span><span class="n">sky_to_sci</span><span class="p">(</span><span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="p">)</span>
+
+<span class="n">xytab</span> <span class="o">=</span> <span class="n">Table</span><span class="p">([</span><span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;RA&#39;</span><span class="p">,</span> <span class="s1">&#39;DEC&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">))</span>
+<span class="n">xytab</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;.8f&#39;</span>
+<span class="n">xytab</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;.8f&#39;</span>
+<span class="n">xytab</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;.4f&#39;</span>
+<span class="n">xytab</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;.4f&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">xytab</span><span class="p">)</span>
+
+<span class="n">ys</span><span class="p">,</span> <span class="n">xs</span> <span class="o">=</span> <span class="n">imfile</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="n">xsize</span><span class="p">,</span> <span class="n">ysize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">patches</span><span class="o">.</span><span class="n">Ellipse</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+        <span class="p">(</span><span class="n">xsize</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">ysize</span><span class="p">),</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">))</span>
+<span class="c1"># Create image with bad pixels interpolated over (for display purposes)</span>
+<span class="n">kernel</span> <span class="o">=</span> <span class="n">Gaussian2DKernel</span><span class="p">(</span><span class="n">x_stddev</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">fixed_image</span> <span class="o">=</span> <span class="n">interpolate_replace_nans</span><span class="p">(</span><span class="n">imfile</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">fixed_image</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;binary&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">xs</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ys</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     RA         DEC         x         y    
+------------ ---------- --------- ---------
+150.41652702 2.39878800 1178.4537  572.5781
+150.41591443 2.39797550 1233.7315  582.1378
+150.40719349 2.39406168 1646.0505  909.0131
+150.42265455 2.40721593  610.8758  484.1616
+150.39991658 2.41498142  805.9535 1784.5106
+150.42546736 2.41363882  225.3103  506.9972
+150.42277119 2.41723805  117.3792  727.9126
+150.41347159 2.38794396 1786.8709  450.3341
+150.42439347 2.42208304 -160.7871  769.1785
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7ff7e80eb610&gt;
+</pre></div>
+</div>
+<img alt="../../../_images/3d4e9eda1b99c1b5ad552bc6aee05dada9532e410e62139de694962a9d06f8c5.png" src="../../../_images/3d4e9eda1b99c1b5ad552bc6aee05dada9532e410e62139de694962a9d06f8c5.png" />
+</div>
+</div>
+<p>Note that the WCS is ‘off’ by more than a pixel, which is a problem for spectral extraction in the pipeline for WFSS data, since <strong>that extraction relies blindly on the accuracy of the WCS</strong>.</p>
+</section>
+<section id="now-apply-the-update-parallel-wcs-py-script-to-correct-the-wcs-note-the-offset-in-pixel-coordinates-calculated-by-the-script">
+<h3>Now apply the update_parallel_wcs.py script to correct the WCS. Note the offset in pixel coordinates calculated by the script:<a class="headerlink" href="#now-apply-the-update-parallel-wcs-py-script-to-correct-the-wcs-note-the-offset-in-pixel-coordinates-calculated-by-the-script" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># This cell assumes that you have script update_parallel_wcs.py in your working directory. </span>
+<span class="c1"># Note: Outside of this notebook, this script should be run as follows on each _rate.fits file in the pure parallel visit:</span>
+<span class="c1"># </span>
+<span class="c1"># python update_parallel_wcs.py my_rate.fits &lt;verbosity&gt;</span>
+<span class="c1"># </span>
+<span class="c1"># After the script has been run on the input file(s), one can then (re-)run Stage 2 of the JWST calibration pipeline </span>
+<span class="c1"># (`calwebb_image2` and/or `calwebb_spec2`) on those files, which will now result in correct WCSes in the data headers </span>
+<span class="c1"># (and corrected locations of spectral extractions in case of pure parallel WFSS data).</span>
+<span class="c1">#</span>
+<span class="c1"># By default, `update_parallel_wcs.py` displays the input and output values of the CRVAL1/2 keywords when the script is run </span>
+<span class="c1"># as seen below. One can avoid this by setting the optional parameter &lt;verbosity&gt; to anything other than `True`.</span>
+<span class="c1">#</span>
+<span class="c1"># The script keeps track of its executions using a log file called &quot;pure_parallel_wcs_logfile&quot; in the working directory.</span>
+
+<span class="o">%</span><span class="k">run</span> update_parallel_wcs.py jw01571078001_03201_00002_nis_rate.fits
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PureParallelUtils.update_pure_parallel_wcs: File: jw01571078001_03201_00002_nis_rate.fits
+PureParallelUtils.update_pure_parallel_wcs: FGS: jw01762008001_gs-fg_2022364021322_cal.fits
+PureParallelUtils.update_pure_parallel_wcs: original crval: 150.4104809 2.4050525
+PureParallelUtils.update_pure_parallel_wcs:      new crval: 150.4104774 2.4050775
+PureParallelUtils.update_pure_parallel_wcs:         d(pix): -1.139  0.792
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 640x480 with 0 Axes&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="calculate-x-y-for-the-gaia-targets-in-the-updated-fits-file-and-print-the-updated-x-y-coordinates">
+<h3>Calculate (x, y) for the GAIA targets in the updated fits file and print the updated (x, y) coordinates:<a class="headerlink" href="#calculate-x-y-for-the-gaia-targets-in-the-updated-fits-file-and-print-the-updated-x-y-coordinates" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;jw01571078001_03201_00002_nis_rate.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">imfile</span><span class="p">:</span>
+    <span class="n">hdr0</span> <span class="o">=</span> <span class="n">imfile</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+    <span class="n">myaper</span> <span class="o">=</span> <span class="n">pysiaf</span><span class="o">.</span><span class="n">Siaf</span><span class="p">(</span><span class="n">hdr0</span><span class="p">[</span><span class="s1">&#39;INSTRUME&#39;</span><span class="p">])[</span><span class="n">hdr0</span><span class="p">[</span><span class="s1">&#39;APERNAME&#39;</span><span class="p">]]</span>
+    <span class="n">mod</span> <span class="o">=</span> <span class="n">dm</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;jw01571078001_03201_00002_nis_rate.fits&#39;</span><span class="p">)</span>
+    <span class="n">am</span> <span class="o">=</span> <span class="n">pysiaf</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">rotations</span><span class="o">.</span><span class="n">attitude_matrix</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mod</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">pointing</span><span class="o">.</span><span class="n">ra_v1</span><span class="p">,</span>
+                                                <span class="n">mod</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">pointing</span><span class="o">.</span><span class="n">dec_v1</span><span class="p">,</span>
+                                                <span class="n">mod</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">pointing</span><span class="o">.</span><span class="n">pa_v3</span><span class="p">)</span>
+    <span class="n">myaper</span><span class="o">.</span><span class="n">set_attitude_matrix</span><span class="p">(</span><span class="n">am</span><span class="p">)</span>
+    <span class="n">newx</span><span class="p">,</span> <span class="n">newy</span> <span class="o">=</span> <span class="n">myaper</span><span class="o">.</span><span class="n">sky_to_sci</span><span class="p">(</span><span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="p">)</span>
+    <span class="n">xytab</span> <span class="o">=</span> <span class="n">Table</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">newx</span><span class="p">,</span> <span class="n">newy</span><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;x_corr&#39;</span><span class="p">,</span> <span class="s1">&#39;y_corr&#39;</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">xytab</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+        <span class="n">xytab</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;.4f&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">xytab</span><span class="p">)</span>
+
+<span class="c1"># In practice, one would run the script on all _rate.fits files for a given target, </span>
+<span class="c1"># then run the stage-2 and stage-3 pipelines on the resulting images </span>
+<span class="c1"># (specifically, Image2Pipeline for the direct images, followed by Image3Pipeline to create a combined </span>
+<span class="c1"># image and source catalog, followed by the stage-2 and stage-3 pipelines for the grism images </span>
+<span class="c1"># (Spec2Pipeline and Spec3Pipeline, respectively).</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    x         y       x_corr    y_corr 
+--------- --------- --------- ---------
+1178.4537  572.5781 1179.3692  573.1124
+1233.7315  582.1378 1234.6468  582.6729
+1646.0505  909.0131 1646.9603  909.5544
+ 610.8758  484.1616  611.7927  484.6867
+ 805.9535 1784.5106  806.8472 1785.0388
+ 225.3103  506.9972  226.2269  507.5160
+ 117.3792  727.9126  118.2918  728.4293
+1786.8709  450.3341 1787.7893  450.8782
+-160.7871  769.1785 -159.8752  769.6907
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/jdat_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/cross_instrument/update_pure_parallel_wcs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Specviz Simple Demo</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_runpipeline.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">MRS Pipeline</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-pipeline-and-other-required-packages">Install pipeline and other required packages</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#define-a-few-functions">Define a few functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-sky-coordinates-of-a-list-of-gaia-targets-around-the-pointing-of-the-pure-parallel-image">Get sky coordinates of a list of GAIA targets around the pointing of the pure parallel image</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convert-those-sky-coordinates-to-x-y-in-the-image-according-to-its-wcs-then-show-them-on-image">Convert those sky coordinates to (x, y) in the image according to its WCS, then show them on image</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#now-apply-the-update-parallel-wcs-py-script-to-correct-the-wcs-note-the-offset-in-pixel-coordinates-calculated-by-the-script">Now apply the update_parallel_wcs.py script to correct the WCS. Note the offset in pixel coordinates calculated by the script:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-x-y-for-the-gaia-targets-in-the-updated-fits-file-and-print-the-updated-x-y-coordinates">Calculate (x, y) for the GAIA targets in the updated fits file and print the updated (x, y) coordinates:</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

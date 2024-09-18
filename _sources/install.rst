@@ -31,7 +31,7 @@ with most modern shells, except CSH/TCSH.
 You may want to consider installing your notebooks in a new virtual or conda environment
 to avoid version conflicts with other packages you may have installed, for example::
 
-    conda create -n jdat-nb python=3.9
+    conda create -n jdat-nb python=3.11
     conda activate jdat-nb
     git clone https://github.com/spacetelescope/jdat_notebooks.git
 
