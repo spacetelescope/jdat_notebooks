@@ -1,0 +1,20 @@
+name: Manual Single File Execute-Store-Generate HTML
+on:
+  workflow_dispatch:
+    inputs:
+      filename:
+        description: 'Notebook file name:'
+        required: true
+        default: 'notebook.ipynb'
+
+jobs:
+  GenerateHTML:
+   uses: spacetelescope/notebook-ci-actions/.github/workflows/ci_build_merge_manual_single.yml@v3
+   with:
+      python-version: ${{ vars.PYTHON_VERSION }}
+      filename: ${{ github.event.inputs.filename }}
+   secrets:
+      CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
+      CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
+   permissions:
+     contents: write
