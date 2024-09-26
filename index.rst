@@ -25,7 +25,7 @@ and a listing of the data analysis tools that
 are demonstrated by the use case.
 
 The latest versions of the notebooks are contained in the
-`GitHub jdat_notebooks repository <https://github.com/spacetelescope/jdat_notebooks>.`
+`GitHub jdat_notebooks repository <https://github.com/spacetelescope/jdat_notebooks>`_.
 
 
 Installation Instructions
