@@ -10,11 +10,30 @@ as well. This repository and the notebooks are one component of STScI's
 larger `Data Analysis Tools
 Ecosystem <https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis>`_.
 
+Summary Listing and Descriptions
+================================
+
+The sidebar on the left of this page provides a summery listing of the notebooks,
+and clicking will take you to html-rendered
+versions of the notebooks. These are easily readable, and
+require no special tools beyond your web browser. The notebooks are
+organized by JWST instrument, or are marked as
+cross-instrument. At the top of each notebook you will find a brief
+description of the specific science use case
+that is demonstrated by the notebook, a description of the data that are used,
+and a listing of the data analysis tools that
+are demonstrated by the use case.
+
+The latest versions of the notebooks are contained in the
+`GitHub jdat_notebooks repository <https://github.com/spacetelescope/jdat_notebooks>.`
+
+
 Installation Instructions
 =========================
 
-Please see the :ref:`installation instructions <install>` for details on how to download,
-install, and run your notebooks.
+To download and execute the notebooks, we recommend that you
+clone this repository to your local computer as described
+in :ref:`installation instructions <install>` for details.
 
 Help
 ====
