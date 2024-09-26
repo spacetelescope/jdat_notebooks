@@ -7,13 +7,13 @@
 
 The ``jdat_notebooks`` repository contains notebooks illustrating workflows for post-pipeline analysis of JWST data. Some of the notebooks also illustrate generic analysis workflows that are applicable to data from other observatories as well. This repository and the notebooks are one component of STScI's larger [Data Analysis Tools Ecosystem](https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis).
 
-The following [table](https://spacetelescope.github.io/jdat_notebooks/) summarizes the notebooks currently available.
+## Summary and Description
+
+The following [page](https://spacetelescope.github.io/jdat_notebooks/) summarizes the material currently available.
 
 ## Installation
 
-You can view [rendered versions of the notebooks](https://spacetelescope.github.io/jdat_notebooks/), which require no special tools beyond your web browser.
-
-To download and execute the notebooks, please read the [detailed instructions](https://spacetelescope.github.io/jdat_notebooks/install.html). for cloning this repository to your local computer.
+To download and execute the notebooks, please read the [detailed instructions](https://spacetelescope.github.io/jdat_notebooks/install.html).
 
 ## Help
 
@@ -24,4 +24,3 @@ If you uncover any issues or bugs, you can [open an issue on GitHub](https://git
 Contributions are welcome from both the scientist and developer community.  If you wish to contribute fixes or clarifications to existing notebooks, feel free to do so directly to this repository.  If you wish to contribute new notebooks or major reworks of existing notebooks, see [contributing instructions](https://github.com/spacetelescope/jdat_notebooks/blob/main/CONTRIBUTING.rst).
 
 The notebooks attempt to utilize a number of software packages supported by STScI, including [Astropy](https://www.astropy.org), [glue](http://docs.glueviz.org/en/stable/index.html), [ginga](https://ginga.readthedocs.io/en/latest/), [photutils](https://photutils.readthedocs.io), [specutils](https://specutils.readthedocs.io/en/stable/), [astroimtools](http://astroimtools.readthedocs.io), [imexam](http://imexam.readthedocs.io), [jdaviz](https://jdaviz.readthedocs.io/en/latest/), [asdf](http://asdf.readthedocs.io/en/latest/), [gwcs](https://gwcs.readthedocs.io/en/latest/), and [synphot](http://synphot.readthedocs.io/en/latest/index.html).  Note jdaviz is STScI's JWST Data Analysis Visualization Tool, designed to be used with spectra, IFU cubes, and multi-object spectroscopy (MOS).
-
