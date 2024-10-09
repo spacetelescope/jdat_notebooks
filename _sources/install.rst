@@ -43,6 +43,6 @@ Next, move into the directory of the notebook you want to install and set up the
     cd jdat_notebooks/notebooks/<whatever-notebook>
     pip install -r pre-requirements.txt (if necessary)
     pip install -r requirements.txt
+    pip install jupyter
     jupyter notebook
     ## Alternatively, you can use jupyter lab
-
