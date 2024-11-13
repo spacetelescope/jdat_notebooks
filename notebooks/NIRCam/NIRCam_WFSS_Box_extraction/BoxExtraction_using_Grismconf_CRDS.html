@@ -462,8 +462,9 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-imports">Package Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-crds-path-and-server">Set CRDS Path and Server</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-functions-and-parameters">Define Functions and Parameters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-data-and-ensure-crds-configuration">Download Data and Ensure CRDS Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-data">Download Data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-pipeline-steps">Run Pipeline Steps</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-computation-of-wfss-information">Basic Computation of WFSS Information</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compute-where-light-gets-dispersed-to">Compute where light gets dispersed to</a></li>
@@ -529,11 +530,43 @@ Date created: 24 Sept 2024</p>
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">sigmaclip</span>
 
-<span class="kn">from</span> <span class="nn">crds</span> <span class="kn">import</span> <span class="n">client</span>
 <span class="kn">import</span> <span class="nn">grismconf</span>
 <span class="kn">from</span> <span class="nn">jwst.assign_wcs</span> <span class="kn">import</span> <span class="n">AssignWcsStep</span>
 <span class="kn">from</span> <span class="nn">jwst.flatfield</span> <span class="kn">import</span> <span class="n">FlatFieldStep</span>
 <span class="kn">from</span> <span class="nn">jwst.photom</span> <span class="kn">import</span> <span class="n">PhotomStep</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="set-crds-path-and-server">
+<h2>Set CRDS Path and Server<a class="headerlink" href="#set-crds-path-and-server" title="Permalink to this heading">#</a></h2>
+<p>Before running the pipeline steps, we need to ensure our our CRDS environment is configured. This includes defining a CRDS cache directory in which to keep the reference files that will be used by the calibration pipeline.</p>
+<p>If the root directory for the local CRDS cache has not already been set, it will be created in the home directory.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check whether the local CRDS cache directory has been set.</span>
+<span class="c1"># If not, set it to the user home directory</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CRDS_PATH&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">),</span> <span class="s1">&#39;crds&#39;</span><span class="p">)</span>
+<span class="c1"># Check whether the CRDS server URL has been set.  If not, set it.</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://jwst-crds.stsci.edu&#39;</span>
+
+<span class="c1"># Echo CRDS path and context in use</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;CRDS local filepath:&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_PATH&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;CRDS file server:&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">])</span>
+
+<span class="c1"># import crds after setting up the required environment variables</span>
+<span class="kn">from</span> <span class="nn">crds</span> <span class="kn">import</span> <span class="n">client</span>
+<span class="k">if</span> <span class="n">client</span><span class="o">.</span><span class="n">get_crds_server</span><span class="p">()</span> <span class="o">!=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">]:</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">set_crds_server</span><span class="p">(</span><span class="s1">&#39;https://jwst-crds.stsci.edu&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS local filepath: /home/runner/crds
+CRDS file server: https://jwst-crds.stsci.edu
 </pre></div>
 </div>
 </div>
@@ -632,8 +665,8 @@ Date created: 24 Sept 2024</p>
 </div>
 </div>
 </section>
-<section id="download-data-and-ensure-crds-configuration">
-<h2>Download Data and Ensure CRDS Configuration<a class="headerlink" href="#download-data-and-ensure-crds-configuration" title="Permalink to this heading">#</a></h2>
+<section id="download-data">
+<h2>Download Data<a class="headerlink" href="#download-data" title="Permalink to this heading">#</a></h2>
 <p>Download an example imaging mode rate file and corresponding WFSS mode rate file from MAST.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -642,18 +675,6 @@ Date created: 24 Sept 2024</p>
 <span class="n">wfss_file</span> <span class="o">=</span> <span class="s2">&quot;jw01076103001_02101_00001_nrcalong_rate.fits&quot;</span>
 <span class="n">get_jwst_file</span><span class="p">(</span><span class="n">imaging_file</span><span class="p">)</span>
 <span class="n">get_jwst_file</span><span class="p">(</span><span class="n">wfss_file</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>If CRDS is not configured, set the CRDS server URL and define a local cache path
-to ensure the pipeline steps can access reference files as needed.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;CRDS_PATH&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">set_crds_server</span><span class="p">(</span><span class="s1">&#39;https://jwst-crds.stsci.edu&#39;</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CRDS_SERVER_URL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;https://jwst-crds.stsci.edu&quot;</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CRDS_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -670,616 +691,616 @@ to ensure the pipeline steps can access reference files as needed.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:05,163 - CRDS - INFO -  Calibration SW Found: jwst 1.16.0 (/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/jwst-1.16.0.dist-info)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:07,386 - CRDS - INFO -  Calibration SW Found: jwst 1.16.0 (/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/jwst-1.16.0.dist-info)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:05,540 - CRDS - INFO -  Fetching  mappings/jwst/jwst_system_datalvl_0002.rmap                  694 bytes  (1 / 200 files) (0 / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:07,607 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_system_datalvl_0002.rmap      694 bytes  (1 / 200 files) (0 / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:05,594 - CRDS - INFO -  Fetching  mappings/jwst/jwst_system_calver_0043.rmap                 4.9 K bytes  (2 / 200 files) (694 / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:07,687 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_system_calver_0043.rmap    4.9 K bytes  (2 / 200 files) (694 / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:05,636 - CRDS - INFO -  Fetching  mappings/jwst/jwst_system_0042.imap                          385 bytes  (3 / 200 files) (5.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:07,790 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_system_0042.imap        385 bytes  (3 / 200 files) (5.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:05,748 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_wavelengthrange_0024.rmap       1.4 K bytes  (4 / 200 files) (6.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:07,867 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_wavelengthrange_0024.rmap    1.4 K bytes  (4 / 200 files) (6.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:05,840 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_wavecorr_0005.rmap                884 bytes  (5 / 200 files) (7.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:08,018 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_wavecorr_0005.rmap      884 bytes  (5 / 200 files) (7.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:05,916 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_superbias_0074.rmap            33.8 K bytes  (6 / 200 files) (8.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:08,166 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_superbias_0074.rmap   33.8 K bytes  (6 / 200 files) (8.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:06,078 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_sflat_0026.rmap                20.6 K bytes  (7 / 200 files) (42.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:08,258 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_sflat_0026.rmap   20.6 K bytes  (7 / 200 files) (42.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:06,162 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_saturation_0018.rmap            2.0 K bytes  (8 / 200 files) (62.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:08,348 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_saturation_0018.rmap    2.0 K bytes  (8 / 200 files) (62.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:06,288 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_refpix_0015.rmap                1.6 K bytes  (9 / 200 files) (64.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:08,478 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_refpix_0015.rmap    1.6 K bytes  (9 / 200 files) (64.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:06,397 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_readnoise_0025.rmap             2.6 K bytes  (10 / 200 files) (66.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:08,538 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_readnoise_0025.rmap    2.6 K bytes  (10 / 200 files) (66.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:06,474 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_photom_0013.rmap                  958 bytes  (11 / 200 files) (68.8 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:08,627 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_photom_0013.rmap      958 bytes  (11 / 200 files) (68.8 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:06,546 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_pathloss_0007.rmap              1.1 K bytes  (12 / 200 files) (69.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:08,701 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_pathloss_0007.rmap    1.1 K bytes  (12 / 200 files) (69.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:06,673 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_pars-whitelightstep_0001.rmap      777 bytes  (13 / 200 files) (70.8 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:08,752 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_pars-whitelightstep_0001.rmap      777 bytes  (13 / 200 files) (70.8 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:06,726 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_pars-spec2pipeline_0013.rmap    2.1 K bytes  (14 / 200 files) (71.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:08,833 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_pars-spec2pipeline_0013.rmap    2.1 K bytes  (14 / 200 files) (71.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:06,767 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_pars-resamplespecstep_0002.rmap      709 bytes  (15 / 200 files) (73.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:08,892 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_pars-resamplespecstep_0002.rmap      709 bytes  (15 / 200 files) (73.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:06,810 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_pars-outlierdetectionstep_0003.rmap    1.1 K bytes  (16 / 200 files) (74.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:08,946 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_pars-outlierdetectionstep_0003.rmap    1.1 K bytes  (16 / 200 files) (74.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:06,859 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_pars-jumpstep_0005.rmap           810 bytes  (17 / 200 files) (75.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:08,994 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_pars-jumpstep_0005.rmap      810 bytes  (17 / 200 files) (75.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:07,018 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_pars-image2pipeline_0008.rmap    1.0 K bytes  (18 / 200 files) (76.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:09,047 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_pars-image2pipeline_0008.rmap    1.0 K bytes  (18 / 200 files) (76.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:07,069 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_pars-detector1pipeline_0003.rmap    1.1 K bytes  (19 / 200 files) (77.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:09,100 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_pars-detector1pipeline_0003.rmap    1.1 K bytes  (19 / 200 files) (77.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:07,130 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_pars-darkpipeline_0003.rmap       872 bytes  (20 / 200 files) (78.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:09,148 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_pars-darkpipeline_0003.rmap      872 bytes  (20 / 200 files) (78.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:07,195 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_pars-darkcurrentstep_0001.rmap      622 bytes  (21 / 200 files) (79.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:09,215 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_pars-darkcurrentstep_0001.rmap      622 bytes  (21 / 200 files) (79.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:07,241 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_ote_0030.rmap                   1.3 K bytes  (22 / 200 files) (80.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:09,277 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_ote_0030.rmap    1.3 K bytes  (22 / 200 files) (80.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:07,293 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_msaoper_0014.rmap               1.4 K bytes  (23 / 200 files) (81.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:09,342 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_msaoper_0014.rmap    1.4 K bytes  (23 / 200 files) (81.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:07,354 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_msa_0027.rmap                   1.3 K bytes  (24 / 200 files) (82.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:09,433 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_msa_0027.rmap    1.3 K bytes  (24 / 200 files) (82.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:07,420 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_mask_0039.rmap                  2.7 K bytes  (25 / 200 files) (83.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:09,493 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_mask_0039.rmap    2.7 K bytes  (25 / 200 files) (83.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:07,462 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_linearity_0017.rmap             1.6 K bytes  (26 / 200 files) (86.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:09,568 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_linearity_0017.rmap    1.6 K bytes  (26 / 200 files) (86.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:07,614 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_ipc_0006.rmap                     876 bytes  (27 / 200 files) (88.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:09,627 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_ipc_0006.rmap      876 bytes  (27 / 200 files) (88.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:07,675 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_ifuslicer_0017.rmap             1.5 K bytes  (28 / 200 files) (89.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:09,679 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_ifuslicer_0017.rmap    1.5 K bytes  (28 / 200 files) (89.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:07,719 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_ifupost_0019.rmap               1.5 K bytes  (29 / 200 files) (90.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:09,744 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_ifupost_0019.rmap    1.5 K bytes  (29 / 200 files) (90.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:07,760 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_ifufore_0017.rmap               1.5 K bytes  (30 / 200 files) (92.1 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:09,795 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_ifufore_0017.rmap    1.5 K bytes  (30 / 200 files) (92.1 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:07,824 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_gain_0023.rmap                  1.8 K bytes  (31 / 200 files) (93.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:09,844 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_gain_0023.rmap    1.8 K bytes  (31 / 200 files) (93.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:07,886 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_fpa_0028.rmap                   1.3 K bytes  (32 / 200 files) (95.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:09,896 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_fpa_0028.rmap    1.3 K bytes  (32 / 200 files) (95.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:07,943 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_fore_0026.rmap                  5.0 K bytes  (33 / 200 files) (96.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:09,957 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_fore_0026.rmap    5.0 K bytes  (33 / 200 files) (96.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,045 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_flat_0015.rmap                  3.8 K bytes  (34 / 200 files) (101.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:10,010 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_flat_0015.rmap    3.8 K bytes  (34 / 200 files) (101.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,119 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_fflat_0026.rmap                 7.2 K bytes  (35 / 200 files) (105.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:10,086 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_fflat_0026.rmap    7.2 K bytes  (35 / 200 files) (105.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,169 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_extract1d_0018.rmap             2.3 K bytes  (36 / 200 files) (112.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:10,230 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_extract1d_0018.rmap    2.3 K bytes  (36 / 200 files) (112.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,222 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_disperser_0028.rmap             5.7 K bytes  (37 / 200 files) (114.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:10,280 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_disperser_0028.rmap    5.7 K bytes  (37 / 200 files) (114.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,271 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_dflat_0007.rmap                 1.1 K bytes  (38 / 200 files) (120.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:10,340 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_dflat_0007.rmap    1.1 K bytes  (38 / 200 files) (120.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,318 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_dark_0069.rmap                 32.6 K bytes  (39 / 200 files) (121.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:10,416 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_dark_0069.rmap   32.6 K bytes  (39 / 200 files) (121.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,370 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_cubepar_0015.rmap                 966 bytes  (40 / 200 files) (154.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:10,500 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_cubepar_0015.rmap      966 bytes  (40 / 200 files) (154.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,410 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_collimator_0026.rmap            1.3 K bytes  (41 / 200 files) (155.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:10,559 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_collimator_0026.rmap    1.3 K bytes  (41 / 200 files) (155.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,496 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_camera_0026.rmap                1.3 K bytes  (42 / 200 files) (156.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:10,638 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_camera_0026.rmap    1.3 K bytes  (42 / 200 files) (156.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,552 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_barshadow_0007.rmap             1.8 K bytes  (43 / 200 files) (157.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:10,701 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_barshadow_0007.rmap    1.8 K bytes  (43 / 200 files) (157.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,642 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_area_0018.rmap                  6.3 K bytes  (44 / 200 files) (159.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:10,751 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_area_0018.rmap    6.3 K bytes  (44 / 200 files) (159.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,706 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_apcorr_0009.rmap                5.6 K bytes  (45 / 200 files) (165.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:10,800 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_apcorr_0009.rmap    5.6 K bytes  (45 / 200 files) (165.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,757 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nirspec_0383.imap                       5.6 K bytes  (46 / 200 files) (171.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:10,862 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nirspec_0383.imap     5.6 K bytes  (46 / 200 files) (171.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,842 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_wfssbkg_0007.rmap                3.1 K bytes  (47 / 200 files) (177.1 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:10,923 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_wfssbkg_0007.rmap    3.1 K bytes  (47 / 200 files) (177.1 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,889 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_wavemap_0008.rmap                2.2 K bytes  (48 / 200 files) (180.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:10,974 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_wavemap_0008.rmap    2.2 K bytes  (48 / 200 files) (180.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,943 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_wavelengthrange_0006.rmap          862 bytes  (49 / 200 files) (182.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,039 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_wavelengthrange_0006.rmap      862 bytes  (49 / 200 files) (182.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:08,985 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_trappars_0004.rmap                 753 bytes  (50 / 200 files) (183.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,095 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_trappars_0004.rmap      753 bytes  (50 / 200 files) (183.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,067 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_trapdensity_0005.rmap              705 bytes  (51 / 200 files) (184.1 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,147 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_trapdensity_0005.rmap      705 bytes  (51 / 200 files) (184.1 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,116 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_throughput_0005.rmap             1.3 K bytes  (52 / 200 files) (184.8 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,196 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_throughput_0005.rmap    1.3 K bytes  (52 / 200 files) (184.8 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,157 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_superbias_0028.rmap              6.5 K bytes  (53 / 200 files) (186.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,248 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_superbias_0028.rmap    6.5 K bytes  (53 / 200 files) (186.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,217 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_specwcs_0014.rmap                3.1 K bytes  (54 / 200 files) (192.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,297 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_specwcs_0014.rmap    3.1 K bytes  (54 / 200 files) (192.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,321 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_spectrace_0008.rmap              2.3 K bytes  (55 / 200 files) (195.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,350 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_spectrace_0008.rmap    2.3 K bytes  (55 / 200 files) (195.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,364 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_specprofile_0008.rmap            2.4 K bytes  (56 / 200 files) (198.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,400 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_specprofile_0008.rmap    2.4 K bytes  (56 / 200 files) (198.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,417 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_speckernel_0006.rmap             1.0 K bytes  (57 / 200 files) (200.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,448 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_speckernel_0006.rmap    1.0 K bytes  (57 / 200 files) (200.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,484 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_saturation_0015.rmap               829 bytes  (58 / 200 files) (201.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,519 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_saturation_0015.rmap      829 bytes  (58 / 200 files) (201.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,531 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_readnoise_0011.rmap                987 bytes  (59 / 200 files) (202.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,569 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_readnoise_0011.rmap      987 bytes  (59 / 200 files) (202.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,593 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_photom_0035.rmap                 1.3 K bytes  (60 / 200 files) (203.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,617 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_photom_0035.rmap    1.3 K bytes  (60 / 200 files) (203.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,644 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_persat_0007.rmap                   674 bytes  (61 / 200 files) (204.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,667 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_persat_0007.rmap      674 bytes  (61 / 200 files) (204.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,696 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_pathloss_0003.rmap                 758 bytes  (62 / 200 files) (205.1 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,726 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_pathloss_0003.rmap      758 bytes  (62 / 200 files) (205.1 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,767 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_pastasoss_0004.rmap                818 bytes  (63 / 200 files) (205.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,776 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_pastasoss_0004.rmap      818 bytes  (63 / 200 files) (205.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,833 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_pars-undersamplecorrectionstep_0001.rmap      904 bytes  (64 / 200 files) (206.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,828 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_pars-undersamplecorrectionstep_0001.rmap      904 bytes  (64 / 200 files) (206.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,886 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_pars-tweakregstep_0012.rmap      3.1 K bytes  (65 / 200 files) (207.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,881 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_pars-tweakregstep_0012.rmap    3.1 K bytes  (65 / 200 files) (207.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,943 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_pars-spec2pipeline_0008.rmap       984 bytes  (66 / 200 files) (210.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,940 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_pars-spec2pipeline_0008.rmap      984 bytes  (66 / 200 files) (210.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:09,987 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_pars-sourcecatalogstep_0002.rmap    2.3 K bytes  (67 / 200 files) (211.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:11,989 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_pars-sourcecatalogstep_0002.rmap    2.3 K bytes  (67 / 200 files) (211.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,035 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_pars-resamplestep_0002.rmap        687 bytes  (68 / 200 files) (214.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,047 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_pars-resamplestep_0002.rmap      687 bytes  (68 / 200 files) (214.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,085 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_pars-outlierdetectionstep_0004.rmap    2.7 K bytes  (69 / 200 files) (214.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,112 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_pars-outlierdetectionstep_0004.rmap    2.7 K bytes  (69 / 200 files) (214.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,137 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_pars-jumpstep_0007.rmap          6.4 K bytes  (70 / 200 files) (217.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,161 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_pars-jumpstep_0007.rmap    6.4 K bytes  (70 / 200 files) (217.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,197 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_pars-image2pipeline_0005.rmap    1.0 K bytes  (71 / 200 files) (223.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,222 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_pars-image2pipeline_0005.rmap    1.0 K bytes  (71 / 200 files) (223.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,241 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_pars-detector1pipeline_0002.rmap    1.0 K bytes  (72 / 200 files) (224.8 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,283 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_pars-detector1pipeline_0002.rmap    1.0 K bytes  (72 / 200 files) (224.8 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,294 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_pars-darkpipeline_0002.rmap        868 bytes  (73 / 200 files) (225.8 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,333 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_pars-darkpipeline_0002.rmap      868 bytes  (73 / 200 files) (225.8 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,352 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_pars-darkcurrentstep_0001.rmap      591 bytes  (74 / 200 files) (226.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,384 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_pars-darkcurrentstep_0001.rmap      591 bytes  (74 / 200 files) (226.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,409 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_pars-chargemigrationstep_0004.rmap    5.7 K bytes  (75 / 200 files) (227.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,444 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_pars-chargemigrationstep_0004.rmap    5.7 K bytes  (75 / 200 files) (227.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,461 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_nrm_0002.rmap                      663 bytes  (76 / 200 files) (232.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,498 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_nrm_0002.rmap      663 bytes  (76 / 200 files) (232.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,508 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_mask_0020.rmap                     859 bytes  (77 / 200 files) (233.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,548 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_mask_0020.rmap      859 bytes  (77 / 200 files) (233.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,550 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_linearity_0022.rmap                961 bytes  (78 / 200 files) (234.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,597 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_linearity_0022.rmap      961 bytes  (78 / 200 files) (234.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,595 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_ipc_0007.rmap                      651 bytes  (79 / 200 files) (235.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,647 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_ipc_0007.rmap      651 bytes  (79 / 200 files) (235.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,652 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_gain_0011.rmap                     797 bytes  (80 / 200 files) (236.1 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,697 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_gain_0011.rmap      797 bytes  (80 / 200 files) (236.1 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,713 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_flat_0023.rmap                   5.9 K bytes  (81 / 200 files) (236.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,754 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_flat_0023.rmap    5.9 K bytes  (81 / 200 files) (236.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,755 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_filteroffset_0010.rmap             853 bytes  (82 / 200 files) (242.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,804 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_filteroffset_0010.rmap      853 bytes  (82 / 200 files) (242.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,796 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_extract1d_0007.rmap                905 bytes  (83 / 200 files) (243.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,864 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_extract1d_0007.rmap      905 bytes  (83 / 200 files) (243.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,940 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_drizpars_0004.rmap                 519 bytes  (84 / 200 files) (244.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,920 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_drizpars_0004.rmap      519 bytes  (84 / 200 files) (244.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:10,982 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_distortion_0025.rmap             3.4 K bytes  (85 / 200 files) (245.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:12,980 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_distortion_0025.rmap    3.4 K bytes  (85 / 200 files) (245.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,028 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_dark_0031.rmap                   6.8 K bytes  (86 / 200 files) (248.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:13,038 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_dark_0031.rmap    6.8 K bytes  (86 / 200 files) (248.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,072 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_area_0014.rmap                   2.7 K bytes  (87 / 200 files) (255.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:13,088 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_area_0014.rmap    2.7 K bytes  (87 / 200 files) (255.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,151 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_apcorr_0010.rmap                 4.3 K bytes  (88 / 200 files) (257.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:13,144 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_apcorr_0010.rmap    4.3 K bytes  (88 / 200 files) (257.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,194 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_abvegaoffset_0004.rmap           1.4 K bytes  (89 / 200 files) (262.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:13,193 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_abvegaoffset_0004.rmap    1.4 K bytes  (89 / 200 files) (262.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,237 - CRDS - INFO -  Fetching  mappings/jwst/jwst_niriss_0261.imap                        5.7 K bytes  (90 / 200 files) (263.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:13,253 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_niriss_0261.imap      5.7 K bytes  (90 / 200 files) (263.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,289 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_wfssbkg_0004.rmap                7.2 K bytes  (91 / 200 files) (269.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:13,314 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_wfssbkg_0004.rmap    7.2 K bytes  (91 / 200 files) (269.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,333 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_wavelengthrange_0010.rmap          996 bytes  (92 / 200 files) (276.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:13,380 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_wavelengthrange_0010.rmap      996 bytes  (92 / 200 files) (276.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,373 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_tsophot_0003.rmap                  896 bytes  (93 / 200 files) (277.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:13,439 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_tsophot_0003.rmap      896 bytes  (93 / 200 files) (277.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,420 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_trappars_0003.rmap               1.6 K bytes  (94 / 200 files) (278.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:13,503 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_trappars_0003.rmap    1.6 K bytes  (94 / 200 files) (278.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,466 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_trapdensity_0003.rmap            1.6 K bytes  (95 / 200 files) (279.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:13,560 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_trapdensity_0003.rmap    1.6 K bytes  (95 / 200 files) (279.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,517 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_superbias_0017.rmap             16.1 K bytes  (96 / 200 files) (281.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:13,636 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_superbias_0017.rmap   16.1 K bytes  (96 / 200 files) (281.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,572 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_specwcs_0022.rmap                7.1 K bytes  (97 / 200 files) (297.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:13,709 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_specwcs_0022.rmap    7.1 K bytes  (97 / 200 files) (297.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,625 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_saturation_0010.rmap             2.2 K bytes  (98 / 200 files) (304.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:13,772 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_saturation_0010.rmap    2.2 K bytes  (98 / 200 files) (304.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,668 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_readnoise_0024.rmap             23.1 K bytes  (99 / 200 files) (306.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:13,829 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_readnoise_0024.rmap   23.1 K bytes  (99 / 200 files) (306.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,722 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_psfmask_0008.rmap               28.4 K bytes  (100 / 200 files) (330.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:13,886 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_psfmask_0008.rmap   28.4 K bytes  (100 / 200 files) (330.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,784 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_photom_0028.rmap                 3.4 K bytes  (101 / 200 files) (358.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:13,956 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_photom_0028.rmap    3.4 K bytes  (101 / 200 files) (358.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,836 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_persat_0005.rmap                 1.6 K bytes  (102 / 200 files) (361.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:14,004 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_persat_0005.rmap    1.6 K bytes  (102 / 200 files) (361.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,881 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_pars-whitelightstep_0003.rmap    1.5 K bytes  (103 / 200 files) (363.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:14,058 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_pars-whitelightstep_0003.rmap    1.5 K bytes  (103 / 200 files) (363.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,922 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_pars-tweakregstep_0003.rmap      4.5 K bytes  (104 / 200 files) (364.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:14,118 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_pars-tweakregstep_0003.rmap    4.5 K bytes  (104 / 200 files) (364.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:11,968 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_pars-spec2pipeline_0008.rmap       984 bytes  (105 / 200 files) (369.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:14,174 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_pars-spec2pipeline_0008.rmap      984 bytes  (105 / 200 files) (369.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,009 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_pars-sourcecatalogstep_0002.rmap    4.6 K bytes  (106 / 200 files) (370.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:14,239 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_pars-sourcecatalogstep_0002.rmap    4.6 K bytes  (106 / 200 files) (370.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,053 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_pars-resamplestep_0002.rmap        687 bytes  (107 / 200 files) (374.8 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:14,295 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_pars-resamplestep_0002.rmap      687 bytes  (107 / 200 files) (374.8 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,116 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_pars-outlierdetectionstep_0003.rmap      940 bytes  (108 / 200 files) (375.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:14,352 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_pars-outlierdetectionstep_0003.rmap      940 bytes  (108 / 200 files) (375.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,168 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_pars-jumpstep_0005.rmap            806 bytes  (109 / 200 files) (376.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:14,419 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_pars-jumpstep_0005.rmap      806 bytes  (109 / 200 files) (376.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,229 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_pars-image2pipeline_0003.rmap    1.0 K bytes  (110 / 200 files) (377.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:14,479 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_pars-image2pipeline_0003.rmap    1.0 K bytes  (110 / 200 files) (377.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,272 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_pars-detector1pipeline_0003.rmap    1.0 K bytes  (111 / 200 files) (378.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:14,530 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_pars-detector1pipeline_0003.rmap    1.0 K bytes  (111 / 200 files) (378.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,327 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_pars-darkpipeline_0002.rmap        868 bytes  (112 / 200 files) (379.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:14,581 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_pars-darkpipeline_0002.rmap      868 bytes  (112 / 200 files) (379.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,370 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_pars-darkcurrentstep_0001.rmap      618 bytes  (113 / 200 files) (380.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:14,632 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_pars-darkcurrentstep_0001.rmap      618 bytes  (113 / 200 files) (380.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,422 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_mask_0011.rmap                   3.5 K bytes  (114 / 200 files) (380.8 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:14,682 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_mask_0011.rmap    3.5 K bytes  (114 / 200 files) (380.8 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,489 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_linearity_0011.rmap              2.4 K bytes  (115 / 200 files) (384.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:14,732 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_linearity_0011.rmap    2.4 K bytes  (115 / 200 files) (384.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,533 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_ipc_0003.rmap                    2.0 K bytes  (116 / 200 files) (386.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:15,823 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_ipc_0003.rmap    2.0 K bytes  (116 / 200 files) (386.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,585 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_gain_0016.rmap                   2.1 K bytes  (117 / 200 files) (388.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:15,874 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_gain_0016.rmap    2.1 K bytes  (117 / 200 files) (388.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,626 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_flat_0027.rmap                  51.7 K bytes  (118 / 200 files) (390.8 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:15,924 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_flat_0027.rmap   51.7 K bytes  (118 / 200 files) (390.8 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,678 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_filteroffset_0004.rmap           1.4 K bytes  (119 / 200 files) (442.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:15,992 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_filteroffset_0004.rmap    1.4 K bytes  (119 / 200 files) (442.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,735 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_extract1d_0004.rmap                842 bytes  (120 / 200 files) (443.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:16,042 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_extract1d_0004.rmap      842 bytes  (120 / 200 files) (443.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,777 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_drizpars_0001.rmap                 519 bytes  (121 / 200 files) (444.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:16,091 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_drizpars_0001.rmap      519 bytes  (121 / 200 files) (444.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,820 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_distortion_0033.rmap            53.4 K bytes  (122 / 200 files) (445.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:16,141 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_distortion_0033.rmap   53.4 K bytes  (122 / 200 files) (445.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,887 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_dark_0044.rmap                  26.3 K bytes  (123 / 200 files) (498.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:16,215 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_dark_0044.rmap   26.3 K bytes  (123 / 200 files) (498.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:12,952 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_area_0012.rmap                  33.5 K bytes  (124 / 200 files) (524.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:16,277 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_area_0012.rmap   33.5 K bytes  (124 / 200 files) (524.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,013 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_apcorr_0008.rmap                 4.3 K bytes  (125 / 200 files) (558.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:16,340 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_apcorr_0008.rmap    4.3 K bytes  (125 / 200 files) (558.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,067 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_abvegaoffset_0003.rmap           1.3 K bytes  (126 / 200 files) (562.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:16,442 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_abvegaoffset_0003.rmap    1.3 K bytes  (126 / 200 files) (562.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,116 - CRDS - INFO -  Fetching  mappings/jwst/jwst_nircam_0295.imap                        5.5 K bytes  (127 / 200 files) (564.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:16,507 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_nircam_0295.imap      5.5 K bytes  (127 / 200 files) (564.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,166 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_wavelengthrange_0027.rmap            929 bytes  (128 / 200 files) (569.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:16,560 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_wavelengthrange_0027.rmap      929 bytes  (128 / 200 files) (569.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,209 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_tsophot_0004.rmap                    882 bytes  (129 / 200 files) (570.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:16,620 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_tsophot_0004.rmap      882 bytes  (129 / 200 files) (570.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,252 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_straymask_0009.rmap                  987 bytes  (130 / 200 files) (571.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:16,674 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_straymask_0009.rmap      987 bytes  (130 / 200 files) (571.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,299 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_specwcs_0042.rmap                  5.8 K bytes  (131 / 200 files) (572.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:16,736 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_specwcs_0042.rmap    5.8 K bytes  (131 / 200 files) (572.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,341 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_saturation_0015.rmap               1.2 K bytes  (132 / 200 files) (578.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:16,792 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_saturation_0015.rmap    1.2 K bytes  (132 / 200 files) (578.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,384 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_rscd_0008.rmap                     1.0 K bytes  (133 / 200 files) (579.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:16,850 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_rscd_0008.rmap    1.0 K bytes  (133 / 200 files) (579.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,427 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_resol_0006.rmap                      790 bytes  (134 / 200 files) (580.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:16,916 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_resol_0006.rmap      790 bytes  (134 / 200 files) (580.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,467 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_reset_0026.rmap                    3.9 K bytes  (135 / 200 files) (581.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:16,966 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_reset_0026.rmap    3.9 K bytes  (135 / 200 files) (581.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,509 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_regions_0033.rmap                  5.2 K bytes  (136 / 200 files) (584.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,016 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_regions_0033.rmap    5.2 K bytes  (136 / 200 files) (584.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,561 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_readnoise_0023.rmap                1.6 K bytes  (137 / 200 files) (590.1 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,080 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_readnoise_0023.rmap    1.6 K bytes  (137 / 200 files) (590.1 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,606 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_psfmask_0009.rmap                  2.1 K bytes  (138 / 200 files) (591.8 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,130 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_psfmask_0009.rmap    2.1 K bytes  (138 / 200 files) (591.8 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,652 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_photom_0056.rmap                   3.7 K bytes  (139 / 200 files) (593.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,196 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_photom_0056.rmap    3.7 K bytes  (139 / 200 files) (593.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,698 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_pathloss_0005.rmap                   866 bytes  (140 / 200 files) (597.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,261 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_pathloss_0005.rmap      866 bytes  (140 / 200 files) (597.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,745 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_pars-whitelightstep_0003.rmap        912 bytes  (141 / 200 files) (598.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,312 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_pars-whitelightstep_0003.rmap      912 bytes  (141 / 200 files) (598.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,796 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_pars-tweakregstep_0003.rmap        1.8 K bytes  (142 / 200 files) (599.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,364 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_pars-tweakregstep_0003.rmap    1.8 K bytes  (142 / 200 files) (599.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,847 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_pars-spec3pipeline_0008.rmap         816 bytes  (143 / 200 files) (601.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,446 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_pars-spec3pipeline_0008.rmap      816 bytes  (143 / 200 files) (601.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,896 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_pars-spec2pipeline_0012.rmap       1.3 K bytes  (144 / 200 files) (602.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,500 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_pars-spec2pipeline_0012.rmap    1.3 K bytes  (144 / 200 files) (602.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:13,937 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_pars-sourcecatalogstep_0003.rmap    1.9 K bytes  (145 / 200 files) (603.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,561 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_pars-sourcecatalogstep_0003.rmap    1.9 K bytes  (145 / 200 files) (603.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,033 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_pars-resamplestep_0002.rmap          677 bytes  (146 / 200 files) (605.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,613 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_pars-resamplestep_0002.rmap      677 bytes  (146 / 200 files) (605.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,076 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_pars-resamplespecstep_0002.rmap      706 bytes  (147 / 200 files) (606.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,669 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_pars-resamplespecstep_0002.rmap      706 bytes  (147 / 200 files) (606.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,126 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_pars-outlierdetectionstep_0017.rmap    3.4 K bytes  (148 / 200 files) (606.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,723 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_pars-outlierdetectionstep_0017.rmap    3.4 K bytes  (148 / 200 files) (606.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,173 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_pars-jumpstep_0009.rmap            1.4 K bytes  (149 / 200 files) (610.1 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,772 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_pars-jumpstep_0009.rmap    1.4 K bytes  (149 / 200 files) (610.1 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,225 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_pars-image2pipeline_0007.rmap        983 bytes  (150 / 200 files) (611.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,850 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_pars-image2pipeline_0007.rmap      983 bytes  (150 / 200 files) (611.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,276 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_pars-extract1dstep_0002.rmap         728 bytes  (151 / 200 files) (612.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,900 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_pars-extract1dstep_0002.rmap      728 bytes  (151 / 200 files) (612.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,321 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_pars-emicorrstep_0002.rmap           796 bytes  (152 / 200 files) (613.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:17,963 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_pars-emicorrstep_0002.rmap      796 bytes  (152 / 200 files) (613.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,371 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_pars-detector1pipeline_0009.rmap    1.4 K bytes  (153 / 200 files) (614.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,025 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_pars-detector1pipeline_0009.rmap    1.4 K bytes  (153 / 200 files) (614.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,431 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_pars-darkpipeline_0002.rmap          860 bytes  (154 / 200 files) (615.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,088 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_pars-darkpipeline_0002.rmap      860 bytes  (154 / 200 files) (615.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,473 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_pars-darkcurrentstep_0002.rmap       683 bytes  (155 / 200 files) (616.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,160 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_pars-darkcurrentstep_0002.rmap      683 bytes  (155 / 200 files) (616.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,523 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_mrsxartcorr_0002.rmap              2.2 K bytes  (156 / 200 files) (616.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,214 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_mrsxartcorr_0002.rmap    2.2 K bytes  (156 / 200 files) (616.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,566 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_mrsptcorr_0005.rmap                2.0 K bytes  (157 / 200 files) (619.1 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,263 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_mrsptcorr_0005.rmap    2.0 K bytes  (157 / 200 files) (619.1 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,608 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_mask_0023.rmap                     3.5 K bytes  (158 / 200 files) (621.1 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,325 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_mask_0023.rmap    3.5 K bytes  (158 / 200 files) (621.1 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,651 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_linearity_0018.rmap                2.8 K bytes  (159 / 200 files) (624.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,378 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_linearity_0018.rmap    2.8 K bytes  (159 / 200 files) (624.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,701 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_ipc_0008.rmap                        700 bytes  (160 / 200 files) (627.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,431 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_ipc_0008.rmap      700 bytes  (160 / 200 files) (627.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,742 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_gain_0013.rmap                     3.9 K bytes  (161 / 200 files) (628.1 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,480 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_gain_0013.rmap    3.9 K bytes  (161 / 200 files) (628.1 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,796 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_fringefreq_0003.rmap               1.4 K bytes  (162 / 200 files) (632.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,530 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_fringefreq_0003.rmap    1.4 K bytes  (162 / 200 files) (632.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,839 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_fringe_0019.rmap                   3.9 K bytes  (163 / 200 files) (633.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,591 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_fringe_0019.rmap    3.9 K bytes  (163 / 200 files) (633.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,880 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_flat_0065.rmap                    15.5 K bytes  (164 / 200 files) (637.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,651 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_flat_0065.rmap   15.5 K bytes  (164 / 200 files) (637.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,925 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_filteroffset_0025.rmap             2.5 K bytes  (165 / 200 files) (652.8 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,708 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_filteroffset_0025.rmap    2.5 K bytes  (165 / 200 files) (652.8 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:14,976 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_extract1d_0020.rmap                1.4 K bytes  (166 / 200 files) (655.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,757 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_extract1d_0020.rmap    1.4 K bytes  (166 / 200 files) (655.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,018 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_emicorr_0003.rmap                    663 bytes  (167 / 200 files) (656.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,816 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_emicorr_0003.rmap      663 bytes  (167 / 200 files) (656.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,061 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_drizpars_0002.rmap                   511 bytes  (168 / 200 files) (657.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,875 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_drizpars_0002.rmap      511 bytes  (168 / 200 files) (657.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,106 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_distortion_0040.rmap               4.9 K bytes  (169 / 200 files) (657.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,937 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_distortion_0040.rmap    4.9 K bytes  (169 / 200 files) (657.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,152 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_dark_0036.rmap                     4.4 K bytes  (170 / 200 files) (662.8 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:18,988 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_dark_0036.rmap    4.4 K bytes  (170 / 200 files) (662.8 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,200 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_cubepar_0017.rmap                    800 bytes  (171 / 200 files) (667.1 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,052 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_cubepar_0017.rmap      800 bytes  (171 / 200 files) (667.1 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,242 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_area_0015.rmap                       866 bytes  (172 / 200 files) (667.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,101 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_area_0015.rmap      866 bytes  (172 / 200 files) (667.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,292 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_apcorr_0019.rmap                   5.0 K bytes  (173 / 200 files) (668.8 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,149 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_apcorr_0019.rmap    5.0 K bytes  (173 / 200 files) (668.8 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,334 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_abvegaoffset_0002.rmap             1.3 K bytes  (174 / 200 files) (673.8 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,226 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_abvegaoffset_0002.rmap    1.3 K bytes  (174 / 200 files) (673.8 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,385 - CRDS - INFO -  Fetching  mappings/jwst/jwst_miri_0416.imap                          5.7 K bytes  (175 / 200 files) (675.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,277 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_miri_0416.imap        5.7 K bytes  (175 / 200 files) (675.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,429 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_trappars_0004.rmap                    903 bytes  (176 / 200 files) (680.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,333 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_trappars_0004.rmap      903 bytes  (176 / 200 files) (680.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,469 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_trapdensity_0006.rmap                 930 bytes  (177 / 200 files) (681.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,409 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_trapdensity_0006.rmap      930 bytes  (177 / 200 files) (681.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,526 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_superbias_0017.rmap                 3.8 K bytes  (178 / 200 files) (682.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,465 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_superbias_0017.rmap    3.8 K bytes  (178 / 200 files) (682.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,578 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_saturation_0009.rmap                  779 bytes  (179 / 200 files) (686.3 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,517 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_saturation_0009.rmap      779 bytes  (179 / 200 files) (686.3 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,633 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_readnoise_0011.rmap                 1.3 K bytes  (180 / 200 files) (687.1 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,578 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_readnoise_0011.rmap    1.3 K bytes  (180 / 200 files) (687.1 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,694 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_photom_0014.rmap                    1.1 K bytes  (181 / 200 files) (688.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,628 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_photom_0014.rmap    1.1 K bytes  (181 / 200 files) (688.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,740 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_persat_0006.rmap                      884 bytes  (182 / 200 files) (689.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,687 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_persat_0006.rmap      884 bytes  (182 / 200 files) (689.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,784 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_pars-tweakregstep_0002.rmap           850 bytes  (183 / 200 files) (690.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,744 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_pars-tweakregstep_0002.rmap      850 bytes  (183 / 200 files) (690.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,827 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_pars-sourcecatalogstep_0001.rmap      636 bytes  (184 / 200 files) (691.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,794 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_pars-sourcecatalogstep_0001.rmap      636 bytes  (184 / 200 files) (691.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,870 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_pars-outlierdetectionstep_0001.rmap      654 bytes  (185 / 200 files) (691.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,854 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_pars-outlierdetectionstep_0001.rmap      654 bytes  (185 / 200 files) (691.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,920 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_pars-image2pipeline_0005.rmap         974 bytes  (186 / 200 files) (692.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,914 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_pars-image2pipeline_0005.rmap      974 bytes  (186 / 200 files) (692.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:15,971 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_pars-detector1pipeline_0002.rmap    1.0 K bytes  (187 / 200 files) (693.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:19,971 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_pars-detector1pipeline_0002.rmap    1.0 K bytes  (187 / 200 files) (693.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:16,033 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_pars-darkpipeline_0002.rmap           856 bytes  (188 / 200 files) (694.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:20,035 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_pars-darkpipeline_0002.rmap      856 bytes  (188 / 200 files) (694.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:16,078 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_mask_0023.rmap                      1.1 K bytes  (189 / 200 files) (695.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:20,085 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_mask_0023.rmap    1.1 K bytes  (189 / 200 files) (695.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:16,122 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_linearity_0015.rmap                   925 bytes  (190 / 200 files) (696.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:20,136 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_linearity_0015.rmap      925 bytes  (190 / 200 files) (696.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:16,172 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_ipc_0003.rmap                         614 bytes  (191 / 200 files) (697.4 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:20,188 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_ipc_0003.rmap       614 bytes  (191 / 200 files) (697.4 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:16,216 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_gain_0010.rmap                        890 bytes  (192 / 200 files) (698.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:20,250 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_gain_0010.rmap      890 bytes  (192 / 200 files) (698.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:16,260 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_flat_0009.rmap                      1.1 K bytes  (193 / 200 files) (698.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:20,302 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_flat_0009.rmap    1.1 K bytes  (193 / 200 files) (698.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:16,304 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_distortion_0011.rmap                1.2 K bytes  (194 / 200 files) (700.0 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:20,365 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_distortion_0011.rmap    1.2 K bytes  (194 / 200 files) (700.0 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:16,360 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_dark_0017.rmap                      4.3 K bytes  (195 / 200 files) (701.2 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:20,429 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_dark_0017.rmap    4.3 K bytes  (195 / 200 files) (701.2 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:16,420 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_area_0010.rmap                      1.2 K bytes  (196 / 200 files) (705.5 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:20,492 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_area_0010.rmap    1.2 K bytes  (196 / 200 files) (705.5 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:16,463 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_apcorr_0004.rmap                    4.0 K bytes  (197 / 200 files) (706.7 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:20,555 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_apcorr_0004.rmap    4.0 K bytes  (197 / 200 files) (706.7 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:16,509 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_abvegaoffset_0002.rmap              1.3 K bytes  (198 / 200 files) (710.6 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:20,605 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_abvegaoffset_0002.rmap    1.3 K bytes  (198 / 200 files) (710.6 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:16,552 - CRDS - INFO -  Fetching  mappings/jwst/jwst_fgs_0117.imap                           5.0 K bytes  (199 / 200 files) (711.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:20,659 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_fgs_0117.imap         5.0 K bytes  (199 / 200 files) (711.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:16,605 - CRDS - INFO -  Fetching  mappings/jwst/jwst_1298.pmap                                 580 bytes  (200 / 200 files) (716.9 K / 717.5 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:20,722 - CRDS - INFO -  Fetching  /home/runner/crds/mappings/jwst/jwst_1298.pmap               580 bytes  (200 / 200 files) (716.9 K / 717.5 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:16,916 - stpipe.AssignWcsStep - INFO - AssignWcsStep instance created.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:21,045 - stpipe.AssignWcsStep - INFO - AssignWcsStep instance created.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:16,984 - stpipe.AssignWcsStep - INFO - Step AssignWcsStep running with args (&#39;jw01076103001_02102_00001_nrcalong_rate.fits&#39;,).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:21,147 - stpipe.AssignWcsStep - INFO - Step AssignWcsStep running with args (&#39;jw01076103001_02102_00001_nrcalong_rate.fits&#39;,).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:16,987 - stpipe.AssignWcsStep - INFO - Step AssignWcsStep parameters are:
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:21,150 - stpipe.AssignWcsStep - INFO - Step AssignWcsStep parameters are:
   pre_hooks: []
   post_hooks: []
   output_file: None
@@ -1302,40 +1323,40 @@ to ensure the pipeline steps can access reference files as needed.</p>
   slit_y_high: 0.55
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:17,048 - CRDS - INFO -  Fetching  references/jwst/nircam/jwst_nircam_distortion_0249.asdf   10.7 K bytes  (1 / 1 files) (0 / 10.7 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:21,212 - CRDS - INFO -  Fetching  /home/runner/crds/references/jwst/nircam/jwst_nircam_distortion_0249.asdf   10.7 K bytes  (1 / 1 files) (0 / 10.7 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:17,100 - CRDS - INFO -  Fetching  references/jwst/nircam/jwst_nircam_filteroffset_0007.asdf   11.4 K bytes  (1 / 1 files) (0 / 11.4 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:21,270 - CRDS - INFO -  Fetching  /home/runner/crds/references/jwst/nircam/jwst_nircam_filteroffset_0007.asdf   11.4 K bytes  (1 / 1 files) (0 / 11.4 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:17,402 - stpipe.AssignWcsStep - INFO - Update S_REGION to POLYGON ICRS  247.881039741 30.207448926 247.843873553 30.191475478 247.861598602 30.159558186 247.899460360 30.174872316
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:21,592 - stpipe.AssignWcsStep - INFO - Update S_REGION to POLYGON ICRS  247.881039741 30.207448926 247.843873553 30.191475478 247.861598602 30.159558186 247.899460360 30.174872316
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:17,403 - stpipe.AssignWcsStep - INFO - assign_wcs updated S_REGION to POLYGON ICRS  247.881039741 30.207448926 247.843873553 30.191475478 247.861598602 30.159558186 247.899460360 30.174872316
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:21,593 - stpipe.AssignWcsStep - INFO - assign_wcs updated S_REGION to POLYGON ICRS  247.881039741 30.207448926 247.843873553 30.191475478 247.861598602 30.159558186 247.899460360 30.174872316
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:17,403 - stpipe.AssignWcsStep - INFO - COMPLETED assign_wcs
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:21,593 - stpipe.AssignWcsStep - INFO - COMPLETED assign_wcs
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:17,455 - CRDS - INFO -  Calibration SW Found: jwst 1.16.0 (/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/jwst-1.16.0.dist-info)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:21,647 - CRDS - INFO -  Calibration SW Found: jwst 1.16.0 (/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/jwst-1.16.0.dist-info)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:17,516 - stpipe.AssignWcsStep - INFO - Results used CRDS context: jwst_1298.pmap
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:21,707 - stpipe.AssignWcsStep - INFO - Results used CRDS context: jwst_1298.pmap
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:17,517 - stpipe.AssignWcsStep - INFO - Step AssignWcsStep done
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:21,708 - stpipe.AssignWcsStep - INFO - Step AssignWcsStep done
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:17,517 - stpipe - INFO - Results used jwst version: 1.16.0
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:21,708 - stpipe - INFO - Results used jwst version: 1.16.0
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:17,526 - stpipe.FlatFieldStep - INFO - FlatFieldStep instance created.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:21,719 - stpipe.FlatFieldStep - INFO - FlatFieldStep instance created.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:17,596 - stpipe.FlatFieldStep - INFO - Step FlatFieldStep running with args (&lt;ImageModel(2048, 2048) from jw01076103001_02102_00001_nrcalong_rate.fits&gt;,).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:21,822 - stpipe.FlatFieldStep - INFO - Step FlatFieldStep running with args (&lt;ImageModel(2048, 2048) from jw01076103001_02102_00001_nrcalong_rate.fits&gt;,).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:17,599 - stpipe.FlatFieldStep - INFO - Step FlatFieldStep parameters are:
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:21,824 - stpipe.FlatFieldStep - INFO - Step FlatFieldStep parameters are:
   pre_hooks: []
   post_hooks: []
   output_file: None
@@ -1353,40 +1374,40 @@ to ensure the pipeline steps can access reference files as needed.</p>
   inverse: False
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:17,614 - CRDS - INFO -  Fetching  references/jwst/nircam/jwst_nircam_flat_0636.fits         50.4 M bytes  (1 / 1 files) (0 / 50.4 M bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:21,840 - CRDS - INFO -  Fetching  /home/runner/crds/references/jwst/nircam/jwst_nircam_flat_0636.fits   50.4 M bytes  (1 / 1 files) (0 / 50.4 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:18,233 - stpipe.FlatFieldStep - INFO - Using FLAT reference file: references/jwst/nircam/jwst_nircam_flat_0636.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:22,390 - stpipe.FlatFieldStep - INFO - Using FLAT reference file: /home/runner/crds/references/jwst/nircam/jwst_nircam_flat_0636.fits
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:18,233 - stpipe.FlatFieldStep - INFO - No reference found for type FFLAT
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:22,391 - stpipe.FlatFieldStep - INFO - No reference found for type FFLAT
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:18,234 - stpipe.FlatFieldStep - INFO - No reference found for type SFLAT
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:22,391 - stpipe.FlatFieldStep - INFO - No reference found for type SFLAT
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:18,234 - stpipe.FlatFieldStep - INFO - No reference found for type DFLAT
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:22,392 - stpipe.FlatFieldStep - INFO - No reference found for type DFLAT
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:18,619 - stpipe.FlatFieldStep - INFO - Results used CRDS context: jwst_1298.pmap
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:22,673 - stpipe.FlatFieldStep - INFO - Results used CRDS context: jwst_1298.pmap
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:18,865 - stpipe.FlatFieldStep - INFO - Saved model in jw01076103001_02102_00001_nrcalong_flatfieldstep.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:22,920 - stpipe.FlatFieldStep - INFO - Saved model in jw01076103001_02102_00001_nrcalong_flatfieldstep.fits
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:18,866 - stpipe.FlatFieldStep - INFO - Step FlatFieldStep done
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:22,920 - stpipe.FlatFieldStep - INFO - Step FlatFieldStep done
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:18,866 - stpipe - INFO - Results used jwst version: 1.16.0
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:22,921 - stpipe - INFO - Results used jwst version: 1.16.0
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:18,876 - stpipe.PhotomStep - INFO - PhotomStep instance created.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:22,930 - stpipe.PhotomStep - INFO - PhotomStep instance created.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:18,950 - stpipe.PhotomStep - INFO - Step PhotomStep running with args (&lt;ImageModel(2048, 2048) from jw01076103001_02102_00001_nrcalong_flatfieldstep.fits&gt;,).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,020 - stpipe.PhotomStep - INFO - Step PhotomStep running with args (&lt;ImageModel(2048, 2048) from jw01076103001_02102_00001_nrcalong_flatfieldstep.fits&gt;,).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:18,952 - stpipe.PhotomStep - INFO - Step PhotomStep parameters are:
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,023 - stpipe.PhotomStep - INFO - Step PhotomStep parameters are:
   pre_hooks: []
   post_hooks: []
   output_file: None
@@ -1404,52 +1425,52 @@ to ensure the pipeline steps can access reference files as needed.</p>
   mrs_time_correction: True
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:18,967 - CRDS - INFO -  Fetching  references/jwst/nircam/jwst_nircam_photom_0157.fits       23.0 K bytes  (1 / 1 files) (0 / 23.0 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,038 - CRDS - INFO -  Fetching  /home/runner/crds/references/jwst/nircam/jwst_nircam_photom_0157.fits   23.0 K bytes  (1 / 1 files) (0 / 23.0 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,027 - CRDS - INFO -  Fetching  references/jwst/nircam/jwst_nircam_area_0334.fits         16.8 M bytes  (1 / 1 files) (0 / 16.8 M bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,116 - CRDS - INFO -  Fetching  /home/runner/crds/references/jwst/nircam/jwst_nircam_area_0334.fits   16.8 M bytes  (1 / 1 files) (0 / 16.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,336 - stpipe.PhotomStep - INFO - Using photom reference file: references/jwst/nircam/jwst_nircam_photom_0157.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,410 - stpipe.PhotomStep - INFO - Using photom reference file: /home/runner/crds/references/jwst/nircam/jwst_nircam_photom_0157.fits
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,336 - stpipe.PhotomStep - INFO - Using area reference file: references/jwst/nircam/jwst_nircam_area_0334.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,411 - stpipe.PhotomStep - INFO - Using area reference file: /home/runner/crds/references/jwst/nircam/jwst_nircam_area_0334.fits
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,367 - stpipe.PhotomStep - INFO - Using instrument: NIRCAM
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,444 - stpipe.PhotomStep - INFO - Using instrument: NIRCAM
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,367 - stpipe.PhotomStep - INFO -  detector: NRCALONG
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,444 - stpipe.PhotomStep - INFO -  detector: NRCALONG
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,368 - stpipe.PhotomStep - INFO -  exp_type: NRC_IMAGE
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,445 - stpipe.PhotomStep - INFO -  exp_type: NRC_IMAGE
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,368 - stpipe.PhotomStep - INFO -  filter: F410M
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,445 - stpipe.PhotomStep - INFO -  filter: F410M
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,369 - stpipe.PhotomStep - INFO -  pupil: CLEAR
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,445 - stpipe.PhotomStep - INFO -  pupil: CLEAR
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,402 - stpipe.PhotomStep - INFO - Pixel area map copied to output.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,480 - stpipe.PhotomStep - INFO - Pixel area map copied to output.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,403 - stpipe.PhotomStep - INFO - Values for PIXAR_SR and PIXAR_A2 obtained from AREA reference file.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,480 - stpipe.PhotomStep - INFO - Values for PIXAR_SR and PIXAR_A2 obtained from AREA reference file.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,404 - stpipe.PhotomStep - INFO - PHOTMJSR value: 0.902
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,481 - stpipe.PhotomStep - INFO - PHOTMJSR value: 0.902
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,440 - stpipe.PhotomStep - INFO - Results used CRDS context: jwst_1298.pmap
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,517 - stpipe.PhotomStep - INFO - Results used CRDS context: jwst_1298.pmap
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,700 - stpipe.PhotomStep - INFO - Saved model in jw01076103001_02102_00001_nrcalong_photomstep.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,779 - stpipe.PhotomStep - INFO - Saved model in jw01076103001_02102_00001_nrcalong_photomstep.fits
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,700 - stpipe.PhotomStep - INFO - Step PhotomStep done
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,780 - stpipe.PhotomStep - INFO - Step PhotomStep done
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,701 - stpipe - INFO - Results used jwst version: 1.16.0
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,781 - stpipe - INFO - Results used jwst version: 1.16.0
 </pre></div>
 </div>
 </div>
@@ -1462,13 +1483,13 @@ to ensure the pipeline steps can access reference files as needed.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,757 - stpipe.AssignWcsStep - INFO - AssignWcsStep instance created.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,838 - stpipe.AssignWcsStep - INFO - AssignWcsStep instance created.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,833 - stpipe.AssignWcsStep - INFO - Step AssignWcsStep running with args (&#39;jw01076103001_02101_00001_nrcalong_rate.fits&#39;,).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,942 - stpipe.AssignWcsStep - INFO - Step AssignWcsStep running with args (&#39;jw01076103001_02101_00001_nrcalong_rate.fits&#39;,).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,836 - stpipe.AssignWcsStep - INFO - Step AssignWcsStep parameters are:
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:23,944 - stpipe.AssignWcsStep - INFO - Step AssignWcsStep parameters are:
   pre_hooks: []
   post_hooks: []
   output_file: None
@@ -1491,40 +1512,40 @@ to ensure the pipeline steps can access reference files as needed.</p>
   slit_y_high: 0.55
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,891 - CRDS - INFO -  Fetching  references/jwst/nircam/jwst_nircam_distortion_0260.asdf   14.4 K bytes  (1 / 1 files) (0 / 14.4 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:24,003 - CRDS - INFO -  Fetching  /home/runner/crds/references/jwst/nircam/jwst_nircam_distortion_0260.asdf   14.4 K bytes  (1 / 1 files) (0 / 14.4 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:19,951 - CRDS - INFO -  Fetching  references/jwst/nircam/jwst_nircam_specwcs_0184.asdf       9.3 K bytes  (1 / 1 files) (0 / 9.3 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:24,078 - CRDS - INFO -  Fetching  /home/runner/crds/references/jwst/nircam/jwst_nircam_specwcs_0184.asdf    9.3 K bytes  (1 / 1 files) (0 / 9.3 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:20,018 - CRDS - INFO -  Fetching  references/jwst/nircam/jwst_nircam_wavelengthrange_0003.asdf    2.8 K bytes  (1 / 1 files) (0 / 2.8 K bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:24,144 - CRDS - INFO -  Fetching  /home/runner/crds/references/jwst/nircam/jwst_nircam_wavelengthrange_0003.asdf    2.8 K bytes  (1 / 1 files) (0 / 2.8 K bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:20,197 - stpipe.AssignWcsStep - INFO - Added Barycentric velocity correction: 1.0000443954492393
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:24,329 - stpipe.AssignWcsStep - INFO - Added Barycentric velocity correction: 1.0000443954492393
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:20,344 - stpipe.AssignWcsStep - INFO - COMPLETED assign_wcs
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:24,478 - stpipe.AssignWcsStep - INFO - COMPLETED assign_wcs
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:20,345 - stpipe.AssignWcsStep - INFO - AssignWcsStep instance created.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:24,479 - stpipe.AssignWcsStep - INFO - AssignWcsStep instance created.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:20,579 - stpipe.AssignWcsStep - INFO - Results used CRDS context: jwst_1298.pmap
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:24,721 - stpipe.AssignWcsStep - INFO - Results used CRDS context: jwst_1298.pmap
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:20,580 - stpipe.AssignWcsStep - INFO - Step AssignWcsStep done
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:24,722 - stpipe.AssignWcsStep - INFO - Step AssignWcsStep done
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:20,580 - stpipe - INFO - Results used jwst version: 1.16.0
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:24,722 - stpipe - INFO - Results used jwst version: 1.16.0
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:20,590 - stpipe.FlatFieldStep - INFO - FlatFieldStep instance created.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:24,732 - stpipe.FlatFieldStep - INFO - FlatFieldStep instance created.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:20,665 - stpipe.FlatFieldStep - INFO - Step FlatFieldStep running with args (&lt;ImageModel(2048, 2048) from jw01076103001_02101_00001_nrcalong_rate.fits&gt;,).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:24,850 - stpipe.FlatFieldStep - INFO - Step FlatFieldStep running with args (&lt;ImageModel(2048, 2048) from jw01076103001_02101_00001_nrcalong_rate.fits&gt;,).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:20,667 - stpipe.FlatFieldStep - INFO - Step FlatFieldStep parameters are:
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:24,852 - stpipe.FlatFieldStep - INFO - Step FlatFieldStep parameters are:
   pre_hooks: []
   post_hooks: []
   output_file: None
@@ -1542,40 +1563,40 @@ to ensure the pipeline steps can access reference files as needed.</p>
   inverse: False
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:20,683 - CRDS - INFO -  Fetching  references/jwst/nircam/jwst_nircam_flat_0623.fits         50.4 M bytes  (1 / 1 files) (0 / 50.4 M bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:24,868 - CRDS - INFO -  Fetching  /home/runner/crds/references/jwst/nircam/jwst_nircam_flat_0623.fits   50.4 M bytes  (1 / 1 files) (0 / 50.4 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:21,353 - stpipe.FlatFieldStep - INFO - Using FLAT reference file: references/jwst/nircam/jwst_nircam_flat_0623.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:25,556 - stpipe.FlatFieldStep - INFO - Using FLAT reference file: /home/runner/crds/references/jwst/nircam/jwst_nircam_flat_0623.fits
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:21,354 - stpipe.FlatFieldStep - INFO - No reference found for type FFLAT
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:25,557 - stpipe.FlatFieldStep - INFO - No reference found for type FFLAT
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:21,354 - stpipe.FlatFieldStep - INFO - No reference found for type SFLAT
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:25,557 - stpipe.FlatFieldStep - INFO - No reference found for type SFLAT
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:21,355 - stpipe.FlatFieldStep - INFO - No reference found for type DFLAT
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:25,558 - stpipe.FlatFieldStep - INFO - No reference found for type DFLAT
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:21,537 - stpipe.FlatFieldStep - INFO - Results used CRDS context: jwst_1298.pmap
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:25,767 - stpipe.FlatFieldStep - INFO - Results used CRDS context: jwst_1298.pmap
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:21,819 - stpipe.FlatFieldStep - INFO - Saved model in jw01076103001_02101_00001_nrcalong_flatfieldstep.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,053 - stpipe.FlatFieldStep - INFO - Saved model in jw01076103001_02101_00001_nrcalong_flatfieldstep.fits
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:21,820 - stpipe.FlatFieldStep - INFO - Step FlatFieldStep done
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,054 - stpipe.FlatFieldStep - INFO - Step FlatFieldStep done
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:21,820 - stpipe - INFO - Results used jwst version: 1.16.0
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,054 - stpipe - INFO - Results used jwst version: 1.16.0
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:21,831 - stpipe.PhotomStep - INFO - PhotomStep instance created.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,065 - stpipe.PhotomStep - INFO - PhotomStep instance created.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:21,909 - stpipe.PhotomStep - INFO - Step PhotomStep running with args (&lt;ImageModel(2048, 2048) from jw01076103001_02101_00001_nrcalong_flatfieldstep.fits&gt;,).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,183 - stpipe.PhotomStep - INFO - Step PhotomStep running with args (&lt;ImageModel(2048, 2048) from jw01076103001_02101_00001_nrcalong_flatfieldstep.fits&gt;,).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:21,911 - stpipe.PhotomStep - INFO - Step PhotomStep parameters are:
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,185 - stpipe.PhotomStep - INFO - Step PhotomStep parameters are:
   pre_hooks: []
   post_hooks: []
   output_file: None
@@ -1593,49 +1614,49 @@ to ensure the pipeline steps can access reference files as needed.</p>
   mrs_time_correction: True
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:21,926 - CRDS - INFO -  Fetching  references/jwst/nircam/jwst_nircam_photom_0162.fits        1.7 M bytes  (1 / 1 files) (0 / 1.7 M bytes)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,201 - CRDS - INFO -  Fetching  /home/runner/crds/references/jwst/nircam/jwst_nircam_photom_0162.fits    1.7 M bytes  (1 / 1 files) (0 / 1.7 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:22,058 - stpipe.PhotomStep - INFO - Using photom reference file: references/jwst/nircam/jwst_nircam_photom_0162.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,334 - stpipe.PhotomStep - INFO - Using photom reference file: /home/runner/crds/references/jwst/nircam/jwst_nircam_photom_0162.fits
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:22,058 - stpipe.PhotomStep - INFO - Using area reference file: N/A
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,335 - stpipe.PhotomStep - INFO - Using area reference file: N/A
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:22,120 - stpipe.PhotomStep - INFO - Using instrument: NIRCAM
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,394 - stpipe.PhotomStep - INFO - Using instrument: NIRCAM
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:22,120 - stpipe.PhotomStep - INFO -  detector: NRCALONG
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,395 - stpipe.PhotomStep - INFO -  detector: NRCALONG
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:22,121 - stpipe.PhotomStep - INFO -  exp_type: NRC_WFSS
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,395 - stpipe.PhotomStep - INFO -  exp_type: NRC_WFSS
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:22,121 - stpipe.PhotomStep - INFO -  filter: F356W
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,396 - stpipe.PhotomStep - INFO -  filter: F356W
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:22,122 - stpipe.PhotomStep - INFO -  pupil: CLEAR
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,396 - stpipe.PhotomStep - INFO -  pupil: CLEAR
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:22,141 - stpipe.PhotomStep - INFO - Attempting to obtain PIXAR_SR and PIXAR_A2 values from PHOTOM reference file.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,416 - stpipe.PhotomStep - INFO - Attempting to obtain PIXAR_SR and PIXAR_A2 values from PHOTOM reference file.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:22,141 - stpipe.PhotomStep - INFO - Values for PIXAR_SR and PIXAR_A2 obtained from PHOTOM reference file.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,417 - stpipe.PhotomStep - INFO - Values for PIXAR_SR and PIXAR_A2 obtained from PHOTOM reference file.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:22,142 - stpipe.PhotomStep - WARNING - Expected to find one matching row in table, found 0.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,418 - stpipe.PhotomStep - WARNING - Expected to find one matching row in table, found 0.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:22,144 - stpipe.PhotomStep - INFO - Results used CRDS context: jwst_1298.pmap
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,420 - stpipe.PhotomStep - INFO - Results used CRDS context: jwst_1298.pmap
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:22,424 - stpipe.PhotomStep - INFO - Saved model in jw01076103001_02101_00001_nrcalong_photomstep.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,708 - stpipe.PhotomStep - INFO - Saved model in jw01076103001_02101_00001_nrcalong_photomstep.fits
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:22,425 - stpipe.PhotomStep - INFO - Step PhotomStep done
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,709 - stpipe.PhotomStep - INFO - Step PhotomStep done
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-08 04:32:22,425 - stpipe - INFO - Results used jwst version: 1.16.0
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024-11-13 17:49:26,709 - stpipe - INFO - Results used jwst version: 1.16.0
 </pre></div>
 </div>
 </div>
@@ -2233,8 +2254,9 @@ Using the 6 equations above, one can relate any combination of (<span class="mat
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-imports">Package Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-crds-path-and-server">Set CRDS Path and Server</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-functions-and-parameters">Define Functions and Parameters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-data-and-ensure-crds-configuration">Download Data and Ensure CRDS Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-data">Download Data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-pipeline-steps">Run Pipeline Steps</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-computation-of-wfss-information">Basic Computation of WFSS Information</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compute-where-light-gets-dispersed-to">Compute where light gets dispersed to</a></li>
