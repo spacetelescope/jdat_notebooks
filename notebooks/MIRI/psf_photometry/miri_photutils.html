@@ -1,0 +1,1384 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>MIRI PSF Photometry with Photutils &#8212; STScI JDAT Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/main.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-D46G4HKJY3');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/MIRI/psf_photometry/miri_photutils';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="STScI JDAT Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="STScI JDAT Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebook_development_workflow.html">Notebook Development Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/submitting_notebooks.html">Submitting Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/requirements.html">Requirements file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebooks.html">Jupyter Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/data_files.html">Data Files</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">GitHub Guidelines</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_setup.html">GitHub Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_workflow.html">GitHub Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_pr.html">GitHub PR</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cross-Instrument</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/asdf_example/asdf_example.html">ASDF Example</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/background_estimation_imaging/Imaging_Sky_Background_Estimation.html">Complex 2D Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/composite_model_fitting/specfit_demo_3.html">Composite Model Spectral Fitting</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/NIRSpec_MAST_Query/NIRSpec_MAST_Query.html">MAST Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/rgb_imviz/imviz_rgb_carina.html">RGB images with Imviz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">Specviz Simple Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/update_pure_parallel_wcs/NIRISS_correct_pure_parallel_WCS.html">Improving Accuracy of WCS of Pure Parallel Dataset</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">MIRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">MRS Mstar - Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">IFU of YSOs in LMC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../MIRI_LRS_spectral_extraction/miri_lrs_advanced_extraction_part1.html">LRS Optimal Spectral Extraction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRCam</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/aperture_photometry/NIRCam_Aperture_Photometry_Example.html">Point Source Aperture Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_photometry/NIRCam_multiband_photometry.html">Extended Aperture Photometry</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">Cross-Filter PSF Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/psf_photometry/NIRCam_PSF_Photometry_Example.html">PSF Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_wisp_subtraction/nircam_wisp_subtraction.html">NIRCam Wisp Removal</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRISS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">WFSS Spectra - Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">WFSS Spectra - Combine and Normalize 1D Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">WFSS Spectra - Cross-Correlation Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">WFSS Spectra - Emission Line Map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/niriss_imaging/niriss-imaging-tutorial.html">NIRISS Imaging Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/00_niriss_mast_query_data_setup.html">NIRISS MAST</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/01_niriss_wfss_image2_image3.html">Direct imaging for WFSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/02_niriss_wfss_spec2.html">Spec2 pipeline for WFSS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRSpec</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">IFU Cube Fitting</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/cube_fitting/cube_fitting.html">IFU Cube Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/ifu_optimal/ifu_optimal.html">IFU Optimal Spectral Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/optimal_extraction/Spectral_Extraction-static.html">MOS Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/mos_spectroscopy_advanced/MOSspec_advanced.html">MOS Spectroscopy of Extragalactic Field</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">BOTS Time Series Observations</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/galaxy_redshift/redshift_fitting.html">Redshift and Template Fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/FS_NSClean_example.html">FS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/IFU_NSClean_example.html">IFU Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/MOS_NSClean_example.html">MOS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/BOTS_NSClean_example.html">BOTS Products with NSClean</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/MIRI/psf_photometry/miri_photutils.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/MIRI/psf_photometry/miri_photutils.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>MIRI PSF Photometry with Photutils</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">MIRI PSF Photometry with Photutils</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of contents</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-a-class-anchor-id-intro-a">1. Introduction <a class="anchor" id="intro"></a></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-imports-a-class-anchor-id-imports-a">1.1 Python Imports <a class="anchor" id="imports"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-and-set-up-required-data-for-webbpsf-and-synphot-a-class-anchor-id-setup-a">1.2 Download and Set up Required Data for WebbPSF and Synphot <a class="anchor" id="setup"></a></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#download-jwst-miri-data-a-class-anchor-id-data-a">2. Download JWST MIRI Data <a class="anchor" id="data"></a></a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#single-bright-star-a-class-anchor-id-bso-a">3. Single Bright Star <a class="anchor" id="bso"></a></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-level-2-file-a-class-anchor-id-bso2-a">3.1 Single Level 2 File <a class="anchor" id="bso2"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-empirical-psf-grid-for-miri-f770w-using-webbpsf-a-class-anchor-id-bso3-a">3.2 Generate empirical PSF grid for MIRI F770W using WebbPSF <a class="anchor" id="bso3"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psf-photometry-a-class-anchor-id-bso4-a">3.3 PSF Photometry <a class="anchor" id="bso4"></a></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#faint-upper-limit-single-object-a-class-anchor-id-fso-a">4. Faint/Upper Limit, Single Object <a class="anchor" id="fso"></a></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#note-you-can-go-significantly-deeper-with-the-level-3-combined-data-product">Note: you can go significantly deeper with the Level 3 combined data product</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#stellar-field-lmc-a-class-anchor-id-lmc-a">5. Stellar Field (LMC) <a class="anchor" id="lmc"></a></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-stars-single-level-2-file-a-class-anchor-id-lmc2-a">5.1 Multiple Stars, Single Level 2 File <a class="anchor" id="lmc2"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-empirical-psf-grid-for-miri-f560w-using-webbpsf-a-class-anchor-id-grid2-a">5.2 Generate empirical PSF grid for MIRI F560W using WebbPSF <a class="anchor" id="grid2"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psf-photometry-a-class-anchor-id-lmc3-a">5.3 PSF Photometry <a class="anchor" id="lmc3"></a></a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="miri-psf-photometry-with-photutils">
+<h1>MIRI PSF Photometry with Photutils<a class="headerlink" href="#miri-psf-photometry-with-photutils" title="Permalink to this heading">#</a></h1>
+<p><strong>Author</strong>: Ori Fox<br></p>
+<p><strong>Submitted</strong>: November, 2023<br>
+<strong>Updated</strong>: November, 2023<br></p>
+<p><strong>Use case</strong>: PSF Photometry using <a class="reference external" href="https://photutils.readthedocs.io/en/stable/">Photutils</a>. The purpose here is to illustrate the workflow and runtime for using Photutils in a variety of use cases.</p>
+<p>Generally, PSF photometry for data from a space telescope is most accurately performed on pre-mosaiced data. The mosaic process changes the inherent PSF, blurring it both due to resampling and mixing PSFs at different detector positions and rotations.  Additionally, accurate theoretical PSF models (e.g., from <a class="reference external" href="https://webbpsf.readthedocs.io/en/latest/">WebbPSF</a>) are not available for mosaiced data. While an empirical PSF could be constructed (e.g., using Photutils <a class="reference external" href="https://photutils.readthedocs.io/en/latest/epsf.html">ePSFBuilder</a>) for mosaiced data, the results will generally not be as accurate as performing PSF photometry on the pre-mosaiced data.</p>
+<p><strong>NOTE:</strong> A companion notebook exists that illustrates how to use perform PSF photometry on both Level 2 and Level 3 data using a new software program called space_phot.<br>
+<strong>Data</strong>: MIRI Data PID 1028 (Calibration Program; Single Star Visit 006 A5V dwarf 2MASSJ17430448+6655015) and MIRI Data PID 1171 (LMC; Multiple Stars).<br>
+<strong>Tools</strong>: photutils, webbpsf, jwst <br>
+<strong>Cross-Instrument</strong>: MIRI<br>
+<strong>Documentation:</strong> This notebook is part of a STScI’s larger <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis">post-pipeline Data Analysis Tools Ecosystem</a> and can be <a class="reference external" href="https://github.com/spacetelescope/dat_pyinthesky/tree/main/jdat_notebooks/MRS_Mstar_analysis">downloaded</a> directly from the <a class="reference external" href="https://github.com/spacetelescope/jdat_notebooks">JDAT Notebook Github directory</a>.<br></p>
+<section id="table-of-contents">
+<h2>Table of contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><span class="xref myst">Introduction</span><br>
+1.1 <span class="xref myst">Python Imports</span><br>
+1.2 <span class="xref myst">Set up WebbPSF and Synphot</span><br></p></li>
+<li><p><span class="xref myst">Download JWST MIRI Data</span><br></p></li>
+<li><p><span class="xref myst">Single Bright Object</span><br>
+3.1 <span class="xref myst">Single Level 2 File</span><br>
+3.2 <span class="xref myst">Generate empirical PSF grid for MIRI F770W using WebbPSF</span><br>
+3.3 <span class="xref myst">PSF Photometry</span><br></p></li>
+<li><p><span class="xref myst">Faint/Upper Limit, Single Object</span><br>
+4.1 <span class="xref myst">Multiple, Level2 Files</span><br></p></li>
+<li><p><span class="xref myst">Stellar Field (LMC)</span><br>
+5.1 <span class="xref myst">Multiple Stars, Single Level 2 File</span><br>
+5.2 <span class="xref myst">Generate empirical PSF grid for MIRI F560W using WebbPSF</span><br>
+5.3 <span class="xref myst">PSF Photometry</span><br></p></li>
+</ol>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="introduction-a-class-anchor-id-intro-a">
+<h1>1. Introduction <a class="anchor" id="intro"></a><a class="headerlink" href="#introduction-a-class-anchor-id-intro-a" title="Permalink to this heading">#</a></h1>
+<p><strong>GOALS</strong>:<br></p>
+<p>Perform PSF photometry on JWST MIRI images with the <a class="reference external" href="https://photutils.readthedocs.io/en/latest/psf.html">Photutils PSF Photometry tools</a> using a grid of empirical PSF models from WebbPSF.</p>
+<p>The notebook shows how to:<br></p>
+<ul class="simple">
+<li><p>generate a <a class="reference external" href="https://webbpsf.readthedocs.io/en/latest/psf_grids.html">grid of empirical PSF models</a> from WebbPSF<br></p></li>
+<li><p>perform PSF photometry on the image using the <a class="reference external" href="https://photutils.readthedocs.io/en/latest/api/photutils.psf.PSFPhotometry.html#photutils.psf.PSFPhotometry">PSFPhotometry class</a><br></p></li>
+</ul>
+<p><strong>Data</strong>:<br></p>
+<p>MIRI Data PID 1028 (Calibration Program), F770W <br>
+MIRI Data PID 1171 (LMC), F560W/F770W</p>
+<section id="python-imports-a-class-anchor-id-imports-a">
+<h2>1.1 Python Imports <a class="anchor" id="imports"></a><a class="headerlink" href="#python-imports-a-class-anchor-id-imports-a" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">tarfile</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">webbpsf</span>
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">urlparse</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
+<span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">SkyCoord</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span> <span class="nn">astropy.nddata</span> <span class="kn">import</span> <span class="n">extract_array</span>
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">simple_norm</span>
+<span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
+<span class="kn">from</span> <span class="nn">jwst.datamodels</span> <span class="kn">import</span> <span class="n">ImageModel</span>
+<span class="kn">from</span> <span class="nn">photutils.aperture</span> <span class="kn">import</span> <span class="n">CircularAperture</span>
+<span class="kn">from</span> <span class="nn">photutils.background</span> <span class="kn">import</span> <span class="n">LocalBackground</span><span class="p">,</span> <span class="n">MADStdBackgroundRMS</span><span class="p">,</span> <span class="n">MMMBackground</span>
+<span class="kn">from</span> <span class="nn">photutils.detection</span> <span class="kn">import</span> <span class="n">DAOStarFinder</span>
+<span class="kn">from</span> <span class="nn">photutils.psf</span> <span class="kn">import</span> <span class="n">GriddedPSFModel</span><span class="p">,</span> <span class="n">PSFPhotometry</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="download-and-set-up-required-data-for-webbpsf-and-synphot-a-class-anchor-id-setup-a">
+<h2>1.2 Download and Set up Required Data for WebbPSF and Synphot <a class="anchor" id="setup"></a><a class="headerlink" href="#download-and-set-up-required-data-for-webbpsf-and-synphot-a-class-anchor-id-setup-a" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set environmental variables</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;WEBBPSF_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;./webbpsf-data/webbpsf-data&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PYSYN_CDBS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;./grp/redcat/trds/&quot;</span>
+
+<span class="c1"># required webbpsf data</span>
+<span class="n">boxlink</span> <span class="o">=</span> <span class="s1">&#39;https://stsci.box.com/shared/static/qxpiaxsjwo15ml6m4pkhtk36c9jgj70k.gz&#39;</span>                                                          
+<span class="n">boxfile</span> <span class="o">=</span> <span class="s1">&#39;./webbpsf-data/webbpsf-data-LATEST.tar.gz&#39;</span>
+<span class="n">synphot_url</span> <span class="o">=</span> <span class="s1">&#39;http://ssb.stsci.edu/trds/tarfiles/synphot5.tar.gz&#39;</span>
+<span class="n">synphot_file</span> <span class="o">=</span> <span class="s1">&#39;./synphot5.tar.gz&#39;</span>
+
+<span class="n">webbpsf_folder</span> <span class="o">=</span> <span class="s1">&#39;./webbpsf-data&#39;</span>
+<span class="n">synphot_folder</span> <span class="o">=</span> <span class="s1">&#39;./grp&#39;</span>
+
+
+<span class="k">def</span> <span class="nf">download_file</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">dest_path</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+    <span class="n">parsed_url</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">parsed_url</span><span class="o">.</span><span class="n">scheme</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;http&quot;</span><span class="p">,</span> <span class="s2">&quot;https&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported URL scheme: </span><span class="si">{</span><span class="n">parsed_url</span><span class="o">.</span><span class="n">scheme</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dest_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">8192</span><span class="p">):</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+
+
+<span class="c1"># Gather webbpsf files</span>
+<span class="n">psfExist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">psfExist</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
+    <span class="n">download_file</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
+    <span class="n">gzf</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">boxfile</span><span class="p">)</span>
+    <span class="n">gzf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+
+<span class="c1"># Gather synphot files</span>
+<span class="n">synExist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">synphot_folder</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">synExist</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">synphot_folder</span><span class="p">)</span>
+    <span class="n">download_file</span><span class="p">(</span><span class="n">synphot_url</span><span class="p">,</span> <span class="n">synphot_file</span><span class="p">)</span>
+    <span class="n">gzf</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">synphot_file</span><span class="p">)</span>
+    <span class="n">gzf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="download-jwst-miri-data-a-class-anchor-id-data-a">
+<h1>2. Download JWST MIRI Data <a class="anchor" id="data"></a><a class="headerlink" href="#download-jwst-miri-data-a-class-anchor-id-data-a" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download Proposal ID 1028 F770W data</span>
+
+<span class="c1"># Define source and destination directories</span>
+<span class="n">source_dir</span> <span class="o">=</span> <span class="s1">&#39;mastDownload/JWST/&#39;</span>
+<span class="n">destination_dir</span> <span class="o">=</span> <span class="s1">&#39;mast/01028/&#39;</span>
+
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">destination_dir</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Data already downloaded to </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">destination_dir</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># Query the MAST (Mikulski Archive for Space Telescopes) database for observations</span>
+    <span class="c1"># with proposal ID 1028 and the F770W filter</span>
+    <span class="n">obs</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">proposal_id</span><span class="o">=</span><span class="mi">1028</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;F770W&#39;</span><span class="p">])</span>
+    
+    <span class="c1"># Get a list of products associated with the located observation</span>
+    <span class="n">plist</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+    
+    <span class="c1"># Filter the product list to include only specific product subgroups</span>
+    <span class="n">fplist</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">filter_products</span><span class="p">(</span><span class="n">plist</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;CAL&#39;</span><span class="p">,</span> <span class="s1">&#39;I2D&#39;</span><span class="p">,</span> <span class="s1">&#39;ASN&#39;</span><span class="p">])</span>
+    
+    <span class="c1"># Download the selected products from the MAST database</span>
+    <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">fplist</span><span class="p">)</span>
+    
+    <span class="c1"># Create the destination directory</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">destination_dir</span><span class="p">)</span>
+    
+    <span class="c1"># Use glob to find all files matching the pattern</span>
+    <span class="n">files_to_copy</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="s1">&#39;j*/jw01028*&#39;</span><span class="p">))</span>
+
+    <span class="c1"># Copy the matching files to the destination directory</span>
+    <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">files_to_copy</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">destination_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download Proposal ID 1171 F550W and F770W data</span>
+
+<span class="c1"># Define source and destination directories</span>
+<span class="n">source_dir</span> <span class="o">=</span> <span class="s1">&#39;mastDownload/JWST/&#39;</span>
+<span class="n">destination_dir</span> <span class="o">=</span> <span class="s1">&#39;mast/01171/&#39;</span>
+
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">destination_dir</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Data already downloaded to </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">destination_dir</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># Query the MAST (Mikulski Archive for Space Telescopes) database for observations</span>
+    <span class="c1"># with proposal ID 1171 and the F550W and F770W filters</span>
+    <span class="n">obs</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">proposal_id</span><span class="o">=</span><span class="mi">1171</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;F560W&#39;</span><span class="p">,</span> <span class="s1">&#39;F770W&#39;</span><span class="p">])</span>
+    
+    <span class="c1"># Get a list of products associated with the located observation</span>
+    <span class="n">plist</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+    
+    <span class="c1"># Filter the product list to include only specific product subgroups</span>
+    <span class="n">fplist</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">filter_products</span><span class="p">(</span><span class="n">plist</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;CAL&#39;</span><span class="p">,</span> <span class="s1">&#39;I2D&#39;</span><span class="p">,</span> <span class="s1">&#39;ASN&#39;</span><span class="p">])</span>
+    
+    <span class="c1"># Download the selected products from the MAST database</span>
+    <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">fplist</span><span class="p">)</span>
+    
+    <span class="c1"># Create the destination directory</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">destination_dir</span><span class="p">)</span>
+    
+    <span class="c1"># Use glob to find all files matching the pattern</span>
+    <span class="n">files_to_copy</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="s1">&#39;j*/jw01171*&#39;</span><span class="p">))</span>
+    
+    <span class="c1"># Copy the matching files to the destination directory</span>
+    <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">files_to_copy</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">destination_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="single-bright-star-a-class-anchor-id-bso-a">
+<h1>3. Single Bright Star <a class="anchor" id="bso"></a><a class="headerlink" href="#single-bright-star-a-class-anchor-id-bso-a" title="Permalink to this heading">#</a></h1>
+<p>The purpose of this section is to illustrate how to perform PSF photometry on a single bright star. While aperture photometry is feasible in isolated cases, the user may find PSF photometry preferable in crowded fields or complicated backgrounds.</p>
+<section id="single-level-2-file-a-class-anchor-id-bso2-a">
+<h2>3.1 Single Level 2 File <a class="anchor" id="bso2"></a><a class="headerlink" href="#single-level-2-file-a-class-anchor-id-bso2-a" title="Permalink to this heading">#</a></h2>
+<p>In this example, we fit a single, bright source in a single Level 2 images. For a collection of Level 2 images, we could fit each Level 2 image individually and then average the measured fluxes.</p>
+<p>Useful references:<br>
+HST Documentation on PSF Photometry: https://www.stsci.edu/hst/instrumentation/wfc3/data-analysis/psf<br>
+WFPC2 Stellar Photometry with HSTPHOT: https://ui.adsabs.harvard.edu/abs/2000PASP..112.1383D/abstract<br>
+Photutils PSF Fitting Photometry: https://photutils.readthedocs.io/en/stable/psf.html</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get the level 2 filenames</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;./mast/01028/&quot;</span>
+<span class="n">level2</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;*cal.fits&#39;</span><span class="p">)))</span>
+<span class="n">level2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># display the first level-2 image</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">level2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">clb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MJy/sr&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Change all DQ flagged pixels to NaN.</span>
+<span class="c1"># Here, we&#39;ll overwrite the original CAL file.</span>
+<span class="c1"># Reference for JWST DQ Flag Definitions: https://jwst-pipeline.readthedocs.io/en/latest/jwst/references_general/references_general.html</span>
+<span class="c1"># In this case, we choose all DQ &gt; 10, but users are encouraged to choose their own values accordingly.</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">level2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">with</span> <span class="n">ImageModel</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">dq</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Re-display the image</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">level2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">clb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MJy/sr&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Zoom in to see the source. In this case, our source is from MIRI Program ID #1028, a Calibration Program.</span>
+<span class="c1"># We are using Visit 006, which targets the A5V dwarf 2MASSJ17430448+6655015</span>
+<span class="c1"># Reference Link: http://simbad.cds.unistra.fr/simbad/sim-basic?Ident=2MASSJ17430448%2B6655015&amp;submit=SIMBAD+search</span>
+<span class="n">source_location</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="s1">&#39;17:43:04.4879&#39;</span><span class="p">,</span> <span class="s1">&#39;+66:55:01.837&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">hourangle</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">))</span>
+<span class="k">with</span> <span class="n">ImageModel</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">wcs</span><span class="o">.</span><span class="n">world_to_pixel</span><span class="p">(</span><span class="n">source_location</span><span class="p">)</span>
+
+<span class="n">cutout</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">norm2</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">cutout</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cutout</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">clb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MJy/sr&#39;</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;PID1028, Obs006&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="generate-empirical-psf-grid-for-miri-f770w-using-webbpsf-a-class-anchor-id-bso3-a">
+<h2>3.2 Generate empirical PSF grid for MIRI F770W using WebbPSF <a class="anchor" id="bso3"></a><a class="headerlink" href="#generate-empirical-psf-grid-for-miri-f770w-using-webbpsf-a-class-anchor-id-bso3-a" title="Permalink to this heading">#</a></h2>
+<p>Let’s now use WebbPSF to generate an empirical grid of ePSF models for MIRI F770W.
+The output will be a Photutils <a class="reference external" href="https://photutils.readthedocs.io/en/latest/api/photutils.psf.GriddedPSFModel.html#photutils.psf.GriddedPSFModel">GriddedPSFModel</a> containing a 2x2 grid of detector-position-dependent empirical PSFs, each oversampled by a factor of 4. Note that we save the PSF grid to a FITS file (via <code class="docutils literal notranslate"><span class="pre">save=True</span></code>) called <code class="docutils literal notranslate"><span class="pre">miri_mirim_f770w_fovp101_samp4_npsf4.fits</span></code>.  To save time in future runs, we load this FITS file directly into a <code class="docutils literal notranslate"><span class="pre">GriddedPSFModel</span></code> object:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psfgrid_filename</span> <span class="o">=</span> <span class="s1">&#39;miri_mirim_f770w_fovp101_samp4_npsf4.fits&#39;</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">psfgrid_filename</span><span class="p">):</span>
+    <span class="n">miri</span> <span class="o">=</span> <span class="n">webbpsf</span><span class="o">.</span><span class="n">MIRI</span><span class="p">()</span>
+    <span class="n">miri</span><span class="o">.</span><span class="n">filter</span> <span class="o">=</span> <span class="s1">&#39;F770W&#39;</span>
+    <span class="n">psf_model</span> <span class="o">=</span> <span class="n">miri</span><span class="o">.</span><span class="n">psf_grid</span><span class="p">(</span><span class="n">num_psfs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">all_detectors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">psf_model</span> <span class="o">=</span> <span class="n">GriddedPSFModel</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">psfgrid_filename</span><span class="p">)</span>
+
+<span class="n">psf_model</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># display the PSF grid</span>
+<span class="n">psf_model</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># display the PSF grid deltas from the mean ePSF</span>
+<span class="n">psf_model</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">(</span><span class="n">deltas</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="psf-photometry-a-class-anchor-id-bso4-a">
+<h2>3.3 PSF Photometry <a class="anchor" id="bso4"></a><a class="headerlink" href="#psf-photometry-a-class-anchor-id-bso4-a" title="Permalink to this heading">#</a></h2>
+<p>Now let’s use our gridded PSF model to perform PSF photometry.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load data and convert units from MJy/sr to uJy</span>
+<span class="k">with</span> <span class="n">ImageModel</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">bunit_data</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;&lt;</span> <span class="n">unit</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">err</span> <span class="o">&lt;&lt;</span> <span class="n">unit</span>
+
+    <span class="c1"># use pixel area map because of geometric distortion in level-2 data </span>
+    <span class="n">pixel_area</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">area</span> <span class="o">*</span> <span class="n">model</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">photometry</span><span class="o">.</span><span class="n">pixelarea_steradians</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">sr</span>
+    <span class="n">data</span> <span class="o">*=</span> <span class="n">pixel_area</span>
+    <span class="n">error</span> <span class="o">*=</span> <span class="n">pixel_area</span>
+    
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">uJy</span><span class="p">)</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">uJy</span><span class="p">)</span>
+
+<span class="n">data</span><span class="o">.</span><span class="n">unit</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">unit</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>To perform photometry on a single source we can input a Table containing its (x, y) position.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">init_params</span> <span class="o">=</span> <span class="n">Table</span><span class="p">()</span>
+<span class="n">init_params</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+<span class="n">init_params</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">]</span>
+<span class="n">init_params</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># we turn off the finder because we input the source position</span>
+<span class="n">fit_shape</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">localbkg_estimator</span> <span class="o">=</span> <span class="n">LocalBackground</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">bkg_estimator</span><span class="o">=</span><span class="n">MMMBackground</span><span class="p">())</span>
+<span class="n">psfphot</span> <span class="o">=</span> <span class="n">PSFPhotometry</span><span class="p">(</span><span class="n">psf_model</span><span class="p">,</span> <span class="n">fit_shape</span><span class="p">,</span> <span class="n">finder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aperture_radius</span><span class="o">=</span><span class="n">fit_shape</span><span class="p">,</span> 
+                        <span class="n">localbkg_estimator</span><span class="o">=</span><span class="n">localbkg_estimator</span><span class="p">,</span> <span class="n">progress_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">phot</span> <span class="o">=</span> <span class="n">psfphot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">,</span> <span class="n">init_params</span><span class="o">=</span><span class="n">init_params</span><span class="p">)</span>
+<span class="n">phot</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># convert fit flux from uJy to ABmag</span>
+<span class="n">flux</span> <span class="o">=</span> <span class="n">phot</span><span class="p">[</span><span class="s1">&#39;flux_fit&#39;</span><span class="p">]</span>
+<span class="n">flux_err</span> <span class="o">=</span> <span class="n">phot</span><span class="p">[</span><span class="s1">&#39;flux_err&#39;</span><span class="p">]</span>
+<span class="n">mag</span> <span class="o">=</span> <span class="n">phot</span><span class="p">[</span><span class="s1">&#39;flux_fit&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">ABmag</span><span class="p">)</span>
+<span class="n">magerr</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="p">(</span><span class="n">flux_err</span> <span class="o">/</span> <span class="n">flux</span><span class="p">))</span>
+<span class="n">magerr</span> <span class="o">=</span> <span class="n">magerr</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">ABmag</span>
+<span class="n">mag</span><span class="p">,</span> <span class="n">magerr</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">21</span><span class="p">)</span>
+<span class="n">cutout1</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">cutout1</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">98</span><span class="p">)</span>
+<span class="n">im1</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cutout1</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Data ($\mu$Jy)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im1</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">psfphot</span><span class="o">.</span><span class="n">make_model_image</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+<span class="n">cutout2</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+<span class="n">im2</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cutout2</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Fit PSF Model&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im2</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
+<span class="n">resid</span> <span class="o">=</span> <span class="n">psfphot</span><span class="o">.</span><span class="n">make_residual_image</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+<span class="n">cutout3</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">resid</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+<span class="n">norm3</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">cutout3</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+<span class="n">im3</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cutout3</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm3</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Residual&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im3</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="faint-upper-limit-single-object-a-class-anchor-id-fso-a">
+<h1>4. Faint/Upper Limit, Single Object <a class="anchor" id="fso"></a><a class="headerlink" href="#faint-upper-limit-single-object-a-class-anchor-id-fso-a" title="Permalink to this heading">#</a></h1>
+<p>The purpose of this section is to illustrate how to calculate an upper limit at a fixed (x, y) position using forced PSF photometry a blank part of the sky.</p>
+<p>We’ll use the same data as Section 3.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load data and convert units from MJy/sr to uJy</span>
+<span class="k">with</span> <span class="n">ImageModel</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">bunit_data</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;&lt;</span> <span class="n">unit</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">err</span> <span class="o">&lt;&lt;</span> <span class="n">unit</span>
+    
+    <span class="n">pixel_area</span> <span class="o">=</span> <span class="n">pixel_area</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">photometry</span><span class="o">.</span><span class="n">pixelarea_steradians</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">sr</span>
+    <span class="n">data</span> <span class="o">*=</span> <span class="n">pixel_area</span>
+    <span class="n">error</span> <span class="o">*=</span> <span class="n">pixel_area</span>
+    
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">uJy</span><span class="p">)</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">uJy</span><span class="p">)</span>
+
+<span class="n">source_location</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="s1">&#39;17:43:00.0332&#39;</span><span class="p">,</span> <span class="s1">&#39;+66:54:42.677&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">hourangle</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">))</span>
+<span class="k">with</span> <span class="n">ImageModel</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">wcs</span><span class="o">.</span><span class="n">world_to_pixel</span><span class="p">(</span><span class="n">source_location</span><span class="p">)</span>
+
+<span class="n">cutout</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">cutout</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">95</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cutout</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">clb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\mu$Jy&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;PID1028, Obs006&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># to perform forced photometry, we set the (x, y) source position</span>
+<span class="c1"># AND we fix the PSF model position so that it does not vary in the fit</span>
+<span class="c1"># (only flux will be fit)</span>
+<span class="n">init_params</span> <span class="o">=</span> <span class="n">Table</span><span class="p">()</span>
+<span class="n">init_params</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+<span class="n">init_params</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">]</span>
+
+<span class="c1"># This requires photutils 1.11.0</span>
+<span class="n">psf_model_forced</span> <span class="o">=</span> <span class="n">psf_model</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">psf_model_forced</span><span class="o">.</span><span class="n">x_0</span><span class="o">.</span><span class="n">fixed</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">psf_model_forced</span><span class="o">.</span><span class="n">y_0</span><span class="o">.</span><span class="n">fixed</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">psf_model_forced</span><span class="o">.</span><span class="n">fixed</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fit_shape</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">localbkg_estimator</span> <span class="o">=</span> <span class="n">LocalBackground</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">bkg_estimator</span><span class="o">=</span><span class="n">MMMBackground</span><span class="p">())</span>
+<span class="n">psfphot</span> <span class="o">=</span> <span class="n">PSFPhotometry</span><span class="p">(</span><span class="n">psf_model_forced</span><span class="p">,</span> <span class="n">fit_shape</span><span class="p">,</span> <span class="n">finder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aperture_radius</span><span class="o">=</span><span class="n">fit_shape</span><span class="p">,</span> 
+                        <span class="n">localbkg_estimator</span><span class="o">=</span><span class="n">localbkg_estimator</span><span class="p">,</span> <span class="n">progress_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">phot</span> <span class="o">=</span> <span class="n">psfphot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">,</span> <span class="n">init_params</span><span class="o">=</span><span class="n">init_params</span><span class="p">)</span>
+<span class="n">phot</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># To calculate upper limit, multiply the flux_err by your desired sigma</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mf">3.0</span>
+<span class="n">limit</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">phot</span><span class="p">[</span><span class="s1">&#39;flux_err&#39;</span><span class="p">]</span>
+<span class="n">limit</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">ABmag</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="note-you-can-go-significantly-deeper-with-the-level-3-combined-data-product">
+<h2>Note: you can go significantly deeper with the Level 3 combined data product<a class="headerlink" href="#note-you-can-go-significantly-deeper-with-the-level-3-combined-data-product" title="Permalink to this heading">#</a></h2>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="stellar-field-lmc-a-class-anchor-id-lmc-a">
+<h1>5. Stellar Field (LMC) <a class="anchor" id="lmc"></a><a class="headerlink" href="#stellar-field-lmc-a-class-anchor-id-lmc-a" title="Permalink to this heading">#</a></h1>
+<p>In this case, we are going to do the same steps as in Section 3, but for multiple stars. The purpose is to illustrate the workflow and runtime for using Photutils on a large number of stars.</p>
+<section id="multiple-stars-single-level-2-file-a-class-anchor-id-lmc2-a">
+<h2>5.1 Multiple Stars, Single Level 2 File <a class="anchor" id="lmc2"></a><a class="headerlink" href="#multiple-stars-single-level-2-file-a-class-anchor-id-lmc2-a" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find stars in Level 3 File</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;./mast/01171/&#39;</span>
+<span class="n">level3</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;jw01171-o004_t001_miri_f560w_i2d.fits&#39;</span><span class="p">)</span>
+<span class="n">level3</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get rough estimate of background (there are better ways to do background subtraction)</span>
+<span class="n">bkgrms</span> <span class="o">=</span> <span class="n">MADStdBackgroundRMS</span><span class="p">()</span>
+<span class="n">mmm_bkg</span> <span class="o">=</span> <span class="n">MMMBackground</span><span class="p">()</span>
+
+<span class="k">with</span> <span class="n">ImageModel</span><span class="p">(</span><span class="n">level3</span><span class="p">)</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">wcs_l3</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">wcs</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">bkgrms</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">bkg</span> <span class="o">=</span> <span class="n">mmm_bkg</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">data_bkgsub</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">data_bkgsub</span> <span class="o">-=</span> <span class="n">bkg</span> 
+
+<span class="c1"># Find stars</span>
+<span class="c1"># F560W FWHM = 1.882 pix</span>
+<span class="n">fwhm_psf</span> <span class="o">=</span> <span class="mf">1.882</span>
+<span class="n">threshold</span> <span class="o">=</span> <span class="mf">5.0</span>
+<span class="n">daofind</span> <span class="o">=</span> <span class="n">DAOStarFinder</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span> <span class="o">*</span> <span class="n">std</span><span class="p">,</span> <span class="n">fwhm</span><span class="o">=</span><span class="n">fwhm_psf</span><span class="p">,</span> <span class="n">exclude_border</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">min_separation</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">found_stars</span> <span class="o">=</span> <span class="n">daofind</span><span class="p">(</span><span class="n">data_bkgsub</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">found_stars</span><span class="o">.</span><span class="n">pprint_all</span><span class="p">(</span><span class="n">max_lines</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot the found stars</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">data_bkgsub</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data_bkgsub</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+
+<span class="n">xypos</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">],</span> <span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">])</span>
+<span class="n">aper</span> <span class="o">=</span> <span class="n">CircularAperture</span><span class="p">(</span><span class="n">xypos</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">aper</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;mag&#39;</span><span class="p">],</span> <span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;sharpness&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;mag&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;sharpness&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;mag&#39;</span><span class="p">],</span> <span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;roundness2&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;mag&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;roundness&#39;</span><span class="p">)</span>
+
+<span class="n">mag0</span> <span class="o">=</span> <span class="o">-</span><span class="mf">3.0</span>
+<span class="n">mag1</span> <span class="o">=</span> <span class="o">-</span><span class="mf">5.0</span>
+<span class="k">for</span> <span class="n">ax_</span> <span class="ow">in</span> <span class="n">ax</span><span class="p">:</span>
+    <span class="n">ax_</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">mag0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">)</span>
+    <span class="n">ax_</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">mag1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">)</span>
+
+<span class="n">sh0</span> <span class="o">=</span> <span class="mf">0.40</span>
+<span class="n">sh1</span> <span class="o">=</span> <span class="mf">0.82</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">sh0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">sh1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">)</span>
+
+<span class="n">rnd0</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.40</span>
+<span class="n">rnd1</span> <span class="o">=</span> <span class="mf">0.40</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">rnd0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">rnd1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="p">((</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;mag&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">mag0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;mag&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">mag1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;roundness2&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">rnd0</span><span class="p">)</span>
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;roundness2&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">rnd1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;sharpness&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">sh0</span><span class="p">)</span> 
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;sharpness&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">sh1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">700</span><span class="p">)</span>
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">700</span><span class="p">))</span>
+
+<span class="n">found_stars_sel</span> <span class="o">=</span> <span class="n">found_stars</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of stars found originally:&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">found_stars</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of stars in final selection:&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">found_stars_sel</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot the selected stars</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">data_bkgsub</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data_bkgsub</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+
+<span class="n">xypos</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">found_stars_sel</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">],</span> <span class="n">found_stars_sel</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">])</span>
+<span class="n">aper</span> <span class="o">=</span> <span class="n">CircularAperture</span><span class="p">(</span><span class="n">xypos</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">aper</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="generate-empirical-psf-grid-for-miri-f560w-using-webbpsf-a-class-anchor-id-grid2-a">
+<h2>5.2 Generate empirical PSF grid for MIRI F560W using WebbPSF <a class="anchor" id="grid2"></a><a class="headerlink" href="#generate-empirical-psf-grid-for-miri-f560w-using-webbpsf-a-class-anchor-id-grid2-a" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psfgrid_filename</span> <span class="o">=</span> <span class="s1">&#39;miri_mirim_f560w_fovp101_samp4_npsf4.fits&#39;</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">psfgrid_filename</span><span class="p">):</span>
+    <span class="n">miri</span> <span class="o">=</span> <span class="n">webbpsf</span><span class="o">.</span><span class="n">MIRI</span><span class="p">()</span>
+    <span class="n">miri</span><span class="o">.</span><span class="n">filter</span> <span class="o">=</span> <span class="s1">&#39;F560W&#39;</span>
+    <span class="n">psf_model</span> <span class="o">=</span> <span class="n">miri</span><span class="o">.</span><span class="n">psf_grid</span><span class="p">(</span><span class="n">num_psfs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">all_detectors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">psf_model</span> <span class="o">=</span> <span class="n">GriddedPSFModel</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">psfgrid_filename</span><span class="p">)</span>
+
+<span class="n">psf_model</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psf_model</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get the level 2 image</span>
+<span class="c1"># here, we&#39;ll use the PID 1171 files</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;./mast/01171/&quot;</span>
+<span class="n">level2</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;jw01171004*cal.fits&#39;</span><span class="p">)))</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">level2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="c1"># load data and convert units from MJy/sr to uJy</span>
+<span class="k">with</span> <span class="n">ImageModel</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
+    <span class="n">unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">bunit_data</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">dq</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;&lt;</span> <span class="n">unit</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">err</span> <span class="o">&lt;&lt;</span> <span class="n">unit</span>
+    
+    <span class="n">pixel_area</span> <span class="o">=</span> <span class="n">pixel_area</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">photometry</span><span class="o">.</span><span class="n">pixelarea_steradians</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">sr</span>
+    <span class="n">data</span> <span class="o">*=</span> <span class="n">pixel_area</span>
+    <span class="n">error</span> <span class="o">*=</span> <span class="n">pixel_area</span>
+    
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">uJy</span><span class="p">)</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">uJy</span><span class="p">)</span>
+
+    <span class="n">wcs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">wcs</span>
+
+<span class="n">data</span><span class="o">.</span><span class="n">unit</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">unit</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="psf-photometry-a-class-anchor-id-lmc3-a">
+<h2>5.3 PSF Photometry <a class="anchor" id="lmc3"></a><a class="headerlink" href="#psf-photometry-a-class-anchor-id-lmc3-a" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># translate (x, y) positions from the level 3 image to the level 2 image</span>
+<span class="n">xc</span> <span class="o">=</span> <span class="n">found_stars_sel</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">]</span>
+<span class="n">yc</span> <span class="o">=</span> <span class="n">found_stars_sel</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">]</span>
+<span class="n">sc</span> <span class="o">=</span> <span class="n">wcs_l3</span><span class="o">.</span><span class="n">pixel_to_world</span><span class="p">(</span><span class="n">xc</span><span class="p">,</span> <span class="n">yc</span><span class="p">)</span>
+
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">wcs</span><span class="o">.</span><span class="n">world_to_pixel</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span>
+<span class="n">init_params</span> <span class="o">=</span> <span class="n">Table</span><span class="p">()</span>
+<span class="n">init_params</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+<span class="n">init_params</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+
+<span class="c1"># we need to remove stars in the masked region of</span>
+<span class="c1"># the level-2 data</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">400</span>
+<span class="n">init_params</span> <span class="o">=</span> <span class="n">init_params</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot the selected stars</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+
+<span class="n">xypos</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">init_params</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="n">init_params</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">])</span>
+<span class="n">aper</span> <span class="o">=</span> <span class="n">CircularAperture</span><span class="p">(</span><span class="n">xypos</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">aper</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fit_shape</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">localbkg_estimator</span> <span class="o">=</span> <span class="n">LocalBackground</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">bkg_estimator</span><span class="o">=</span><span class="n">MMMBackground</span><span class="p">())</span>
+<span class="n">psfphot</span> <span class="o">=</span> <span class="n">PSFPhotometry</span><span class="p">(</span><span class="n">psf_model</span><span class="p">,</span> <span class="n">fit_shape</span><span class="p">,</span> <span class="n">finder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aperture_radius</span><span class="o">=</span><span class="n">fit_shape</span><span class="p">,</span> 
+                        <span class="n">localbkg_estimator</span><span class="o">=</span><span class="n">localbkg_estimator</span><span class="p">,</span> <span class="n">progress_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">phot</span> <span class="o">=</span> <span class="n">psfphot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">,</span> <span class="n">init_params</span><span class="o">=</span><span class="n">init_params</span><span class="p">)</span>
+<span class="n">phot</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># convert fit flux from uJy to ABmag</span>
+<span class="n">flux</span> <span class="o">=</span> <span class="n">phot</span><span class="p">[</span><span class="s1">&#39;flux_fit&#39;</span><span class="p">]</span>
+<span class="n">flux_err</span> <span class="o">=</span> <span class="n">phot</span><span class="p">[</span><span class="s1">&#39;flux_err&#39;</span><span class="p">]</span>
+<span class="n">mag</span> <span class="o">=</span> <span class="n">phot</span><span class="p">[</span><span class="s1">&#39;flux_fit&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">ABmag</span><span class="p">)</span>
+<span class="n">magerr</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="p">(</span><span class="n">flux_err</span> <span class="o">/</span> <span class="n">flux</span><span class="p">))</span>
+<span class="n">magerr</span> <span class="o">=</span> <span class="n">magerr</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">ABmag</span>
+<span class="n">mag</span><span class="p">,</span> <span class="n">magerr</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Write to File</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;RA&quot;</span><span class="p">:</span> <span class="n">sc</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">deg</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="s2">&quot;DEC&quot;</span><span class="p">:</span> <span class="n">sc</span><span class="o">.</span><span class="n">dec</span><span class="o">.</span><span class="n">deg</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="s2">&quot;Mag&quot;</span><span class="p">:</span> <span class="n">mag</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;Mag Err&quot;</span><span class="p">:</span> <span class="n">magerr</span><span class="o">.</span><span class="n">value</span><span class="p">})</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;miri_photometry_photutils.txt&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  
+</pre></div>
+</div>
+</div>
+</div>
+<hr style="border:1px solid gray"> </hr><a class="reference internal image-reference" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/MIRI/psf_photometry"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">MIRI PSF Photometry with Photutils</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of contents</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-a-class-anchor-id-intro-a">1. Introduction <a class="anchor" id="intro"></a></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-imports-a-class-anchor-id-imports-a">1.1 Python Imports <a class="anchor" id="imports"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-and-set-up-required-data-for-webbpsf-and-synphot-a-class-anchor-id-setup-a">1.2 Download and Set up Required Data for WebbPSF and Synphot <a class="anchor" id="setup"></a></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#download-jwst-miri-data-a-class-anchor-id-data-a">2. Download JWST MIRI Data <a class="anchor" id="data"></a></a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#single-bright-star-a-class-anchor-id-bso-a">3. Single Bright Star <a class="anchor" id="bso"></a></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-level-2-file-a-class-anchor-id-bso2-a">3.1 Single Level 2 File <a class="anchor" id="bso2"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-empirical-psf-grid-for-miri-f770w-using-webbpsf-a-class-anchor-id-bso3-a">3.2 Generate empirical PSF grid for MIRI F770W using WebbPSF <a class="anchor" id="bso3"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psf-photometry-a-class-anchor-id-bso4-a">3.3 PSF Photometry <a class="anchor" id="bso4"></a></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#faint-upper-limit-single-object-a-class-anchor-id-fso-a">4. Faint/Upper Limit, Single Object <a class="anchor" id="fso"></a></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#note-you-can-go-significantly-deeper-with-the-level-3-combined-data-product">Note: you can go significantly deeper with the Level 3 combined data product</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#stellar-field-lmc-a-class-anchor-id-lmc-a">5. Stellar Field (LMC) <a class="anchor" id="lmc"></a></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-stars-single-level-2-file-a-class-anchor-id-lmc2-a">5.1 Multiple Stars, Single Level 2 File <a class="anchor" id="lmc2"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-empirical-psf-grid-for-miri-f560w-using-webbpsf-a-class-anchor-id-grid2-a">5.2 Generate empirical PSF grid for MIRI F560W using WebbPSF <a class="anchor" id="grid2"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psf-photometry-a-class-anchor-id-lmc3-a">5.3 PSF Photometry <a class="anchor" id="lmc3"></a></a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
