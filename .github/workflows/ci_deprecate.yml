@@ -1,0 +1,66 @@
+name: Deprecate Notebook
+
+on:
+  workflow_dispatch:
+    inputs:
+      notebook_name:
+        description: 'The name of the notebook to deprecate (e.g., example.ipynb)'
+        required: true
+        default: 'example.ipynb'
+
+jobs:
+  deprecate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Find notebook path
+        id: find_path
+        run: |
+          NOTEBOOK_NAME="${{ github.event.inputs.notebook_name }}"
+          NOTEBOOK_PATH=$(find ./notebooks -name "$NOTEBOOK_NAME" -type f)
+          if [ -z "$NOTEBOOK_PATH" ]; then
+            echo "::error::Notebook '${NOTEBOOK_NAME}' not found in the notebooks directory."
+            exit 1
+          fi
+          echo "notebook_path=$NOTEBOOK_PATH" >> $GITHUB_ENV
+
+      # - name: Check for deprecated tag
+      #  id: check_deprecated
+      #  run: |
+      #    notebook_path="${{ env.notebook_path }}"
+      #    if jq '.metadata.deprecated == true' "$notebook_path"; then
+      #      echo "::error::Notebook '${{ env.notebook_path }}' is already flagged as deprecated."
+      #     exit 0
+      #    fi
+
+      - name: Add deprecated tag with timestamp and removal date
+        run: |
+          notebook_path="${{ env.notebook_path }}"
+          timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          removal_date=$(date -u -d "$timestamp + 30 days" +"%Y-%m-%dT%H:%M:%SZ")
+          jq --arg ts "$timestamp" --arg rd "$removal_date" \
+            '.metadata.deprecated = { "status": true, "timestamp": $ts, "removal_date": $rd }' \
+            "$notebook_path" > temp.ipynb && mv temp.ipynb "$notebook_path"
+      
+      - name: Add deprecation banner with timestamp and removal date
+        run: |
+          notebook_path="${{ env.notebook_path }}"
+          timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          removal_date=$(date -u -d "$timestamp + 30 days" +"%Y-%m-%d")
+          BANNER_CELL=$(jq -n \
+            --arg text "<div style='border: 3px solid red; padding: 10px; text-align: center; font-weight: bold; color: red;'>⚠️ This notebook is scheduled for deprecation as of $timestamp and is planned for removal by $removal_date. Future use is discouraged.</div>" \
+            '{"cell_type": "markdown", "metadata": {"deprecation": true}, "source": [$text]}')
+          jq ".cells |= [$BANNER_CELL] + ." "$notebook_path" > temp.ipynb && mv temp.ipynb "$notebook_path"
+
+
+      - name: Commit and push to gh-storage branch
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git checkout -B gh-storage
+          git add "${{ env.notebook_path }}"
+          git commit -m "Deprecate notebook ${{ env.notebook_path }}"
+          git push origin gh-storage --force
