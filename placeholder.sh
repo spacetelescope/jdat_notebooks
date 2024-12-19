@@ -10,7 +10,7 @@ ROOT_DIR="_build/html"
 SEARCH_STRING="vnd.jupyter.widget-view+json"
 
 # Replacement line
-REPLACEMENT_STRING='<img align="center" height="auto" width="50%" src="$HOME/jdaviz_placeholder_new.png">'
+REPLACEMENT_STRING='<img style="display: block; margin: auto; width: 50%;" src="jdaviz_placeholder_new.png">'
 
 # Function to replace lines in a file
 replace_lines_in_file() {
