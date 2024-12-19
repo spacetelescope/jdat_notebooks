@@ -635,11 +635,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(25, 1298)
-</pre></div>
-</div>
-</div>
 </div>
 <p>When we want to view 2d spectra, we’ll generally need to stretch the pixels vertically to get a useful image. We can do this by setting the plot aspect ratio explicitly (we’ll try to retain a measure of rectangularity).</p>
 <div class="cell docutils container">
@@ -652,9 +647,6 @@ document.write(`
 <span class="n">clb1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/1d63a7246c71731107e76f4bb0c99f9bf980db5528edbf905b19df444c42a10a.png" src="../../../_images/1d63a7246c71731107e76f4bb0c99f9bf980db5528edbf905b19df444c42a10a.png" />
 </div>
 </div>
 </section>
@@ -706,9 +698,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/b1a1b79d5fe0256e99b676836b39818125a9339703b2ba09ea03fd79b89ea4c9.png" src="../../../_images/b1a1b79d5fe0256e99b676836b39818125a9339703b2ba09ea03fd79b89ea4c9.png" />
-</div>
 </div>
 <p>We’ll set the region coordinates to <code class="docutils literal notranslate"><span class="pre">x1=51,</span> <span class="pre">y1=3,</span> <span class="pre">x2=1268,</span> <span class="pre">y2=9</span></code>, then create a new array containing only our extraction region (so that we don’t need to continually index our original array).</p>
 <div class="cell docutils container">
@@ -730,9 +719,6 @@ document.write(`
 <span class="n">clb3</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/bb9030c728410641b9e8e2be8acfeb3f00bba3f7c6ce90238c3c3fd9fa50a586.png" src="../../../_images/bb9030c728410641b9e8e2be8acfeb3f00bba3f7c6ce90238c3c3fd9fa50a586.png" />
 </div>
 </div>
 </section>
@@ -787,9 +773,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/17a5471d6ba00279fdb91191c6f06d806c0090290d431785c8921df724a25bed.png" src="../../../_images/17a5471d6ba00279fdb91191c6f06d806c0090290d431785c8921df724a25bed.png" />
-</div>
 </div>
 <p>A column index of 670 and width 50 seem to work reasonably well for this file, so we can now generate the final slice for kernel fitting.</p>
 <div class="cell docutils container">
@@ -832,9 +815,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/7e54ed913da5bb1bd24d266621ba34a0c1999757eb6deb4c0edaf1dd6a4c3228.png" src="../../../_images/7e54ed913da5bb1bd24d266621ba34a0c1999757eb6deb4c0edaf1dd6a4c3228.png" />
-</div>
 </div>
 <p>The Gaussian profile looks like a better approximation, so that’s the profile we’ll use for this spectrum. In the cell below, we could add more PSF templates using <a class="reference external" href="https://docs.astropy.org/en/stable/modeling/compound-models.html">model operations</a>; this is left as an exercise for the reader.</p>
 <p>We need to de-normalize our amplitude, so we’ll set it to the maximum pixel value of the slice.</p>
@@ -844,18 +824,6 @@ document.write(`
 <span class="n">psf_template</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">kernel_slice</span><span class="p">[</span><span class="n">max_pixel</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">psf_template</span><span class="p">)</span>
 <span class="c1"># If deblending multiple sources, add more PSF templates here:</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: Gaussian1D
-Inputs: (&#39;x&#39;,)
-Outputs: (&#39;y&#39;,)
-Model set size: 1
-Parameters:
-        amplitude     mean stddev
-    ----------------- ---- ------
-    213.2068328857422  3.0    1.0
 </pre></div>
 </div>
 </div>
@@ -872,42 +840,12 @@ Parameters:
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: Polynomial1D
-Inputs: (&#39;x&#39;,)
-Outputs: (&#39;y&#39;,)
-Model set size: 1
-Degree: 2
-Parameters:
-     c0  c1  c2
-    --- --- ---
-    0.0 0.0 0.0
-</pre></div>
-</div>
-</div>
 </div>
 <p>The final step is to combine the PSF(s) and the background to create our compound model.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">extraction_kernel</span> <span class="o">=</span> <span class="n">psf_template</span> <span class="o">+</span> <span class="n">background_poly</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">extraction_kernel</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: CompoundModel
-Inputs: (&#39;x&#39;,)
-Outputs: (&#39;y&#39;,)
-Model set size: 1
-Expression: [0] + [1]
-Components: 
-    [0]: &lt;Gaussian1D(amplitude=213.20683289, mean=3., stddev=1.)&gt;
-
-    [1]: &lt;Polynomial1D(2, c0=0., c1=0., c2=0.)&gt;
-Parameters:
-       amplitude_0    mean_0 stddev_0 c0_1 c1_1 c2_1
-    ----------------- ------ -------- ---- ---- ----
-    213.2068328857422    3.0      1.0  0.0  0.0  0.0
 </pre></div>
 </div>
 </div>
@@ -936,24 +874,6 @@ Parameters:
 <span class="n">lgd6b</span> <span class="o">=</span> <span class="n">fln6</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: CompoundModel
-Inputs: (&#39;x&#39;,)
-Outputs: (&#39;y&#39;,)
-Model set size: 1
-Expression: [0] + [1]
-Components: 
-    [0]: &lt;Gaussian1D(amplitude=206.65933668, mean=3.10605298, stddev=0.54468209)&gt;
-
-    [1]: &lt;Polynomial1D(2, c0=-2.5518974, c1=8.41767538, c2=-1.36349914)&gt;
-Parameters:
-       amplitude_0           mean_0       ...        c1_1               c2_1       
-    ------------------ ------------------ ... ----------------- -------------------
-    206.65933668030522 3.1060529790325218 ... 8.417675382494473 -1.3634991396746452
-</pre></div>
-</div>
-<img alt="../../../_images/4215fe06c459a22ed3007297607671d222e8cd9a31c50b2e39b99ad6c6fef935.png" src="../../../_images/4215fe06c459a22ed3007297607671d222e8cd9a31c50b2e39b99ad6c6fef935.png" />
 </div>
 </div>
 <section id="wavelength-varying-fwhm-skipped">
@@ -989,9 +909,6 @@ Parameters:
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/fe21efe7cdf3729a9948b42bd510a993683eb3ad2d2d9caa19b300b1d2f1c76a.png" src="../../../_images/fe21efe7cdf3729a9948b42bd510a993683eb3ad2d2d9caa19b300b1d2f1c76a.png" />
-</div>
 </div>
 </section>
 </section>
@@ -1016,19 +933,6 @@ Parameters:
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">trace_center_model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Polynomial1D</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#we use a constant because the spectrum has already been rectified</span>
 <span class="n">trace_center_model</span><span class="o">.</span><span class="n">c0</span> <span class="o">=</span> <span class="n">fit_extraction_kernel</span><span class="o">.</span><span class="n">mean_0</span><span class="o">.</span><span class="n">value</span> <span class="c1"># use the parameter for center of the PSF profile</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">trace_center_model</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: Polynomial1D
-Inputs: (&#39;x&#39;,)
-Outputs: (&#39;y&#39;,)
-Model set size: 1
-Degree: 0
-Parameters:
-            c0        
-    ------------------
-    3.1060529790325218
 </pre></div>
 </div>
 </div>
@@ -1066,17 +970,6 @@ Parameters:
 <span class="n">img_var</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">variance_image</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">var_norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">palette</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: AstropyDeprecationWarning: &quot;min_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmin&quot; instead. [warnings]
-2024-12-10 20:12:57,801 - stpipe - WARNING - AstropyDeprecationWarning: &quot;min_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmin&quot; instead.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: AstropyDeprecationWarning: &quot;max_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmax&quot; instead. [warnings]
-2024-12-10 20:12:57,817 - stpipe - WARNING - AstropyDeprecationWarning: &quot;max_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmax&quot; instead.
-</pre></div>
-</div>
-<img alt="../../../_images/bdcff944240f0f4fd9f2b8a58a869c31e0a6a0991b46310cf4e85b37cbc27bf6.png" src="../../../_images/bdcff944240f0f4fd9f2b8a58a869c31e0a6a0991b46310cf4e85b37cbc27bf6.png" />
 </div>
 </div>
 </section>
@@ -1132,31 +1025,6 @@ where \)</span>I<span class="math notranslate nohighlight">\( is the pixel value
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;WCS(output_frame=world, input_frame=detector, forward_transform=Model: CompoundModel
-Inputs: (&#39;x0&#39;, &#39;x1&#39;)
-Outputs: (&#39;alpha_C&#39;, &#39;delta_C&#39;, &#39;y&#39;)
-Model set size: 1
-Expression: [0] | ([1] &amp; [2] | [3] | [4]) &amp; [5]
-Components: 
-    [0]: &lt;Mapping((1, 1, 0))&gt;
-
-    [1]: &lt;Linear1D(slope=-0.0000212, intercept=0.00014843)&gt;
-
-    [2]: &lt;Linear1D(slope=-0.00002109, intercept=0.0001476)&gt;
-
-    [3]: &lt;Pix2Sky_Gnomonic()&gt;
-
-    [4]: &lt;RotateNative2Celestial(lon=53.1347588, lat=-27.80662884, lon_pole=180.)&gt;
-
-    [5]: &lt;Tabular1D(points=(&lt;array (unloaded) shape: [1298] dtype: float64&gt;,), lookup_table=[1.64694116 1.64694116 1.64694116 ... 3.17850353 3.17956468 3.17956468])&gt;
-Parameters:
-            slope_1              intercept_1       ... lon_pole_4
-    ----------------------- ---------------------- ... ----------
-    -2.1203814393372336e-05 0.00014842677756392322 ...      180.0)&gt;
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1164,9 +1032,6 @@ Parameters:
 <span class="n">spec7</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/0bf6752e216ac405594a35c343c3fa0eb846c364205cee37c1680d59e6aa045f.png" src="../../../_images/0bf6752e216ac405594a35c343c3fa0eb846c364205cee37c1680d59e6aa045f.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1195,9 +1060,6 @@ Parameters:
 <span class="n">lgd8</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/f2d2c44eb7a9bc0f57ce102243c252802b5e68f78b97f4aed473d907726ba9dd.png" src="../../../_images/f2d2c44eb7a9bc0f57ce102243c252802b5e68f78b97f4aed473d907726ba9dd.png" />
 </div>
 </div>
 </section>
@@ -1565,248 +1427,6 @@ Parameters:
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 1 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00417_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 2 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s35395_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 3 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s06174_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 4 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s33527_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 5 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s50176_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 6 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s02624_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 7 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s30440_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 8 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s35786_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 9 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s04353_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 10 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s30455_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 11 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s02690_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 12 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03812_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 13 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s32530_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 14 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s35815_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 15 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s31771_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 16 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s05447_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 17 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03162_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 18 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s01154_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 19 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03495_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 20 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s36510_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 21 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s06661_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 22 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00443_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 23 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03398_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 24 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s33778_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 25 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00204_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 26 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s04012_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 27 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s01801_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 28 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s54218_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 29 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00227_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 30 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00618_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 31 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s31404_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 32 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00716_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 33 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s50007_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 34 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s02853_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 35 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s52673_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 36 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s05337_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 37 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s01186_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 38 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s09616_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 39 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s02315_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 40 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03317_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 41 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s02615_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 42 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03055_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 43 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00482_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 44 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s31248_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 45 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00708_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 46 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s30263_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 47 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03901_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 48 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s36863_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 49 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s05225_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 50 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s36786_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 51 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s04659_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 52 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03262_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 53 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s33685_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 54 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s06325_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 55 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00546_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 56 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s41066_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 57 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00205_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 58 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s50396_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 59 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s33926_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 60 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s09427_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 61 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s05788_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 62 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s35193_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 63 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s01158_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 64 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s06667_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 65 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s05720_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 66 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s32667_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 67 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s30576_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 68 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s32150_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 69 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s50037_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 70 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00646_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 71 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00492_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 72 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03698_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 73 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s08415_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 74 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s36383_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 75 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00455_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 76 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03211_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 77 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00279_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 78 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s06001_s2d.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 79 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00802_s2d.fits
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;contextlib.ExitStack at 0x7f8b484bbd10&gt;
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 </section>
@@ -1844,14 +1464,6 @@ Parameters:
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading WebbPSF data files.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Extracting into ./webbpsf-data ...
-</pre></div>
-</div>
-</div>
 </div>
 <section id="instrument-properties">
 <h3>Instrument properties<a class="headerlink" href="#instrument-properties" title="Permalink to this heading">#</a></h3>
@@ -1872,11 +1484,6 @@ Parameters:
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;F110W&#39;, &#39;F140X&#39;, &#39;F070LP&#39;, &#39;F100LP&#39;, &#39;F170LP&#39;, &#39;F290LP&#39;, &#39;CLEAR&#39;]
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="monochromatic-psfs">
@@ -1889,11 +1496,6 @@ Parameters:
 <span class="n">cube_hdul</span> <span class="o">=</span> <span class="n">instrument</span><span class="o">.</span><span class="n">calc_datacube</span><span class="p">(</span><span class="n">psf_wavelengths</span><span class="p">)</span> <span class="c1">#the output is a HDUList</span>
 <span class="n">psf_cube</span> <span class="o">=</span> <span class="n">cube_hdul</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="n">psf_cube</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(10, 48, 48)
 </pre></div>
 </div>
 </div>
@@ -1918,9 +1520,6 @@ Parameters:
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/a672f56c39d8c508f37c27f77d7605e4d5a98aa600752d1f101286cd232350cb.png" src="../../../_images/a672f56c39d8c508f37c27f77d7605e4d5a98aa600752d1f101286cd232350cb.png" />
-</div>
 </div>
 </section>
 <section id="interpolation-methods">
@@ -1931,16 +1530,6 @@ Parameters:
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reference_psf_hdul</span> <span class="o">=</span> <span class="n">instrument</span><span class="o">.</span><span class="n">calc_psf</span><span class="p">(</span><span class="n">monochromatic</span><span class="o">=</span><span class="mf">3.0e-6</span><span class="p">)</span>
 <span class="n">reference_psf</span> <span class="o">=</span> <span class="n">reference_psf_hdul</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="n">ref_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">reference_psf</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: AstropyDeprecationWarning: &quot;min_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmin&quot; instead. [warnings]
-2024-12-10 20:15:49,773 - stpipe - WARNING - AstropyDeprecationWarning: &quot;min_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmin&quot; instead.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: AstropyDeprecationWarning: &quot;max_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmax&quot; instead. [warnings]
-2024-12-10 20:15:49,794 - stpipe - WARNING - AstropyDeprecationWarning: &quot;max_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmax&quot; instead.
 </pre></div>
 </div>
 </div>
@@ -1977,15 +1566,6 @@ Parameters:
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reference: min 1.074e-09, max 1.718e-01
-Linear: min 1.477e-09, max 1.718e-01
-Diff: min -2.256e-05, max 1.862e-05
-Total error: 5.11593e-05
-</pre></div>
-</div>
-<img alt="../../../_images/bf1ae9a9a7a79aefd4cbc25fbe922806d87885ae4d40a6a83b7066ffdfba4e84.png" src="../../../_images/bf1ae9a9a7a79aefd4cbc25fbe922806d87885ae4d40a6a83b7066ffdfba4e84.png" />
-</div>
 </div>
 <p>The next method is more calculation-intensive, but could be more accurate. We go pixel-by-pixel through the PSF cube and interpolate with a 1D cubic spline along the wavelength axis.</p>
 <div class="cell docutils container">
@@ -2019,15 +1599,6 @@ Total error: 5.11593e-05
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reference: min 1.074e-09, max 1.718e-01
-Cubic: min 1.248e-09, max 1.718e-01
-Diff: min -1.983e-05, max 8.233e-05
-Total error: 1.05253e-04
-</pre></div>
-</div>
-<img alt="../../../_images/4d018b6ad16a5eb42e739875fc2c9977ac7ea4631310462484d67c25efd93031.png" src="../../../_images/4d018b6ad16a5eb42e739875fc2c9977ac7ea4631310462484d67c25efd93031.png" />
-</div>
 </div>
 <p>While the log-log plot looks virtually identical to the linear case, the difference image in the spline case shows slightly larger errors in some of the central pixels. This is consistent with the “total error” statistic (the sum of squares of the difference image), which is larger in this second case.</p>
 <p>We can see in the plot below that the difference between the two methods is very slight, but the linearly-interpolated PSF is more accurate by about a factor of ~3 in total error.</p>
@@ -2039,12 +1610,6 @@ Total error: 1.05253e-04
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Cubic interpolation&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;Cubic interpolation&#39;)
-</pre></div>
-</div>
-<img alt="../../../_images/775f38d00a29d88bf4768cec46d3170887faf414bfd1d84c88fb935bc481458c.png" src="../../../_images/775f38d00a29d88bf4768cec46d3170887faf414bfd1d84c88fb935bc481458c.png" />
 </div>
 </div>
 </section>
@@ -2081,20 +1646,6 @@ Total error: 1.05253e-04
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: AstropyDeprecationWarning: &quot;min_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmin&quot; instead. [warnings]
-2024-12-10 20:15:51,422 - stpipe - WARNING - AstropyDeprecationWarning: &quot;min_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmin&quot; instead.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: AstropyDeprecationWarning: &quot;max_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmax&quot; instead. [warnings]
-2024-12-10 20:15:51,444 - stpipe - WARNING - AstropyDeprecationWarning: &quot;max_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmax&quot; instead.
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.colorbar.Colorbar at 0x7f8b435d0a50&gt;
-</pre></div>
-</div>
-<img alt="../../../_images/d0fee2be7e3a23b4d1918d8ea7dce7242041579205293d47af9081647c441083.png" src="../../../_images/d0fee2be7e3a23b4d1918d8ea7dce7242041579205293d47af9081647c441083.png" />
-</div>
 </div>
 </section>
 <section id="resampling-the-trace">
@@ -2123,12 +1674,6 @@ Total error: 1.05253e-04
                   <span class="n">norm</span><span class="o">=</span><span class="n">er_norm</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f8b435190d0&gt;
-</pre></div>
-</div>
-<img alt="../../../_images/305c39f9220794c4db9196ac42d39440b059da58e2a97745b98b66756dd7bd56.png" src="../../../_images/305c39f9220794c4db9196ac42d39440b059da58e2a97745b98b66756dd7bd56.png" />
 </div>
 </div>
 </section>
