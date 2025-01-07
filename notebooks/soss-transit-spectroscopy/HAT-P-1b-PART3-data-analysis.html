@@ -517,30 +517,30 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># General internal libraries:</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">numpy.polynomial</span> <span class="kn">import</span> <span class="n">chebyshev</span>
-<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">gaussian_filter1d</span>
-<span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1.inset_locator</span> <span class="kn">import</span> <span class="n">mark_inset</span>
-<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.polynomial</span><span class="w"> </span><span class="kn">import</span> <span class="n">chebyshev</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.ndimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">gaussian_filter1d</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1.inset_locator</span><span class="w"> </span><span class="kn">import</span> <span class="n">mark_inset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">interp1d</span>
 
 <span class="c1"># Libraries for plotting, reading data:</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span> 
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span> 
 <span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">)</span> <span class="c1"># Set seaborn &quot;ticks&quot; style for better styled plots</span>
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
-<span class="kn">from</span> <span class="nn">astropy.utils.data</span> <span class="kn">import</span> <span class="n">download_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_file</span>
 <span class="c1"># Library for some power-spectral density analysis:</span>
-<span class="kn">from</span> <span class="nn">astropy.timeseries</span> <span class="kn">import</span> <span class="n">LombScargle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.timeseries</span><span class="w"> </span><span class="kn">import</span> <span class="n">LombScargle</span>
 
 <span class="c1"># Useful library to obtain wavelength map solution from the JWST pipeline:</span>
-<span class="kn">from</span> <span class="nn">jwst</span> <span class="kn">import</span> <span class="n">datamodels</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jwst</span><span class="w"> </span><span class="kn">import</span> <span class="n">datamodels</span>
 
 <span class="c1"># Corner (for posterior distribution plotting):</span>
-<span class="kn">import</span> <span class="nn">corner</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">corner</span>
 <span class="c1"># Juliet (for transit fitting &amp; model evaluation:)</span>
-<span class="kn">import</span> <span class="nn">juliet</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">juliet</span>
 </pre></div>
 </div>
 </div>
@@ -616,7 +616,7 @@ document.write(`
 <p>Let’s use all of the above to our advantage to trace the spectra of each integration. First, let’s write a small script to get the centroids of each column for each order on each integration. Here we’ll use a very simple algorithm in which we convolve each column with a gaussian filter (in order to smooth the profile, which is rather complex), and then take the centroiding of that filtered image. We repeat this procedure in each of the columns of the image in order to obtain the centroids of the traces, and then we fit them with a polynomial:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">trace_spectrum</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">xstart</span><span class="p">,</span> <span class="n">ystart</span><span class="p">,</span> <span class="n">profile_radius</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">gauss_filter_width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">xend</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">trace_spectrum</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">xstart</span><span class="p">,</span> <span class="n">ystart</span><span class="p">,</span> <span class="n">profile_radius</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">gauss_filter_width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">xend</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function that non-parametrically traces NIRISS/SOSS spectra. First, to get the centroid at xstart and </span>
 <span class="sd">    ystart, it convolves the spatial profile with a gaussian filter, finding its peak through usual flux-weighted </span>
@@ -697,7 +697,7 @@ document.write(`
 <p>Woah, pretty good for such a simple approach! There are evidently some parts of the traces that go a bit off-board. In particular, the trace goes off at values below around 30. Let’s fit a Chebyshev polynomial for each of them so we can smooth the shape a little bit, being careful not to use these pixels that throw the trace off in the fit. We could do some iterative fitting but, as we will see below, this is not terribly important. To select the best order for this polynomial, let’s write a small function that does model selection using the <a class="reference external" href="https://projecteuclid.org/euclid.aos/1176344136">Bayesian Information Criterion</a> (BIC) for each trace, and then select the best order via “majority vote”:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">select_cheby_order</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">min_order</span><span class="p">,</span> <span class="n">max_order</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">select_cheby_order</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">min_order</span><span class="p">,</span> <span class="n">max_order</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function selects (and returns) the optimal order of a Chebyshev polynomial using the BIC.</span>
 <span class="sd">    </span>
@@ -900,7 +900,7 @@ document.write(`
 <p>First, the aperture extraction function:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">aperture_extraction</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">aperture_radius</span><span class="p">,</span> <span class="n">background_radius</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">error_image</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">correct_bkg</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">aperture_extraction</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">aperture_radius</span><span class="p">,</span> <span class="n">background_radius</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">error_image</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">correct_bkg</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function takes as inputs two arrays (x,y) that follow the trace, </span>
 <span class="sd">    and returns the added flux over the defined aperture radius (and its error, if an error image </span>

@@ -533,29 +533,29 @@ attributes. Here, we demonstrate 1-D spectral modeling applied to an individual 
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">multiprocess</span> <span class="k">as</span> <span class="nn">mp</span>
-<span class="kn">from</span> <span class="nn">multiprocess</span> <span class="kn">import</span> <span class="n">Pool</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">multiprocess</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiprocess</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pool</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">loadtxt</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">arange</span><span class="p">,</span> <span class="n">interp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">loadtxt</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">arange</span><span class="p">,</span> <span class="n">interp</span>
 
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogNorm</span>
 
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span> 
-<span class="kn">from</span> <span class="nn">astropy.nddata</span> <span class="kn">import</span> <span class="n">StdDevUncertainty</span>
-<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
-<span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">make_lupton_rgb</span>
-<span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">quantity_support</span>
-<span class="kn">from</span> <span class="nn">astropy.modeling</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span> 
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.nddata</span><span class="w"> </span><span class="kn">import</span> <span class="n">StdDevUncertainty</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astropy.units</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">u</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_lupton_rgb</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantity_support</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.modeling</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span>
 
-<span class="kn">from</span> <span class="nn">specutils</span> <span class="kn">import</span> <span class="n">Spectrum1D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">specutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Spectrum1D</span>
 
-<span class="kn">import</span> <span class="nn">lmfit</span>
-<span class="kn">from</span> <span class="nn">lmfit</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Minimizer</span><span class="p">,</span> <span class="n">Parameters</span>
-<span class="kn">from</span> <span class="nn">lmfit.model</span> <span class="kn">import</span> <span class="n">save_modelresult</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lmfit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lmfit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Minimizer</span><span class="p">,</span> <span class="n">Parameters</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lmfit.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_modelresult</span>
 </pre></div>
 </div>
 </div>
@@ -583,37 +583,37 @@ attributes. Here, we demonstrate 1-D spectral modeling applied to an individual 
 <p>A variety of emission line, continuum and extinction models for spectral fitting.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Modelcero</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">Modelcero</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple model of 0 to initialize some models&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="mi">0</span><span class="o">*</span><span class="n">x</span>
 
 <span class="c1">#powerlaw, zblackbody, gaussian and drude functions wrap existing astropy models.</span>
 <span class="c1">#lmfit requires wavelength (x) to be passed as function parameter.</span>
 
-<span class="k">def</span> <span class="nf">powerlaw</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">powerlaw</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;power law function (c1*nu^c2) normalized at 1 micron, with positive index convention&quot;&quot;&quot;</span>
     <span class="n">x0</span><span class="o">=</span><span class="mf">1.0</span>  <span class="c1">#Normalize at  1 micron</span>
     <span class="n">c2</span><span class="o">=-</span><span class="n">c2</span>
     <span class="k">return</span> <span class="n">models</span><span class="o">.</span><span class="n">PowerLaw1D</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">c1</span><span class="p">,</span><span class="n">x0</span><span class="p">,</span><span class="n">c2</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">zblackbody</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">OnePlusZ</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">scale</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">zblackbody</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">OnePlusZ</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">scale</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;black body function&quot;&quot;&quot;</span>
     <span class="n">xs</span><span class="o">=</span><span class="n">x</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="o">/</span><span class="n">OnePlusZ</span>
     <span class="n">bb</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">BlackBody</span><span class="p">(</span><span class="n">T</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">bb</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">gaussian</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">xcen</span><span class="p">,</span> <span class="n">std</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gaussian</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">xcen</span><span class="p">,</span> <span class="n">std</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;1-d gaussian&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">models</span><span class="o">.</span><span class="n">Gaussian1D</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">amplitude</span><span class="p">,</span><span class="n">xcen</span><span class="p">,</span><span class="n">std</span><span class="p">)</span>   
 
-<span class="k">def</span> <span class="nf">drude</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">peakx</span><span class="p">,</span> <span class="n">frac_FWHM</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">drude</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">peakx</span><span class="p">,</span> <span class="n">frac_FWHM</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;dust emission&quot;&quot;&quot;</span>
     <span class="n">FWHM</span><span class="o">=</span><span class="n">peakx</span><span class="o">*</span><span class="n">frac_FWHM</span>
     <span class="k">return</span> <span class="n">models</span><span class="o">.</span><span class="n">Drude1D</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">amplitude</span><span class="p">,</span><span class="n">peakx</span><span class="p">,</span><span class="n">FWHM</span><span class="p">)</span>
 
 <span class="c1">#pahdust and sidust functions do not exist in astropy</span>
 
-<span class="k">def</span> <span class="nf">pahdust</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">OnePlusZ</span><span class="p">,</span> <span class="n">amplitude_76</span><span class="p">,</span> <span class="n">amplitude_113</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pahdust</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">OnePlusZ</span><span class="p">,</span> <span class="n">amplitude_76</span><span class="p">,</span> <span class="n">amplitude_113</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;PAH dust emission&quot;&quot;&quot;</span>
     
     <span class="c1">#Ionized PAH features</span>
@@ -638,7 +638,7 @@ attributes. Here, we demonstrate 1-D spectral modeling applied to an individual 
 
     <span class="k">return</span> <span class="n">pahflux</span>    <span class="c1">#Amplitude unit</span>
 
-<span class="k">def</span> <span class="nf">sidust</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sidust</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Silicate dust emission&quot;&quot;&quot;</span>
     
     <span class="c1">#Custom extinction curve built from weighted sum of three components: </span>
@@ -658,7 +658,7 @@ attributes. Here, we demonstrate 1-D spectral modeling applied to an individual 
 <span class="c1"># Enable tabulated extinction functions. Existing options in dust_extinction are insufficient</span>
 <span class="c1"># at mid-IR wavelengths</span>
 
-<span class="k">def</span> <span class="nf">extinction_a</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">extinction_a</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extinction from table data&quot;&quot;&quot;</span>
     <span class="n">ext</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>      
     <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">tau</span><span class="o">*</span><span class="n">ext</span><span class="p">)</span>
@@ -674,8 +674,8 @@ attributes. Here, we demonstrate 1-D spectral modeling applied to an individual 
 <span class="c1">#P92 is the only model that extends over the mid-IR range, but it is crude</span>
 <span class="c1">#Normalized to extinction in the V-band</span>
 
-<span class="kn">from</span> <span class="nn">dust_extinction.parameter_averages</span> <span class="kn">import</span> <span class="n">F99</span>
-<span class="kn">from</span> <span class="nn">dust_extinction.shapes</span> <span class="kn">import</span> <span class="n">P92</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dust_extinction.parameter_averages</span><span class="w"> </span><span class="kn">import</span> <span class="n">F99</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dust_extinction.shapes</span><span class="w"> </span><span class="kn">import</span> <span class="n">P92</span>
 <span class="n">a92</span> <span class="o">=</span> <span class="n">P92</span><span class="p">()</span>
 
 <span class="c1">#Extinction Comparison</span>
@@ -712,11 +712,11 @@ in the lmfit setpar command.  For now we are just fitting amplitudes of emission
 Fits with more variable parameters take longer.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setpar</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">vary</span><span class="p">,</span> <span class="n">minus</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">setpar</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">vary</span><span class="p">,</span> <span class="n">minus</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set any parameter&quot;&quot;&quot;</span>
     <span class="n">pars</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">,</span><span class="n">vary</span><span class="o">=</span><span class="n">vary</span><span class="p">,</span><span class="nb">min</span><span class="o">=</span><span class="n">minus</span><span class="p">)</span>
     
-<span class="k">def</span> <span class="nf">gaussian_defpar</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">stddev</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gaussian_defpar</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">stddev</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;set the parameters for a gaussian&quot;&quot;&quot;</span>
     <span class="n">std</span><span class="o">=</span><span class="n">stddev</span>
     <span class="n">name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -727,7 +727,7 @@ Fits with more variable parameters take longer.</p>
     <span class="n">setpar</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;_amplitude&#39;</span><span class="p">,</span><span class="n">amplitude</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="c1">#pars[name+&#39;_std&#39;].set(std,vary=False),pars[name+&#39;_xcen&#39;].set(xcen,vary=False),pars[name+&#39;_amplitude&#39;].set(amplitude)</span>
 
-<span class="k">def</span> <span class="nf">drude_defpar</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">peakx</span><span class="p">,</span> <span class="n">frac_FWHM</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">drude_defpar</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">peakx</span><span class="p">,</span> <span class="n">frac_FWHM</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;set the parameters for a drude&quot;&quot;&quot;</span>
     <span class="n">peakx</span><span class="o">=</span><span class="n">peakx</span><span class="o">*</span><span class="n">OneZ</span>
     <span class="n">setpar</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;_frac_FWHM&#39;</span><span class="p">,</span><span class="n">frac_FWHM</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">None</span><span class="p">)</span>
@@ -736,39 +736,39 @@ Fits with more variable parameters take longer.</p>
     <span class="n">setpar</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;_amplitude&#39;</span><span class="p">,</span><span class="n">amplitude</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>    
     <span class="k">return</span> <span class="c1">#pars[name+&#39;_frac_FWHM&#39;].set(frac_FWHM,vary=False),pars[name+&#39;_peakx&#39;].set(peakx,vary=False),pars[name+&#39;_amplitude&#39;].set(amplitude)</span>
 
-<span class="k">def</span> <span class="nf">pahdust_defpar</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">OnePlusZ</span><span class="p">,</span> <span class="n">amplitude_76</span><span class="p">,</span> <span class="n">amplitude_113</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pahdust_defpar</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">OnePlusZ</span><span class="p">,</span> <span class="n">amplitude_76</span><span class="p">,</span> <span class="n">amplitude_113</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;set the parameters for pdr dust&quot;&quot;&quot;</span>
     <span class="n">setpar</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;_amplitude_76&#39;</span><span class="p">,</span><span class="n">amplitude_76</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> 
     <span class="n">setpar</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;_amplitude_113&#39;</span><span class="p">,</span><span class="n">amplitude_113</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> 
     <span class="n">setpar</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;_OnePlusZ&#39;</span><span class="p">,</span><span class="n">OnePlusZ</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">None</span><span class="p">)</span>
     <span class="k">return</span> <span class="c1">#pars[name+&#39;_frac_FWHM&#39;].set(frac_FWHM,vary=False),pars[name+&#39;_peakx&#39;].set(peakx,vary=False),pars[name+&#39;_amplitude&#39;].set(amplitude)</span>
 
-<span class="k">def</span> <span class="nf">sidust_defpar</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sidust_defpar</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">pars</span><span class="p">):</span>
     <span class="n">setpar</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;_amplitude&#39;</span><span class="p">,</span><span class="n">amplitude</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">setpar</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;_T&#39;</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span>
 
-<span class="k">def</span> <span class="nf">gaussian_extractpars</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gaussian_extractpars</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;extract the parameters for a gaussian&quot;&quot;&quot;</span>
     <span class="n">amp</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;amplitude&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
     <span class="n">cen</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;xcen&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
     <span class="n">std</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;std&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
     <span class="k">return</span> <span class="n">amp</span><span class="p">,</span> <span class="n">cen</span><span class="p">,</span> <span class="n">std</span>
 
-<span class="k">def</span> <span class="nf">drude_extractpars</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">drude_extractpars</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;extract the parameters for a drude&quot;&quot;&quot;</span>
     <span class="n">ampl</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;amplitude&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
     <span class="n">peak</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;peakx&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>         
     <span class="n">frac</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;frac_FWHM&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
     <span class="k">return</span> <span class="n">ampl</span><span class="p">,</span> <span class="n">peak</span><span class="p">,</span> <span class="n">frac</span>
 
-<span class="k">def</span> <span class="nf">pahdust_extractpars</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pahdust_extractpars</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;extract the parameters for pahdust model&quot;&quot;&quot;</span>
     <span class="n">ampl_76</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;amplitude_76&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
     <span class="n">ampl_113</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;amplitude_113&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
     <span class="k">return</span> <span class="n">ampl_76</span><span class="p">,</span> <span class="n">ampl_113</span>  
 
-<span class="k">def</span> <span class="nf">sidust_extractpars</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sidust_extractpars</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;extract the parameters for pahdust model&quot;&quot;&quot;</span>
     <span class="n">T</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;T&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
     <span class="n">ampl</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;amplitude&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
@@ -785,14 +785,14 @@ Fits with more variable parameters take longer.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#NOTE that these are ANALYTIC estimates of line fluxes,</span>
 <span class="c1">#NOT available in astropy modeling or specutils</span>
 
-<span class="k">def</span> <span class="nf">gaussianline_flux</span><span class="p">(</span><span class="n">amp</span><span class="p">,</span><span class="n">std</span><span class="p">,</span><span class="n">cen</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gaussianline_flux</span><span class="p">(</span><span class="n">amp</span><span class="p">,</span><span class="n">std</span><span class="p">,</span><span class="n">cen</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;calculate the integrated flux for a gaussian line&quot;&quot;&quot;</span>
     <span class="c1">#Units= amp:Jy cen:microns</span>
     <span class="n">c</span><span class="o">=</span> <span class="mf">29979.2458</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">10</span> <span class="c1">#c in microns/s</span>
     <span class="n">gaussianfactor</span><span class="o">=</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">amp</span><span class="o">*</span><span class="n">gaussianfactor</span><span class="o">*</span><span class="n">c</span><span class="o">*</span><span class="n">std</span><span class="o">/</span><span class="p">(</span><span class="n">cen</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">23</span><span class="p">)</span>      <span class="c1">#erg s^{-1} cm^{-2}</span>
 
-<span class="k">def</span> <span class="nf">drudeline_flux</span><span class="p">(</span><span class="n">amp</span><span class="p">,</span><span class="n">frac</span><span class="p">,</span><span class="n">peak</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">drudeline_flux</span><span class="p">(</span><span class="n">amp</span><span class="p">,</span><span class="n">frac</span><span class="p">,</span><span class="n">peak</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;calculate the integrate flux for a drude line&quot;&quot;&quot;</span>
     <span class="c1">#Units= amp:Jy peak:microns</span>
     <span class="n">c</span><span class="o">=</span> <span class="mf">29979.2458</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">10</span> <span class="c1">#c in microns/s</span>
@@ -807,13 +807,13 @@ Fits with more variable parameters take longer.</p>
 <h3>Extract and plot 1D spectrum and model components<a class="headerlink" href="#extract-and-plot-1d-spectrum-and-model-components" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">extract_spec</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">extract_spec</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;extract spec and errors from a,b coordinates&quot;&quot;&quot;</span>
     <span class="n">spec_pix</span><span class="o">=</span><span class="n">data_cube</span><span class="p">[:,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">]</span>
     <span class="n">err_pix</span><span class="o">=</span><span class="n">error_cube</span><span class="p">[:,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">spec_pix</span><span class="p">,</span> <span class="n">err_pix</span>
 
-<span class="k">def</span> <span class="nf">model_comps</span><span class="p">(</span><span class="n">model_result</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">model_comps</span><span class="p">(</span><span class="n">model_result</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate model components&quot;&quot;&quot;</span>
     <span class="n">comps</span> <span class="o">=</span> <span class="n">model_result</span><span class="o">.</span><span class="n">eval_components</span><span class="p">()</span>
     <span class="n">plcomp</span><span class="o">=</span><span class="p">[]</span>
@@ -843,7 +843,7 @@ Fits with more variable parameters take longer.</p>
         
     <span class="k">return</span><span class="p">([</span><span class="n">plaw_model</span><span class="p">,</span><span class="n">h2_model</span><span class="p">,</span><span class="n">ion_model</span><span class="p">,</span><span class="n">pah_model</span><span class="p">,</span><span class="n">sidust_model</span><span class="p">],[</span><span class="s1">&#39;PL&#39;</span><span class="p">,</span><span class="s1">&#39;H2&#39;</span><span class="p">,</span><span class="s1">&#39;Ions&#39;</span><span class="p">,</span><span class="s1">&#39;PAHs&#39;</span><span class="p">,</span><span class="s1">&#39;Si Dust&#39;</span><span class="p">])</span>
 
-<span class="k">def</span> <span class="nf">plot_fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">specerr</span><span class="p">,</span> <span class="n">model_result</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">specerr</span><span class="p">,</span> <span class="n">model_result</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;plot spectrum, model components, and residual&quot;&quot;&quot;</span>
 
     <span class="c1">#Model Results</span>
@@ -1119,12 +1119,12 @@ Trimmed cube dimensions: 194 30 32
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cube_res</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Manager</span><span class="p">()</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
 
 <span class="c1">#The fit method is redefined as a top-level function to make it pickle-able for multiprocessing.Pool</span>
-<span class="k">def</span> <span class="nf">modfit</span><span class="p">(</span><span class="n">spaxel</span><span class="p">,</span> <span class="n">generic_pars</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">modfit</span><span class="p">(</span><span class="n">spaxel</span><span class="p">,</span> <span class="n">generic_pars</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="n">modf</span><span class="o">=</span><span class="n">generic_mod</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">spaxel</span><span class="p">,</span> <span class="n">generic_pars</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="n">spaxerr</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">modf</span><span class="o">.</span><span class="n">dumps</span><span class="p">()</span>
 
 <span class="c1">#Helper to either assign a NaN result or fit a single non-NaN spaxel</span>
-<span class="k">def</span> <span class="nf">fit_point</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_point</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
         <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">spaxel</span><span class="p">,</span><span class="n">spaxerr</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">generic_pars</span><span class="p">,</span><span class="n">nancheck</span> <span class="o">=</span> <span class="n">args</span>
         <span class="c1"># print(a, b, len(spaxel), mp.current_process().name)</span>
         <span class="k">if</span> <span class="n">nancheck</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
@@ -1232,7 +1232,7 @@ Trimmed cube dimensions: 194 30 32
 <h4>Functions to extract line and PAH maps from model parameter cube<a class="headerlink" href="#functions-to-extract-line-and-pah-maps-from-model-parameter-cube" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">line_map</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">cube_res</span><span class="p">,</span> <span class="n">modres</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">line_map</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">cube_res</span><span class="p">,</span> <span class="n">modres</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create total emission line flux map for Gaussian emission line model component&quot;&quot;&quot;</span>
     
     <span class="n">line_flux</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">35</span><span class="p">,</span> <span class="mi">35</span><span class="p">))</span>
@@ -1247,7 +1247,7 @@ Trimmed cube dimensions: 194 30 32
 
     <span class="k">return</span> <span class="n">line_flux</span>
 
-<span class="k">def</span> <span class="nf">pahdust_maps</span><span class="p">(</span><span class="n">pahdust_comp</span><span class="p">,</span> <span class="n">cube_res</span><span class="p">,</span> <span class="n">modres</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pahdust_maps</span><span class="p">(</span><span class="n">pahdust_comp</span><span class="p">,</span> <span class="n">cube_res</span><span class="p">,</span> <span class="n">modres</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create total emission line flux map for Gaussian emission line model component&quot;&quot;&quot;</span>
     
     <span class="n">pah_ion_flux</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">35</span><span class="p">,</span> <span class="mi">35</span><span class="p">))</span>
@@ -1267,7 +1267,7 @@ Trimmed cube dimensions: 194 30 32
 
     <span class="k">return</span> <span class="n">pah_ion_flux</span><span class="p">,</span> <span class="n">pah_neutral_flux</span>
 
-<span class="k">def</span> <span class="nf">sidust_map</span><span class="p">(</span><span class="n">sidust_comp</span><span class="p">,</span> <span class="n">cube_res</span><span class="p">,</span> <span class="n">modres</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sidust_map</span><span class="p">(</span><span class="n">sidust_comp</span><span class="p">,</span> <span class="n">cube_res</span><span class="p">,</span> <span class="n">modres</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create silicate dust emission map&quot;&quot;&quot;</span>
     <span class="n">sidust_flux</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">35</span><span class="p">,</span> <span class="mi">35</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">dumpval</span> <span class="ow">in</span> <span class="n">cube_res</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>

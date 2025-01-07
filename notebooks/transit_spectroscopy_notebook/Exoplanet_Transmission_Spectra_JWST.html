@@ -535,26 +535,26 @@ exoplanet grid was selected (clear atmosphere at solar metallicity).  With an ac
 https://github.com/hrwakeford/ExoTiC-ISM), and slightly adapted. The full set of stellar models used for the limb-darkening calculation can also be downloaded from ExoTiC-ISM, as this notebook only downloads and loads the single stellar model used to generate the limb darkening.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">ticker</span>
-<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_pdf</span> <span class="kn">import</span> <span class="n">PdfPages</span>
-<span class="kn">from</span> <span class="nn">astropy.utils.data</span> <span class="kn">import</span> <span class="n">download_file</span>
-<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span><span class="p">,</span> <span class="n">ascii</span>
-<span class="kn">from</span> <span class="nn">astropy.modeling.models</span> <span class="kn">import</span> <span class="n">custom_model</span>
-<span class="kn">from</span> <span class="nn">astropy.modeling.fitting</span> <span class="kn">import</span> <span class="n">LevMarLSQFitter</span>
-<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span><span class="p">,</span> <span class="n">splev</span><span class="p">,</span> <span class="n">splrep</span>
-<span class="kn">from</span> <span class="nn">scipy.io</span> <span class="kn">import</span> <span class="n">readsav</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">lmfit</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">mkdir</span>
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.ticker</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ticker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.backends.backend_pdf</span><span class="w"> </span><span class="kn">import</span> <span class="n">PdfPages</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span><span class="p">,</span> <span class="n">ascii</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.modeling.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">custom_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.modeling.fitting</span><span class="w"> </span><span class="kn">import</span> <span class="n">LevMarLSQFitter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">interp1d</span><span class="p">,</span> <span class="n">splev</span><span class="p">,</span> <span class="n">splrep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">readsav</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lmfit</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">mkdir</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 </pre></div>
 </div>
 </div>
@@ -1030,7 +1030,7 @@ The inputs are the orbit distance between the planet-star center <span class="ma
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@custom_model</span>
-<span class="k">def</span> <span class="nf">nonlinear_limb_darkening</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c0</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">c1</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">c2</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">c3</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">nonlinear_limb_darkening</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c0</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">c1</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">c2</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">c3</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Define non-linear limb darkening model with four parameters c0, c1, c2, c3.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1040,7 +1040,7 @@ The inputs are the orbit distance between the planet-star center <span class="ma
 
 
 <span class="nd">@custom_model</span>
-<span class="k">def</span> <span class="nf">quadratic_limb_darkening</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">aLD</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bLD</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">quadratic_limb_darkening</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">aLD</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bLD</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Define linear limb darkening model with parameters aLD and bLD.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1048,7 +1048,7 @@ The inputs are the orbit distance between the planet-star center <span class="ma
     <span class="k">return</span> <span class="n">model</span>
 
 
-<span class="k">def</span> <span class="nf">limb_dark_fit</span><span class="p">(</span><span class="n">grating</span><span class="p">,</span> <span class="n">wsdata</span><span class="p">,</span> <span class="n">M_H</span><span class="p">,</span> <span class="n">Teff</span><span class="p">,</span> <span class="n">logg</span><span class="p">,</span> <span class="n">dirsen</span><span class="p">,</span> <span class="n">ld_model</span><span class="o">=</span><span class="s1">&#39;1D&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">limb_dark_fit</span><span class="p">(</span><span class="n">grating</span><span class="p">,</span> <span class="n">wsdata</span><span class="p">,</span> <span class="n">M_H</span><span class="p">,</span> <span class="n">Teff</span><span class="p">,</span> <span class="n">logg</span><span class="p">,</span> <span class="n">dirsen</span><span class="p">,</span> <span class="n">ld_model</span><span class="o">=</span><span class="s1">&#39;1D&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates stellar limb-darkening coefficients for a given wavelength bin.</span>
 
@@ -1385,7 +1385,7 @@ The inputs are the orbit distance between the planet-star center <span class="ma
     <span class="k">return</span> <span class="n">uLD</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span><span class="p">,</span> <span class="n">c4</span><span class="p">,</span> <span class="n">cp1</span><span class="p">,</span> <span class="n">cp2</span><span class="p">,</span> <span class="n">cp3</span><span class="p">,</span> <span class="n">cp4</span><span class="p">,</span> <span class="n">aLD</span><span class="p">,</span> <span class="n">bLD</span>
 
 
-<span class="k">def</span> <span class="nf">int_tabulated</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">int_tabulated</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">Xsegments</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
 
     <span class="c1"># Sort vectors into ascending order.</span>
@@ -1418,7 +1418,7 @@ The inputs are the orbit distance between the planet-star center <span class="ma
 <h2>Now define the transit model function<a class="headerlink" href="#now-define-the-transit-model-function" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">occultnl</span><span class="p">(</span><span class="n">rl</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span><span class="p">,</span> <span class="n">c4</span><span class="p">,</span> <span class="n">b0</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">occultnl</span><span class="p">(</span><span class="n">rl</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span><span class="p">,</span> <span class="n">c4</span><span class="p">,</span> <span class="n">b0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    MANDEL &amp; AGOL (2002) transit model.</span>
 <span class="sd">    :param rl: float, transit depth (Rp/R*)</span>
@@ -1494,7 +1494,7 @@ The inputs are the orbit distance between the planet-star center <span class="ma
     <span class="k">return</span> <span class="n">mulimb0</span><span class="p">,</span> <span class="n">mulimbf</span>
 
 
-<span class="k">def</span> <span class="nf">occultuniform</span><span class="p">(</span><span class="n">b0</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">occultuniform</span><span class="p">(</span><span class="n">b0</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the lightcurve for occultation of a uniform source without microlensing (Mandel &amp; Agol 2002).</span>
 
@@ -1543,7 +1543,7 @@ The inputs are the orbit distance between the planet-star center <span class="ma
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Functions to call and calculate models</span>
-<span class="k">def</span> <span class="nf">residual</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span><span class="p">,</span> <span class="n">c4</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">residual</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span><span class="p">,</span> <span class="n">c4</span><span class="p">):</span>
     <span class="c1"># calculate new orbit</span>
     <span class="n">b0</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="s1">&#39;a_Rs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phase</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;cosinc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phase</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
     <span class="c1"># Select indicies between first and fourth contact</span>
@@ -1565,7 +1565,7 @@ The inputs are the orbit distance between the planet-star center <span class="ma
 <p>A function is also defined to return just the transit model <span class="math notranslate nohighlight">\(T(t,\theta)\)</span></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">model_fine</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>  <span class="c1"># Make Transit model with a fine grid for plotting purposes</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">model_fine</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>  <span class="c1"># Make Transit model with a fine grid for plotting purposes</span>
     <span class="n">b0</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="s1">&#39;a_Rs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phase_fine</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;cosinc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phase_fine</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">mulimb0</span><span class="p">,</span> <span class="n">mulimbf</span> <span class="o">=</span> <span class="n">occultnl</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;rprs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span><span class="p">,</span> <span class="n">c4</span><span class="p">,</span> <span class="n">b0</span><span class="p">)</span>  <span class="c1"># Madel and Agol</span>
     <span class="n">model_fine</span> <span class="o">=</span> <span class="n">mulimb0</span>
