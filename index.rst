@@ -2,9 +2,9 @@
 JWST Data Analysis Tool Notebooks
 =======================================================
 
-The `jdat_notebooks <https://github.com/spacetelescope/jdat_notebooks>`_
-repository contains notebooks illustrating workflows for post-pipeline
-analysis of JWST data. Some of the notebooks also illustrate generic
+The `jdat_notebooks repository <https://github.com/spacetelescope/jdat_notebooks>`_
+contains notebooks illustrating workflows for post-pipeline analysis of JWST data.
+Some of the notebooks also illustrate generic
 analysis workflows that are applicable to data from other observatories
 as well. This repository and the notebooks are one component of STScI's
 larger `Data Analysis Tools
@@ -24,16 +24,13 @@ that is demonstrated by the notebook, a description of the data that are used,
 and a listing of the data analysis tools that
 are demonstrated by the use case.
 
-The latest versions of the notebooks are contained in the
-`GitHub jdat_notebooks repository <https://github.com/spacetelescope/jdat_notebooks>`_.
-
-
 Installation Instructions
 =========================
 
 To download and execute the notebooks, we recommend that you
-clone this repository to your local computer as described
-in :ref:`installation instructions <install>` for details.
+clone the `jdat_notebooks repository <https://github.com/spacetelescope/jdat_notebooks>`_
+to your local computer as described
+in the :ref:`installation instructions <install>`.
 
 Help
 ====
