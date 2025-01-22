@@ -34,7 +34,10 @@ jobs:
         run: |
           current_date="${{ env.current_date }}"
           deprecated_notebooks="${{ env.deprecated_notebooks }}"
-          
+          if [ -z "$deprecated_notebooks" ]; then
+            echo "No deprecated notebooks found, exiting."
+            exit 0
+          fi          
           for notebook_path in $deprecated_notebooks; do
             # Extract the removal date from the notebook metadata
             removal_date=$(jq -r '.metadata.deprecated.removal_date' "$notebook_path")
