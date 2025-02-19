@@ -212,11 +212,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="../rgb_imviz/imviz_rgb_carina.html">RGB images with Imviz</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">Specviz Simple Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../update_pure_parallel_wcs/NIRISS_correct_pure_parallel_WCS.html">Improving Accuracy of WCS of Pure Parallel Dataset</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">JWST Using Wavefronts Measured On Orbit</a></li>
-
-
-
-
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">STPSF Examples</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">MIRI</span></p>
 <ul class="nav bd-sidenav">
@@ -462,50 +458,34 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">JWST Using Wavefronts Measured On Orbit</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stpsf-formerly-knows-as-webbpsf-includes-code-for-using-the-results-of-in-flight-wavefront-sensing-measurements-by-retrieving-optical-path-difference-opd">STPSF, formerly knows as WebbPSF, includes code for using the results of in-flight wavefront sensing measurements, by retrieving Optical Path Difference (OPD)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#index">Index</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-the-measured-wavefront-near-a-given-date">Finding the measured wavefront near a given date</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#opd-file-description">OPD File description</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fits-file-contains-five-image-extensions-for-each-analyzed-input-image-in-the-case-of-the-sensing-program-there-are-2-images-8wl">The FITS file contains five image extensions for each analyzed input image. In the case of the sensing program, there are 2 images +/-8WL</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#delta-wfe-around-time-of-observation">Delta wfe Around Time of Observation</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-setup-a-psf-simulation-by-using-a-particular-observation">Let’s setup a PSF simulation by using a particular observation</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#index">Index</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports-and-setup">Imports and Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-the-measured-wavefront-near-a-given-date">Finding the measured wavefront near a given date</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#opd-file-description">OPD File description</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#delta-wavefront-error-around-time-of-observation">Delta Wavefront Error Around Time of Observation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-a-psf-simulation-using-a-particular-observation">Setup a PSF simulation using a particular observation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trending-wavefront-changes-over-time">Trending Wavefront Changes over Time</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wavefront-time-series-and-histogram-plots">Wavefront time series and histogram plots</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#we-can-retrieve-a-table-of-all-available-opds-and-plot-the-measurements-over-time">We can retrieve a table of all available OPDs and plot the measurements over time:</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#you-can-download-all-the-opds-from-the-opdtable-object-note-that-some-functions-need-to-have-all-the-opds-available">You can download all the OPDs from the opdtable object. Note that some functions need to have all the OPDs available.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wavefront-time-series-and-histogram-plots">Wavefront time series and histogram plots</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-all-opds">Table of all OPDs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trending-plots">Trending Plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-over-a-time-range">Plot over a time range</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-and-plot-a-single-opd">Load and plot a Single OPD</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#select-a-time-range-depending-on-your-observations">Select a time range, depending on your observations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-a-single-opd">Load a Single OPD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jwst-simulated-psf-subtraction-from-in-flight-data">JWST Simulated PSF Subtraction from in-flight data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-a-subarray-around-source-of-interest-and-measure-source-location">Extract a subarray around source of interest, and measure source location</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#find-the-source">Find the source</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-previous-function-to-set-up-our-simulation">Use previous function to set up our simulation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-photutils-to-create-our-model-psf">Use photutils to create our model PSF</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-location-of-the-source-to-be-subtracted">Check the location of the source to be subtracted</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#jwst-psf-subtraction-using-in-flight-simulations">JWST PSF Subtraction Using in-flight Simulations</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-a-subarray-around-a-particular-source-of-interest-and-measure-source-location">Extract a subarray around a particular source of interest, and measure source location</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-find-the-source">Let’s find the source</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-use-our-previous-function-to-setup-our-simulation">Let’s use our previous function to setup our simulation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#we-use-photutils-to-create-our-model-psf">We use photutils to create our model PSF</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#well-use-photutils-to-fit-and-subtract-the-psf-from-the-data-first-we-take-the-output-simulated-psf-and-convert-it-into-a-photutils-fittable-model">We’ll use photutils to fit and subtract the PSF from the data. First, we take the output simulated PSF and convert it into a photutils fittable model:</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#we-check-the-location-of-the-source-to-be-subtracted">We check the location of the source to be subtracted</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#after-a-successful-psf-fit-then-we-can-create-a-residual-image-and-display-the-results">After a successful PSF fit then we can create a residual image and display the results</a></li>
-</ul>
-</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subtract-psf-and-create-residual-image">Subtract PSF and create residual image</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#psf-properties-and-differences">PSF properties and differences</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#improved-ifu-sims">Improved IFU sims</a></li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#improved-ifu-sims">Improved IFU sims</a></li>
-</ul>
-
             </nav>
         </div>
     </div>
@@ -516,7 +496,49 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="cell docutils container">
+  <section class="tex2jax_ignore mathjax_ignore" id="jwst-using-wavefronts-measured-on-orbit">
+<h1>JWST Using Wavefronts Measured On Orbit<a class="headerlink" href="#jwst-using-wavefronts-measured-on-orbit" title="Permalink to this heading">#</a></h1>
+<p>STPSF, formerly knows as WebbPSF, includes code for using the results of in-flight wavefront sensing measurements, by retrieving Optical Path Difference (OPD) files. These can be used to create simulated PSFs appropriate for a given instrument, detector, and time.</p>
+<p>This notebook serves as a reference for how to use STPSF to search for and retrieve an OPD file, and explains the contents of this file. It also shows how to load multiple OPD files and plot changes in the wavefront properties over time. It also contains an example case of using an OPD file to create and subtract a simulated PSF from an in-flight image.</p>
+<p>Details on the use of STPSF’s in-flight OPDs are given here:
+https://stpsf.readthedocs.io/en/latest/jwst_measured_opds.html</p>
+<p>Author: Marcio Melendez Hernandez<br>
+Last Updated: 13 Feb 2025</p>
+<section id="index">
+<h2>Index<a class="headerlink" href="#index" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><span class="xref myst">Imports and Setup</span></p></li>
+<li><p><span class="xref myst">Finding the measured wavefront near a given date</span></p></li>
+<li><p><span class="xref myst">OPD File description</span></p></li>
+<li><p><span class="xref myst">Delta Wavefront Error Around Time of Observation</span></p></li>
+<li><p><span class="xref myst">Setup a PSF simulation using a particular observation</span></p></li>
+<li><p><span class="xref myst">Trending Wavefront Changes over Time</span></p></li>
+<li><p><span class="xref myst">Wavefront time series and histogram plots</span></p>
+<ul>
+<li><p><span class="xref myst">Table of all OPDs</span></p></li>
+<li><p><span class="xref myst">Trending Plots</span></p></li>
+<li><p><span class="xref myst">Plot over a time range</span></p></li>
+<li><p><span class="xref myst">Load and plot a Single OPD</span></p></li>
+</ul>
+</li>
+<li><p><span class="xref myst">JWST Simulated PSF Subtraction from in-flight data</span></p>
+<ul>
+<li><p><span class="xref myst">Extract a subarray around source of interest, and measure source location</span></p></li>
+<li><p><span class="xref myst">Find the source</span></p></li>
+<li><p><span class="xref myst">Use previous function to set up our simulation</span></p></li>
+<li><p><span class="xref myst">Use photutils to create our model PSF</span></p></li>
+<li><p><span class="xref myst">Subtract PSF and create residual image</span></p></li>
+<li><p><span class="xref myst">PSF properties and differences</span></p></li>
+</ul>
+</li>
+<li><p><span class="xref myst">Improved IFU Sims</span></p></li>
+</ul>
+<p>For other STPSF examples:
+https://stpsf.readthedocs.io/en/latest/more_examples.html</p>
+</section>
+<section id="imports-and-setup">
+<h2>Imports and Setup<a class="headerlink" href="#imports-and-setup" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pylab</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">poppy</span>
@@ -542,6 +564,11 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">photutils.background</span><span class="w"> </span><span class="kn">import</span> <span class="n">Background2D</span><span class="p">,</span> <span class="n">MedianBackground</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">photutils.detection</span><span class="w"> </span><span class="kn">import</span> <span class="n">IRAFStarFinder</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">photutils.psf</span><span class="w"> </span><span class="kn">import</span> <span class="n">PSFPhotometry</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matplotlib is building the font cache; this may take a moment.
 </pre></div>
 </div>
 </div>
@@ -583,29 +610,9 @@ document.write(`
 </div>
 </div>
 </div>
-<section class="tex2jax_ignore mathjax_ignore" id="jwst-using-wavefronts-measured-on-orbit">
-<h1>JWST Using Wavefronts Measured On Orbit<a class="headerlink" href="#jwst-using-wavefronts-measured-on-orbit" title="Permalink to this heading">#</a></h1>
-<section id="stpsf-formerly-knows-as-webbpsf-includes-code-for-using-the-results-of-in-flight-wavefront-sensing-measurements-by-retrieving-optical-path-difference-opd">
-<h2>STPSF, formerly knows as WebbPSF, includes code for using the results of in-flight wavefront sensing measurements, by retrieving Optical Path Difference (OPD)<a class="headerlink" href="#stpsf-formerly-knows-as-webbpsf-includes-code-for-using-the-results-of-in-flight-wavefront-sensing-measurements-by-retrieving-optical-path-difference-opd" title="Permalink to this heading">#</a></h2>
-<p>https://stpsf.readthedocs.io/en/latest/jwst_measured_opds.html</p>
 </section>
-<section id="index">
-<h2>Index<a class="headerlink" href="#index" title="Permalink to this heading">#</a></h2>
-<ul class="simple">
-<li><p><span class="xref myst">Finding the measured wavefront near a given date</span></p></li>
-<li><p><span class="xref myst">Delta wfe Around Time</span></p></li>
-<li><p><span class="xref myst">Trending Wavefront Changes over Time</span></p></li>
-<li><p><span class="xref myst">Wavefront time series and histogram plots</span></p></li>
-<li><p><span class="xref myst">Load a Single OPD</span></p></li>
-<li><p><span class="xref myst">JWST PSF Subtraction Using in-flight Simulations</span></p></li>
-<li><p><span class="xref myst">PSF properties and differences </span></p></li>
-<li><p><span class="xref myst">Improved IFU Sims</span></p></li>
-</ul>
-<p>For other STPSF examples:
-https://stpsf.readthedocs.io/en/latest/more_examples.html</p>
-<p><a id='opd'></a></p>
 <section id="finding-the-measured-wavefront-near-a-given-date">
-<h3>Finding the measured wavefront near a given date<a class="headerlink" href="#finding-the-measured-wavefront-near-a-given-date" title="Permalink to this heading">#</a></h3>
+<h2>Finding the measured wavefront near a given date<a class="headerlink" href="#finding-the-measured-wavefront-near-a-given-date" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nrc</span> <span class="o">=</span> <span class="n">stpsf</span><span class="o">.</span><span class="n">NIRCam</span><span class="p">()</span>
@@ -644,9 +651,7 @@ OPD immediately following the given datetime:
 	Date (MJD):	 59761.5484
 	Delta time:	 0.5484 days
 User requested choosing OPD time closest in time to 2022-07-01T00:00:00.000, which is R2022070403-NRCA3_FP1-0.fits, delta time 0.548 days
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022070403-NRCA3_FP1-0.fits to /home/runner/work/jdat_notebooks/jdat_notebooks/notebooks/cross_instrument/stpsf_examples/R2022070403-NRCA3_FP1-0.fits ...
+Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022070403-NRCA3_FP1-0.fits to /home/runner/work/jdat_notebooks/jdat_notebooks/notebooks/cross_instrument/stpsf_examples/R2022070403-NRCA3_FP1-0.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -709,7 +714,6 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 </section>
-</section>
 <section id="opd-file-description">
 <h2>OPD File description<a class="headerlink" href="#opd-file-description" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
@@ -722,8 +726,7 @@ The FITS file contains an ‘EXPECTED’ image extension, which is the expected 
 <li><p>PUPIL_MASK Image Extension
 The FITS file contains a ‘PUPIL_MASK’ image extension, which is the pupil mask used to compute the PSF from the resultant phase</p></li>
 </ul>
-<section id="the-fits-file-contains-five-image-extensions-for-each-analyzed-input-image-in-the-case-of-the-sensing-program-there-are-2-images-8wl">
-<h3>The FITS file contains five image extensions for each analyzed input image. In the case of the sensing program, there are 2 images +/-8WL<a class="headerlink" href="#the-fits-file-contains-five-image-extensions-for-each-analyzed-input-image-in-the-case-of-the-sensing-program-there-are-2-images-8wl" title="Permalink to this heading">#</a></h3>
+<p><b>The FITS file contains five image extensions for each analyzed input image. In the case of the sensing program, there are 2 images +/-8WL</b></p>
 <ul class="simple">
 <li><p>RAW_PSF Image Extensions
 For each input image, the Raw PSF extension will contain the raw extracted subimage taken from the calibrated science data</p></li>
@@ -758,12 +761,9 @@ For each input image, the Low-Order Phase extension will contain an image which 
 <img alt="../../../_images/7d82cdc6deb03ce7e62ff265f07b537647118731cfe0278b86391ea7d1c4ec13.png" src="../../../_images/7d82cdc6deb03ce7e62ff265f07b537647118731cfe0278b86391ea7d1c4ec13.png" />
 </div>
 </div>
-<p><a id='delta'></a></p>
 </section>
-</section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="delta-wfe-around-time-of-observation">
-<h1>Delta wfe Around Time of Observation<a class="headerlink" href="#delta-wfe-around-time-of-observation" title="Permalink to this heading">#</a></h1>
+<section id="delta-wavefront-error-around-time-of-observation">
+<h2>Delta Wavefront Error Around Time of Observation<a class="headerlink" href="#delta-wavefront-error-around-time-of-observation" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stpsf</span><span class="o">.</span><span class="n">trending</span><span class="o">.</span><span class="n">delta_wfe_around_time</span><span class="p">(</span><span class="s1">&#39;2024-05-11 01:50:25.231&#39;</span><span class="p">)</span>
@@ -796,8 +796,8 @@ For each input image, the Low-Order Phase extension will contain an image which 
 </div>
 </div>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="let-s-setup-a-psf-simulation-by-using-a-particular-observation">
-<h1>Let’s setup a PSF simulation by using a particular observation<a class="headerlink" href="#let-s-setup-a-psf-simulation-by-using-a-particular-observation" title="Permalink to this heading">#</a></h1>
+<section id="setup-a-psf-simulation-using-a-particular-observation">
+<h2>Setup a PSF simulation using a particular observation<a class="headerlink" href="#setup-a-psf-simulation-using-a-particular-observation" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">mast_retrieve_files</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">redownload</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -893,9 +893,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Importing and format-converting OPD from data/stpsf-data/MAST_JWST_WSS_OPDs/O2024070701-NRCA3_FP1-1.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Backing out SI WFE and OTE field dependence at the WF sensing field point (NRCA3_FP1)
+Backing out SI WFE and OTE field dependence at the WF sensing field point (NRCA3_FP1)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Configured simulation instrument for:
@@ -912,7 +910,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <img alt="../../../_images/1b7572cfa7a2595947f5af302aea2bd6ccebc879227f56136e6ee07c008d29bf.png" src="../../../_images/1b7572cfa7a2595947f5af302aea2bd6ccebc879227f56136e6ee07c008d29bf.png" />
 </div>
 </div>
-<p><a id='trending'></a></p>
+</section>
 <section id="trending-wavefront-changes-over-time">
 <h2>Trending Wavefront Changes over Time<a class="headerlink" href="#trending-wavefront-changes-over-time" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
@@ -1035,7 +1033,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>QTable length=17</i>
-<table id="table139849572691344" class="table-striped table-bordered table-condensed">
+<table id="table140573181437648" class="table-striped table-bordered table-condensed">
 <thead><tr><th>Date</th><th>Filename</th><th>WFS Type</th><th>RMS WFE (OTE+SI)</th><th>RMS WFE (OTE only)</th><th>EE(2.5 pix)</th><th>EE(10pix)</th></tr></thead>
 <thead><tr><th></th><th></th><th></th><th>nm</th><th>nm</th><th></th><th></th></tr></thead>
 <thead><tr><th>str23</th><th>str29</th><th>str7</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
@@ -1058,13 +1056,12 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <tr><td>2024-06-29T11:11:11.900</td><td>O2024062901-NRCA3_FP1-1.fits</td><td>Sensing</td><td>68.61955754982066</td><td>65.40644711461798</td><td>0.670565698344554</td><td>0.8763606492879847</td></tr>
 </table></div></div></div>
 </div>
-<p><a id='time'></a></p>
 </section>
 <section id="wavefront-time-series-and-histogram-plots">
 <h2>Wavefront time series and histogram plots<a class="headerlink" href="#wavefront-time-series-and-histogram-plots" title="Permalink to this heading">#</a></h2>
-</section>
-<section id="we-can-retrieve-a-table-of-all-available-opds-and-plot-the-measurements-over-time">
-<h2>We can retrieve a table of all available OPDs and plot the measurements over time:<a class="headerlink" href="#we-can-retrieve-a-table-of-all-available-opds-and-plot-the-measurements-over-time" title="Permalink to this heading">#</a></h2>
+<section id="table-of-all-opds">
+<h3>Table of all OPDs<a class="headerlink" href="#table-of-all-opds" title="Permalink to this heading">#</a></h3>
+<p><b>Retrieve a table of all available OPDs and plot the measurements over time</b></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">opdtable</span> <span class="o">=</span> <span class="n">stpsf</span><span class="o">.</span><span class="n">mast_wss</span><span class="o">.</span><span class="n">retrieve_mast_opd_table</span><span class="p">()</span>
@@ -1081,32 +1078,33 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div><i>Table length=596</i>
-<table id="table139849573934224" class="table-striped table-bordered table-condensed">
+<div class="output text_html"><div><i>Table length=602</i>
+<table id="table140573188351312" class="table-striped table-bordered table-condensed">
 <thead><tr><th>date</th><th>date_obs_mjd</th><th>visitId</th><th>activity</th><th>apername</th><th>corr_id</th><th>fileName</th><th>dataURI</th><th>wfs_measurement_type</th><th>is_post_correction</th><th>is_pre_correction</th></tr></thead>
 <thead><tr><th>str23</th><th>float64</th><th>str12</th><th>str5</th><th>str9</th><th>str11</th><th>str29</th><th>str47</th><th>str10</th><th>bool</th><th>bool</th></tr></thead>
 <tr><td>2022-03-11T19:37:04.200</td><td>59649.81740972222</td><td>V01160001001</td><td>02109</td><td>NRCA3_FP1</td><td>R2022031401</td><td>R2022031401-NRCA3_FP1-0.fits</td><td>mast:JWST/product/R2022031401-NRCA3_FP1-0.fits</td><td>post</td><td>True</td><td>False</td></tr>
-<tr><td>2022-03-12T13:56:12.900</td><td>59650.58070486111</td><td>V01162001001</td><td>02101</td><td>NRCA3_FP1</td><td>R2022031302</td><td>R2022031302-NRCA3_FP1-1.fits</td><td>mast:JWST/product/R2022031302-NRCA3_FP1-1.fits</td><td>pre</td><td>False</td><td>False</td></tr>
+<tr><td>2022-03-12T13:56:12.900</td><td>59650.58070486111</td><td>V01162001001</td><td>02101</td><td>NRCA3_FP1</td><td>R2022031401</td><td>R2022031401-NRCA3_FP1-1.fits</td><td>mast:JWST/product/R2022031401-NRCA3_FP1-1.fits</td><td>pre</td><td>False</td><td>False</td></tr>
 <tr><td>2022-03-12T19:42:19.800</td><td>59650.8210625</td><td>V01162006001</td><td>02101</td><td>NRCA3_FP1</td><td>R2022031401</td><td>R2022031401-NRCA3_FP1-6.fits</td><td>mast:JWST/product/R2022031401-NRCA3_FP1-6.fits</td><td>pre</td><td>False</td><td>False</td></tr>
-<tr><td>2022-03-13T02:02:19.300</td><td>59651.084945601855</td><td>V01162012001</td><td>02101</td><td>NRCA3_FP1</td><td>R2022031401</td><td>R2022031401-NRCA3_FP1-12.fits</td><td>mast:JWST/product/R2022031401-NRCA3_FP1-12.fits</td><td>pre</td><td>False</td><td>False</td></tr>
+<tr><td>2022-03-13T02:02:19.300</td><td>59651.084945601855</td><td>V01162012001</td><td>02101</td><td>NRCA3_FP1</td><td>R2022031303</td><td>R2022031303-NRCA3_FP1-1.fits</td><td>mast:JWST/product/R2022031303-NRCA3_FP1-1.fits</td><td>pre</td><td>False</td><td>False</td></tr>
 <tr><td>2022-03-14T15:44:07.500</td><td>59652.65564236111</td><td>V01163006001</td><td>02107</td><td>NRCA3_FP1</td><td>R2022031405</td><td>R2022031405-NRCA3_FP1-1.fits</td><td>mast:JWST/product/R2022031405-NRCA3_FP1-1.fits</td><td>post</td><td>True</td><td>False</td></tr>
 <tr><td>2022-03-17T06:50:00.300</td><td>59655.284725694444</td><td>V01163001001</td><td>02101</td><td>NRCA3_FP1</td><td>R2022032002</td><td>R2022032002-NRCA3_FP1-0.fits</td><td>mast:JWST/product/R2022032002-NRCA3_FP1-0.fits</td><td>pre</td><td>False</td><td>False</td></tr>
 <tr><td>2022-03-17T15:50:41.300</td><td>59655.66020023148</td><td>V01163003001</td><td>02101</td><td>NRCA3_FP1</td><td>R2022031703</td><td>R2022031703-NRCA3_FP1-1.fits</td><td>mast:JWST/product/R2022031703-NRCA3_FP1-1.fits</td><td>pre</td><td>False</td><td>False</td></tr>
 <tr><td>2022-03-17T22:54:02.800</td><td>59655.954199074076</td><td>V01163004001</td><td>02107</td><td>NRCA3_FP1</td><td>R2022031801</td><td>R2022031801-NRCA3_FP1-1.fits</td><td>mast:JWST/product/R2022031801-NRCA3_FP1-1.fits</td><td>post</td><td>True</td><td>False</td></tr>
 <tr><td>2022-03-18T05:18:33.700</td><td>59656.22122337963</td><td>V01163005001</td><td>02107</td><td>NRCA3_FP1</td><td>R2022031902</td><td>R2022031902-NRCA3_FP1-0.fits</td><td>mast:JWST/product/R2022031902-NRCA3_FP1-0.fits</td><td>post</td><td>True</td><td>False</td></tr>
 <tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
-<tr><td>2024-12-28T21:45:11.100</td><td>60672.906378472224</td><td>V06693031001</td><td>03104</td><td>NRCA1_FP6</td><td>O2024122801</td><td>O2024122801-NRCA1_FP6-1.fits</td><td>mast:JWST/product/O2024122801-NRCA1_FP6-1.fits</td><td>pre</td><td>False</td><td>False</td></tr>
-<tr><td>2025-01-01T19:39:41.400</td><td>60676.819229166664</td><td>V06690128001</td><td>03104</td><td>NRCA1_FP6</td><td>O2025010101</td><td>O2025010101-NRCA1_FP6-1.fits</td><td>mast:JWST/product/O2025010101-NRCA1_FP6-1.fits</td><td>pre</td><td>False</td><td>False</td></tr>
-<tr><td>2025-01-05T04:20:46.800</td><td>60680.18109722222</td><td>V06690006001</td><td>03104</td><td>NRCA1_FP6</td><td>O2025010501</td><td>O2025010501-NRCA1_FP6-1.fits</td><td>mast:JWST/product/O2025010501-NRCA1_FP6-1.fits</td><td>pre</td><td>False</td><td>False</td></tr>
-<tr><td>2025-01-08T07:34:16.000</td><td>60683.315462962964</td><td>V06690121001</td><td>03104</td><td>NRCA1_FP6</td><td>R2025010801</td><td>R2025010801-NRCA1_FP6-1.fits</td><td>mast:JWST/product/R2025010801-NRCA1_FP6-1.fits</td><td>pre</td><td>False</td><td>True</td></tr>
-<tr><td>2025-01-08T08:23:28.600</td><td>60683.34963657407</td><td>V06690121001</td><td>03107</td><td>NRCA1_FP6</td><td>R2025010802</td><td>R2025010802-NRCA1_FP6-1.fits</td><td>mast:JWST/product/R2025010802-NRCA1_FP6-1.fits</td><td>post</td><td>True</td><td>False</td></tr>
-<tr><td>2025-01-11T16:08:21.500</td><td>60686.67247106481</td><td>V06689186001</td><td>03104</td><td>NRCA1_FP6</td><td>O2025011301</td><td>O2025011301-NRCA1_FP6-1.fits</td><td>mast:JWST/product/O2025011301-NRCA1_FP6-1.fits</td><td>pre</td><td>False</td><td>False</td></tr>
 <tr><td>2025-01-14T20:48:05.600</td><td>60689.86673148148</td><td>V06690046001</td><td>03104</td><td>NRCA1_FP6</td><td>O2025011501</td><td>O2025011501-NRCA1_FP6-1.fits</td><td>mast:JWST/product/O2025011501-NRCA1_FP6-1.fits</td><td>pre</td><td>False</td><td>False</td></tr>
 <tr><td>2025-01-19T05:24:01.000</td><td>60694.225011574075</td><td>V06689097001</td><td>03104</td><td>NRCA1_FP6</td><td>O2025012101</td><td>O2025012101-NRCA1_FP6-1.fits</td><td>mast:JWST/product/O2025012101-NRCA1_FP6-1.fits</td><td>pre</td><td>False</td><td>False</td></tr>
 <tr><td>2025-01-24T05:41:14.900</td><td>60699.236978009256</td><td>V06691006001</td><td>03104</td><td>NRCA1_FP6</td><td>O2025012501</td><td>O2025012501-NRCA1_FP6-1.fits</td><td>mast:JWST/product/O2025012501-NRCA1_FP6-1.fits</td><td>pre</td><td>False</td><td>False</td></tr>
 <tr><td>2025-01-28T07:08:15.200</td><td>60703.29739814815</td><td>V06691066001</td><td>03104</td><td>NRCA1_FP6</td><td>R2025012901</td><td>R2025012901-NRCA1_FP6-1.fits</td><td>mast:JWST/product/R2025012901-NRCA1_FP6-1.fits</td><td>pre</td><td>False</td><td>False</td></tr>
+<tr><td>2025-02-01T05:00:34.100</td><td>60707.20872800926</td><td>V06690166001</td><td>03104</td><td>NRCA1_FP6</td><td>R2025020101</td><td>R2025020101-NRCA1_FP6-1.fits</td><td>mast:JWST/product/R2025020101-NRCA1_FP6-1.fits</td><td>pre</td><td>False</td><td>True</td></tr>
+<tr><td>2025-02-01T05:40:28.500</td><td>60707.23644097222</td><td>V06690166001</td><td>03107</td><td>NRCA1_FP6</td><td>R2025020102</td><td>R2025020102-NRCA1_FP6-1.fits</td><td>mast:JWST/product/R2025020102-NRCA1_FP6-1.fits</td><td>post</td><td>True</td><td>False</td></tr>
+<tr><td>2025-02-04T20:42:06.700</td><td>60710.86257754629</td><td>V06691102001</td><td>03104</td><td>NRCA1_FP6</td><td>O2025020501</td><td>O2025020501-NRCA1_FP6-1.fits</td><td>mast:JWST/product/O2025020501-NRCA1_FP6-1.fits</td><td>pre</td><td>False</td><td>False</td></tr>
+<tr><td>2025-02-08T14:13:49.200</td><td>60714.592930555555</td><td>V06694091001</td><td>03104</td><td>NRCA1_FP6</td><td>O2025020901</td><td>O2025020901-NRCA1_FP6-1.fits</td><td>mast:JWST/product/O2025020901-NRCA1_FP6-1.fits</td><td>pre</td><td>False</td><td>False</td></tr>
+<tr><td>2025-02-12T16:35:29.100</td><td>60718.69130902778</td><td>V06696083001</td><td>03104</td><td>NRCA1_FP6</td><td>O2025021301</td><td>O2025021301-NRCA1_FP6-1.fits</td><td>mast:JWST/product/O2025021301-NRCA1_FP6-1.fits</td><td>pre</td><td>False</td><td>False</td></tr>
+<tr><td>2025-02-16T18:29:04.100</td><td>60722.77018634259</td><td>V06694006001</td><td>03104</td><td>NRCA1_FP6</td><td>O2025021701</td><td>O2025021701-NRCA1_FP6-1.fits</td><td>mast:JWST/product/O2025021701-NRCA1_FP6-1.fits</td><td>pre</td><td>False</td><td>False</td></tr>
 </table></div></div></div>
 </div>
+<p><b>Download all the OPDs from the opdtable object. Note that some functions need to have all the OPDs available. </b></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stpsf</span><span class="o">.</span><span class="n">mast_wss</span><span class="o">.</span><span class="n">download_all_opds</span><span class="p">(</span><span class="n">opdtable</span><span class="p">)</span>
@@ -1120,7 +1118,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022031302-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022031302-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022031401-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022031401-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -1132,7 +1130,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022031401-NRCA3_FP1-12.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022031401-NRCA3_FP1-12.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022031303-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022031303-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -1168,7 +1166,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022031902-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022031902-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022032102-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022032102-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -1540,7 +1538,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022041801-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022041801-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022041906-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022041906-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -1666,7 +1664,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/O2022042801-NRCA3_FP1-0.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/O2022042801-NRCA3_FP1-0.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022042901-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022042901-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -1870,7 +1868,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022062701-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022062701-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022062102-NRCA3_FP1-0.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022062102-NRCA3_FP1-0.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -1912,19 +1910,19 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/O2022070601-NRCA3_FP1-0.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/O2022070601-NRCA3_FP1-0.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022070602-NRCA3_FP1-0.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022070602-NRCA3_FP1-0.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023050803-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023050803-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022070901-NRCA3_FP1-0.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022070901-NRCA3_FP1-0.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023050804-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023050804-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022070901-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022070901-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -1948,7 +1946,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023040602-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023040602-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022071502-NRCA3_FP1-2.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022071502-NRCA3_FP1-2.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -1996,19 +1994,19 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022080204-NRCA3_FP1-0.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022080204-NRCA3_FP1-0.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022080203-NRCA3_FP1-0.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022080203-NRCA3_FP1-0.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022080601-NRCA3_FP1-0.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022080601-NRCA3_FP1-0.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023050801-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023050801-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023050802-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023050802-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022080601-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022080601-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -2050,10 +2048,13 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022090101-NRCA3_FP1-2.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022090101-NRCA3_FP1-2.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022082403-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022082403-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022090101-NRCA3_FP1-3.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022090101-NRCA3_FP1-3.fits ...
@@ -2092,13 +2093,13 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022090506-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022090506-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022090502-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022090502-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022090802-NRCA3_FP1-0.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022090802-NRCA3_FP1-0.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/O2022090801-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/O2022090801-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -2122,7 +2123,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/O2022091601-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/O2022091601-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022091602-NRCA3_FP1-0.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022091602-NRCA3_FP1-0.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -2194,13 +2195,13 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022101103-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022101103-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022101104-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022101104-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022101203-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022101203-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022101301-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022101301-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -2212,7 +2213,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022101905-NRCA3_FP1-0.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022101905-NRCA3_FP1-0.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022101903-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022101903-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -2224,7 +2225,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022102004-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022102004-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022102005-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022102005-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -2242,7 +2243,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/O2022102601-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/O2022102601-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022102607-NRCA3_FP1-0.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022102607-NRCA3_FP1-0.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -2398,13 +2399,13 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022121504-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022121504-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022121503-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022121503-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022121703-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022121703-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022121702-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022121702-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -2422,13 +2423,13 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022122503-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022122503-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022122504-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022122504-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022122704-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022122704-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022122703-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022122703-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -2524,7 +2525,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023012804-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023012804-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023012803-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023012803-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -2548,19 +2549,19 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023020503-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023020503-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023020502-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023020502-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023020604-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023020604-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023020603-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023020603-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023020803-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023020803-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023020804-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023020804-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -2572,7 +2573,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023021203-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023021203-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023021204-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023021204-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -2644,7 +2645,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023031302-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023031302-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023033001-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023033001-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -2728,7 +2729,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023040703-NRCA3_FP1-0.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023040703-NRCA3_FP1-0.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023040702-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023040702-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -3034,7 +3035,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023072005-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023072005-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023072203-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023072203-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -3280,7 +3281,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023100801-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023100801-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023100901-NRCA3_FP1-0.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023100901-NRCA3_FP1-0.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -3292,7 +3293,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023101005-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023101005-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2023101004-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2023101004-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -3862,7 +3863,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2024032902-NRCA3_FP1-0.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2024032902-NRCA3_FP1-0.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/O2024032901-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/O2024032901-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -4270,7 +4271,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2024093004-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2024093004-NRCA3_FP1-1.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2024093002-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2024093002-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -4570,11 +4571,47 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2025020101-NRCA1_FP6-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2025020101-NRCA1_FP6-1.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2025020102-NRCA1_FP6-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2025020102-NRCA1_FP6-1.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/O2025020501-NRCA1_FP6-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/O2025020501-NRCA1_FP6-1.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/O2025020901-NRCA1_FP6-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/O2025020901-NRCA1_FP6-1.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/O2025021301-NRCA1_FP6-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/O2025021301-NRCA1_FP6-1.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/O2025021701-NRCA1_FP6-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/O2025021701-NRCA1_FP6-1.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
 </div>
 </div>
-<section id="you-can-download-all-the-opds-from-the-opdtable-object-note-that-some-functions-need-to-have-all-the-opds-available">
-<h3>You can download all the OPDs from the opdtable object. Note that some functions need to have all the OPDs available.<a class="headerlink" href="#you-can-download-all-the-opds-from-the-opdtable-object-note-that-some-functions-need-to-have-all-the-opds-available" title="Permalink to this heading">#</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">stpsf.mast_wss.download_all_opds(opdtable)</span></code></p>
+</div>
+</section>
+<section id="trending-plots">
+<h3>Trending Plots<a class="headerlink" href="#trending-plots" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stpsf</span><span class="o">.</span><span class="n">trending</span><span class="o">.</span><span class="n">wavefront_time_series_plot</span><span class="p">(</span><span class="n">opdtable</span><span class="p">)</span>
@@ -4585,13 +4622,12 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: TimeDeltaMissingUnitWarning: Numerical value without unit or explicit format passed to TimeDelta, assuming days [astropy.time.core]
 </pre></div>
 </div>
-<img alt="../../../_images/2f3f585c3f1c8a5a714cf8f8e9963243ac87ed7c7f8ad09d7f50228ee5c93e11.png" src="../../../_images/2f3f585c3f1c8a5a714cf8f8e9963243ac87ed7c7f8ad09d7f50228ee5c93e11.png" />
+<img alt="../../../_images/255cb947e00416749afb7d38f6c959e5e9f039aa031e1c9fd09ca680ed6791be.png" src="../../../_images/255cb947e00416749afb7d38f6c959e5e9f039aa031e1c9fd09ca680ed6791be.png" />
 </div>
 </div>
 </section>
-</section>
-<section id="select-a-time-range-depending-on-your-observations">
-<h2>Select a time range, depending on your observations<a class="headerlink" href="#select-a-time-range-depending-on-your-observations" title="Permalink to this heading">#</a></h2>
+<section id="plot-over-a-time-range">
+<h3>Plot over a time range<a class="headerlink" href="#plot-over-a-time-range" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">start_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="s1">&#39;2022-11-22&#39;</span><span class="p">)</span>
@@ -4620,7 +4656,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/d2c6591f1e93faf3483d94a3d91f6f5edd1b7be1932702ea7b2e2608220807c3.png" src="../../../_images/d2c6591f1e93faf3483d94a3d91f6f5edd1b7be1932702ea7b2e2608220807c3.png" />
+<img alt="../../../_images/6dee7868365e3234cfbe15aab921f51e9e5b0d48c233c5c1c1b4e4b0efabe77f.png" src="../../../_images/6dee7868365e3234cfbe15aab921f51e9e5b0d48c233c5c1c1b4e4b0efabe77f.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -4631,49 +4667,49 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1018 ticks ([19145.0, ..., 20162.0]), which exceeds Locator.MAXTICKS (1000).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1040 ticks ([19144.0, ..., 20183.0]), which exceeds Locator.MAXTICKS (1000).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1018 ticks ([19145.0, ..., 20162.0]), which exceeds Locator.MAXTICKS (1000).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1040 ticks ([19144.0, ..., 20183.0]), which exceeds Locator.MAXTICKS (1000).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1018 ticks ([19145.0, ..., 20162.0]), which exceeds Locator.MAXTICKS (1000).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1040 ticks ([19144.0, ..., 20183.0]), which exceeds Locator.MAXTICKS (1000).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1018 ticks ([19145.0, ..., 20162.0]), which exceeds Locator.MAXTICKS (1000).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1040 ticks ([19144.0, ..., 20183.0]), which exceeds Locator.MAXTICKS (1000).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1018 ticks ([19145.0, ..., 20162.0]), which exceeds Locator.MAXTICKS (1000).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1040 ticks ([19144.0, ..., 20183.0]), which exceeds Locator.MAXTICKS (1000).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1018 ticks ([19145.0, ..., 20162.0]), which exceeds Locator.MAXTICKS (1000).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1040 ticks ([19144.0, ..., 20183.0]), which exceeds Locator.MAXTICKS (1000).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1018 ticks ([19145.0, ..., 20162.0]), which exceeds Locator.MAXTICKS (1000).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1040 ticks ([19144.0, ..., 20183.0]), which exceeds Locator.MAXTICKS (1000).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1018 ticks ([19145.0, ..., 20162.0]), which exceeds Locator.MAXTICKS (1000).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1040 ticks ([19144.0, ..., 20183.0]), which exceeds Locator.MAXTICKS (1000).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1018 ticks ([19145.0, ..., 20162.0]), which exceeds Locator.MAXTICKS (1000).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1040 ticks ([19144.0, ..., 20183.0]), which exceeds Locator.MAXTICKS (1000).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1018 ticks ([19145.0, ..., 20162.0]), which exceeds Locator.MAXTICKS (1000).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1040 ticks ([19144.0, ..., 20183.0]), which exceeds Locator.MAXTICKS (1000).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1018 ticks ([19145.0, ..., 20162.0]), which exceeds Locator.MAXTICKS (1000).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1040 ticks ([19144.0, ..., 20183.0]), which exceeds Locator.MAXTICKS (1000).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1018 ticks ([19145.0, ..., 20162.0]), which exceeds Locator.MAXTICKS (1000).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1040 ticks ([19144.0, ..., 20183.0]), which exceeds Locator.MAXTICKS (1000).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1018 ticks ([19145.0, ..., 20162.0]), which exceeds Locator.MAXTICKS (1000).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1040 ticks ([19144.0, ..., 20183.0]), which exceeds Locator.MAXTICKS (1000).
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1018 ticks ([19145.0, ..., 20162.0]), which exceeds Locator.MAXTICKS (1000).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Locator attempting to generate 1040 ticks ([19144.0, ..., 20183.0]), which exceeds Locator.MAXTICKS (1000).
 </pre></div>
 </div>
-<img alt="../../../_images/395715198cb79b4f199b3c5c7a4908a1d63e3173b0aa0aabf6dcac78e7190b6d.png" src="../../../_images/395715198cb79b4f199b3c5c7a4908a1d63e3173b0aa0aabf6dcac78e7190b6d.png" />
+<img alt="../../../_images/7822f7cfd3d392f28cf49c409660fdbd42b4879b950b8e97d3178d353c9915c5.png" src="../../../_images/7822f7cfd3d392f28cf49c409660fdbd42b4879b950b8e97d3178d353c9915c5.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -4686,12 +4722,12 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/1d9023e8bd16ae42131b97f0cb87ce59b5195a252086d8a6d2e805005c817c24.png" src="../../../_images/1d9023e8bd16ae42131b97f0cb87ce59b5195a252086d8a6d2e805005c817c24.png" />
+<img alt="../../../_images/681301e10c35891cef332abde43f40510d559220a7e1b903ec72f450175a8bc8.png" src="../../../_images/681301e10c35891cef332abde43f40510d559220a7e1b903ec72f450175a8bc8.png" />
 </div>
 </div>
-<p><a id='single'></a></p>
-<section id="load-a-single-opd">
-<h3>Load a Single OPD<a class="headerlink" href="#load-a-single-opd" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="load-and-plot-a-single-opd">
+<h3>Load and plot a Single OPD<a class="headerlink" href="#load-and-plot-a-single-opd" title="Permalink to this heading">#</a></h3>
 <p>Inspect the OPD table above for an OPD around your observation</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -4712,7 +4748,9 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/prod
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Importing and format-converting OPD from /home/runner/work/jdat_notebooks/jdat_notebooks/notebooks/cross_instrument/stpsf_examples/R2022120204-NRCA3_FP1-1.fits
-Backing out SI WFE and OTE field dependence at the WF sensing field point (NRCA3_FP1)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Backing out SI WFE and OTE field dependence at the WF sensing field point (NRCA3_FP1)
 </pre></div>
 </div>
 </div>
@@ -4749,12 +4787,10 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 <img alt="../../../_images/ed270feb8a0e9d0f9910c57e8633bc9f7c8b71b1022fc0abb3c5fe0cbd6bb1b0.png" src="../../../_images/ed270feb8a0e9d0f9910c57e8633bc9f7c8b71b1022fc0abb3c5fe0cbd6bb1b0.png" />
 </div>
 </div>
-<p><a id='psfsub'></a></p>
 </section>
 </section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="jwst-psf-subtraction-using-in-flight-simulations">
-<h1>JWST PSF Subtraction Using in-flight Simulations<a class="headerlink" href="#jwst-psf-subtraction-using-in-flight-simulations" title="Permalink to this heading">#</a></h1>
+<section id="jwst-simulated-psf-subtraction-from-in-flight-data">
+<h2>JWST Simulated PSF Subtraction from in-flight data<a class="headerlink" href="#jwst-simulated-psf-subtraction-from-in-flight-data" title="Permalink to this heading">#</a></h2>
 <p>https://stpsf.readthedocs.io/en/latest/jwst_psf_subtraction.html</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -4799,14 +4835,14 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f319922cf10&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fd9beafa6d0&gt;
 </pre></div>
 </div>
 <img alt="../../../_images/bcc15994f98f7dd99068bd43f39fbaebc515347e4f9492d10cce285340d9c117.png" src="../../../_images/bcc15994f98f7dd99068bd43f39fbaebc515347e4f9492d10cce285340d9c117.png" />
 </div>
 </div>
-<section id="extract-a-subarray-around-a-particular-source-of-interest-and-measure-source-location">
-<h2>Extract a subarray around a particular source of interest, and measure source location<a class="headerlink" href="#extract-a-subarray-around-a-particular-source-of-interest-and-measure-source-location" title="Permalink to this heading">#</a></h2>
+<section id="extract-a-subarray-around-source-of-interest-and-measure-source-location">
+<h3>Extract a subarray around source of interest, and measure source location<a class="headerlink" href="#extract-a-subarray-around-source-of-interest-and-measure-source-location" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">position</span> <span class="o">=</span> <span class="p">(</span><span class="mi">550</span><span class="p">,</span> <span class="mi">1950</span><span class="p">)</span> <span class="c1"># approximate location. This will be improved below.</span>
@@ -4832,8 +4868,9 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 <img alt="../../../_images/dca52e29af82f5d732b85416e1f2f3648359ad6d4804c10c35e586e25266d64d.png" src="../../../_images/dca52e29af82f5d732b85416e1f2f3648359ad6d4804c10c35e586e25266d64d.png" />
 </div>
 </div>
-<section id="let-s-find-the-source">
-<h3>Let’s find the source<a class="headerlink" href="#let-s-find-the-source" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="find-the-source">
+<h3>Find the source<a class="headerlink" href="#find-the-source" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">starfind</span> <span class="o">=</span> <span class="n">IRAFStarFinder</span><span class="p">(</span><span class="n">fwhm</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">100.</span> <span class="o">*</span> <span class="n">bkg</span><span class="o">.</span><span class="n">background_median</span><span class="p">)</span>
@@ -4846,7 +4883,7 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.PathCollection at 0x7f31442fcb50&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.PathCollection at 0x7fd96ff21f90&gt;
 </pre></div>
 </div>
 <img alt="../../../_images/239a15d3195fba1a0bc2831a098ee644783c953ae92d4e3b995b94b70203f725.png" src="../../../_images/239a15d3195fba1a0bc2831a098ee644783c953ae92d4e3b995b94b70203f725.png" />
@@ -4876,8 +4913,8 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 </section>
-<section id="let-s-use-our-previous-function-to-setup-our-simulation">
-<h3>Let’s use our previous function to setup our simulation<a class="headerlink" href="#let-s-use-our-previous-function-to-setup-our-simulation" title="Permalink to this heading">#</a></h3>
+<section id="use-previous-function-to-set-up-our-simulation">
+<h3>Use previous function to set up our simulation<a class="headerlink" href="#use-previous-function-to-set-up-our-simulation" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">inst</span> <span class="o">=</span> <span class="n">stpsf</span><span class="o">.</span><span class="n">setup_sim_to_match_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
@@ -4905,16 +4942,16 @@ OPD immediately following the given datetime:
 	Date (MJD):	 59915.1683
 	Delta time:	 2.4418 days
 User requested choosing OPD time closest in time to 2022-11-29T17:26:06.893, which is R2022112903-NRCA3_FP1-1.fits, delta time -0.000 days
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022112903-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022112903-NRCA3_FP1-1.fits ...
+Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/R2022112903-NRCA3_FP1-1.fits to data/stpsf-data/MAST_JWST_WSS_OPDs/R2022112903-NRCA3_FP1-1.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Importing and format-converting OPD from data/stpsf-data/MAST_JWST_WSS_OPDs/R2022112903-NRCA3_FP1-1.fits
-Backing out SI WFE and OTE field dependence at the WF sensing field point (NRCA3_FP1)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Backing out SI WFE and OTE field dependence at the WF sensing field point (NRCA3_FP1)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Configured simulation instrument for:
@@ -5009,8 +5046,8 @@ OPDSLICE=                    0 / Pupil OPD slice number, if file is a datacube
 INSTRUME= &#39;NIRCam  &#39;           / Instrument                                     
 FILTER  = &#39;F356W   &#39;           / Filter name                                    
 EXTNAME = &#39;DET_DIST&#39;           / This extension is oversampled.                 
-DATE    = &#39;2025-01-31T17:47:19&#39; / Date of calculation                           
-AUTHOR  = &#39;runner@fv-az1674-562&#39; / username@host for calculation                
+DATE    = &#39;2025-02-19T14:20:33&#39; / Date of calculation                           
+AUTHOR  = &#39;runner@fv-az1934-680&#39; / username@host for calculation                
 VERSION = &#39;2.0.0   &#39;           / STPSF software version                         
 DATAVERS= &#39;2.0.0   &#39;           / STPSF reference data files version             
 DET_NAME= &#39;NRCA5   &#39;           / Name of detector on this instrument            
@@ -5131,7 +5168,7 @@ HISTORY   Propagating wavefront to Detector plane: NIRCam detector (200x200 pixe
 HISTORY ls, 0.063 arcsec / pix).                                                
 HISTORY     Propagating w/ MFT: 0.0157 arcsec / pix     fov=128.797 lam/D    npi
 HISTORY x=800                                                                   
-HISTORY Calculation completed in 5.250 seconds                                  
+HISTORY Calculation completed in 5.300 seconds                                  
 HISTORY Created by POPPY version                                                
 HISTORY Applied detector charge diffusion model.                                
 HISTORY Applied detector interpixel capacitance (IPC) model                     
@@ -5140,10 +5177,9 @@ HISTORY Applied detector interpixel capacitance (IPC) model
 </div>
 </div>
 </section>
-<section id="we-use-photutils-to-create-our-model-psf">
-<h3>We use photutils to create our model PSF<a class="headerlink" href="#we-use-photutils-to-create-our-model-psf" title="Permalink to this heading">#</a></h3>
-<section id="well-use-photutils-to-fit-and-subtract-the-psf-from-the-data-first-we-take-the-output-simulated-psf-and-convert-it-into-a-photutils-fittable-model">
-<h4>We’ll use photutils to fit and subtract the PSF from the data. First, we take the output simulated PSF and convert it into a photutils fittable model:<a class="headerlink" href="#well-use-photutils-to-fit-and-subtract-the-psf-from-the-data-first-we-take-the-output-simulated-psf-and-convert-it-into-a-photutils-fittable-model" title="Permalink to this heading">#</a></h4>
+<section id="use-photutils-to-create-our-model-psf">
+<h3>Use photutils to create our model PSF<a class="headerlink" href="#use-photutils-to-create-our-model-psf" title="Permalink to this heading">#</a></h3>
+<p>We’ll use photutils to fit and subtract the PSF from the data. First, we take the output simulated PSF and convert it into a photutils fittable model:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stpsf_model</span> <span class="o">=</span> <span class="n">photutils</span><span class="o">.</span><span class="n">psf</span><span class="o">.</span><span class="n">FittableImageModel</span><span class="p">(</span><span class="n">single_stpsf_nrc</span><span class="p">[</span><span class="s1">&#39;DET_DIST&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">oversampling</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -5169,9 +5205,8 @@ HISTORY Applied detector interpixel capacitance (IPC) model
 </div>
 </div>
 </div>
-</section>
-<section id="we-check-the-location-of-the-source-to-be-subtracted">
-<h4>We check the location of the source to be subtracted<a class="headerlink" href="#we-check-the-location-of-the-source-to-be-subtracted" title="Permalink to this heading">#</a></h4>
+<section id="check-the-location-of-the-source-to-be-subtracted">
+<h4>Check the location of the source to be subtracted<a class="headerlink" href="#check-the-location-of-the-source-to-be-subtracted" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">phot</span><span class="p">)</span> <span class="c1"># single source</span>
@@ -5187,8 +5222,9 @@ HISTORY Applied detector interpixel capacitance (IPC) model
 </div>
 </div>
 </section>
-<section id="after-a-successful-psf-fit-then-we-can-create-a-residual-image-and-display-the-results">
-<h4>After a successful PSF fit then we can create a residual image and display the results<a class="headerlink" href="#after-a-successful-psf-fit-then-we-can-create-a-residual-image-and-display-the-results" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="subtract-psf-and-create-residual-image">
+<h3>Subtract PSF and create residual image<a class="headerlink" href="#subtract-psf-and-create-residual-image" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">residual</span> <span class="o">=</span> <span class="n">psfphot</span><span class="o">.</span><span class="n">make_residual_image</span><span class="p">(</span><span class="n">data_source</span><span class="p">,</span> <span class="n">psf_shape</span><span class="o">=</span><span class="p">(</span><span class="n">size_pixels</span><span class="p">,</span> <span class="n">size_pixels</span><span class="p">))</span>
@@ -5217,8 +5253,6 @@ HISTORY Applied detector interpixel capacitance (IPC) model
 <img alt="../../../_images/b82e82883e72d7e281719dec80534cc8396c1ff4f678e2e05f7e12a1479d1a91.png" src="../../../_images/b82e82883e72d7e281719dec80534cc8396c1ff4f678e2e05f7e12a1479d1a91.png" />
 </div>
 </div>
-<p><a id='psfdiff'></a></p>
-</section>
 </section>
 <section id="psf-properties-and-differences">
 <h3>PSF properties and differences<a class="headerlink" href="#psf-properties-and-differences" title="Permalink to this heading">#</a></h3>
@@ -5298,7 +5332,7 @@ HISTORY Applied detector interpixel capacitance (IPC) model
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f3144354f10&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fd971126590&gt;
 </pre></div>
 </div>
 <img alt="../../../_images/d00ab2ca801f8b9597e602dac9c313ed7ddad1cd13edeb990b5a615dd293dfd4.png" src="../../../_images/d00ab2ca801f8b9597e602dac9c313ed7ddad1cd13edeb990b5a615dd293dfd4.png" />
@@ -5447,7 +5481,7 @@ Backing out SI WFE and OTE field dependence at the WF sensing field point (NRCA3
         <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">0.51</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>   
 </pre></div>
 </div>
 </div>
@@ -5463,9 +5497,8 @@ Backing out SI WFE and OTE field dependence at the WF sensing field point (NRCA3
 
 MAST OPD query around UTC: 2022-07-12T00:00:00.000
                         MJD: 59772.0
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>OPD immediately preceding the given datetime:
+
+OPD immediately preceding the given datetime:
 	URI:	 mast:JWST/product/O2022071001-NRCA3_FP1-0.fits
 	Date (MJD):	 59770.4830
 	Delta time:	 -1.5170 days
@@ -5484,7 +5517,9 @@ User requested choosing OPD time closest in time to 2022-07-12T00:00:00.000, whi
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Importing and format-converting OPD from /home/runner/work/jdat_notebooks/jdat_notebooks/notebooks/cross_instrument/stpsf_examples/R2022071302-NRCA3_FP1-1.fits
-Backing out SI WFE and OTE field dependence at the WF sensing field point (NRCA3_FP1)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Backing out SI WFE and OTE field dependence at the WF sensing field point (NRCA3_FP1)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
@@ -5499,7 +5534,7 @@ Backing out SI WFE and OTE field dependence at the WF sensing field point (NRCA3
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;astropy.io.fits.hdu.image.PrimaryHDU object at 0x7f31370b9510&gt;, &lt;astropy.io.fits.hdu.image.ImageHDU object at 0x7f31372f3850&gt;, &lt;astropy.io.fits.hdu.image.ImageHDU object at 0x7f313712c110&gt;, &lt;astropy.io.fits.hdu.image.ImageHDU object at 0x7f3134d25010&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;astropy.io.fits.hdu.image.PrimaryHDU object at 0x7fd953be9950&gt;, &lt;astropy.io.fits.hdu.image.ImageHDU object at 0x7fd953baf8d0&gt;, &lt;astropy.io.fits.hdu.image.ImageHDU object at 0x7fd953fa1d50&gt;, &lt;astropy.io.fits.hdu.image.ImageHDU object at 0x7fd9583eafd0&gt;]
 </pre></div>
 </div>
 <img alt="../../../_images/5d2915f24aedd5f33e2f46e43ba0183991c35e0fb836aefa7ba7082b5d1b8f4a.png" src="../../../_images/5d2915f24aedd5f33e2f46e43ba0183991c35e0fb836aefa7ba7082b5d1b8f4a.png" />
@@ -5722,51 +5757,6 @@ Backing out SI WFE and OTE field dependence at the WF sensing field point (NRCA3
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">miri_psfs_for_ee</span><span class="p">():</span>
-    <span class="n">miri</span> <span class="o">=</span> <span class="n">stpsf</span><span class="o">.</span><span class="n">MIRI</span><span class="p">()</span>
-
-    <span class="c1">#opd_fn = &#39;R2022120404-NRCA3_FP1-1.fits&#39;</span>
-    <span class="c1">#miri.load_wss_opd(opd_fn, output_path = output_path)</span>
-    <span class="n">miri</span><span class="o">.</span><span class="n">load_wss_opd_by_date</span><span class="p">(</span><span class="s1">&#39;2022-07-12T00:00:00&#39;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">wave</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">14</span><span class="p">]:</span>
-        <span class="n">fov</span> <span class="o">=</span> <span class="mi">18</span>
-
-        <span class="n">outname</span> <span class="o">=</span> <span class="s2">&quot;PSF_MIRI_</span><span class="si">%.1f</span><span class="s2">um_wfed.fits&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">wave</span><span class="p">)</span>
-        <span class="n">psf</span> <span class="o">=</span> <span class="n">miri</span><span class="o">.</span><span class="n">calc_psf</span><span class="p">(</span><span class="n">outname</span><span class="p">,</span> <span class="n">monochromatic</span><span class="o">=</span><span class="n">wave</span><span class="o">*</span><span class="mf">1e-6</span><span class="p">,</span>
-                            <span class="n">oversample</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">fov_arcsec</span><span class="o">=</span><span class="n">fov</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">psf</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">plot_ee_curves</span><span class="p">():</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">iw</span><span class="p">,</span> <span class="n">wave</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">14</span><span class="p">]):</span>
-        <span class="n">ees60</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">ees51</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">iw</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-
-        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;PSF_MIRI_</span><span class="si">%.1f</span><span class="s2">um_wfed.fits&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">wave</span><span class="p">)</span>
-        <span class="n">stpsf</span><span class="o">.</span><span class="n">display_ee</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">mark_levels</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-        <span class="n">eefn</span> <span class="o">=</span> <span class="n">stpsf</span><span class="o">.</span><span class="n">measure_ee</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">ees60</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eefn</span><span class="p">(</span><span class="mf">0.60</span><span class="p">))</span>
-        <span class="n">ees51</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eefn</span><span class="p">(</span><span class="mf">0.51</span><span class="p">))</span>
-
-        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="s1">&#39;Mean EE inside 0.60&quot;: </span><span class="si">%.3f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ees60</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;Mean EE inside 0.51&quot;: </span><span class="si">%.3f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ees51</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
-
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wavelength = </span><span class="si">{</span><span class="n">wave</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> $</span><span class="se">\\</span><span class="s2">mu$m&quot;</span><span class="p">)</span>
-
-        <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">0.51</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
-
-    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">miri_psfs_for_ee</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -5787,13 +5777,10 @@ OPD immediately following the given datetime:
 	Date (MJD):	 59772.6632
 	Delta time:	 0.6632 days
 User requested choosing OPD time closest in time to 2022-07-12T00:00:00.000, which is R2022071302-NRCA3_FP1-1.fits, delta time 0.663 days
-Importing and format-converting OPD from /home/runner/work/jdat_notebooks/jdat_notebooks/notebooks/cross_instrument/stpsf_examples/R2022071302-NRCA3_FP1-1.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Backing out SI WFE and OTE field dependence at the WF sensing field point (NRCA3_FP1)
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Importing and format-converting OPD from /home/runner/work/jdat_notebooks/jdat_notebooks/notebooks/cross_instrument/stpsf_examples/R2022071302-NRCA3_FP1-1.fits
+Backing out SI WFE and OTE field dependence at the WF sensing field point (NRCA3_FP1)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
@@ -5805,7 +5792,10 @@ Importing and format-converting OPD from /home/runner/work/jdat_notebooks/jdat_n
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;astropy.io.fits.hdu.image.PrimaryHDU object at 0x7f3144660bd0&gt;, &lt;astropy.io.fits.hdu.image.ImageHDU object at 0x7f31440b5350&gt;, &lt;astropy.io.fits.hdu.image.ImageHDU object at 0x7f31440e5f90&gt;, &lt;astropy.io.fits.hdu.image.ImageHDU object at 0x7f31375df910&gt;]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;astropy.io.fits.hdu.image.PrimaryHDU object at 0x7fd96cffc090&gt;, &lt;astropy.io.fits.hdu.image.ImageHDU object at 0x7fd96dbe5890&gt;, &lt;astropy.io.fits.hdu.image.ImageHDU object at 0x7fd96cff3a10&gt;, &lt;astropy.io.fits.hdu.image.ImageHDU object at 0x7fd96ed7a410&gt;]
 </pre></div>
 </div>
 <img alt="../../../_images/5d2915f24aedd5f33e2f46e43ba0183991c35e0fb836aefa7ba7082b5d1b8f4a.png" src="../../../_images/5d2915f24aedd5f33e2f46e43ba0183991c35e0fb836aefa7ba7082b5d1b8f4a.png" />
@@ -5821,12 +5811,10 @@ Importing and format-converting OPD from /home/runner/work/jdat_notebooks/jdat_n
 <img alt="../../../_images/0383ae702af075e574ea498504086864c64993c67be084580a8bbd7dc9685da7.png" src="../../../_images/0383ae702af075e574ea498504086864c64993c67be084580a8bbd7dc9685da7.png" />
 </div>
 </div>
-<p><a id='ifu'></a></p>
 </section>
 </section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="improved-ifu-sims">
-<h1>Improved IFU sims<a class="headerlink" href="#improved-ifu-sims" title="Permalink to this heading">#</a></h1>
+<section id="improved-ifu-sims">
+<h2>Improved IFU sims<a class="headerlink" href="#improved-ifu-sims" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">miri</span> <span class="o">=</span> <span class="n">stpsf</span><span class="o">.</span><span class="n">MIRI</span><span class="p">()</span>
@@ -5884,6 +5872,7 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 </div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -5950,50 +5939,34 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">JWST Using Wavefronts Measured On Orbit</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stpsf-formerly-knows-as-webbpsf-includes-code-for-using-the-results-of-in-flight-wavefront-sensing-measurements-by-retrieving-optical-path-difference-opd">STPSF, formerly knows as WebbPSF, includes code for using the results of in-flight wavefront sensing measurements, by retrieving Optical Path Difference (OPD)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#index">Index</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-the-measured-wavefront-near-a-given-date">Finding the measured wavefront near a given date</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#opd-file-description">OPD File description</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fits-file-contains-five-image-extensions-for-each-analyzed-input-image-in-the-case-of-the-sensing-program-there-are-2-images-8wl">The FITS file contains five image extensions for each analyzed input image. In the case of the sensing program, there are 2 images +/-8WL</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#delta-wfe-around-time-of-observation">Delta wfe Around Time of Observation</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-setup-a-psf-simulation-by-using-a-particular-observation">Let’s setup a PSF simulation by using a particular observation</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#index">Index</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports-and-setup">Imports and Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-the-measured-wavefront-near-a-given-date">Finding the measured wavefront near a given date</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#opd-file-description">OPD File description</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#delta-wavefront-error-around-time-of-observation">Delta Wavefront Error Around Time of Observation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-a-psf-simulation-using-a-particular-observation">Setup a PSF simulation using a particular observation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trending-wavefront-changes-over-time">Trending Wavefront Changes over Time</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wavefront-time-series-and-histogram-plots">Wavefront time series and histogram plots</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#we-can-retrieve-a-table-of-all-available-opds-and-plot-the-measurements-over-time">We can retrieve a table of all available OPDs and plot the measurements over time:</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#you-can-download-all-the-opds-from-the-opdtable-object-note-that-some-functions-need-to-have-all-the-opds-available">You can download all the OPDs from the opdtable object. Note that some functions need to have all the OPDs available.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wavefront-time-series-and-histogram-plots">Wavefront time series and histogram plots</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-all-opds">Table of all OPDs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trending-plots">Trending Plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-over-a-time-range">Plot over a time range</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-and-plot-a-single-opd">Load and plot a Single OPD</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#select-a-time-range-depending-on-your-observations">Select a time range, depending on your observations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-a-single-opd">Load a Single OPD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jwst-simulated-psf-subtraction-from-in-flight-data">JWST Simulated PSF Subtraction from in-flight data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-a-subarray-around-source-of-interest-and-measure-source-location">Extract a subarray around source of interest, and measure source location</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#find-the-source">Find the source</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-previous-function-to-set-up-our-simulation">Use previous function to set up our simulation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-photutils-to-create-our-model-psf">Use photutils to create our model PSF</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-location-of-the-source-to-be-subtracted">Check the location of the source to be subtracted</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#jwst-psf-subtraction-using-in-flight-simulations">JWST PSF Subtraction Using in-flight Simulations</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-a-subarray-around-a-particular-source-of-interest-and-measure-source-location">Extract a subarray around a particular source of interest, and measure source location</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-find-the-source">Let’s find the source</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-use-our-previous-function-to-setup-our-simulation">Let’s use our previous function to setup our simulation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#we-use-photutils-to-create-our-model-psf">We use photutils to create our model PSF</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#well-use-photutils-to-fit-and-subtract-the-psf-from-the-data-first-we-take-the-output-simulated-psf-and-convert-it-into-a-photutils-fittable-model">We’ll use photutils to fit and subtract the PSF from the data. First, we take the output simulated PSF and convert it into a photutils fittable model:</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#we-check-the-location-of-the-source-to-be-subtracted">We check the location of the source to be subtracted</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#after-a-successful-psf-fit-then-we-can-create-a-residual-image-and-display-the-results">After a successful PSF fit then we can create a residual image and display the results</a></li>
-</ul>
-</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subtract-psf-and-create-residual-image">Subtract PSF and create residual image</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#psf-properties-and-differences">PSF properties and differences</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#improved-ifu-sims">Improved IFU sims</a></li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#improved-ifu-sims">Improved IFU sims</a></li>
-</ul>
-
   </nav></div>
 
 </div></div>
