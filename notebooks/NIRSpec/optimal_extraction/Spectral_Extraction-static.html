@@ -501,7 +501,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-on-example-dataset">Run on example dataset</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#appendix-b-webbpsf">Appendix B: WebbPSF</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#appendix-b-stpsf">Appendix B: STPSF</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instrument-properties">Instrument properties</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monochromatic-psfs">Monochromatic PSFs</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpolation-methods">Interpolation Methods</a></li>
@@ -523,10 +523,9 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="mos-optimal-spectral-extraction">
 <h1>MOS Optimal Spectral Extraction<a class="headerlink" href="#mos-optimal-spectral-extraction" title="Permalink to this heading">#</a></h1>
-<p><strong>NOTE:</strong> This is a static version of the notebook for web rendering. The full, interactive version is available <a class="reference external" href="https://github.com/spacetelescope/dat_pyinthesky/blob/master/jdat_notebooks/optimal_extraction/Spectral%20Extraction.ipynb">here</a>.</p>
 <p><strong>Use case:</strong> optimal spectral extraction; method by <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1986PASP...98..609H/abstract">Horne (1986)</a>.<br>
 <strong>Data:</strong> JWST simulated NIRSpec MOS data; point sources.<br>
-<strong>Tools:</strong>  jwst, webbpsf, matplotlib, scipy, custom functions.<br>
+<strong>Tools:</strong>  jwst, stpsf, matplotlib, scipy, custom functions.<br>
 <strong>Cross-intrument:</strong> any spectrograph. <br>
 <strong>Documentation:</strong> This notebook is part of a STScI’s larger <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis">post-pipeline Data Analysis Tools Ecosystem</a>.<br></p>
 <section id="introduction">
@@ -552,50 +551,62 @@ document.write(`
 <li><p><code class="docutils literal notranslate"><span class="pre">scipy.interpolate</span> <span class="pre">interp1d,</span> <span class="pre">RegularGridInterpolator</span></code> for all our interpolation needs</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code> for plotting data</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">matplotlib.patches</span> <span class="pre">Rectangle</span></code> for plotting rectangles on our data</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">webbpsf</span> <span class="pre">NIRSpec</span></code> to generate and visualize a PSF from the instrument model (see Appendix B)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stpsf</span> <span class="pre">NIRSpec</span></code> to generate and visualize a PSF from the instrument model (see Appendix B)</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tarfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">urllib.request</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">glob</span><span class="w"> </span><span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stdatamodels.jwst.datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.modeling</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">fitting</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">astropy_mpl_style</span><span class="p">,</span> <span class="n">simple_norm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">interp1d</span><span class="p">,</span> <span class="n">RegularGridInterpolator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rectangle</span>
 
-<span class="c1"># Set environmental variables</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;WEBBPSF_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;./webbpsf-data/webbpsf-data&quot;</span>
-
-<span class="c1"># WEBBPSF Data</span>
-<span class="n">boxlink</span> <span class="o">=</span> <span class="s1">&#39;https://stsci.box.com/shared/static/34o0keicz2iujyilg4uz617va46ks6u9.gz&#39;</span>                                                           
-<span class="n">boxfile</span> <span class="o">=</span> <span class="s1">&#39;./webbpsf-data/webbpsf-data-1.0.0.tar.gz&#39;</span>
-
-<span class="n">webbpsf_folder</span> <span class="o">=</span> <span class="s1">&#39;./webbpsf-data&#39;</span>
-
-<span class="c1"># Gather webbpsf files</span>
-<span class="n">psfExist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">psfExist</span><span class="p">:</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
-    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
-    <span class="n">gzf</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">boxfile</span><span class="p">)</span>
-    <span class="n">gzf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span> <span class="c1"># add filter=&#39;data&#39; to skip absolute (/) or relative (..) paths</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="n">astropy_mpl_style</span><span class="p">)</span> <span class="c1"># use the style we imported for matplotlib displays</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">from</span><span class="w"> </span><span class="nn">glob</span><span class="w"> </span><span class="kn">import</span> <span class="n">glob</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">stdatamodels.jwst.datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageModel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">stdatamodels.jwst.datamodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiSpecModel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.modeling</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">fitting</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">astropy_mpl_style</span><span class="p">,</span> <span class="n">simple_norm</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">specutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Spectrum1D</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">interp1d</span><span class="p">,</span> <span class="n">RegularGridInterpolator</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rectangle</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set environmental variables</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;STPSF_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;./data/stpsf-data&quot;</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="n">astropy_mpl_style</span><span class="p">)</span> <span class="c1">#use the style we imported for matplotlib displays</span>
+<span class="c1"># STPSF Data</span>
+<span class="n">stpsf_url</span> <span class="o">=</span> <span class="s1">&#39;https://stsci.box.com/shared/static/kqfolg2bfzqc4mjkgmujo06d3iaymahv.gz&#39;</span>
+<span class="n">stpsf_file</span> <span class="o">=</span> <span class="s1">&#39;./stpsf-data-LATEST.tar.gz&#39;</span>
+<span class="n">stpsf_folder</span> <span class="o">=</span> <span class="s2">&quot;./data&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">download_file</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">dest_path</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+    <span class="n">parsed_url</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">parsed_url</span><span class="o">.</span><span class="n">scheme</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;http&quot;</span><span class="p">,</span> <span class="s2">&quot;https&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported URL scheme: </span><span class="si">{</span><span class="n">parsed_url</span><span class="o">.</span><span class="n">scheme</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dest_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">8192</span><span class="p">):</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+
+
+<span class="c1"># Gather stpsf files</span>
+<span class="n">stpsfExist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">stpsf_folder</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">stpsfExist</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">stpsf_folder</span><span class="p">)</span>
+    <span class="n">download_file</span><span class="p">(</span><span class="n">stpsf_url</span><span class="p">,</span> <span class="n">stpsf_file</span><span class="p">)</span>
+    <span class="n">gzf</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">stpsf_file</span><span class="p">)</span>
+    <span class="n">gzf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">stpsf_folder</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -607,17 +618,14 @@ document.write(`
 <p>The optimal extraction procedure laid out below can be repeated for each <code class="docutils literal notranslate"><span class="pre">'SCI'</span></code> extension in each <code class="docutils literal notranslate"><span class="pre">s2d</span></code> file. For the purposes of this notebook, we will assume that the <code class="docutils literal notranslate"><span class="pre">resample</span></code> step has produced optimal output, so those are the only extensions we need to access. (Rectifying and combining the input spectra is a complicated process on its own, and is far beyond the scope of this notebook!)</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="c1"># If the example dataset has already been downloaded, comment out these lines:</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">urllib.request</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># If the example dataset has already been downloaded, comment out these lines:</span>
 <span class="n">boxlink</span> <span class="o">=</span> <span class="s1">&#39;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/optimal_extraction/optimal_extraction.zip&#39;</span>
 <span class="n">boxfile</span> <span class="o">=</span> <span class="s1">&#39;./optimal_extraction.zip&#39;</span>
 <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
 <span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
 <span class="n">list_names</span> <span class="o">=</span> <span class="n">zf</span><span class="o">.</span><span class="n">namelist</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">list_names</span><span class="p">:</span>
-    <span class="n">zf</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">member</span><span class="o">=</span><span class="n">item</span><span class="p">)</span> <span class="c1"># Using extract instead of extractall because it is safer when files have absolute (/) or relative (..) paths# ...to here</span>
+    <span class="n">zf</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">member</span><span class="o">=</span><span class="n">item</span><span class="p">)</span> <span class="c1"># Using extract instead of extractall because it is safer when files have absolute (/) or relative (..) paths to here</span>
 
 <span class="n">example_file</span> <span class="o">=</span> <span class="s1">&#39;F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s30263_&#39;</span>
 <span class="n">s2d_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;s2d_files&#39;</span><span class="p">,</span> <span class="n">example_file</span><span class="o">+</span><span class="s1">&#39;s2d.fits&#39;</span><span class="p">)</span>
@@ -633,7 +641,7 @@ document.write(`
 <span class="n">weights_2d_image</span> <span class="o">=</span> <span class="n">data_model</span><span class="o">.</span><span class="n">wht</span> <span class="c1"># we will use this to estimate the per-pixel variance later</span>
 
 <span class="n">image_shape</span> <span class="o">=</span> <span class="n">resampled_2d_image</span><span class="o">.</span><span class="n">shape</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">image_shape</span><span class="p">)</span> <span class="c1">#note the swap of x and y</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">image_shape</span><span class="p">)</span> <span class="c1"># note the swap of x and y</span>
 </pre></div>
 </div>
 </div>
@@ -656,7 +664,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/a4ec0d702c87365c98bd2ebdb4f8d98ef30b49e861b457ef7f940a95a173fef5.png" src="../../../_images/a4ec0d702c87365c98bd2ebdb4f8d98ef30b49e861b457ef7f940a95a173fef5.png" />
+<img alt="../../../_images/c25624c2f94a5cd53e368a23df9e72e309f46d99b15c844d9b351d50bffb6528.png" src="../../../_images/c25624c2f94a5cd53e368a23df9e72e309f46d99b15c844d9b351d50bffb6528.png" />
 </div>
 </div>
 </section>
@@ -687,14 +695,14 @@ document.write(`
 <p>Appendices:</p>
 <ul class="simple">
 <li><p><span class="xref myst">Appendix A: Batch Processing</span></p></li>
-<li><p><span class="xref myst">Appendix B: WebbPSF</span></p></li>
+<li><p><span class="xref myst">Appendix B: STPSF</span></p></li>
 </ul>
 <section id="define-an-extraction-region">
 <h3>Define an extraction region<a class="headerlink" href="#define-an-extraction-region" title="Permalink to this heading">#</a></h3>
 <p>We begin by identifying the region in the 2D resampled image which contains the spectral trace we want to extract. For a simple case with only a single source, we can theoretically use the entire image. However, we may still want to exclude large systematic fluctuations in the background which might complicate the fit, or part of the trace with essentially no signal which will make fitting the trace centers difficult. In addition, when working with background nod-subtracted data, the images will contain negative traces, which we will want to exclude.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">))</span> <span class="c1"># we want the largest figure that will fit in the notebook</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="c1"># we want the largest figure that will fit in the notebook</span>
 <span class="n">img2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">resampled_2d_image</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> 
                   <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span> <span class="c1"># reuse norm from earlier</span>
 
@@ -709,7 +717,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/dbe343d30f26a0ebd023c49ecb897e6d4fa477a6c592e76e8628847c8f26bfd1.png" src="../../../_images/dbe343d30f26a0ebd023c49ecb897e6d4fa477a6c592e76e8628847c8f26bfd1.png" />
+<img alt="../../../_images/6b1e2002ca07270a7e3495da401ed61319e29dc180b63315eb1219823b0bf4aa.png" src="../../../_images/6b1e2002ca07270a7e3495da401ed61319e29dc180b63315eb1219823b0bf4aa.png" />
 </div>
 </div>
 <p>We’ll set the region coordinates to <code class="docutils literal notranslate"><span class="pre">x1=51,</span> <span class="pre">y1=3,</span> <span class="pre">x2=1268,</span> <span class="pre">y2=9</span></code>, then create a new array containing only our extraction region (so that we don’t need to continually index our original array).</p>
@@ -734,7 +742,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/632fd532286a980deeb58350ece0dbb39978a74f964a1b8235865bcf5c5189a3.png" src="../../../_images/632fd532286a980deeb58350ece0dbb39978a74f964a1b8235865bcf5c5189a3.png" />
+<img alt="../../../_images/2e1efd983ad4573f941a9c6d1ecedc756be578cd03b9f3f54aa0da006dccedae.png" src="../../../_images/2e1efd983ad4573f941a9c6d1ecedc756be578cd03b9f3f54aa0da006dccedae.png" />
 </div>
 </div>
 </section>
@@ -745,6 +753,7 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">slice_width</span> <span class="o">=</span> <span class="mi">30</span>
 <span class="n">initial_column</span> <span class="o">=</span> <span class="n">er_nx</span> <span class="o">//</span> <span class="mi">2</span>
+
 
 <span class="k">def</span><span class="w"> </span><span class="nf">kernel_slice_coadd</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">column_idx</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -757,6 +766,7 @@ document.write(`
                          <span class="nb">min</span><span class="p">(</span><span class="n">er_nx</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">column_idx</span> <span class="o">+</span> <span class="n">half_width</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">extraction_region</span><span class="p">[:,</span> <span class="n">to_coadd</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">width</span>
 
+
 <span class="n">slice_0</span> <span class="o">=</span> <span class="n">kernel_slice_coadd</span><span class="p">(</span><span class="n">slice_width</span><span class="p">,</span> <span class="n">initial_column</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -768,20 +778,22 @@ document.write(`
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig4</span><span class="p">,</span> <span class="p">(</span><span class="n">iax4</span><span class="p">,</span> <span class="n">pax4</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
 <span class="n">img4</span> <span class="o">=</span> <span class="n">iax4</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">extraction_region</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> 
-                  <span class="n">norm</span><span class="o">=</span><span class="n">er_norm</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+                   <span class="n">norm</span><span class="o">=</span><span class="n">er_norm</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
 
-<span class="c1">#create slice box</span>
+
+<span class="c1"># create slice box</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_slice</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">column_idx</span><span class="p">):</span>
     <span class="n">sy</span><span class="p">,</span> <span class="n">sh</span><span class="p">,</span> <span class="n">sw</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">er_ny</span><span class="p">,</span> <span class="n">width</span>
     <span class="n">sx</span> <span class="o">=</span> <span class="n">column_idx</span> <span class="o">-</span> <span class="n">width</span> <span class="o">//</span> <span class="mi">2</span>
     <span class="k">return</span> <span class="n">sx</span><span class="p">,</span> <span class="n">sy</span><span class="p">,</span> <span class="n">sw</span><span class="p">,</span> <span class="n">sh</span>
+
 
 <span class="o">*</span><span class="n">sxy</span><span class="p">,</span> <span class="n">sw</span><span class="p">,</span> <span class="n">sh</span> <span class="o">=</span> <span class="n">make_slice</span><span class="p">(</span><span class="n">slice_width</span><span class="p">,</span> <span class="n">initial_column</span><span class="p">)</span>
 <span class="n">slice_rectangle</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">(</span><span class="n">sxy</span><span class="p">,</span> <span class="n">sw</span><span class="p">,</span> <span class="n">sh</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> 
                             <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
 <span class="n">iax4</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">slice_rectangle</span><span class="p">)</span>
 
-<span class="c1">#plot the coadded slice</span>
+<span class="c1"># plot the coadded slice</span>
 <span class="n">xd_pixels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">er_ny</span><span class="p">)</span>
 <span class="n">lin4</span><span class="p">,</span> <span class="o">=</span> <span class="n">pax4</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">slice_0</span><span class="p">,</span> <span class="s1">&#39;k-&#39;</span><span class="p">)</span>
 <span class="n">xlbl4</span> <span class="o">=</span> <span class="n">pax4</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Cross-dispersion pixel&#39;</span><span class="p">)</span>
@@ -790,7 +802,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/cc672684823c61facdf99e7a1f385ea943f3b7198a18c83cc1c9dff296db83c4.png" src="../../../_images/cc672684823c61facdf99e7a1f385ea943f3b7198a18c83cc1c9dff296db83c4.png" />
+<img alt="../../../_images/738da5e862cb40827d0570c12aedb823777089bc5f20e00727ea3a1018edd5b7.png" src="../../../_images/738da5e862cb40827d0570c12aedb823777089bc5f20e00727ea3a1018edd5b7.png" />
 </div>
 </div>
 <p>A column index of 670 and width 50 seem to work reasonably well for this file, so we can now generate the final slice for kernel fitting.</p>
@@ -815,7 +827,7 @@ document.write(`
 <p>There are two things to note:</p>
 <ol class="arabic simple">
 <li><p>The methods shown here are only applicable to a true point source. Extended sources require a different methodology.</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">WebbPSF</span></code> package can be used to directly construct a composite PSF from the instrument model; however, this process is far more arduous than fitting a 1D profile using the <code class="docutils literal notranslate"><span class="pre">astropy.modeling</span></code> tools, and has thus been banished to Appendix B.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">STPSF</span></code> package can be used to directly construct a composite PSF from the instrument model; however, this process is far more arduous than fitting a 1D profile using the <code class="docutils literal notranslate"><span class="pre">astropy.modeling</span></code> tools, and has thus been banished to Appendix B.</p></li>
 </ol>
 <p>We start by plotting the two profiles against the kernel slice, with a naive normalization so that we can ignore scaling for the time being, centered on the pixel with the kernel’s maximum value. (We will perform a true fit later, don’t worry!)</p>
 <div class="cell docutils container">
@@ -835,7 +847,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/aff6d3dcc7c369582329eaff3439dd834697a0110c5d6565c11850bc3fff1154.png" src="../../../_images/aff6d3dcc7c369582329eaff3439dd834697a0110c5d6565c11850bc3fff1154.png" />
+<img alt="../../../_images/b0db94863a8e7580fd4b13624107ab8ac87bf53c2c521bde56dc532d6a50163b.png" src="../../../_images/b0db94863a8e7580fd4b13624107ab8ac87bf53c2c521bde56dc532d6a50163b.png" />
 </div>
 </div>
 <p>The Gaussian profile looks like a better approximation, so that’s the profile we’ll use for this spectrum. In the cell below, we could add more PSF templates using <a class="reference external" href="https://docs.astropy.org/en/stable/modeling/compound-models.html">model operations</a>; this is left as an exercise for the reader.</p>
@@ -955,7 +967,7 @@ Parameters:
     206.65933668030522 3.1060529790325218 ... 8.417675382494473 -1.3634991396746452
 </pre></div>
 </div>
-<img alt="../../../_images/9de6547035509d105072a5beed74dbc6834722044015bf14f10666e78b86eb5c.png" src="../../../_images/9de6547035509d105072a5beed74dbc6834722044015bf14f10666e78b86eb5c.png" />
+<img alt="../../../_images/ff6b646b38f7c8d6660e00c3226f98f7e92aaca9f8947e4ada17c1c04c5d2608.png" src="../../../_images/ff6b646b38f7c8d6660e00c3226f98f7e92aaca9f8947e4ada17c1c04c5d2608.png" />
 </div>
 </div>
 <section id="wavelength-varying-fwhm-skipped">
@@ -965,13 +977,11 @@ Parameters:
 <p>(Once the binned kernel FWHMs have been calculated and plotted, the next step would be to find an appropriate model and fit the FWHM as a function of bin center. The fit model would then be included in the final 1D extraction below.)</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">astropy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">sigma_clip</span>
-
-<span class="n">n_bin</span> <span class="o">=</span> <span class="mi">100</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_bin</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">bin_width</span> <span class="o">=</span> <span class="n">er_nx</span> <span class="o">//</span> <span class="n">n_bin</span>
 <span class="n">bin_centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">er_nx</span><span class="p">,</span> <span class="n">bin_width</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="o">+</span> <span class="n">bin_width</span> <span class="o">//</span> <span class="mi">2</span>
 <span class="n">binned_spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">extraction_region</span><span class="p">[:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">bin_width</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span> 
-                                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">er_nx</span><span class="p">,</span> <span class="n">bin_width</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+                            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">er_nx</span><span class="p">,</span> <span class="n">bin_width</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
 <span class="n">bin_fwhms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">bin_centers</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bin_centers</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
@@ -992,7 +1002,7 @@ Parameters:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/9924c26cd9347c6c7500346c82288824d28256f8209951948bebdcac7f9483e2.png" src="../../../_images/9924c26cd9347c6c7500346c82288824d28256f8209951948bebdcac7f9483e2.png" />
+<img alt="../../../_images/2e87ec4f8806234d8536d9c1a67f6f47a12c6b7cbfbc468e89635c0281d1a01c.png" src="../../../_images/2e87ec4f8806234d8536d9c1a67f6f47a12c6b7cbfbc468e89635c0281d1a01c.png" />
 </div>
 </div>
 </section>
@@ -1015,7 +1025,7 @@ Parameters:
 <p>Since we won’t be fitting, instead we’ll create a placeholder trace center model: a 0th-order polynomial.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">trace_center_model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Polynomial1D</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#we use a constant because the spectrum has already been rectified</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">trace_center_model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Polynomial1D</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># we use a constant because the spectrum has already been rectified</span>
 <span class="n">trace_center_model</span><span class="o">.</span><span class="n">c0</span> <span class="o">=</span> <span class="n">fit_extraction_kernel</span><span class="o">.</span><span class="n">mean_0</span><span class="o">.</span><span class="n">value</span> <span class="c1"># use the parameter for center of the PSF profile</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">trace_center_model</span><span class="p">)</span>
 </pre></div>
@@ -1064,21 +1074,13 @@ Parameters:
 <span class="n">fig_var</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">palette</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">)</span>
 <span class="n">palette</span><span class="o">.</span><span class="n">set_bad</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
-<span class="n">var_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">variance_image</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">0.006</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">var_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">variance_image</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.006</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 <span class="n">img_var</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">variance_image</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">var_norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">palette</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: AstropyDeprecationWarning: &quot;min_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmin&quot; instead. [warnings]
-2025-02-17 16:23:27,301 - stpipe - WARNING - AstropyDeprecationWarning: &quot;min_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmin&quot; instead.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: AstropyDeprecationWarning: &quot;max_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmax&quot; instead. [warnings]
-2025-02-17 16:23:27,319 - stpipe - WARNING - AstropyDeprecationWarning: &quot;max_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmax&quot; instead.
-</pre></div>
-</div>
-<img alt="../../../_images/0d280ad30685a226341dabdf7bdf3877b64d61f9425b4e8ee58f6a6aac110b00.png" src="../../../_images/0d280ad30685a226341dabdf7bdf3877b64d61f9425b4e8ee58f6a6aac110b00.png" />
+<img alt="../../../_images/3fb156a619c45a90163e5514b6f4d86d7837f31a5050a5093df1f4658925fbd3.png" src="../../../_images/3fb156a619c45a90163e5514b6f4d86d7837f31a5050a5093df1f4658925fbd3.png" />
 </div>
 </div>
 </section>
@@ -1092,7 +1094,7 @@ where \)</span>I<span class="math notranslate nohighlight">\( is the pixel value
 \)</span><span class="math notranslate nohighlight">\(G_x = \sum_y \frac{K_y^2(x)}{V_{xy}}\)</span>$</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">er_nx</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="c1">#initialize our spectrum with zeros</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">er_nx</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="c1"># initialize our spectrum with zeros</span>
 <span class="n">column_pixels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">er_nx</span><span class="p">)</span>
 <span class="n">trace_centers</span> <span class="o">=</span> <span class="n">trace_center_model</span><span class="p">(</span><span class="n">column_pixels</span><span class="p">)</span> <span class="c1"># calculate our trace centers array</span>
 
@@ -1114,7 +1116,7 @@ where \)</span>I<span class="math notranslate nohighlight">\( is the pixel value
     
     <span class="c1"># calculate the kernal normalization</span>
     <span class="n">g_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">kernel_values</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">variance_column</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">is_masked</span><span class="p">(</span><span class="n">g_x</span><span class="p">):</span> <span class="c1">#this column isn&#39;t valid, so we&#39;ll skip it</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">is_masked</span><span class="p">(</span><span class="n">g_x</span><span class="p">):</span> <span class="c1"># this column isn&#39;t valid, so we&#39;ll skip it</span>
         <span class="k">continue</span>
     
     <span class="c1"># and now sum the weighted column</span>
@@ -1168,7 +1170,7 @@ Parameters:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/cbd711f3539d8ce1d184e9362e2d81dce8542d043ed77314288644fc0efe1508.png" src="../../../_images/cbd711f3539d8ce1d184e9362e2d81dce8542d043ed77314288644fc0efe1508.png" />
+<img alt="../../../_images/d7935b436cec1ca8a17a753b7caaab449c9558b7bb96d4961028e26942e3a985.png" src="../../../_images/d7935b436cec1ca8a17a753b7caaab449c9558b7bb96d4961028e26942e3a985.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1199,7 +1201,7 @@ Parameters:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/10b3a9d2ae33a57ab7e4d0d062292f081cc2be90b73820bf84761ca9cd8a6c4d.png" src="../../../_images/10b3a9d2ae33a57ab7e4d0d062292f081cc2be90b73820bf84761ca9cd8a6c4d.png" />
+<img alt="../../../_images/75d56d1271716ad7719d51c60a6462b0af2e36520d7cb059861551eef6e55e17.png" src="../../../_images/75d56d1271716ad7719d51c60a6462b0af2e36520d7cb059861551eef6e55e17.png" />
 </div>
 </div>
 </section>
@@ -1235,12 +1237,11 @@ Parameters:
     <span class="n">ny</span><span class="p">,</span> <span class="n">nx</span> <span class="o">=</span> <span class="n">extraction_region</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">half_width</span> <span class="o">=</span> <span class="n">slice_width</span> <span class="o">//</span> <span class="mi">2</span>
     
-    <span class="c1">#make sure we don&#39;t go past the edges of the extraction region</span>
+    <span class="c1"># make sure we don&#39;t go past the edges of the extraction region</span>
     <span class="n">to_coadd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">column_idx</span> <span class="o">-</span> <span class="n">half_width</span><span class="p">),</span> 
                          <span class="nb">min</span><span class="p">(</span><span class="n">nx</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">column_idx</span> <span class="o">+</span> <span class="n">half_width</span><span class="p">))</span>
     
     <span class="k">return</span> <span class="n">extraction_region</span><span class="p">[:,</span> <span class="n">to_coadd</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">slice_width</span>
-    
 </pre></div>
 </div>
 </div>
@@ -1251,12 +1252,12 @@ Parameters:
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">batch_fit_extraction_kernel</span><span class="p">(</span><span class="n">xd_slice</span><span class="p">,</span> <span class="n">psf_profile</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">Gaussian1D</span><span class="p">,</span> 
-                          <span class="n">height_param_name</span><span class="o">=</span><span class="s1">&#39;amplitude&#39;</span><span class="p">,</span> <span class="n">height_param_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                          <span class="n">width_param_name</span><span class="o">=</span><span class="s1">&#39;stddev&#39;</span><span class="p">,</span> <span class="n">width_param_value</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
-                          <span class="n">center_param_name</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">center_param_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                          <span class="n">other_psf_args</span><span class="o">=</span><span class="p">[],</span> <span class="n">other_psf_kw</span><span class="o">=</span><span class="p">{},</span>
-                          <span class="n">bg_model</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">Polynomial1D</span><span class="p">,</span>
-                          <span class="n">bg_args</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">bg_kw</span><span class="o">=</span><span class="p">{}):</span>
+                                <span class="n">height_param_name</span><span class="o">=</span><span class="s1">&#39;amplitude&#39;</span><span class="p">,</span> <span class="n">height_param_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">width_param_name</span><span class="o">=</span><span class="s1">&#39;stddev&#39;</span><span class="p">,</span> <span class="n">width_param_value</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                                <span class="n">center_param_name</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">center_param_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">other_psf_args</span><span class="o">=</span><span class="p">[],</span> <span class="n">other_psf_kw</span><span class="o">=</span><span class="p">{},</span>
+                                <span class="n">bg_model</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">Polynomial1D</span><span class="p">,</span>
+                                <span class="n">bg_args</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">bg_kw</span><span class="o">=</span><span class="p">{}):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Initialize a composite extraction kernel, then fit it to </span>
 <span class="sd">    the 1D array `xd_slice`, which has been nominally</span>
@@ -1324,8 +1325,8 @@ Parameters:
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">batch_fit_trace_centers</span><span class="p">(</span><span class="n">extraction_region</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span>
-                      <span class="n">trace_model</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">Polynomial1D</span><span class="p">,</span>
-                      <span class="n">trace_args</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">trace_kw</span><span class="o">=</span><span class="p">{}):</span>
+                            <span class="n">trace_model</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">Polynomial1D</span><span class="p">,</span>
+                            <span class="n">trace_args</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">trace_kw</span><span class="o">=</span><span class="p">{}):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit the geometric distortion of the trace with</span>
 <span class="sd">    a model. Currently this is a placeholder function,</span>
@@ -1349,9 +1350,9 @@ Parameters:
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">batch_extract_spectrum</span><span class="p">(</span><span class="n">extraction_region</span><span class="p">,</span> <span class="n">trace</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> 
-                     <span class="n">weights_image</span><span class="p">,</span> 
-                     <span class="n">trace_center_param</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
-                     <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+                           <span class="n">weights_image</span><span class="p">,</span> 
+                           <span class="n">trace_center_param</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+                           <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Optimally extract the 1D spectrum from the extraction </span>
 <span class="sd">    region.</span>
@@ -1408,7 +1409,7 @@ Parameters:
         <span class="k">else</span><span class="p">:</span>
             <span class="n">psf_params</span><span class="p">[</span><span class="n">pname</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">pvalue</span><span class="p">)</span>
     <span class="n">psf_set</span> <span class="o">=</span> <span class="n">psf0</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">n_models</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="o">**</span><span class="n">psf_params</span><span class="p">)</span>
-    <span class="c1">#if not using Polynomial1D for background model, edit this:</span>
+    <span class="c1"># if not using Polynomial1D for background model, edit this:</span>
     <span class="n">bg_set</span> <span class="o">=</span> <span class="n">bg0</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bg0</span><span class="o">.</span><span class="n">param_names</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_models</span><span class="o">=</span><span class="n">nx</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">pname</span><span class="p">,</span> <span class="n">pvalue</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bg0</span><span class="o">.</span><span class="n">param_names</span><span class="p">,</span> <span class="n">bg0</span><span class="o">.</span><span class="n">parameters</span><span class="p">):</span>
         <span class="nb">setattr</span><span class="p">(</span><span class="n">bg_set</span><span class="p">,</span> <span class="n">pname</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">pvalue</span><span class="p">))</span>
@@ -1452,6 +1453,7 @@ Parameters:
     <span class="n">aC</span><span class="p">,</span> <span class="n">dC</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">wcs</span><span class="p">(</span><span class="n">pix_x</span><span class="p">,</span> <span class="n">pix_y</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
+
 <span class="k">def</span><span class="w"> </span><span class="nf">batch_save_extracted_spectrum</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Quick &amp; dirty fits dump of an extracted spectrum.</span>
@@ -1466,9 +1468,10 @@ Parameters:
     <span class="n">hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">BinTableHDU</span><span class="o">.</span><span class="n">from_columns</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
     <span class="n">hdu</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
+
 <span class="k">def</span><span class="w"> </span><span class="nf">batch_plot_output</span><span class="p">(</span><span class="n">resampled_image</span><span class="p">,</span> <span class="n">extraction_bbox</span><span class="p">,</span> 
-                <span class="n">kernel_slice</span><span class="p">,</span> <span class="n">kernel_model</span><span class="p">,</span>
-                <span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+                      <span class="n">kernel_slice</span><span class="p">,</span> <span class="n">kernel_model</span><span class="p">,</span>
+                      <span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convenience function for summary output figures,</span>
 <span class="sd">    allowing visual inspection of the results from </span>
@@ -1476,7 +1479,7 @@ Parameters:
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> 
-                                        <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
+                                        <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
     
     <span class="n">ny</span><span class="p">,</span> <span class="n">nx</span> <span class="o">=</span> <span class="n">resampled_image</span><span class="o">.</span><span class="n">shape</span>
@@ -1484,22 +1487,22 @@ Parameters:
     
     <span class="c1"># Subplot 1: Extraction region</span>
     <span class="n">power_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">resampled_image</span><span class="p">,</span> <span class="s1">&#39;power&#39;</span><span class="p">)</span>
-    <span class="n">er_img</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">resampled_image</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
-               <span class="n">aspect</span><span class="o">=</span><span class="n">aspect</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">power_norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">resampled_image</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                   <span class="n">aspect</span><span class="o">=</span><span class="n">aspect</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">power_norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
     <span class="n">rx</span><span class="p">,</span> <span class="n">ry</span><span class="p">,</span> <span class="n">rw</span><span class="p">,</span> <span class="n">rh</span> <span class="o">=</span> <span class="n">extraction_bbox</span>
     <span class="n">region</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">((</span><span class="n">rx</span><span class="p">,</span> <span class="n">ry</span><span class="p">),</span> <span class="n">rw</span><span class="p">,</span> <span class="n">rh</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> 
                        <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
-    <span class="n">er_ptch</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
     
     <span class="c1"># Subplot 2: Kernel fit</span>
     <span class="n">xd_pixels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">kernel_slice</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
     <span class="n">fit_line</span> <span class="o">=</span> <span class="n">kernel_model</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">)</span>
-    <span class="n">ks_line</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">kernel_slice</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Kernel Slice&#39;</span><span class="p">)</span>
-    <span class="n">kf_line</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">fit_line</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Extraction Kernel&#39;</span><span class="p">)</span>
-    <span class="n">k_lgd</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">kernel_slice</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Kernel Slice&#39;</span><span class="p">)</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">fit_line</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Extraction Kernel&#39;</span><span class="p">)</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
     
     <span class="c1"># Subplot 3: Extracted spectrum</span>
-    <span class="n">spec_line</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">)</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">)</span>
     
     <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
@@ -1546,10 +1549,9 @@ Parameters:
         <span class="n">outfile</span> <span class="o">=</span> <span class="n">fitsfile</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;s2d.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;x1d_optimal&#39;</span><span class="p">)</span>
         
         <span class="n">batch_plot_output</span><span class="p">(</span><span class="n">spec2d</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">k_slice</span><span class="p">,</span> <span class="n">k_model</span><span class="p">,</span>
-                    <span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> 
-                    <span class="n">outfile</span><span class="o">+</span><span class="s1">&#39;.png&#39;</span><span class="p">)</span>
-        <span class="n">batch_save_extracted_spectrum</span><span class="p">(</span><span class="n">outfile</span><span class="o">+</span><span class="s1">&#39;.fits&#39;</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">)</span>
-        
+                          <span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> 
+                          <span class="n">outfile</span><span class="o">+</span><span class="s1">&#39;.png&#39;</span><span class="p">)</span>
+        <span class="n">batch_save_extracted_spectrum</span><span class="p">(</span><span class="n">outfile</span><span class="o">+</span><span class="s1">&#39;.fits&#39;</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">)</span>        
 </pre></div>
 </div>
 </div>
@@ -1568,244 +1570,244 @@ Parameters:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 1 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00546_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 1 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s50396_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 2 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03901_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 2 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s01154_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 3 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s09616_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 3 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00417_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 4 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00802_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 4 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s35815_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 5 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s35395_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 5 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s05788_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 6 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s33685_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 6 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03055_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 7 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s09427_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 7 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s01186_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 8 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03211_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 8 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03398_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 9 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s02315_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 9 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s30263_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 10 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s41066_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 10 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s30455_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 11 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s50396_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 11 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03162_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 12 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s04353_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 12 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s31404_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 13 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s35193_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 13 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03901_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 14 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00618_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 14 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s06661_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 15 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s36383_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 15 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00227_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 16 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s36863_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 16 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03812_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 17 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00646_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 17 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s05225_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 18 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00492_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 18 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s36863_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 19 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s02624_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 19 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s54218_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 20 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s30576_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 20 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s41066_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 21 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s05447_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 21 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s50037_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 22 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s04012_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 22 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s02615_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 23 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00227_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 23 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s50176_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 24 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03812_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 24 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00482_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 25 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03162_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 25 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s52673_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 26 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00205_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 26 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s35786_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 27 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s50037_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 27 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00716_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 28 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s33926_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 28 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s01801_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 29 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s06661_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 29 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03262_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 30 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s50176_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 30 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s02624_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 31 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s06174_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 31 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s09616_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 32 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00708_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 32 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s30440_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 33 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s01158_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 33 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s33685_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 34 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s01801_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 34 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00802_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 35 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s30455_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 35 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00546_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 36 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00204_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 36 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s32150_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 37 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s02690_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 37 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s33778_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 38 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s33778_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 38 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s05720_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 39 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s50007_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 39 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s05337_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 40 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s32150_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 40 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s32667_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 41 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03698_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 41 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00279_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 42 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03398_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 42 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s02690_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 43 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s36510_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 43 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s32530_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 44 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s54218_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 44 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00708_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 45 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s35786_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 45 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s06001_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 46 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s30263_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 46 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03495_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 47 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s33527_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 47 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s36786_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 48 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s08415_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 48 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s04353_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 49 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00417_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 49 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s05447_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 50 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s06667_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 50 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s06174_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 51 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03317_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 51 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s36383_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 52 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00443_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 52 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00646_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 53 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00482_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 53 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s33926_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 54 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s35815_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 54 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s06325_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 55 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s01154_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 55 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00618_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 56 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s02615_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 56 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s36510_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 57 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s36786_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 57 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s06667_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 58 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03495_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 58 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s01158_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 59 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03055_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 59 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03317_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 60 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s05337_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 60 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s08415_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 61 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s06001_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 61 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s31771_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 62 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00716_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 62 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03698_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 63 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s32530_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 63 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s02853_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 64 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s02853_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 64 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00455_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 65 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s01186_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 65 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s50007_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 66 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s52673_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 66 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s30576_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 67 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s31248_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 67 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s33527_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 68 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s05225_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 68 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s35193_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 69 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00455_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 69 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s02315_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 70 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s05788_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 70 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s09427_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 71 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s04659_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 71 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00443_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 72 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s06325_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 72 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00204_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 73 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s30440_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 73 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00492_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 74 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s05720_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 74 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s31248_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 75 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s32667_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 75 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03211_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 76 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s31404_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 76 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00205_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 77 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s00279_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 77 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s04659_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 78 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s31771_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 78 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s35395_s2d.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 79 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s03262_s2d.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file 79 of 79: s2d_files/F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s04012_s2d.fits
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;contextlib.ExitStack at 0x7f043308f510&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;contextlib.ExitStack at 0x7fb52fd428d0&gt;
 </pre></div>
 </div>
 </div>
@@ -1813,58 +1815,28 @@ Parameters:
 </section>
 </section>
 <hr class="docutils" />
-<section id="appendix-b-webbpsf">
-<h2>Appendix B: WebbPSF<a class="headerlink" href="#appendix-b-webbpsf" title="Permalink to this heading">#</a></h2>
-<p>Instead of using a PSF template, we can generate a PSF directly from the instrument model with <a class="reference external" href="https://webbpsf.readthedocs.io/en/stable/index.html">WebbPSF</a>. Currently, only the F110W and F140X imaging filters are supported, but we’ll walk through the process anyway for whenever more filters become available.</p>
-<p>The primary function of WebbPSF is to produce imaging PSFs; however, it <em>can</em> generate a set of monochromatic PSFs, which we can combine.</p>
-<p><code class="docutils literal notranslate"><span class="pre">webbpsf</span></code> is only needed here so we import it at the start of this appendix:</p>
+<section id="appendix-b-stpsf">
+<h2>Appendix B: STPSF<a class="headerlink" href="#appendix-b-stpsf" title="Permalink to this heading">#</a></h2>
+<p>Instead of using a PSF template, we can generate a PSF directly from the instrument model with <a class="reference external" href="https://stpsf.readthedocs.io/en/latest/index.html">STPSF</a>.</p>
+<p>The primary function of STPSF is to produce imaging PSFs; however, it <em>can</em> generate a set of monochromatic PSFs, which we can combine.</p>
+<p><code class="docutils literal notranslate"><span class="pre">stpsf</span></code> is only needed here so we import it at the start of this appendix:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">webbpsf</span><span class="w"> </span><span class="kn">import</span> <span class="n">NIRSpec</span><span class="p">,</span> <span class="n">display_psf</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>WebbPSF has a number of data files which are required to run, so we’ll begin by verifying that they can be accessed (and downloading them if necessary).</p>
-<p>Note that you will see a big red error message if you have not yet downloaded the data files. Don’t worry, as long as you see “Downloading WebbPSF data files.” everything is still proceeding as expected.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
-    <span class="n">instrument</span> <span class="o">=</span> <span class="n">NIRSpec</span><span class="p">()</span>
-<span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-    <span class="c1"># assume that WebbPSF data files have not been downloaded</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">tarfile</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Downloading WebbPSF data files.&quot;</span><span class="p">)</span>
-    <span class="n">webb_url</span> <span class="o">=</span> <span class="s2">&quot;https://stsci.box.com/shared/static/qxpiaxsjwo15ml6m4pkhtk36c9jgj70k.gz&quot;</span>
-    <span class="n">webb_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s2">&quot;webbpsf-data-1.2.1.tar.gz&quot;</span><span class="p">)</span>
-    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">webb_url</span><span class="p">,</span> <span class="n">webb_file</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting into ./webbpsf-data ...&quot;</span><span class="p">)</span>
-    <span class="n">tar</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">webb_file</span><span class="p">)</span>
-    <span class="n">tar</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="nb">filter</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span> <span class="c1"># add filter=&#39;data&#39; to skip absolute (/) or relative (..) paths</span>
-    <span class="n">tar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;WEBBPSF_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span><span class="s2">&quot;webbpsf-data&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading WebbPSF data files.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Extracting into ./webbpsf-data ...
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">stpsf</span><span class="w"> </span><span class="kn">import</span> <span class="n">NIRSpec</span><span class="p">,</span> <span class="n">display_psf</span>
 </pre></div>
 </div>
 </div>
 </div>
 <section id="instrument-properties">
 <h3>Instrument properties<a class="headerlink" href="#instrument-properties" title="Permalink to this heading">#</a></h3>
-<p>See the WebbPSF documentation for a full list of instrument settings.</p>
+<p>See the STPSF documentation for a full list of instrument settings.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">instrument</span> <span class="o">=</span> <span class="n">NIRSpec</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">instrument</span><span class="o">.</span><span class="n">filter_list</span><span class="p">)</span>
 
 <span class="c1"># For reference:</span>
-<span class="n">allowed_masks</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;S200A1&#39;</span><span class="p">,</span><span class="s1">&#39;S200A2&#39;</span><span class="p">,</span><span class="s1">&#39;S400A1&#39;</span><span class="p">,</span><span class="s1">&#39;S1600A1&#39;</span><span class="p">,</span><span class="s1">&#39;S200B1&#39;</span><span class="p">,</span> 
+<span class="n">allowed_masks</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;S200A1&#39;</span><span class="p">,</span> <span class="s1">&#39;S200A2&#39;</span><span class="p">,</span> <span class="s1">&#39;S400A1&#39;</span><span class="p">,</span> <span class="s1">&#39;S1600A1&#39;</span><span class="p">,</span> <span class="s1">&#39;S200B1&#39;</span><span class="p">,</span> 
                  <span class="s1">&#39;MSA all open&#39;</span><span class="p">,</span> <span class="s1">&#39;Single MSA open shutter&#39;</span><span class="p">,</span> 
                  <span class="s1">&#39;Three adjacent MSA open shutters&#39;</span><span class="p">)</span>
 
@@ -1888,7 +1860,7 @@ Parameters:
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psf_wavelengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">wavelength</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">wavelength</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.0e-6</span> <span class="c1"># wavelengths must be in meters</span>
 
-<span class="n">cube_hdul</span> <span class="o">=</span> <span class="n">instrument</span><span class="o">.</span><span class="n">calc_datacube</span><span class="p">(</span><span class="n">psf_wavelengths</span><span class="p">)</span> <span class="c1">#the output is a HDUList</span>
+<span class="n">cube_hdul</span> <span class="o">=</span> <span class="n">instrument</span><span class="o">.</span><span class="n">calc_datacube</span><span class="p">(</span><span class="n">psf_wavelengths</span><span class="p">)</span> <span class="c1"># the output is a HDUList</span>
 <span class="n">psf_cube</span> <span class="o">=</span> <span class="n">cube_hdul</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="n">psf_cube</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
@@ -1902,10 +1874,10 @@ Parameters:
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Display the contents of the data cube</span>
-<span class="n">fig9</span><span class="p">,</span> <span class="n">ax9</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Display the contents of the data cube</span>
+<span class="n">fig9</span><span class="p">,</span> <span class="n">ax9</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mf">0.06</span><span class="p">,</span> 
-                   <span class="n">right</span><span class="o">=</span><span class="mf">0.94</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+                    <span class="n">right</span><span class="o">=</span><span class="mf">0.94</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">ax9</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
@@ -1921,7 +1893,7 @@ Parameters:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/b16617981c1dbcbe51329f8337ca5cab75d11f448acfd0c1b549d2f6fad63c7e.png" src="../../../_images/b16617981c1dbcbe51329f8337ca5cab75d11f448acfd0c1b549d2f6fad63c7e.png" />
+<img alt="../../../_images/cd8c56b136f4cd695b66d8937c0e78ecb553dd1eaa1a38a05093cf3f24723992.png" src="../../../_images/cd8c56b136f4cd695b66d8937c0e78ecb553dd1eaa1a38a05093cf3f24723992.png" />
 </div>
 </div>
 </section>
@@ -1932,17 +1904,7 @@ Parameters:
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reference_psf_hdul</span> <span class="o">=</span> <span class="n">instrument</span><span class="o">.</span><span class="n">calc_psf</span><span class="p">(</span><span class="n">monochromatic</span><span class="o">=</span><span class="mf">3.0e-6</span><span class="p">)</span>
 <span class="n">reference_psf</span> <span class="o">=</span> <span class="n">reference_psf_hdul</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="n">ref_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">reference_psf</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: AstropyDeprecationWarning: &quot;min_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmin&quot; instead. [warnings]
-2025-02-17 16:26:17,092 - stpipe - WARNING - AstropyDeprecationWarning: &quot;min_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmin&quot; instead.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: AstropyDeprecationWarning: &quot;max_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmax&quot; instead. [warnings]
-2025-02-17 16:26:17,116 - stpipe - WARNING - AstropyDeprecationWarning: &quot;max_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmax&quot; instead.
+<span class="n">ref_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">reference_psf</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1986,7 +1948,7 @@ Diff: min -2.256e-05, max 1.862e-05
 Total error: 5.11593e-05
 </pre></div>
 </div>
-<img alt="../../../_images/3a1fb17d0281a84d4d2257808b4aa24df596c0b787127b9ac7aed4317db5bc14.png" src="../../../_images/3a1fb17d0281a84d4d2257808b4aa24df596c0b787127b9ac7aed4317db5bc14.png" />
+<img alt="../../../_images/4a8846d9a77994c882b97eaaea5edf708587d2bf62ef06e059803cfb303c5023.png" src="../../../_images/4a8846d9a77994c882b97eaaea5edf708587d2bf62ef06e059803cfb303c5023.png" />
 </div>
 </div>
 <p>The next method is more calculation-intensive, but could be more accurate. We go pixel-by-pixel through the PSF cube and interpolate with a 1D cubic spline along the wavelength axis.</p>
@@ -2028,7 +1990,7 @@ Diff: min -1.983e-05, max 8.233e-05
 Total error: 1.05253e-04
 </pre></div>
 </div>
-<img alt="../../../_images/5ad6df2f0a555e1bb3339f35aaf429e6b26c0e00ac66928128d08331d49c0e8b.png" src="../../../_images/5ad6df2f0a555e1bb3339f35aaf429e6b26c0e00ac66928128d08331d49c0e8b.png" />
+<img alt="../../../_images/f50a0adc0a78dcf99d2859b3eab4139754ae4703458c654bcdb2e49577418a14.png" src="../../../_images/f50a0adc0a78dcf99d2859b3eab4139754ae4703458c654bcdb2e49577418a14.png" />
 </div>
 </div>
 <p>While the log-log plot looks virtually identical to the linear case, the difference image in the spline case shows slightly larger errors in some of the central pixels. This is consistent with the “total error” statistic (the sum of squares of the difference image), which is larger in this second case.</p>
@@ -2046,7 +2008,7 @@ Total error: 1.05253e-04
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;Cubic interpolation&#39;)
 </pre></div>
 </div>
-<img alt="../../../_images/de12224783e612de5c6194c257ec26224aafa36ebf3f222ad3dd11690e765098.png" src="../../../_images/de12224783e612de5c6194c257ec26224aafa36ebf3f222ad3dd11690e765098.png" />
+<img alt="../../../_images/8e9b17345652e652b19dcc4c1fb655e0451af18dee078b8b044b8cbf3b123479.png" src="../../../_images/8e9b17345652e652b19dcc4c1fb655e0451af18dee078b8b044b8cbf3b123479.png" />
 </div>
 </div>
 </section>
@@ -2077,31 +2039,23 @@ Total error: 1.05253e-04
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wpsf_aspect</span> <span class="o">=</span> <span class="n">nw</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
 <span class="n">figD</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">trace_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">trace_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">wpsf_aspect</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">trace_norm</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: AstropyDeprecationWarning: &quot;min_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmin&quot; instead. [warnings]
-2025-02-17 16:26:18,898 - stpipe - WARNING - AstropyDeprecationWarning: &quot;min_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmin&quot; instead.
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.colorbar.Colorbar at 0x7fb527d33d50&gt;
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: AstropyDeprecationWarning: &quot;max_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmax&quot; instead. [warnings]
-2025-02-17 16:26:18,922 - stpipe - WARNING - AstropyDeprecationWarning: &quot;max_cut&quot; was deprecated in version 6.1 and will be removed in a future version. Use argument &quot;vmax&quot; instead.
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.colorbar.Colorbar at 0x7f042c606210&gt;
-</pre></div>
-</div>
-<img alt="../../../_images/83a19dfb8980806b6fde0bebf9f75d237f2be6ad7b1f30e108c969ba514234a1.png" src="../../../_images/83a19dfb8980806b6fde0bebf9f75d237f2be6ad7b1f30e108c969ba514234a1.png" />
+<img alt="../../../_images/67be62dd5293588e708cfce99843d783d948162b3c6e894fd9e3caa834900041.png" src="../../../_images/67be62dd5293588e708cfce99843d783d948162b3c6e894fd9e3caa834900041.png" />
 </div>
 </div>
 </section>
 <section id="resampling-the-trace">
 <h3>Resampling the trace<a class="headerlink" href="#resampling-the-trace" title="Permalink to this heading">#</a></h3>
-<p>Currently, our PSF array is not the same size or position as the trace in the extraction region. While we could shift and trim to the correct size, the spectrum will rarely be centered on a pixel, and is sufficiently under-sampled that fractional pixel shifts in the PSF could cause significant errors in the final extraction. Thus, we will perform a final resampling to the location of the spectrum in the extraction region. To do this, we can use our old friend <code class="docutils literal notranslate"><span class="pre">RegularGridInterpolator</span></code>. We set the center of the WebbPSF trace (originally at row 23) to our fit trace center, and resample appropriately.</p>
+<p>Currently, our PSF array is not the same size or position as the trace in the extraction region. While we could shift and trim to the correct size, the spectrum will rarely be centered on a pixel, and is sufficiently under-sampled that fractional pixel shifts in the PSF could cause significant errors in the final extraction. Thus, we will perform a final resampling to the location of the spectrum in the extraction region. To do this, we can use our old friend <code class="docutils literal notranslate"><span class="pre">RegularGridInterpolator</span></code>. We set the center of the STPSF trace (originally at row 23) to our fit trace center, and resample appropriately.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">trace_row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ny</span><span class="p">)</span>
@@ -2122,15 +2076,15 @@ Total error: 1.05253e-04
 <span class="n">trace_renorm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">resampled_trace</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
 <span class="n">axE</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">resampled_trace</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">trace_renorm</span><span class="p">)</span>
 <span class="n">axE</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">extraction_region</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> 
-                  <span class="n">norm</span><span class="o">=</span><span class="n">er_norm</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+              <span class="n">norm</span><span class="o">=</span><span class="n">er_norm</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f042c6ea990&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fb5274f4110&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/3fbda31804166afb06901887f262facf6fc09b16b24b9f2fd6b15e5f925db89f.png" src="../../../_images/3fbda31804166afb06901887f262facf6fc09b16b24b9f2fd6b15e5f925db89f.png" />
+<img alt="../../../_images/6e5f11c9a84e38fbe64037712317991a6a3b166b63638e50b776e2624ce5bbb6.png" src="../../../_images/6e5f11c9a84e38fbe64037712317991a6a3b166b63638e50b776e2624ce5bbb6.png" />
 </div>
 </div>
 </section>
@@ -2138,7 +2092,7 @@ Total error: 1.05253e-04
 <section id="about-this-notebook">
 <h2>About this notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">#</a></h2>
 <p><strong>Author:</strong> Graham Kanarek, Staff Scientist, Science Support<br />
-<strong>Updated On:</strong> 2020-07-13</p>
+<strong>Updated On:</strong> 2025-02-27 to use STPSF instead of WebbPSF.</p>
 <p>Optimal extraction algorithm adapted from <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1986PASP...98..609H/">Horne (1986)</a>.</p>
 <hr class="docutils" />
 <p><span class="xref myst">Top of Page</span>
@@ -2251,7 +2205,7 @@ Total error: 1.05253e-04
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-on-example-dataset">Run on example dataset</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#appendix-b-webbpsf">Appendix B: WebbPSF</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#appendix-b-stpsf">Appendix B: STPSF</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instrument-properties">Instrument properties</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monochromatic-psfs">Monochromatic PSFs</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpolation-methods">Interpolation Methods</a></li>
