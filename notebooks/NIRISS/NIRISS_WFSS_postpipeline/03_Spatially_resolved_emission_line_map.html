@@ -527,11 +527,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>astropy 7.0.0
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -556,8 +551,9 @@ document.write(`
     <span class="n">boxfile</span> <span class="o">=</span> <span class="s1">&#39;./output.zip&#39;</span>
     <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
     <span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-    <span class="n">zf</span><span class="o">.</span><span class="n">extractall</span><span class="p">()</span>
-<span class="k">else</span><span class="p">:</span>
+    <span class="n">list_names</span> <span class="o">=</span> <span class="n">zf</span><span class="o">.</span><span class="n">namelist</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">list_names</span><span class="p">:</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">member</span><span class="o">=</span><span class="n">item</span><span class="p">)</span> <span class="c1"># Using extract instead of extractall because it is safer when files have absolute (/) or relative (..) pathselse:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Already exists&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -573,7 +569,9 @@ document.write(`
     <span class="n">boxfile</span> <span class="o">=</span> <span class="s1">&#39;./pipeline_products.zip&#39;</span>
     <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
     <span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-    <span class="n">zf</span><span class="o">.</span><span class="n">extractall</span><span class="p">()</span>
+    <span class="n">list_names</span> <span class="o">=</span> <span class="n">zf</span><span class="o">.</span><span class="n">namelist</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">list_names</span><span class="p">:</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">member</span><span class="o">=</span><span class="n">item</span><span class="p">)</span> <span class="c1"># Using extract instead of extractall because it is safer when files have absolute (/) or relative (..) paths</span>
 </pre></div>
 </div>
 </div>
@@ -634,12 +632,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f93d0992b50&gt;
-</pre></div>
-</div>
-<img alt="../../../_images/875186aa0ea4bb2541475f11cd9fe36e3b18f8ea7d4d0c53649fb352849968d2.png" src="../../../_images/875186aa0ea4bb2541475f11cd9fe36e3b18f8ea7d4d0c53649fb352849968d2.png" />
-</div>
 </div>
 </section>
 <section id="subtract-continuum-at-each-y-position">
@@ -671,43 +663,10 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Model is linear in parameters; consider using linear fitting methods. [astropy.modeling.fitting]
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.6, 2.3)
-</pre></div>
-</div>
-<img alt="../../../_images/1d99dd49ac2008c8ebd85b3ee54dd423eb32f08fce841fa33bf1bde77634bcb8.png" src="../../../_images/1d99dd49ac2008c8ebd85b3ee54dd423eb32f08fce841fa33bf1bde77634bcb8.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cont</span><span class="p">(</span><span class="n">wave_2d</span><span class="p">[</span><span class="n">yy</span><span class="p">,</span> <span class="p">:][</span><span class="n">mask_line</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([250.33514357, 251.34196958, 252.33995488, 253.31373444,
-       254.24980289, 255.1366691 , 255.96455747, 256.72516346,
-       257.4117817 , 258.0190447 , 258.54273033, 258.97986591,
-       259.32840484, 259.58730322, 259.7563374 , 259.83601394,
-       259.82753626, 259.73268184, 259.55376828, 259.293551  ,
-       258.95515925, 258.54210302, 258.05809107, 257.50714692,
-       256.89339292, 256.22107255, 255.4946222 , 254.718431  ,
-       253.89689776, 253.03453603, 252.13569829, 251.20466554,
-       227.29370341, 226.56797823, 225.86951584, 225.19837713,
-       224.55451483, 223.93770379, 223.34764272, 222.78388336,
-       222.24585256, 221.73279539, 221.24384815, 220.7779837 ,
-       220.33396628, 219.91040966, 219.50570878, 219.11804706,
-       218.74533173, 218.38522929, 218.03510728, 217.6919781 ,
-       217.35251746, 217.01299429, 216.66924512, 216.31659606,
-       215.94986802, 215.56329906, 215.15045854, 214.70424682,
-       214.21679175, 213.67940417, 213.08245036, 212.41535494,
-       211.6664663 , 210.82300541, 209.87088594, 208.79474321,
-       207.57778314, 206.20156786, 204.6460847 , 202.88950902,
-       200.90816122, 198.6761674 , 196.16562504, 193.34633955,
-       190.18542597, 186.64758486, 182.69465744])
 </pre></div>
 </div>
 </div>
@@ -735,12 +694,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Fitted continuum&#39;)
-</pre></div>
-</div>
-<img alt="../../../_images/75aeaa1cd8e51b46acf33aa71dc0c3d1490ebd3b81aad906393d61163d097537.png" src="../../../_images/75aeaa1cd8e51b46acf33aa71dc0c3d1490ebd3b81aad906393d61163d097537.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -748,12 +701,6 @@ document.write(`
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Continuum subtracted spectrum&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Continuum subtracted spectrum&#39;)
-</pre></div>
-</div>
-<img alt="../../../_images/c2c5b53d33ceefb8a21920e8cd45a8fe2a06052375ef5c3c9a55b7a9039a5ac1.png" src="../../../_images/c2c5b53d33ceefb8a21920e8cd45a8fe2a06052375ef5c3c9a55b7a9039a5ac1.png" />
 </div>
 </div>
 </section>
@@ -777,12 +724,6 @@ document.write(`
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;H$</span><span class="se">\\</span><span class="s1">alpha$ map&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;H$\\alpha$ map&#39;)
-</pre></div>
-</div>
-<img alt="../../../_images/8960a647e4288a5680818455b7ed236c3d801b9fba0f326e382e4e3791be358a.png" src="../../../_images/8960a647e4288a5680818455b7ed236c3d801b9fba0f326e382e4e3791be358a.png" />
 </div>
 </div>
 </section>
@@ -819,12 +760,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;f150w&#39;)
-</pre></div>
-</div>
-<img alt="../../../_images/9a1a28fcc235dd0eced430656b543151a34d4e2a2e872b85e7ea0e402b7455bf.png" src="../../../_images/9a1a28fcc235dd0eced430656b543151a34d4e2a2e872b85e7ea0e402b7455bf.png" />
-</div>
 </div>
 </section>
 <section id="in-the-plot-above-you-can-see-oiii-doublet-and-hbeta">
@@ -851,12 +786,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.2, 1.8)
-</pre></div>
-</div>
-<img alt="../../../_images/d5b14f32c973567e26a80ff375dc1eb8ca9346fdb94870bd5f4f59b13dd3588e.png" src="../../../_images/d5b14f32c973567e26a80ff375dc1eb8ca9346fdb94870bd5f4f59b13dd3588e.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -875,12 +804,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f937f7e39d0&gt;
-</pre></div>
-</div>
-<img alt="../../../_images/b731fbb65ebedda31f6db852e5d29a5e00ce9d60a2d827eac5c541bb8cc342ea.png" src="../../../_images/b731fbb65ebedda31f6db852e5d29a5e00ce9d60a2d827eac5c541bb8cc342ea.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -889,12 +812,6 @@ document.write(`
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">line_2d</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f937f7cb8d0&gt;
-</pre></div>
-</div>
-<img alt="../../../_images/d7d7b9cbc0705970e7ea6871fd0843537731ad80290acdc50a00c817d6d9d59f.png" src="../../../_images/d7d7b9cbc0705970e7ea6871fd0843537731ad80290acdc50a00c817d6d9d59f.png" />
 </div>
 </div>
 </section>
@@ -928,26 +845,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: CompoundModel
-Inputs: (&#39;x&#39;,)
-Outputs: (&#39;y&#39;,)
-Model set size: 1
-Expression: [0] + [1] + [2]
-Components: 
-    [0]: &lt;Gaussian1D(amplitude=105.66862223, mean=1.5077448 um, stddev=0.00935798 um)&gt;
-
-    [1]: &lt;Gaussian1D(amplitude=81.52142165, mean=1.53394167 um, stddev=0.00642788 um)&gt;
-
-    [2]: &lt;Gaussian1D(amplitude=186.63307995, mean=1.54934897 um, stddev=0.01111534 um)&gt;
-Parameters:
-       amplitude_0          mean_0      ...       mean_2            stddev_2      
-                              um        ...         um                 um         
-    ------------------ ---------------- ... ----------------- --------------------
-    105.66862223169086 1.50774480215419 ... 1.549348972329723 0.011115339820856886
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -972,49 +869,12 @@ Parameters:
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f937f7bc550&gt;
-</pre></div>
-</div>
-<img alt="../../../_images/dd9c86b51596da312b25622e20252b102a2dcd71fc54b16935a7577ffe24fa1f.png" src="../../../_images/dd9c86b51596da312b25622e20252b102a2dcd71fc54b16935a7577ffe24fa1f.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">g123_fit</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">g123_fit</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">g123_fit</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: Gaussian1D
-Inputs: (&#39;x&#39;,)
-Outputs: (&#39;y&#39;,)
-Model set size: 1
-Parameters:
-        amplitude            mean              stddev      
-                              um                 um        
-    ------------------ ---------------- -------------------
-    105.66862223169086 1.50774480215419 0.00935797901237529
-Model: Gaussian1D
-Inputs: (&#39;x&#39;,)
-Outputs: (&#39;y&#39;,)
-Model set size: 1
-Parameters:
-        amplitude            mean               stddev       
-                              um                  um         
-    ----------------- ------------------ --------------------
-    81.52142165000488 1.5339416685773737 0.006427875129710685
-Model: Gaussian1D
-Inputs: (&#39;x&#39;,)
-Outputs: (&#39;y&#39;,)
-Model set size: 1
-Parameters:
-        amplitude            mean              stddev       
-                              um                 um         
-    ----------------- ----------------- --------------------
-    186.6330799464549 1.549348972329723 0.011115339820856886
 </pre></div>
 </div>
 </div>
@@ -1073,12 +933,6 @@ Parameters:
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;H$\\beta$ map&#39;)
-</pre></div>
-</div>
-<img alt="../../../_images/96f49d5d2b83e97d059a9f590f65af7483591acd59e017e5fff0a4fd86926e05.png" src="../../../_images/96f49d5d2b83e97d059a9f590f65af7483591acd59e017e5fff0a4fd86926e05.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1087,12 +941,6 @@ Parameters:
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Oiii 4960&#39;)
-</pre></div>
-</div>
-<img alt="../../../_images/06d307091a8f964ede7e7af3cb07270fb35a96e64b0acf81992bab3f38501ae4.png" src="../../../_images/06d307091a8f964ede7e7af3cb07270fb35a96e64b0acf81992bab3f38501ae4.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1100,12 +948,6 @@ Parameters:
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Oiii 5008&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Oiii 5008&#39;)
-</pre></div>
-</div>
-<img alt="../../../_images/9d5078113213f27732d76d16f39797a4d62b332aae77e31c7936d508dd51a5e1.png" src="../../../_images/9d5078113213f27732d76d16f39797a4d62b332aae77e31c7936d508dd51a5e1.png" />
 </div>
 </div>
 </section>
