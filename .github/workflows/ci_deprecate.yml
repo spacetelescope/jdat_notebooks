@@ -55,12 +55,30 @@ jobs:
             '{"cell_type": "markdown", "metadata": {"deprecation": true}, "source": [$text]}')
           jq ".cells |= [$BANNER_CELL] + ." "$notebook_path" > temp.ipynb && mv temp.ipynb "$notebook_path"
 
-
-      - name: Commit and push to gh-storage branch
+      - name: Commit and push modifications to target branch
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git checkout -B gh-storage
           git add "${{ env.notebook_path }}"
-          git commit -m "Deprecate notebook ${{ env.notebook_path }}"
-          git push origin gh-storage --force
+          git commit -m "Storing deprecated notebook ${{ env.notebook_path }}"
+  
+          MAX_RETRIES=10
+          RETRY_DELAY=30s  # Increased delay
+          success=false
+          for i in $(seq 1 $MAX_RETRIES); do
+            git fetch origin gh-storage
+            git rebase origin/gh-storage
+            if git push origin gh-storage --force; then
+              success=true
+              break
+            else
+              echo "Push $i failed... waiting $RETRY_DELAY"
+              sleep $RETRY_DELAY
+            fi
+          done
+  
+          if [ "$success" = false ]; then
+            echo "Failed to push after $MAX_RETRIES attempts."
+            exit 1
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
