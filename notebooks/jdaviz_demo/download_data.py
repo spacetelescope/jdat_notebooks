@@ -1,7 +1,5 @@
-import os
 from pathlib import Path
 
-import requests
 from astroquery.mast import Observations
 
 LOCAL_DATA_PATH = Path(__file__).parent / "data"
