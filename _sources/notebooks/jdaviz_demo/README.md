@@ -9,7 +9,6 @@ and set up your machine. Do not forget to download the necessary datasets.
 Some files are quite large. You can also try adapting the material to use
 your own datasets.
 
-If you have questions, feel free to submit an [issue](https://github.com/spacetelescope/jdaviz_demo/issues)
-in this repository or email Cami at cpacifici@stsci.edu.
+If you have questions, feel free to submit an [issue](https://github.com/spacetelescope/jdat_notebooks/issues) in this repository or [contact the help desk](jwsthelp.stsci.edu).
 
 Additional documentation can be found on the [Jdaviz readthedocs](https://jdaviz.readthedocs.io/en/stable/).
