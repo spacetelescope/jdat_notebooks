@@ -1,0 +1,2225 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>PSF Photometry Basics with Photutils &#8212; STScI JDAT Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/main.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-D46G4HKJY3');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/NIRCam/psf_photometry_basics/psf_photometry_basics';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="STScI JDAT Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="STScI JDAT Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebook_development_workflow.html">Notebook Development Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/submitting_notebooks.html">Submitting Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/requirements.html">Requirements file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebooks.html">Jupyter Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/data_files.html">Data Files</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">GitHub Guidelines</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_setup.html">GitHub Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_workflow.html">GitHub Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_pr.html">GitHub PR</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cross-Instrument</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/asdf_example/asdf_example.html">ASDF Example</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/background_estimation_imaging/Imaging_Sky_Background_Estimation.html">Complex 2D Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/composite_model_fitting/specfit_demo_3.html">Composite Model Spectral Fitting</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/rgb_imviz/imviz_rgb_carina.html">RGB images with Imviz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">Specviz Simple Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/update_pure_parallel_wcs/NIRISS_correct_pure_parallel_WCS.html">Improving Accuracy of WCS of Pure Parallel Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/stpsf_examples/stpsf_examples.html">STPSF Examples</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">MIRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">MRS Mstar - Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">IFU of YSOs in LMC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MIRI_LRS_spectral_extraction/miri_lrs_advanced_extraction_part1.html">LRS Optimal Spectral Extraction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRCam</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../aperture_photometry/NIRCam_Aperture_Photometry_Example.html">Point Source Aperture Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRCam_photometry/NIRCam_multiband_photometry.html">Extended Aperture Photometry</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">Cross-Filter PSF Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../psf_photometry/NIRCam_PSF_Photometry_Example.html">PSF Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRCam_wisp_subtraction/nircam_wisp_subtraction.html">NIRCam Wisp Removal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRCam_claw_detection/nircam_claw_detection.html">NIRCam Claw Detection</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRISS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">WFSS Spectra - Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">WFSS Spectra - Combine and Normalize 1D Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">WFSS Spectra - Cross-Correlation Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">WFSS Spectra - Emission Line Map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/00_niriss_mast_query_data_setup.html">NIRISS MAST</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/01_niriss_wfss_image2_image3.html">Direct imaging for WFSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/02_niriss_wfss_spec2.html">Spec2 pipeline for WFSS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRSpec</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">IFU Cube Fitting</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/cube_fitting/cube_fitting.html">IFU Cube Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/ifu_optimal/ifu_optimal.html">IFU Optimal Spectral Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/optimal_extraction/Spectral_Extraction-static.html">MOS Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/mos_spectroscopy_advanced/MOSspec_advanced.html">MOS Spectroscopy of Extragalactic Field</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">BOTS Time Series Observations</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/galaxy_redshift/redshift_fitting.html">Redshift and Template Fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/FS_NSClean_example.html">FS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/IFU_NSClean_example.html">IFU Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/MOS_NSClean_example.html">MOS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRSpec/NIRSpec_NSClean/BOTS_NSClean_example.html">BOTS Products with NSClean</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/NIRCam/psf_photometry_basics/psf_photometry_basics.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/NIRCam/psf_photometry_basics/psf_photometry_basics.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>PSF Photometry Basics with Photutils</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">PSF Photometry Basics with Photutils</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#point-spread-function-photometry-with-photutils">Point Spread Function Photometry with Photutils</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#psf-models">PSF Models</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-a-photutils-griddedpsfmodel">Create a Photutils <code class="docutils literal notranslate"><span class="pre">GriddedPSFModel</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-use-this-psf-model-to-create-an-image-of-simulated-stars">Let’s use this PSF model to create an image of simulated stars</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#we-ll-create-500-stars-in-a-2048-x-2048-image-nircam-f200w-nrca1">We’ll create 500 stars in a 2048 x 2048 image (NIRCam F200W NRCA1)</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-stars-in-an-image-photutils-detection">Finding Stars in an Image (photutils.detection)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#the-psfphotometry-class">The <code class="docutils literal notranslate"><span class="pre">PSFPhotometry</span></code> class</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-results">Comparing results</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#source-grouping">Source Grouping</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-a-single-source">Fitting a single source</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further Reading</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="psf-photometry-basics-with-photutils">
+<h1>PSF Photometry Basics with Photutils<a class="headerlink" href="#psf-photometry-basics-with-photutils" title="Permalink to this heading">#</a></h1>
+<p>This notebook provides an basic overview of PSF photometry using <a class="reference external" href="https://photutils.readthedocs.io/en/stable/">Photutils</a>.</p>
+<p><strong>Use case:</strong> Create a simulated image of stars, PSF photometry.<br>
+<strong>Data:</strong> This notebook creates a JWST/NIRCam F200W NRCA1 simulated image of stars.<br>
+<strong>Tools:</strong>  photutils.<br>
+<strong>Instrument:</strong> NIRCam.<br>
+<strong>Documentation:</strong> This notebook is part of a STScI’s larger <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis">post-pipeline Data Analysis Tools Ecosystem</a>.<br></p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="imports">
+<h1>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">QTable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">simple_norm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">photutils.aperture</span><span class="w"> </span><span class="kn">import</span> <span class="n">CircularAperture</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">photutils.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_noise_image</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">photutils.detection</span><span class="w"> </span><span class="kn">import</span> <span class="n">IRAFStarFinder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">photutils.psf</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">GriddedPSFModel</span><span class="p">,</span> <span class="n">PSFPhotometry</span><span class="p">,</span> <span class="n">SourceGrouper</span><span class="p">,</span>
+                           <span class="n">make_psf_model_image</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">photutils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_random_cmap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tweakwcs</span><span class="w"> </span><span class="kn">import</span> <span class="n">XYXYMatch</span>
+
+<span class="c1"># Change some default plotting parameters</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/tqdm/auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="point-spread-function-photometry-with-photutils">
+<h1>Point Spread Function Photometry with Photutils<a class="headerlink" href="#point-spread-function-photometry-with-photutils" title="Permalink to this heading">#</a></h1>
+<p>The Photutils PSF photometry module provides modular tools that allow users to fully customize the photometry procedure (e.g., by using different source detection algorithms, local background estimators, source groupers, and PSF models). Photutils provides implementations for each subtask involved in the photometry process. However, users can also incorporate their own custom implementations for any of the tasks, if desired. This modularity is achieved through an object-oriented programming approach, providing a more convenient user experience.</p>
+<p>Photutils provides two top-level classes to perform PSF photometry, <code class="docutils literal notranslate"><span class="pre">PSFPhotometry</span></code> and <code class="docutils literal notranslate"><span class="pre">IterativelyPSFPhotometry</span></code>. In this notebook, we will cover the basics of the <code class="docutils literal notranslate"><span class="pre">PSFPhotometry</span></code> class.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="psf-models">
+<h1>PSF Models<a class="headerlink" href="#psf-models" title="Permalink to this heading">#</a></h1>
+<p>PSF photometry fundamentally involves fitting models to data. As such, the PSF model is a critical component of PSF photometry. For accurate results in both photometry and astrometry, the PSF model should closely represent the actual data. The PSF model can be a simple analytic function, such as a 2D Gaussian or Moffat profile, or it can be a more complex model derived from a 2D PSF image (e.g., an effective PSF, or ePSF). The PSF model can also account for variations in the PSF across the detector (e.g., due to optical aberrations).</p>
+<p>Photutils provides the following analytic PSF Models based on the <a class="reference external" href="https://docs.astropy.org/en/latest/modeling/index.html">Astropy Modeling and Fitting framework</a>:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://photutils.readthedocs.io/en/latest/api/photutils.psf.GaussianPSF.html#photutils.psf.GaussianPSF">GaussianPSF</a></p></li>
+<li><p><a class="reference external" href="https://photutils.readthedocs.io/en/latest/api/photutils.psf.CircularGaussianPSF.html#photutils.psf.CircularGaussianPSF">CircularGaussianPSF</a></p></li>
+<li><p><a class="reference external" href="https://photutils.readthedocs.io/en/latest/api/photutils.psf.MoffatPSF.html#photutils.psf.MoffatPSF">MoffatPSF</a></p></li>
+<li><p><a class="reference external" href="https://photutils.readthedocs.io/en/latest/api/photutils.psf.AiryDiskPSF.html#photutils.psf.AiryDiskPSF">AiryDiskPSF</a></p></li>
+<li><p><a class="reference external" href="https://photutils.readthedocs.io/en/latest/api/photutils.psf.GaussianPRF.html#photutils.psf.GaussianPRF">GaussianPRF</a></p></li>
+<li><p><a class="reference external" href="https://photutils.readthedocs.io/en/latest/api/photutils.psf.CircularGaussianPRF.html#photutils.psf.CircularGaussianPRF">CircularGaussianPRF</a></p></li>
+</ul>
+<p>It also includes image-based PSF models:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://photutils.readthedocs.io/en/latest/api/photutils.psf.ImagePSF.html#photutils.psf.ImagePSF">ImagePSF</a></p></li>
+<li><p><a class="reference external" href="https://photutils.readthedocs.io/en/latest/api/photutils.psf.ImagePSF.html#photutils.psf.ImagePSF">GriddedPSFModel</a></p></li>
+</ul>
+<section id="create-a-photutils-griddedpsfmodel">
+<h2>Create a Photutils <code class="docutils literal notranslate"><span class="pre">GriddedPSFModel</span></code><a class="headerlink" href="#create-a-photutils-griddedpsfmodel" title="Permalink to this heading">#</a></h2>
+<p>A gridded PSF model is a grid of position-dependent ePSFs that takes into account the PSF varying across the detector.</p>
+<p>Let’s use a position-dependent gridded PSF model for JWST/NIRCam F200W in detector NRCA1.</p>
+<p>This gridded PSF model was calculated using <a class="reference external" href="https://stpsf.readthedocs.io/en/latest/">STPSF</a>, a Python package that computes simulated PSFs for both JWST and Roman.</p>
+<p>The next cell shows how to use STPSF to generate the gridded PSF model. However, for this notebook we’ll simply download a pre-calculated gridded PSF model (see the following cell).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># How to calculate the GriddedPSFModel file that we load in the next cell</span>
+<span class="c1"># nrc = stpsf.NIRCam()</span>
+<span class="c1"># nrc.filter = &#39;F200W&#39;</span>
+<span class="c1"># nrc.detector = &#39;NRCA1&#39;</span>
+<span class="c1"># psf_model = nrc.psf_grid(num_psfs=16, all_detectors=False, verbose=True, save=True)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;nircam_nrca1_f200w_fovp101_samp4_npsf16.fits&quot;</span>
+<span class="n">baseurl</span> <span class="o">=</span> <span class="s2">&quot;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/stpsf_grid/&quot;</span>
+<span class="n">url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">baseurl</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File saved as: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File already exists: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>File saved as: ./nircam_nrca1_f200w_fovp101_samp4_npsf16.fits
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load the STPSF GriddedPSF model from the downloaded FITS file</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;nircam_nrca1_f200w_fovp101_samp4_npsf16.fits&#39;</span>
+<span class="n">psf_model</span> <span class="o">=</span> <span class="n">GriddedPSFModel</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<span class="n">psf_model</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;GriddedPSFModel(flux=1., x_0=0., y_0=0.)&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">psf_model</span></code> contains a 3D cube of PSFs.  There are 16 2D PSFs, each 404 x 404 pixels.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psf_model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(16, 404, 404)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The default oversampling is 4 along each axis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psf_model</span><span class="o">.</span><span class="n">oversampling</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([4, 4])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s plot the grid of ePSFs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">psf_model</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">(</span><span class="n">vmax_scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/27230906ef4b30f99576e59fcf67c929238798d8a2bbb424b0296ed636890ee7.png" src="../../../_images/27230906ef4b30f99576e59fcf67c929238798d8a2bbb424b0296ed636890ee7.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">psf_model</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">(</span><span class="n">deltas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/e42b2b4d456868290fc413fe1bdcf4be202815114588ae19caa7979d68bba374.png" src="../../../_images/e42b2b4d456868290fc413fe1bdcf4be202815114588ae19caa7979d68bba374.png" />
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="let-s-use-this-psf-model-to-create-an-image-of-simulated-stars">
+<h1>Let’s use this PSF model to create an image of simulated stars<a class="headerlink" href="#let-s-use-this-psf-model-to-create-an-image-of-simulated-stars" title="Permalink to this heading">#</a></h1>
+<p>We’ll use the <code class="docutils literal notranslate"><span class="pre">photutils.psf</span></code> <a class="reference external" href="https://photutils.readthedocs.io/en/latest/api/photutils.psf.make_psf_model_image.html">make_psf_model_image</a> function.</p>
+<section id="we-ll-create-500-stars-in-a-2048-x-2048-image-nircam-f200w-nrca1">
+<h2>We’ll create 500 stars in a 2048 x 2048 image (NIRCam F200W NRCA1)<a class="headerlink" href="#we-ll-create-500-stars-in-a-2048-x-2048-image-nircam-f200w-nrca1" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_sources</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">2048</span><span class="p">)</span>
+<span class="n">data</span><span class="p">,</span> <span class="n">true_params</span> <span class="o">=</span> <span class="n">make_psf_model_image</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">psf_model</span><span class="p">,</span> <span class="n">n_sources</span><span class="p">,</span>
+                                         <span class="n">flux</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">20_000</span><span class="p">),</span> <span class="n">min_separation</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+                                         <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">progress_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   0%|          | 0/500 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   1%|          | 3/500 [00:00&lt;00:19, 25.92it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   1%|▏         | 7/500 [00:00&lt;00:15, 31.01it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   3%|▎         | 14/500 [00:00&lt;00:10, 44.98it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   4%|▍         | 20/500 [00:00&lt;00:09, 48.17it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   5%|▌         | 27/500 [00:00&lt;00:08, 53.20it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   7%|▋         | 34/500 [00:00&lt;00:08, 56.14it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   8%|▊         | 41/500 [00:00&lt;00:07, 58.19it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  10%|▉         | 48/500 [00:00&lt;00:07, 59.39it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  11%|█         | 55/500 [00:01&lt;00:07, 60.15it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  12%|█▏        | 62/500 [00:01&lt;00:07, 60.84it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  14%|█▍        | 69/500 [00:01&lt;00:07, 61.27it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  15%|█▌        | 76/500 [00:01&lt;00:06, 61.55it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  17%|█▋        | 83/500 [00:01&lt;00:06, 61.88it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  18%|█▊        | 90/500 [00:01&lt;00:07, 51.53it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  19%|█▉        | 97/500 [00:01&lt;00:07, 54.43it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  21%|██        | 104/500 [00:01&lt;00:07, 56.55it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  22%|██▏       | 111/500 [00:01&lt;00:06, 58.32it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  24%|██▎       | 118/500 [00:02&lt;00:06, 59.30it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  25%|██▌       | 125/500 [00:02&lt;00:06, 59.97it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  26%|██▋       | 132/500 [00:02&lt;00:06, 59.32it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  28%|██▊       | 139/500 [00:02&lt;00:06, 60.16it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  29%|██▉       | 146/500 [00:02&lt;00:05, 60.70it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  31%|███       | 153/500 [00:02&lt;00:05, 61.17it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  32%|███▏      | 160/500 [00:02&lt;00:05, 61.54it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  33%|███▎      | 167/500 [00:02&lt;00:05, 61.21it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  35%|███▍      | 174/500 [00:03&lt;00:05, 61.35it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  36%|███▌      | 181/500 [00:03&lt;00:05, 61.60it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  38%|███▊      | 188/500 [00:03&lt;00:05, 61.85it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  39%|███▉      | 195/500 [00:03&lt;00:04, 62.04it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  40%|████      | 202/500 [00:03&lt;00:04, 62.02it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  42%|████▏     | 209/500 [00:03&lt;00:04, 62.17it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  43%|████▎     | 216/500 [00:03&lt;00:04, 62.33it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  45%|████▍     | 223/500 [00:03&lt;00:04, 62.51it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  46%|████▌     | 230/500 [00:03&lt;00:04, 62.31it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  47%|████▋     | 237/500 [00:04&lt;00:04, 62.43it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  49%|████▉     | 244/500 [00:04&lt;00:04, 62.39it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  50%|█████     | 251/500 [00:04&lt;00:04, 62.22it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  52%|█████▏    | 258/500 [00:04&lt;00:03, 62.11it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  53%|█████▎    | 265/500 [00:04&lt;00:03, 61.89it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  54%|█████▍    | 272/500 [00:04&lt;00:03, 61.93it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  56%|█████▌    | 279/500 [00:04&lt;00:03, 62.08it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  57%|█████▋    | 286/500 [00:04&lt;00:03, 62.00it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  59%|█████▊    | 293/500 [00:04&lt;00:03, 62.07it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  60%|██████    | 300/500 [00:05&lt;00:03, 61.93it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  61%|██████▏   | 307/500 [00:05&lt;00:03, 62.14it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  63%|██████▎   | 314/500 [00:05&lt;00:02, 62.33it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  64%|██████▍   | 321/500 [00:05&lt;00:02, 61.13it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  66%|██████▌   | 328/500 [00:05&lt;00:02, 57.86it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  67%|██████▋   | 334/500 [00:05&lt;00:02, 58.39it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  68%|██████▊   | 341/500 [00:05&lt;00:02, 59.41it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  70%|██████▉   | 348/500 [00:05&lt;00:02, 60.14it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  71%|███████   | 355/500 [00:05&lt;00:02, 60.84it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  72%|███████▏  | 362/500 [00:06&lt;00:02, 61.44it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  74%|███████▍  | 369/500 [00:06&lt;00:02, 61.70it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  75%|███████▌  | 376/500 [00:06&lt;00:02, 61.81it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  77%|███████▋  | 383/500 [00:06&lt;00:01, 62.09it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  78%|███████▊  | 390/500 [00:06&lt;00:01, 62.24it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  79%|███████▉  | 397/500 [00:06&lt;00:01, 62.19it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  81%|████████  | 404/500 [00:06&lt;00:01, 62.01it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  82%|████████▏ | 411/500 [00:06&lt;00:01, 62.04it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  84%|████████▎ | 418/500 [00:06&lt;00:01, 62.16it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  85%|████████▌ | 425/500 [00:07&lt;00:01, 62.27it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  86%|████████▋ | 432/500 [00:07&lt;00:01, 62.48it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  88%|████████▊ | 439/500 [00:07&lt;00:00, 62.66it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  89%|████████▉ | 446/500 [00:07&lt;00:00, 62.63it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  91%|█████████ | 453/500 [00:07&lt;00:00, 62.54it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  92%|█████████▏| 460/500 [00:07&lt;00:00, 62.43it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  93%|█████████▎| 467/500 [00:07&lt;00:00, 62.39it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  95%|█████████▍| 474/500 [00:07&lt;00:00, 62.04it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  96%|█████████▌| 481/500 [00:07&lt;00:00, 62.08it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  98%|█████████▊| 488/500 [00:08&lt;00:00, 61.71it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  99%|█████████▉| 495/500 [00:08&lt;00:00, 61.64it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources: 100%|██████████| 500/500 [00:08&lt;00:00, 60.27it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">98</span><span class="p">)</span>
+<span class="n">axim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/84397ab5e751ba0a6112f7e2d8ecb533aadb9e7a815b1dab65a92b79b0165852.png" src="../../../_images/84397ab5e751ba0a6112f7e2d8ecb533aadb9e7a815b1dab65a92b79b0165852.png" />
+</div>
+</div>
+<p>Now let’s add some Gaussian noise (σ = 0.5) to the image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">noise</span> <span class="o">=</span> <span class="n">make_noise_image</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">+=</span> <span class="n">noise</span>
+<span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">norm2</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+<span class="n">axim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/80b22fb3169cc30deb0437b88a8076cfd2c8956c697c0d94730e73f2c1972e11.png" src="../../../_images/80b22fb3169cc30deb0437b88a8076cfd2c8956c697c0d94730e73f2c1972e11.png" />
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">true_params</span></code> output contains an Astropy table containing the true (x, y, flux) of our artificial stars.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">true_params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>QTable length=500</i>
+<table id="table140329951832912" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>x_0</th><th>y_0</th><th>flux</th></tr></thead>
+<thead><tr><th>int64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>1</td><td>1290.801366902193</td><td>1774.3778244148095</td><td>11576.13482157921</td></tr>
+<tr><td>2</td><td>575.5445184120193</td><td>1395.377339599303</td><td>19268.478310411472</td></tr>
+<tr><td>3</td><td>129.81642462770725</td><td>988.9497341028731</td><td>15441.000611839</td></tr>
+<tr><td>4</td><td>82.19583400957467</td><td>1373.681842381788</td><td>16746.079103988828</td></tr>
+<tr><td>5</td><td>1634.2504259621307</td><td>1678.058048048596</td><td>11603.97911581131</td></tr>
+<tr><td>6</td><td>1828.047864537002</td><td>309.55371527620554</td><td>12347.864117392048</td></tr>
+<tr><td>7</td><td>1231.7264911944665</td><td>1364.5189171807363</td><td>12768.672723356296</td></tr>
+<tr><td>8</td><td>1471.059300796829</td><td>1127.0247989784389</td><td>5685.779847567518</td></tr>
+<tr><td>9</td><td>1108.9814833746439</td><td>1284.3479577936375</td><td>12668.089104108565</td></tr>
+<tr><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+<tr><td>491</td><td>577.223074730307</td><td>129.38072578254219</td><td>14507.876279651628</td></tr>
+<tr><td>492</td><td>1361.7045616265877</td><td>453.27471505007463</td><td>9846.434914865096</td></tr>
+<tr><td>493</td><td>381.1375034624161</td><td>1156.1905984983352</td><td>17092.388569016857</td></tr>
+<tr><td>494</td><td>341.84068336540014</td><td>1317.6701821809852</td><td>19341.760724229327</td></tr>
+<tr><td>495</td><td>287.4655271611766</td><td>211.56488042410663</td><td>14904.353014873148</td></tr>
+<tr><td>496</td><td>198.90321274868666</td><td>1463.8345851886168</td><td>5127.760470402655</td></tr>
+<tr><td>497</td><td>1090.6820339800868</td><td>207.53634357628832</td><td>1297.4411340894303</td></tr>
+<tr><td>498</td><td>372.8442840030262</td><td>215.84440430487842</td><td>11463.74372055272</td></tr>
+<tr><td>499</td><td>1622.3631278221183</td><td>1306.7074127823937</td><td>9583.072289053016</td></tr>
+<tr><td>500</td><td>94.04531350532247</td><td>1986.8254840155562</td><td>19299.05221739804</td></tr>
+</table></div></div></div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="finding-stars-in-an-image-photutils-detection">
+<h1>Finding Stars in an Image <a class="reference external" href="https://photutils.readthedocs.io/en/latest/user_guide/detection.html">(photutils.detection)</a><a class="headerlink" href="#finding-stars-in-an-image-photutils-detection" title="Permalink to this heading">#</a></h1>
+<p>Let’s use the <a class="reference external" href="https://photutils.readthedocs.io/en/latest/api/photutils.detection.IRAFStarFinder.html#photutils.detection.IRAFStarFinder">IRAFStarFinder class</a>
+to find the stars in the simulated image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">finder</span> <span class="o">=</span> <span class="n">IRAFStarFinder</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">fwhm</span><span class="o">=</span><span class="mf">3.0</span><span class="p">)</span>
+<span class="n">stars</span> <span class="o">=</span> <span class="n">finder</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">stars</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>QTable length=500</i>
+<table id="table140329928826320" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>xcentroid</th><th>ycentroid</th><th>fwhm</th><th>sharpness</th><th>roundness</th><th>pa</th><th>npix</th><th>peak</th><th>flux</th><th>mag</th></tr></thead>
+<thead><tr><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>1</td><td>1192.1055559474587</td><td>53.06631525468981</td><td>1.7907366317936948</td><td>0.5969122105978982</td><td>0.01602124538361244</td><td>103.50327927086758</td><td>13</td><td>1445.5348787044131</td><td>6702.657403681727</td><td>-9.565617554118727</td></tr>
+<tr><td>2</td><td>391.77100217783357</td><td>56.62351189204002</td><td>1.7326236218111648</td><td>0.5775412072703883</td><td>0.07734114701673132</td><td>127.67294625687012</td><td>11</td><td>1345.8273140582155</td><td>6834.501827950182</td><td>-9.586767160003873</td></tr>
+<tr><td>3</td><td>795.8087010554189</td><td>57.71980226330965</td><td>1.7547915517116766</td><td>0.5849305172372256</td><td>0.050923983146313495</td><td>123.76952554697297</td><td>11</td><td>1685.9495568301768</td><td>8212.884033591004</td><td>-9.786239226517</td></tr>
+<tr><td>4</td><td>1666.3889149693334</td><td>72.96521340328759</td><td>1.7369949400842508</td><td>0.5789983133614169</td><td>0.012736558230433365</td><td>24.64335109216909</td><td>12</td><td>1602.3725342184905</td><td>7894.772125702702</td><td>-9.743348997678982</td></tr>
+<tr><td>5</td><td>704.8031347265279</td><td>76.31780988632701</td><td>1.7383697976747048</td><td>0.5794565992249016</td><td>0.05728164986451659</td><td>56.71067148674254</td><td>11</td><td>990.6214951513647</td><td>4832.501058805616</td><td>-9.210429894637347</td></tr>
+<tr><td>6</td><td>255.61180082996293</td><td>81.21763986361768</td><td>1.7183973200128126</td><td>0.5727991066709376</td><td>0.07151425359444646</td><td>45.27550776264768</td><td>11</td><td>1926.1576546941526</td><td>9684.86666304069</td><td>-9.96523411480502</td></tr>
+<tr><td>7</td><td>1944.7225059984748</td><td>83.38006547457232</td><td>1.7142929583769968</td><td>0.5714309861256656</td><td>0.0951854120780369</td><td>50.43115402630989</td><td>11</td><td>1373.903054909001</td><td>6972.668462567562</td><td>-9.608497539499997</td></tr>
+<tr><td>8</td><td>1053.616547412623</td><td>83.65170906701586</td><td>1.7037246530865695</td><td>0.5679082176955231</td><td>0.11475912048574714</td><td>132.33752219804214</td><td>11</td><td>1564.2286424835092</td><td>8224.770241215145</td><td>-9.78780943696046</td></tr>
+<tr><td>9</td><td>1477.724106591656</td><td>84.3682304084988</td><td>1.7177369948220635</td><td>0.5725789982740211</td><td>0.09044626722207788</td><td>50.49923134540043</td><td>11</td><td>1384.7129854570685</td><td>6992.860483427065</td><td>-9.611637158981052</td></tr>
+<tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+<tr><td>491</td><td>187.01517612399726</td><td>1961.6867823602129</td><td>1.7735654370735714</td><td>0.5911884790245238</td><td>0.02963407181044025</td><td>85.85191897548906</td><td>12</td><td>1897.7156445314984</td><td>9309.387614483894</td><td>-9.92230278344215</td></tr>
+<tr><td>492</td><td>895.1870558427732</td><td>1970.7766195497748</td><td>1.7728537206217967</td><td>0.5909512402072655</td><td>0.04256035776636366</td><td>59.0689822477808</td><td>11</td><td>998.7779687143158</td><td>4858.1778542642005</td><td>-9.21618352489223</td></tr>
+<tr><td>493</td><td>1924.8388603983933</td><td>1971.3485560582292</td><td>1.7479505422621833</td><td>0.582650180754061</td><td>0.06452058663798878</td><td>60.81777183363713</td><td>11</td><td>680.9536453365565</td><td>3406.850837427257</td><td>-8.830882798037411</td></tr>
+<tr><td>494</td><td>208.3640473085577</td><td>1979.3285110377926</td><td>1.7209611144208048</td><td>0.5736537048069349</td><td>0.10521499796303566</td><td>129.55419310402846</td><td>11</td><td>1673.126539006942</td><td>8731.297849157323</td><td>-9.852697008700918</td></tr>
+<tr><td>495</td><td>50.67575935677433</td><td>1980.8261701954223</td><td>1.7506545676674383</td><td>0.5835515225558128</td><td>0.046862608373343786</td><td>134.0009960951959</td><td>11</td><td>1609.0456617773204</td><td>7994.260167861066</td><td>-9.756945694945262</td></tr>
+<tr><td>496</td><td>298.1683679476747</td><td>1985.2381598478728</td><td>1.7680444963586066</td><td>0.5893481654528688</td><td>0.041227666901465045</td><td>117.76380702044993</td><td>11</td><td>2251.173448406043</td><td>10894.287867528958</td><td>-10.092997116902998</td></tr>
+<tr><td>497</td><td>346.7302076602484</td><td>1985.1497028280266</td><td>1.7656538412623042</td><td>0.5885512804207681</td><td>0.0424913962802405</td><td>52.25300351217583</td><td>12</td><td>758.4319863235332</td><td>3700.4518121683222</td><td>-8.920636882837902</td></tr>
+<tr><td>498</td><td>94.06336559789604</td><td>1986.8707563904954</td><td>1.8054058182738617</td><td>0.6018019394246206</td><td>0.021510498170457495</td><td>79.44898612901693</td><td>13</td><td>2292.261130680258</td><td>10890.066981230495</td><td>-10.092576377417293</td></tr>
+<tr><td>499</td><td>1002.2335241521657</td><td>1992.0076352262183</td><td>1.7877636718214875</td><td>0.5959212239404958</td><td>0.02090867637914325</td><td>91.59256409810243</td><td>12</td><td>897.59333148135</td><td>4317.032305987015</td><td>-9.08796324664611</td></tr>
+<tr><td>500</td><td>553.1011710631859</td><td>1997.8843811142324</td><td>1.803976688551649</td><td>0.6013255628505497</td><td>0.023639246939983413</td><td>75.78418013743854</td><td>13</td><td>1455.404192249984</td><td>6923.60971085213</td><td>-9.600831445957333</td></tr>
+</table></div></div></div>
+</div>
+<p>The star finder found all 500 stars in the image. Let’s plot circles around the detected stars.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">axim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm2</span><span class="p">)</span>
+<span class="n">xypos</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">stars</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">],</span> <span class="n">stars</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">])</span>
+<span class="n">aper</span> <span class="o">=</span> <span class="n">CircularAperture</span><span class="p">(</span><span class="n">xypos</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">patches</span> <span class="o">=</span> <span class="n">aper</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/962cec080b1cc832819989224e1e889367e1850535d2567e8612f57f83e3bc43.png" src="../../../_images/962cec080b1cc832819989224e1e889367e1850535d2567e8612f57f83e3bc43.png" />
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="the-psfphotometry-class">
+<h1>The <code class="docutils literal notranslate"><span class="pre">PSFPhotometry</span></code> class<a class="headerlink" href="#the-psfphotometry-class" title="Permalink to this heading">#</a></h1>
+<p>In this example, we’ll perform PSF photometry on our simulated image.</p>
+<p>First, we create the <code class="docutils literal notranslate"><span class="pre">PSFPhotometry</span></code> class instance with a few parameters.</p>
+<p>We must input a PSF model, which must be an Astropy <code class="docutils literal notranslate"><span class="pre">Fittable2DModel</span></code>. As described above, Photutils provides several PSF models, including a <a class="reference external" href="https://photutils.readthedocs.io/en/latest/api/photutils.psf.GriddedPSFModel.html#photutils.psf.GriddedPSFModel"><code class="docutils literal notranslate"><span class="pre">GriddedPSFModel</span></code></a> for spatially-varying PSFs.</p>
+<p>We must also input the <code class="docutils literal notranslate"><span class="pre">fit_shape</span></code> parameter, which defines the region around the center of each detected star that is used for fitting the PSF model.</p>
+<p>We must also provide initial guesses of the position and flux for each star in order to perform the model fitting. There are a few ways to accomplish that. In this example, we’ll using the optional <code class="docutils literal notranslate"><span class="pre">finder</span></code> and <code class="docutils literal notranslate"><span class="pre">aperture_radius</span></code> keywords.  The <code class="docutils literal notranslate"><span class="pre">finder</span></code> will be used internally to detect the sources and calculate their initial (x, y) positions. The <code class="docutils literal notranslate"><span class="pre">aperture_radius</span></code> (in pixels) will be used internally to calculate the initial flux values for each source. For other options (e.g., inputting an <code class="docutils literal notranslate"><span class="pre">init_params</span></code> table), please see the <a class="reference external" href="https://photutils.readthedocs.io/en/latest/user_guide/psf.html">PSF Photometry docs</a>.</p>
+<p>We set <code class="docutils literal notranslate"><span class="pre">progress_bar=True</span></code> to display an interactive progress bar during the PSF fitting.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fit_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">finder</span> <span class="o">=</span> <span class="n">IRAFStarFinder</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">fwhm</span><span class="o">=</span><span class="mf">3.0</span><span class="p">)</span>
+<span class="n">psfphot</span> <span class="o">=</span> <span class="n">PSFPhotometry</span><span class="p">(</span><span class="n">psf_model</span><span class="p">,</span> <span class="n">fit_shape</span><span class="p">,</span> <span class="n">finder</span><span class="o">=</span><span class="n">finder</span><span class="p">,</span> <span class="n">aperture_radius</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">progress_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>To perform the PSF fitting, we call the <code class="docutils literal notranslate"><span class="pre">psfphot</span></code> object on the data and optional error array.  The result is an Astropy <a class="reference external" href="https://docs.astropy.org/en/latest/table/index.html">QTable</a> with the fit results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phot</span> <span class="o">=</span> <span class="n">psfphot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">)</span>
+<span class="n">phot</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:   0%|          | 0/500 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:   4%|▍         | 19/500 [00:00&lt;00:02, 187.15it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:   8%|▊         | 39/500 [00:00&lt;00:02, 194.11it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  12%|█▏        | 59/500 [00:00&lt;00:02, 190.62it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  16%|█▌        | 79/500 [00:00&lt;00:02, 192.32it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  20%|█▉        | 99/500 [00:00&lt;00:02, 194.78it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  24%|██▍       | 119/500 [00:00&lt;00:01, 192.96it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  28%|██▊       | 139/500 [00:00&lt;00:01, 192.26it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  32%|███▏      | 159/500 [00:00&lt;00:01, 191.50it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  36%|███▌      | 179/500 [00:00&lt;00:01, 190.97it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  40%|███▉      | 199/500 [00:01&lt;00:01, 187.39it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  44%|████▎     | 218/500 [00:01&lt;00:01, 187.19it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  47%|████▋     | 237/500 [00:01&lt;00:01, 185.63it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  51%|█████     | 256/500 [00:01&lt;00:01, 185.14it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  55%|█████▌    | 276/500 [00:01&lt;00:01, 187.24it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  59%|█████▉    | 295/500 [00:01&lt;00:01, 185.97it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  63%|██████▎   | 314/500 [00:01&lt;00:01, 185.71it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  67%|██████▋   | 333/500 [00:01&lt;00:00, 186.65it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  70%|███████   | 352/500 [00:01&lt;00:00, 185.97it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  74%|███████▍  | 372/500 [00:01&lt;00:00, 187.97it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  78%|███████▊  | 391/500 [00:02&lt;00:00, 186.96it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  82%|████████▏ | 410/500 [00:02&lt;00:00, 186.95it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  86%|████████▌ | 430/500 [00:02&lt;00:00, 188.94it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  90%|████████▉ | 449/500 [00:02&lt;00:00, 188.80it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  94%|█████████▎| 468/500 [00:02&lt;00:00, 188.03it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  98%|█████████▊| 488/500 [00:02&lt;00:00, 189.58it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group: 100%|██████████| 500/500 [00:02&lt;00:00, 188.68it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output text_html"><div><i>QTable length=500</i>
+<table id="table140329927995216" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>group_id</th><th>group_size</th><th>local_bkg</th><th>x_init</th><th>y_init</th><th>flux_init</th><th>x_fit</th><th>y_fit</th><th>flux_fit</th><th>x_err</th><th>y_err</th><th>flux_err</th><th>npixfit</th><th>qfit</th><th>cfit</th><th>flags</th></tr></thead>
+<thead><tr><th>int64</th><th>int64</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>int64</th><th>float64</th><th>float64</th><th>int64</th></tr></thead>
+<tr><td>1</td><td>1</td><td>1</td><td>0.0</td><td>1192.1055559474587</td><td>53.06631525468981</td><td>9769.84308785037</td><td>1192.1124890622837</td><td>53.07726025161499</td><td>12216.395106361895</td><td>0.010353287684801087</td><td>0.010454739937857291</td><td>134.99990751571409</td><td>25</td><td>6.964462906791501e-05</td><td>-1.9414090087428652e-07</td><td>0</td></tr>
+<tr><td>2</td><td>2</td><td>1</td><td>0.0</td><td>391.77100217783357</td><td>56.62351189204002</td><td>10790.248508662999</td><td>391.6977786629357</td><td>56.55546642531893</td><td>13483.93575365799</td><td>0.010036000030074134</td><td>0.010311147902097655</td><td>142.2098454553027</td><td>25</td><td>7.262967473124619e-05</td><td>1.5702561799616147e-06</td><td>0</td></tr>
+<tr><td>3</td><td>3</td><td>1</td><td>0.0</td><td>795.8087010554189</td><td>57.71980226330965</td><td>12480.63854173307</td><td>795.7688677717449</td><td>57.674143948502966</td><td>15582.698427626221</td><td>0.009267350741435337</td><td>0.009424472595034823</td><td>152.5984253787596</td><td>25</td><td>5.509408522073522e-05</td><td>1.0347695107500807e-06</td><td>0</td></tr>
+<tr><td>4</td><td>4</td><td>1</td><td>0.0</td><td>1666.3889149693334</td><td>72.96521340328759</td><td>12191.94533071321</td><td>1666.4577118363163</td><td>72.95557355335369</td><td>15252.634968956869</td><td>0.009482102580895943</td><td>0.009339545788981335</td><td>150.73795419248074</td><td>25</td><td>6.881241053978113e-05</td><td>-1.0614993730612482e-06</td><td>0</td></tr>
+<tr><td>5</td><td>5</td><td>1</td><td>0.0</td><td>704.8031347265279</td><td>76.31780988632701</td><td>7511.709303115783</td><td>704.7565257341604</td><td>76.38158892224784</td><td>9371.019102491762</td><td>0.01194436264251922</td><td>0.012226019386897076</td><td>118.02884707087004</td><td>25</td><td>9.19545389556457e-05</td><td>-2.921870050780829e-06</td><td>0</td></tr>
+<tr><td>6</td><td>6</td><td>1</td><td>0.0</td><td>255.61180082996293</td><td>81.21763986361768</td><td>15554.781286257943</td><td>255.5050296093276</td><td>81.26746634334657</td><td>19447.682456216582</td><td>0.00840392321163331</td><td>0.008383150624637731</td><td>170.24146964676584</td><td>25</td><td>2.6439299122880032e-05</td><td>5.248611419255972e-07</td><td>0</td></tr>
+<tr><td>7</td><td>7</td><td>1</td><td>0.0</td><td>1944.7225059984748</td><td>83.38006547457232</td><td>11192.181996694855</td><td>1944.680187441317</td><td>83.44640095272104</td><td>13996.490530663565</td><td>0.009660850395042725</td><td>0.0100689669263145</td><td>144.23672212653102</td><td>25</td><td>6.214553770134094e-05</td><td>1.5302376923467163e-06</td><td>0</td></tr>
+<tr><td>8</td><td>8</td><td>1</td><td>0.0</td><td>1053.616547412623</td><td>83.65170906701586</td><td>13461.269424152204</td><td>1053.5328221342581</td><td>83.5799739295305</td><td>16816.86034691497</td><td>0.008960423995531035</td><td>0.00909083146993759</td><td>158.41169638203598</td><td>25</td><td>5.02870484657219e-05</td><td>-6.33393214798828e-07</td><td>0</td></tr>
+<tr><td>9</td><td>9</td><td>1</td><td>0.0</td><td>1477.724106591656</td><td>84.3682304084988</td><td>11196.546880608843</td><td>1477.6620463130278</td><td>84.43678591418029</td><td>13995.654367943871</td><td>0.009736880067272576</td><td>0.01005074099140739</td><td>144.17391749959023</td><td>25</td><td>6.655961259569325e-05</td><td>-1.2052590474125427e-06</td><td>0</td></tr>
+<tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+<tr><td>491</td><td>491</td><td>1</td><td>0.0</td><td>187.01517612399726</td><td>1961.6867823602129</td><td>14091.10419427188</td><td>186.99536616609942</td><td>1961.6056058351749</td><td>17059.150312912396</td><td>0.00872003814042141</td><td>0.008797392055912423</td><td>157.34018685339808</td><td>25</td><td>4.870744731974836e-05</td><td>-1.0226874447617079e-06</td><td>0</td></tr>
+<tr><td>492</td><td>492</td><td>1</td><td>0.0</td><td>895.1870558427732</td><td>1970.7766195497748</td><td>7299.674693491745</td><td>895.2200338523578</td><td>1970.716379294203</td><td>8826.84616574623</td><td>0.012056625359204686</td><td>0.012073434133258199</td><td>112.95150122600577</td><td>25</td><td>0.00014915713688682658</td><td>-1.8267319309470527e-06</td><td>0</td></tr>
+<tr><td>493</td><td>493</td><td>1</td><td>0.0</td><td>1924.8388603983933</td><td>1971.3485560582292</td><td>5290.368147235181</td><td>1924.7996135556032</td><td>1971.4054166870226</td><td>6414.302252880329</td><td>0.01399231507141068</td><td>0.014791649066840395</td><td>96.35313024735477</td><td>25</td><td>0.00024705065610210636</td><td>-6.55469244497591e-06</td><td>0</td></tr>
+<tr><td>494</td><td>494</td><td>1</td><td>0.0</td><td>208.3640473085577</td><td>1979.3285110377926</td><td>14265.293397462816</td><td>208.41866786536542</td><td>1979.3764337768603</td><td>17275.294570094782</td><td>0.008778316311907916</td><td>0.008978833297112715</td><td>158.0236947235806</td><td>25</td><td>3.41633956719112e-05</td><td>-6.098326727324719e-07</td><td>0</td></tr>
+<tr><td>495</td><td>495</td><td>1</td><td>0.0</td><td>50.67575935677433</td><td>1980.8261701954223</td><td>12403.635975964635</td><td>50.58564071377777</td><td>1980.7696697490026</td><td>15044.838834676952</td><td>0.009352579343700826</td><td>0.009209024719499203</td><td>147.51024512694968</td><td>25</td><td>5.829512725642079e-05</td><td>1.1758702735527357e-06</td><td>0</td></tr>
+<tr><td>496</td><td>496</td><td>1</td><td>0.0</td><td>298.1683679476747</td><td>1985.2381598478728</td><td>16476.589045916437</td><td>298.18081188125467</td><td>1985.2541753482526</td><td>19961.549998722636</td><td>0.008085902764619414</td><td>0.008217072468956876</td><td>169.8799789849002</td><td>25</td><td>3.615928010528903e-05</td><td>5.072004194129899e-07</td><td>0</td></tr>
+<tr><td>497</td><td>497</td><td>1</td><td>0.0</td><td>346.7302076602484</td><td>1985.1497028280266</td><td>5639.747854874019</td><td>346.6701881907089</td><td>1985.149860754561</td><td>6826.568398190213</td><td>0.013824020090822843</td><td>0.013780187546867504</td><td>99.21462670058307</td><td>25</td><td>0.00019858447210482184</td><td>-5.117669977632834e-06</td><td>0</td></tr>
+<tr><td>498</td><td>498</td><td>1</td><td>0.0</td><td>94.06336559789604</td><td>1986.8707563904954</td><td>15919.928793273006</td><td>94.04524842842517</td><td>1986.8252139916788</td><td>19301.36476076781</td><td>0.008166229079300768</td><td>0.008069145853684725</td><td>167.26187845413065</td><td>25</td><td>4.1991758914826264e-05</td><td>5.458675737839309e-07</td><td>0</td></tr>
+<tr><td>499</td><td>499</td><td>1</td><td>0.0</td><td>1002.2335241521657</td><td>1992.0076352262183</td><td>6401.1645473176995</td><td>1002.272666214611</td><td>1991.9885481499437</td><td>7743.881408812759</td><td>0.012910269969946342</td><td>0.012728863301181576</td><td>105.71687949139337</td><td>25</td><td>0.0001362876805779104</td><td>7.105068485039063e-07</td><td>0</td></tr>
+<tr><td>500</td><td>500</td><td>1</td><td>0.0</td><td>553.1011710631859</td><td>1997.8843811142324</td><td>10110.530244567432</td><td>553.118598359688</td><td>1997.8385136600452</td><td>12238.423798337313</td><td>0.010202905262715323</td><td>0.010108185483084389</td><td>133.00563190313764</td><td>25</td><td>7.866862278325297e-05</td><td>1.5745152225618928e-07</td><td>0</td></tr>
+</table></div></div></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">*_init</span></code> columns contain the initial (x, y, flux) values.  The corresponding <code class="docutils literal notranslate"><span class="pre">*_fit</span></code> columns contain the results of the PSF fitting and the <code class="docutils literal notranslate"><span class="pre">*_err</span></code> columns contain the errors on each fit parameter.</p>
+<p>We can now use the <code class="docutils literal notranslate"><span class="pre">make_model_image</span></code> method to create a PSF model image of the results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_img</span> <span class="o">=</span> <span class="n">psfphot</span><span class="o">.</span><span class="n">make_model_image</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">axim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">model_img</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   0%|          | 0/500 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   1%|▏         | 7/500 [00:00&lt;00:08, 61.11it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   3%|▎         | 14/500 [00:00&lt;00:07, 61.89it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   4%|▍         | 21/500 [00:00&lt;00:08, 56.89it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   5%|▌         | 27/500 [00:00&lt;00:08, 54.43it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   7%|▋         | 33/500 [00:00&lt;00:08, 55.09it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   8%|▊         | 40/500 [00:00&lt;00:08, 57.27it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   9%|▉         | 47/500 [00:00&lt;00:07, 58.85it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  11%|█         | 54/500 [00:00&lt;00:07, 60.04it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  12%|█▏        | 61/500 [00:01&lt;00:07, 60.88it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  14%|█▎        | 68/500 [00:01&lt;00:07, 61.32it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  15%|█▌        | 75/500 [00:01&lt;00:06, 61.85it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  16%|█▋        | 82/500 [00:01&lt;00:06, 62.10it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  18%|█▊        | 89/500 [00:01&lt;00:06, 61.94it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  19%|█▉        | 96/500 [00:01&lt;00:06, 62.03it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  21%|██        | 103/500 [00:01&lt;00:06, 62.07it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  22%|██▏       | 110/500 [00:01&lt;00:06, 62.14it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  23%|██▎       | 117/500 [00:01&lt;00:06, 62.20it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  25%|██▍       | 124/500 [00:02&lt;00:06, 61.87it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  26%|██▌       | 131/500 [00:02&lt;00:05, 61.67it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  28%|██▊       | 138/500 [00:02&lt;00:05, 61.48it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  29%|██▉       | 145/500 [00:02&lt;00:05, 61.29it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  30%|███       | 152/500 [00:02&lt;00:05, 61.37it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  32%|███▏      | 159/500 [00:02&lt;00:05, 61.53it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  33%|███▎      | 166/500 [00:02&lt;00:05, 61.73it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  35%|███▍      | 173/500 [00:02&lt;00:05, 61.92it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  36%|███▌      | 180/500 [00:02&lt;00:05, 61.98it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  37%|███▋      | 187/500 [00:03&lt;00:05, 62.09it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  39%|███▉      | 194/500 [00:03&lt;00:04, 62.25it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  40%|████      | 201/500 [00:03&lt;00:04, 62.36it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  42%|████▏     | 208/500 [00:03&lt;00:04, 62.53it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  43%|████▎     | 215/500 [00:03&lt;00:04, 62.57it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  44%|████▍     | 222/500 [00:03&lt;00:04, 62.52it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  46%|████▌     | 229/500 [00:03&lt;00:04, 62.15it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  47%|████▋     | 236/500 [00:03&lt;00:04, 62.03it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  49%|████▊     | 243/500 [00:03&lt;00:04, 62.08it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  50%|█████     | 250/500 [00:04&lt;00:04, 62.20it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  51%|█████▏    | 257/500 [00:04&lt;00:03, 62.29it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  53%|█████▎    | 264/500 [00:04&lt;00:03, 62.39it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  54%|█████▍    | 271/500 [00:04&lt;00:03, 62.44it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  56%|█████▌    | 278/500 [00:04&lt;00:03, 62.42it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  57%|█████▋    | 285/500 [00:04&lt;00:03, 62.53it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  58%|█████▊    | 292/500 [00:04&lt;00:03, 62.46it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  60%|█████▉    | 299/500 [00:04&lt;00:03, 62.50it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  61%|██████    | 306/500 [00:04&lt;00:03, 62.60it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  63%|██████▎   | 313/500 [00:05&lt;00:02, 62.35it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  64%|██████▍   | 320/500 [00:05&lt;00:02, 62.39it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  65%|██████▌   | 327/500 [00:05&lt;00:02, 62.29it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  67%|██████▋   | 334/500 [00:05&lt;00:02, 62.38it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  68%|██████▊   | 341/500 [00:05&lt;00:02, 62.45it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  70%|██████▉   | 348/500 [00:05&lt;00:02, 62.55it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  71%|███████   | 355/500 [00:05&lt;00:02, 62.43it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  72%|███████▏  | 362/500 [00:05&lt;00:02, 62.48it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  74%|███████▍  | 369/500 [00:05&lt;00:02, 62.52it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  75%|███████▌  | 376/500 [00:06&lt;00:01, 62.43it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  77%|███████▋  | 383/500 [00:06&lt;00:01, 62.58it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  78%|███████▊  | 390/500 [00:06&lt;00:01, 62.66it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  79%|███████▉  | 397/500 [00:06&lt;00:01, 62.61it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  81%|████████  | 404/500 [00:06&lt;00:01, 62.62it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  82%|████████▏ | 411/500 [00:06&lt;00:01, 62.68it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  84%|████████▎ | 418/500 [00:06&lt;00:01, 62.60it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  85%|████████▌ | 425/500 [00:06&lt;00:01, 62.59it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  86%|████████▋ | 432/500 [00:06&lt;00:01, 62.44it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  88%|████████▊ | 439/500 [00:07&lt;00:00, 62.36it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  89%|████████▉ | 446/500 [00:07&lt;00:00, 62.52it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  91%|█████████ | 453/500 [00:07&lt;00:00, 62.58it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  92%|█████████▏| 460/500 [00:07&lt;00:00, 62.68it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  93%|█████████▎| 467/500 [00:07&lt;00:00, 62.37it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  95%|█████████▍| 474/500 [00:07&lt;00:00, 62.39it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  96%|█████████▌| 481/500 [00:07&lt;00:00, 62.47it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  98%|█████████▊| 488/500 [00:07&lt;00:00, 62.20it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  99%|█████████▉| 495/500 [00:08&lt;00:00, 62.38it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources: 100%|██████████| 500/500 [00:08&lt;00:00, 61.87it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="../../../_images/10de1cd19888a6731cbc83be9928474459c373d57c7c7f61dbba0b7e48ba1cfd.png" src="../../../_images/10de1cd19888a6731cbc83be9928474459c373d57c7c7f61dbba0b7e48ba1cfd.png" />
+</div>
+</div>
+<p>We can use the <code class="docutils literal notranslate"><span class="pre">make_residual_image</span></code> method to create a residual image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resid</span> <span class="o">=</span> <span class="n">psfphot</span><span class="o">.</span><span class="n">make_residual_image</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">norm3</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">95</span><span class="p">)</span>
+<span class="n">axim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">resid</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   0%|          | 0/500 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   1%|▏         | 7/500 [00:00&lt;00:08, 61.36it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   3%|▎         | 14/500 [00:00&lt;00:07, 61.88it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   4%|▍         | 21/500 [00:00&lt;00:07, 62.09it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   6%|▌         | 28/500 [00:00&lt;00:07, 62.05it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   7%|▋         | 35/500 [00:00&lt;00:07, 62.17it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   8%|▊         | 42/500 [00:00&lt;00:07, 62.05it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  10%|▉         | 49/500 [00:00&lt;00:07, 61.84it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  11%|█         | 56/500 [00:00&lt;00:07, 62.00it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  13%|█▎        | 63/500 [00:01&lt;00:07, 62.14it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  14%|█▍        | 70/500 [00:01&lt;00:06, 62.07it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  15%|█▌        | 77/500 [00:01&lt;00:06, 62.20it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  17%|█▋        | 84/500 [00:01&lt;00:06, 62.21it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  18%|█▊        | 91/500 [00:01&lt;00:06, 62.15it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  20%|█▉        | 98/500 [00:01&lt;00:06, 62.17it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  21%|██        | 105/500 [00:01&lt;00:06, 62.30it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  22%|██▏       | 112/500 [00:01&lt;00:06, 62.27it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  24%|██▍       | 119/500 [00:01&lt;00:06, 62.06it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  25%|██▌       | 126/500 [00:02&lt;00:06, 61.10it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  27%|██▋       | 133/500 [00:02&lt;00:06, 61.15it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  28%|██▊       | 140/500 [00:02&lt;00:05, 61.40it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  29%|██▉       | 147/500 [00:02&lt;00:05, 61.31it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  31%|███       | 154/500 [00:02&lt;00:05, 61.60it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  32%|███▏      | 161/500 [00:02&lt;00:05, 61.74it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  34%|███▎      | 168/500 [00:02&lt;00:05, 62.02it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  35%|███▌      | 175/500 [00:02&lt;00:05, 62.17it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  36%|███▋      | 182/500 [00:02&lt;00:05, 62.10it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  38%|███▊      | 189/500 [00:03&lt;00:05, 62.20it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  39%|███▉      | 196/500 [00:03&lt;00:04, 62.16it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  41%|████      | 203/500 [00:03&lt;00:04, 62.12it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  42%|████▏     | 210/500 [00:03&lt;00:04, 62.10it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  43%|████▎     | 217/500 [00:03&lt;00:04, 62.12it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  45%|████▍     | 224/500 [00:03&lt;00:04, 62.17it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  46%|████▌     | 231/500 [00:03&lt;00:04, 62.26it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  48%|████▊     | 238/500 [00:03&lt;00:04, 62.18it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  49%|████▉     | 245/500 [00:03&lt;00:04, 62.18it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  50%|█████     | 252/500 [00:04&lt;00:03, 62.01it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  52%|█████▏    | 259/500 [00:04&lt;00:03, 62.23it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  53%|█████▎    | 266/500 [00:04&lt;00:03, 62.36it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  55%|█████▍    | 273/500 [00:04&lt;00:03, 62.40it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  56%|█████▌    | 280/500 [00:04&lt;00:03, 62.28it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  57%|█████▋    | 287/500 [00:04&lt;00:03, 62.26it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  59%|█████▉    | 294/500 [00:04&lt;00:03, 61.81it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  60%|██████    | 301/500 [00:04&lt;00:03, 62.05it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  62%|██████▏   | 308/500 [00:04&lt;00:03, 62.13it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  63%|██████▎   | 315/500 [00:05&lt;00:02, 62.13it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  64%|██████▍   | 322/500 [00:05&lt;00:02, 62.17it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  66%|██████▌   | 329/500 [00:05&lt;00:02, 62.33it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  67%|██████▋   | 336/500 [00:05&lt;00:02, 62.34it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  69%|██████▊   | 343/500 [00:05&lt;00:02, 62.44it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  70%|███████   | 350/500 [00:05&lt;00:02, 62.49it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  71%|███████▏  | 357/500 [00:05&lt;00:02, 62.32it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  73%|███████▎  | 364/500 [00:05&lt;00:02, 62.39it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  74%|███████▍  | 371/500 [00:05&lt;00:02, 62.26it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  76%|███████▌  | 378/500 [00:06&lt;00:01, 62.18it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  77%|███████▋  | 385/500 [00:06&lt;00:01, 62.37it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  78%|███████▊  | 392/500 [00:06&lt;00:01, 62.42it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  80%|███████▉  | 399/500 [00:06&lt;00:01, 62.17it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  81%|████████  | 406/500 [00:06&lt;00:01, 62.29it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  83%|████████▎ | 413/500 [00:06&lt;00:01, 62.41it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  84%|████████▍ | 420/500 [00:06&lt;00:01, 62.52it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  85%|████████▌ | 427/500 [00:06&lt;00:01, 62.63it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  87%|████████▋ | 434/500 [00:06&lt;00:01, 62.46it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  88%|████████▊ | 441/500 [00:07&lt;00:00, 62.52it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  90%|████████▉ | 448/500 [00:07&lt;00:00, 62.58it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  91%|█████████ | 455/500 [00:07&lt;00:00, 62.55it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  92%|█████████▏| 462/500 [00:07&lt;00:00, 62.46it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  94%|█████████▍| 469/500 [00:07&lt;00:00, 62.49it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  95%|█████████▌| 476/500 [00:07&lt;00:00, 62.56it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  97%|█████████▋| 483/500 [00:07&lt;00:00, 62.52it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  98%|█████████▊| 490/500 [00:07&lt;00:00, 62.57it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:  99%|█████████▉| 497/500 [00:07&lt;00:00, 62.52it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources: 100%|██████████| 500/500 [00:08&lt;00:00, 62.18it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="../../../_images/c2f99419eb5f7f61d3471ee8a62d39c4a921cf115e622a5addb4c948f846cc70.png" src="../../../_images/c2f99419eb5f7f61d3471ee8a62d39c4a921cf115e622a5addb4c948f846cc70.png" />
+</div>
+</div>
+<p>Our residual image is just noise without any sources, which indicates excellent PSF model fits.</p>
+<section id="comparing-results">
+<h2>Comparing results<a class="headerlink" href="#comparing-results" title="Permalink to this heading">#</a></h2>
+<p>Let’s use our knowledge of the true (x, y) positions and fluxes to compare to our PSF fit results.</p>
+<p>We first need to match the table catalogs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># convenience function to match (x, y) positions</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">xymatch_catalogs</span><span class="p">(</span><span class="n">ref_params</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+    <span class="n">refcat</span> <span class="o">=</span> <span class="n">QTable</span><span class="p">()</span>
+    <span class="n">refcat</span><span class="p">[</span><span class="s1">&#39;TPx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref_params</span><span class="p">[</span><span class="s1">&#39;x_0&#39;</span><span class="p">]</span>
+    <span class="n">refcat</span><span class="p">[</span><span class="s1">&#39;TPy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref_params</span><span class="p">[</span><span class="s1">&#39;y_0&#39;</span><span class="p">]</span>
+    <span class="n">fitcat</span> <span class="o">=</span> <span class="n">QTable</span><span class="p">()</span>
+    <span class="n">fitcat</span><span class="p">[</span><span class="s1">&#39;TPx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;x_fit&#39;</span><span class="p">]</span>
+    <span class="n">fitcat</span><span class="p">[</span><span class="s1">&#39;TPy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;y_fit&#39;</span><span class="p">]</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">XYXYMatch</span><span class="p">(</span><span class="n">separation</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ref_idx</span><span class="p">,</span> <span class="n">fit_idx</span> <span class="o">=</span> <span class="n">match</span><span class="p">(</span><span class="n">refcat</span><span class="p">,</span> <span class="n">fitcat</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ref_params</span><span class="p">[</span><span class="n">ref_idx</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="n">fit_idx</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">true_params</span><span class="p">,</span> <span class="n">fit_params</span> <span class="o">=</span> <span class="n">xymatch_catalogs</span><span class="p">(</span><span class="n">true_params</span><span class="p">,</span> <span class="n">phot</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;PSF Photometry Results&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">true_params</span><span class="p">[</span><span class="s1">&#39;x_0&#39;</span><span class="p">],</span> <span class="n">fit_params</span><span class="p">[</span><span class="s1">&#39;x_fit&#39;</span><span class="p">],</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;True x&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Fit x&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">true_params</span><span class="p">[</span><span class="s1">&#39;y_0&#39;</span><span class="p">],</span> <span class="n">fit_params</span><span class="p">[</span><span class="s1">&#39;y_fit&#39;</span><span class="p">],</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;True y&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Fit y&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">true_params</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">],</span> <span class="n">fit_params</span><span class="p">[</span><span class="s1">&#39;flux_fit&#39;</span><span class="p">],</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;True Flux&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Fit Flux&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/e8d22b03d0650aba43818ea7537bd5c95e8621a0c5d666323ce725bd184734a3.png" src="../../../_images/e8d22b03d0650aba43818ea7537bd5c95e8621a0c5d666323ce725bd184734a3.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">pdiff</span> <span class="o">=</span> <span class="p">(</span><span class="n">true_params</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">fit_params</span><span class="p">[</span><span class="s1">&#39;flux_fit&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">true_params</span><span class="p">[</span><span class="s1">&#39;flux&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">100.0</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Histogram of PSF Flux Differences&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">pdiff</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">text</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Percent Difference (between True and Fit)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/529fe3db0ba08f616bba0ad9c8022009a86ca5bc7373e77b588a9658b6aef548.png" src="../../../_images/529fe3db0ba08f616bba0ad9c8022009a86ca5bc7373e77b588a9658b6aef548.png" />
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="source-grouping">
+<h1>Source Grouping<a class="headerlink" href="#source-grouping" title="Permalink to this heading">#</a></h1>
+<p>Source grouping is an optional feature that allows you to group close stars that should be fit simultaneously.</p>
+<p>To turn it on, create a <a class="reference external" href="https://photutils.readthedocs.io/en/latest/api/photutils.psf.SourceGrouper.html#photutils.psf.SourceGrouper">SourceGrouper</a> instance and input it via the grouper keyword. Here we’ll group stars that are within 20 pixels of each other:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">finder</span> <span class="o">=</span> <span class="n">IRAFStarFinder</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">fwhm</span><span class="o">=</span><span class="mf">3.0</span><span class="p">)</span>
+<span class="n">stars</span> <span class="o">=</span> <span class="n">finder</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">stars</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>QTable length=5</i>
+<table id="table140329882805072" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>xcentroid</th><th>ycentroid</th><th>fwhm</th><th>sharpness</th><th>roundness</th><th>pa</th><th>npix</th><th>peak</th><th>flux</th><th>mag</th></tr></thead>
+<thead><tr><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>1</td><td>1192.1055559474587</td><td>53.06631525468981</td><td>1.7907366317936948</td><td>0.5969122105978982</td><td>0.01602124538361244</td><td>103.50327927086758</td><td>13</td><td>1445.5348787044131</td><td>6702.657403681727</td><td>-9.565617554118727</td></tr>
+<tr><td>2</td><td>391.77100217783357</td><td>56.62351189204002</td><td>1.7326236218111648</td><td>0.5775412072703883</td><td>0.07734114701673132</td><td>127.67294625687012</td><td>11</td><td>1345.8273140582155</td><td>6834.501827950182</td><td>-9.586767160003873</td></tr>
+<tr><td>3</td><td>795.8087010554189</td><td>57.71980226330965</td><td>1.7547915517116766</td><td>0.5849305172372256</td><td>0.050923983146313495</td><td>123.76952554697297</td><td>11</td><td>1685.9495568301768</td><td>8212.884033591004</td><td>-9.786239226517</td></tr>
+<tr><td>4</td><td>1666.3889149693334</td><td>72.96521340328759</td><td>1.7369949400842508</td><td>0.5789983133614169</td><td>0.012736558230433365</td><td>24.64335109216909</td><td>12</td><td>1602.3725342184905</td><td>7894.772125702702</td><td>-9.743348997678982</td></tr>
+<tr><td>5</td><td>704.8031347265279</td><td>76.31780988632701</td><td>1.7383697976747048</td><td>0.5794565992249016</td><td>0.05728164986451659</td><td>56.71067148674254</td><td>11</td><td>990.6214951513647</td><td>4832.501058805616</td><td>-9.210429894637347</td></tr>
+</table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">min_separation</span> <span class="o">=</span> <span class="mi">35</span>
+<span class="n">grouper</span> <span class="o">=</span> <span class="n">SourceGrouper</span><span class="p">(</span><span class="n">min_separation</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stars</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stars</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">])</span>
+<span class="n">group_ids</span> <span class="o">=</span> <span class="n">grouper</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">group_ids</span></code> is an array with 500 elements (1 per input (x, y) position) with the group IDs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">group_ids</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([  1,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,
+        14,  15,  16,  17,  18,  19,  15,  20,  21,  15,  22,  22,  15,
+        23,  24,  22,  15,  25,  24,  26,  27,  28,  29,  30,  31,  32,
+        27,  33,  34,  35,  36,  37,  38,  27,  39,  40,  27,  41,  42,
+        43,  39,  44,  45,  46,  44,  47,  48,  49,  50,  47,  46,  51,
+        52,  53,  54,  55,  56,  57,  58,  46,  59,  60,  61,  62,  63,
+        55,  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,
+        76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  78,  83,  86,
+        87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  91,  98,
+        99, 100, 101, 102, 103, 104, 105, 104, 106, 107, 108, 109, 110,
+       111, 112, 113, 114, 115, 111, 116, 117, 118, 119, 120, 121, 118,
+       122, 123, 124, 125, 121, 123, 126, 127, 128, 129, 130, 131, 132,
+       133, 134, 134, 135, 135, 135, 136, 137, 138, 131, 139, 140, 141,
+       142, 143, 144, 145, 146, 147, 145, 148, 149, 150, 151, 152, 144,
+       153, 154, 155, 156, 157, 149, 158, 159, 160, 161, 162, 163, 157,
+       164, 159, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175,
+       176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188,
+       189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201,
+       202, 201, 203, 204, 205, 206, 207, 208, 204, 207, 209, 210, 205,
+       211, 212, 213, 214, 215, 216, 217, 204, 218, 219, 220, 221, 222,
+       223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235,
+       236, 237, 238, 239, 240, 241, 234, 242, 243, 244, 245, 246, 247,
+       248, 249, 250, 251, 252, 253, 254, 255, 252, 256, 257, 258, 259,
+       253, 252, 260, 261, 262, 263, 264, 252, 265, 266, 267, 261, 268,
+       269, 270, 271, 272, 273, 274, 275, 272, 276, 277, 278, 279, 280,
+       281, 282, 283, 284, 285, 279, 286, 287, 288, 289, 284, 290, 284,
+       291, 292, 293, 294, 295, 284, 296, 297, 298, 299, 284, 300, 301,
+       294, 302, 284, 303, 301, 304, 305, 306, 307, 308, 309, 310, 311,
+       312, 313, 314, 315, 316, 317, 318, 319, 318, 314, 320, 321, 322,
+       318, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334,
+       335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 340, 346,
+       347, 348, 349, 350, 351, 352, 353, 354, 355, 348, 356, 357, 358,
+       356, 359, 360, 357, 361, 362, 363, 361, 361, 364, 365, 366, 367,
+       368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 369,
+       380, 378, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391,
+       392, 393, 394, 395, 396, 397, 398, 393, 399, 400, 401, 402, 403,
+       404, 405, 406, 407, 408, 408, 409, 410, 411, 412, 410, 413, 414,
+       415, 413, 416, 412, 417, 418, 416, 419, 420, 420, 421, 422, 420,
+       423, 424, 425, 426, 427, 428])
+</pre></div>
+</div>
+</div>
+</div>
+<p>The grouping algorithm separated the 500 stars into 428 distinct groups</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">group_ids</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>428
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s visualize them. Close groups of stars with the same circle color are in the same group.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">norm4</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm4</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">)</span>
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">make_random_cmap</span><span class="p">(</span><span class="n">ncolors</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">group_ids</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">group_ids</span> <span class="o">==</span> <span class="n">i</span>
+    <span class="n">xypos</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
+    <span class="n">ap</span> <span class="o">=</span> <span class="n">CircularAperture</span><span class="p">(</span><span class="n">xypos</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">ap</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">cmap</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/addb7353b11041f4c1c86e53a8c3198432b97d4716f184ead7a7179df2c42926.png" src="../../../_images/addb7353b11041f4c1c86e53a8c3198432b97d4716f184ead7a7179df2c42926.png" />
+</div>
+</div>
+<p>For example, the six stars outlined with light orange circles in the figure below are all in the same group.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">norm4</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm4</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">)</span>
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">make_random_cmap</span><span class="p">(</span><span class="n">ncolors</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">group_ids</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">group_ids</span> <span class="o">==</span> <span class="n">i</span>
+    <span class="n">xypos</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
+    <span class="n">ap</span> <span class="o">=</span> <span class="n">CircularAperture</span><span class="p">(</span><span class="n">xypos</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">ap</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">cmap</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">1050</span><span class="p">,</span> <span class="mi">1250</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">1300</span><span class="p">,</span> <span class="mi">1500</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1300.0, 1500.0)
+</pre></div>
+</div>
+<img alt="../../../_images/ea21bc9fd38a6123be1c1059bc6bcc575bd1b31ab669c45265bdeaeacb1fb452.png" src="../../../_images/ea21bc9fd38a6123be1c1059bc6bcc575bd1b31ab669c45265bdeaeacb1fb452.png" />
+</div>
+</div>
+<p>To perform grouped PSF photometry, we can simply input the <code class="docutils literal notranslate"><span class="pre">SourceGrouper</span></code> instance into the <code class="docutils literal notranslate"><span class="pre">grouper</span></code> keyword.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fit_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">finder</span> <span class="o">=</span> <span class="n">IRAFStarFinder</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">fwhm</span><span class="o">=</span><span class="mf">3.0</span><span class="p">)</span>
+<span class="n">min_separation</span> <span class="o">=</span> <span class="mi">35</span>
+<span class="n">grouper</span> <span class="o">=</span> <span class="n">SourceGrouper</span><span class="p">(</span><span class="n">min_separation</span><span class="p">)</span>
+<span class="n">psfphot</span> <span class="o">=</span> <span class="n">PSFPhotometry</span><span class="p">(</span><span class="n">psf_model</span><span class="p">,</span> <span class="n">fit_shape</span><span class="p">,</span> <span class="n">finder</span><span class="o">=</span><span class="n">finder</span><span class="p">,</span> <span class="n">grouper</span><span class="o">=</span><span class="n">grouper</span><span class="p">,</span> 
+                        <span class="n">aperture_radius</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">progress_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">phot</span> <span class="o">=</span> <span class="n">psfphot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">)</span>
+<span class="n">phot</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:   0%|          | 0/428 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:   4%|▎         | 15/428 [00:00&lt;00:05, 72.46it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:   6%|▌         | 24/428 [00:00&lt;00:05, 72.71it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:   7%|▋         | 32/428 [00:00&lt;00:05, 69.15it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  10%|█         | 44/428 [00:00&lt;00:04, 82.28it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  12%|█▏        | 53/428 [00:00&lt;00:04, 80.55it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  16%|█▌        | 68/428 [00:00&lt;00:03, 100.43it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  19%|█▉        | 83/428 [00:00&lt;00:03, 106.26it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  23%|██▎       | 98/428 [00:01&lt;00:02, 116.86it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  26%|██▌       | 111/428 [00:01&lt;00:02, 115.16it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  29%|██▊       | 123/428 [00:01&lt;00:02, 105.69it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  31%|███▏      | 134/428 [00:01&lt;00:02, 104.01it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  34%|███▍      | 145/428 [00:01&lt;00:03, 91.18it/s] 
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  37%|███▋      | 157/428 [00:01&lt;00:02, 93.53it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  40%|███▉      | 171/428 [00:01&lt;00:02, 103.87it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  44%|████▍     | 190/428 [00:01&lt;00:01, 125.38it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  48%|████▊     | 204/428 [00:02&lt;00:02, 111.27it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  50%|█████     | 216/428 [00:02&lt;00:01, 110.31it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  55%|█████▍    | 234/428 [00:02&lt;00:01, 121.55it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  59%|█████▉    | 252/428 [00:02&lt;00:01, 115.87it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  62%|██████▏   | 264/428 [00:02&lt;00:01, 111.65it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  65%|██████▌   | 279/428 [00:02&lt;00:01, 113.90it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  68%|██████▊   | 291/428 [00:02&lt;00:01, 85.11it/s] 
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  70%|███████   | 301/428 [00:03&lt;00:01, 86.16it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  74%|███████▍  | 316/428 [00:03&lt;00:01, 99.52it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  76%|███████▋  | 327/428 [00:03&lt;00:00, 101.82it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  80%|███████▉  | 341/428 [00:03&lt;00:00, 110.31it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  83%|████████▎ | 356/428 [00:03&lt;00:00, 112.67it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  86%|████████▌ | 368/428 [00:03&lt;00:00, 107.28it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  89%|████████▉ | 380/428 [00:03&lt;00:00, 106.40it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  92%|█████████▏| 395/428 [00:03&lt;00:00, 116.45it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  96%|█████████▌| 410/428 [00:03&lt;00:00, 117.02it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:  99%|█████████▊| 422/428 [00:04&lt;00:00, 94.40it/s] 
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group: 100%|██████████| 428/428 [00:04&lt;00:00, 102.67it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output text_html"><div><i>QTable length=500</i>
+<table id="table140329879745040" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>group_id</th><th>group_size</th><th>local_bkg</th><th>x_init</th><th>y_init</th><th>flux_init</th><th>x_fit</th><th>y_fit</th><th>flux_fit</th><th>x_err</th><th>y_err</th><th>flux_err</th><th>npixfit</th><th>qfit</th><th>cfit</th><th>flags</th></tr></thead>
+<thead><tr><th>int64</th><th>int64</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>int64</th><th>float64</th><th>float64</th><th>int64</th></tr></thead>
+<tr><td>1</td><td>1</td><td>1</td><td>0.0</td><td>1192.1055559474587</td><td>53.06631525468981</td><td>9769.84308785037</td><td>1192.1124890622837</td><td>53.07726025161499</td><td>12216.395106361895</td><td>0.010353287684801087</td><td>0.010454739937857291</td><td>134.99990751571409</td><td>25</td><td>6.964462906791501e-05</td><td>-1.9414090087428652e-07</td><td>0</td></tr>
+<tr><td>2</td><td>2</td><td>1</td><td>0.0</td><td>391.77100217783357</td><td>56.62351189204002</td><td>10790.248508662999</td><td>391.6977786629357</td><td>56.55546642531893</td><td>13483.93575365799</td><td>0.010036000030074134</td><td>0.010311147902097655</td><td>142.2098454553027</td><td>25</td><td>7.262967473124619e-05</td><td>1.5702561799616147e-06</td><td>0</td></tr>
+<tr><td>3</td><td>3</td><td>1</td><td>0.0</td><td>795.8087010554189</td><td>57.71980226330965</td><td>12480.63854173307</td><td>795.7688677717449</td><td>57.674143948502966</td><td>15582.698427626221</td><td>0.009267350741435337</td><td>0.009424472595034823</td><td>152.5984253787596</td><td>25</td><td>5.509408522073522e-05</td><td>1.0347695107500807e-06</td><td>0</td></tr>
+<tr><td>4</td><td>4</td><td>1</td><td>0.0</td><td>1666.3889149693334</td><td>72.96521340328759</td><td>12191.94533071321</td><td>1666.4577118363163</td><td>72.95557355335369</td><td>15252.634968956869</td><td>0.009482102580895943</td><td>0.009339545788981335</td><td>150.73795419248074</td><td>25</td><td>6.881241053978113e-05</td><td>-1.0614993730612482e-06</td><td>0</td></tr>
+<tr><td>5</td><td>5</td><td>1</td><td>0.0</td><td>704.8031347265279</td><td>76.31780988632701</td><td>7511.709303115783</td><td>704.7565257341604</td><td>76.38158892224784</td><td>9371.019102491762</td><td>0.01194436264251922</td><td>0.012226019386897076</td><td>118.02884707087004</td><td>25</td><td>9.19545389556457e-05</td><td>-2.921870050780829e-06</td><td>0</td></tr>
+<tr><td>6</td><td>6</td><td>1</td><td>0.0</td><td>255.61180082996293</td><td>81.21763986361768</td><td>15554.781286257943</td><td>255.5050296093276</td><td>81.26746634334657</td><td>19447.682456216582</td><td>0.00840392321163331</td><td>0.008383150624637731</td><td>170.24146964676584</td><td>25</td><td>2.6439299122880032e-05</td><td>5.248611419255972e-07</td><td>0</td></tr>
+<tr><td>7</td><td>7</td><td>1</td><td>0.0</td><td>1944.7225059984748</td><td>83.38006547457232</td><td>11192.181996694855</td><td>1944.680187441317</td><td>83.44640095272104</td><td>13996.490530663565</td><td>0.009660850395042725</td><td>0.0100689669263145</td><td>144.23672212653102</td><td>25</td><td>6.214553770134094e-05</td><td>1.5302376923467163e-06</td><td>0</td></tr>
+<tr><td>8</td><td>8</td><td>1</td><td>0.0</td><td>1053.616547412623</td><td>83.65170906701586</td><td>13461.269424152204</td><td>1053.5328221342581</td><td>83.5799739295305</td><td>16816.86034691497</td><td>0.008960423995531035</td><td>0.00909083146993759</td><td>158.41169638203598</td><td>25</td><td>5.02870484657219e-05</td><td>-6.33393214798828e-07</td><td>0</td></tr>
+<tr><td>9</td><td>9</td><td>1</td><td>0.0</td><td>1477.724106591656</td><td>84.3682304084988</td><td>11196.546880608843</td><td>1477.6620463130278</td><td>84.43678591418029</td><td>13995.654367943871</td><td>0.009736880067272576</td><td>0.01005074099140739</td><td>144.17391749959023</td><td>25</td><td>6.655961259569325e-05</td><td>-1.2052590474125427e-06</td><td>0</td></tr>
+<tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+<tr><td>491</td><td>420</td><td>3</td><td>0.0</td><td>187.01517612399726</td><td>1961.6867823602129</td><td>14091.10419427188</td><td>186.99530357656568</td><td>1961.6054988998549</td><td>17045.920572025698</td><td>0.008726821826781932</td><td>0.00880456763567827</td><td>157.34025558699682</td><td>25</td><td>4.1807543286507106e-05</td><td>6.681096222682628e-07</td><td>0</td></tr>
+<tr><td>492</td><td>421</td><td>1</td><td>0.0</td><td>895.1870558427732</td><td>1970.7766195497748</td><td>7299.674693491745</td><td>895.2200338523578</td><td>1970.716379294203</td><td>8826.84616574623</td><td>0.012056625359204686</td><td>0.012073434133258199</td><td>112.95150122600577</td><td>25</td><td>0.00014915713688682658</td><td>-1.8267319309470527e-06</td><td>0</td></tr>
+<tr><td>493</td><td>422</td><td>1</td><td>0.0</td><td>1924.8388603983933</td><td>1971.3485560582292</td><td>5290.368147235181</td><td>1924.7996135556032</td><td>1971.4054166870226</td><td>6414.302252880329</td><td>0.01399231507141068</td><td>0.014791649066840395</td><td>96.35313024735477</td><td>25</td><td>0.00024705065610210636</td><td>-6.55469244497591e-06</td><td>0</td></tr>
+<tr><td>494</td><td>420</td><td>3</td><td>0.0</td><td>208.3640473085577</td><td>1979.3285110377926</td><td>14265.293397462816</td><td>208.4187374326748</td><td>1979.3765122890393</td><td>17259.78225845154</td><td>0.008786212585472875</td><td>0.00898685568755109</td><td>158.02354395803448</td><td>25</td><td>3.4398376724650686e-05</td><td>1.2546980142505045e-06</td><td>0</td></tr>
+<tr><td>495</td><td>423</td><td>1</td><td>0.0</td><td>50.67575935677433</td><td>1980.8261701954223</td><td>12403.635975964635</td><td>50.58564071377777</td><td>1980.7696697490026</td><td>15044.838834676952</td><td>0.009352579343700826</td><td>0.009209024719499203</td><td>147.51024512694968</td><td>25</td><td>5.829512725642079e-05</td><td>1.1758702735527357e-06</td><td>0</td></tr>
+<tr><td>496</td><td>424</td><td>1</td><td>0.0</td><td>298.1683679476747</td><td>1985.2381598478728</td><td>16476.589045916437</td><td>298.18081188125467</td><td>1985.2541753482526</td><td>19961.549998722636</td><td>0.008085902764619414</td><td>0.008217072468956876</td><td>169.8799789849002</td><td>25</td><td>3.615928010528903e-05</td><td>5.072004194129899e-07</td><td>0</td></tr>
+<tr><td>497</td><td>425</td><td>1</td><td>0.0</td><td>346.7302076602484</td><td>1985.1497028280266</td><td>5639.747854874019</td><td>346.6701881907089</td><td>1985.149860754561</td><td>6826.568398190213</td><td>0.013824020090822843</td><td>0.013780187546867504</td><td>99.21462670058307</td><td>25</td><td>0.00019858447210482184</td><td>-5.117669977632834e-06</td><td>0</td></tr>
+<tr><td>498</td><td>426</td><td>1</td><td>0.0</td><td>94.06336559789604</td><td>1986.8707563904954</td><td>15919.928793273006</td><td>94.04524842842517</td><td>1986.8252139916788</td><td>19301.36476076781</td><td>0.008166229079300768</td><td>0.008069145853684725</td><td>167.26187845413065</td><td>25</td><td>4.1991758914826264e-05</td><td>5.458675737839309e-07</td><td>0</td></tr>
+<tr><td>499</td><td>427</td><td>1</td><td>0.0</td><td>1002.2335241521657</td><td>1992.0076352262183</td><td>6401.1645473176995</td><td>1002.272666214611</td><td>1991.9885481499437</td><td>7743.881408812759</td><td>0.012910269969946342</td><td>0.012728863301181576</td><td>105.71687949139337</td><td>25</td><td>0.0001362876805779104</td><td>7.105068485039063e-07</td><td>0</td></tr>
+<tr><td>500</td><td>428</td><td>1</td><td>0.0</td><td>553.1011710631859</td><td>1997.8843811142324</td><td>10110.530244567432</td><td>553.118598359688</td><td>1997.8385136600452</td><td>12238.423798337313</td><td>0.010202905262715323</td><td>0.010108185483084389</td><td>133.00563190313764</td><td>25</td><td>7.866862278325297e-05</td><td>1.5745152225618928e-07</td><td>0</td></tr>
+</table></div></div></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">group_id</span></code> and <code class="docutils literal notranslate"><span class="pre">group_size</span></code> columns can be used to determine which stars were grouped together and how many stars were in each group.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="fitting-a-single-source">
+<h1>Fitting a single source<a class="headerlink" href="#fitting-a-single-source" title="Permalink to this heading">#</a></h1>
+<p>Instead of finding and fitting all stars in an image, we can instead fit only a few or a single star if desired.</p>
+<p>Let’s randomly select a single star from our image (circled in red in the image below).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">axim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm2</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="mi">743</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">1044</span>
+<span class="n">aper</span> <span class="o">=</span> <span class="n">CircularAperture</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">r</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">patches</span> <span class="o">=</span> <span class="n">aper</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/be76e8ffed01fc542b1861cfb52f0e815cb6029c3e2849139ca00e69ed2dd311.png" src="../../../_images/be76e8ffed01fc542b1861cfb52f0e815cb6029c3e2849139ca00e69ed2dd311.png" />
+</div>
+</div>
+<p>In this example, we will not input the star finder (<code class="docutils literal notranslate"><span class="pre">finder</span> <span class="pre">=</span> <span class="pre">None</span></code>).  Instead, we’ll input an Astropy table containing initial (x, y) position guesses for the stars (here a single star) that we want to fit.  We’ll still input <code class="docutils literal notranslate"><span class="pre">aperture_radius</span></code> to estimate the initial flux.  However, we could also include the initial flux in the <code class="docutils literal notranslate"><span class="pre">init_params</span></code> table, in which case <code class="docutils literal notranslate"><span class="pre">aperture_radius</span></code> would not be needed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">init_params</span> <span class="o">=</span> <span class="n">QTable</span><span class="p">()</span>
+<span class="n">init_params</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+<span class="n">init_params</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">]</span>
+
+<span class="n">fit_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">psfphot</span> <span class="o">=</span> <span class="n">PSFPhotometry</span><span class="p">(</span><span class="n">psf_model</span><span class="p">,</span> <span class="n">fit_shape</span><span class="p">,</span> <span class="n">finder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                        <span class="n">aperture_radius</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">progress_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">phot</span> <span class="o">=</span> <span class="n">psfphot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">,</span> <span class="n">init_params</span><span class="o">=</span><span class="n">init_params</span><span class="p">)</span>
+<span class="n">phot</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group:   0%|          | 0/1 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fit source/group: 100%|██████████| 1/1 [00:00&lt;00:00, 127.57it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output text_html"><div><i>QTable length=1</i>
+<table id="table140329872946256" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>group_id</th><th>group_size</th><th>local_bkg</th><th>x_init</th><th>y_init</th><th>flux_init</th><th>x_fit</th><th>y_fit</th><th>flux_fit</th><th>x_err</th><th>y_err</th><th>flux_err</th><th>npixfit</th><th>qfit</th><th>cfit</th><th>flags</th></tr></thead>
+<thead><tr><th>int64</th><th>int64</th><th>int64</th><th>float64</th><th>int64</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>int64</th><th>float64</th><th>float64</th><th>int64</th></tr></thead>
+<tr><td>1</td><td>1</td><td>1</td><td>0.0</td><td>743</td><td>1044</td><td>8379.370482239492</td><td>742.2209013963048</td><td>1044.6876671045654</td><td>10416.020691155609</td><td>0.011525957550313659</td><td>0.012083619814874857</td><td>123.77285685674893</td><td>25</td><td>9.143273121175345e-05</td><td>-4.1186112664838225e-06</td><td>0</td></tr>
+</table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resid</span> <span class="o">=</span> <span class="n">psfphot</span><span class="o">.</span><span class="n">make_residual_image</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="n">resid</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">resid</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Data&#39;</span><span class="p">)</span>
+<span class="n">aper</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Model&#39;</span><span class="p">)</span>
+<span class="n">aper</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Residual Image&#39;</span><span class="p">)</span>
+<span class="n">aper</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources:   0%|          | 0/1 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Add model sources: 100%|██████████| 1/1 [00:00&lt;00:00, 53.72it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="../../../_images/092148788606abbb1648aa65c7eaae47e19bbd3f181b27814f850317e2db5d21.png" src="../../../_images/092148788606abbb1648aa65c7eaae47e19bbd3f181b27814f850317e2db5d21.png" />
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="further-reading">
+<h1>Further Reading<a class="headerlink" href="#further-reading" title="Permalink to this heading">#</a></h1>
+<p>Please consult the <a class="reference external" href="https://photutils.readthedocs.io/en/stable/user_guide/psf.html">PSF Photometry documentation</a> for additional features, including:</p>
+<ul class="simple">
+<li><p>Forced Photometry</p></li>
+<li><p>Fixed Model Parameters</p></li>
+<li><p>Bounded Model Parameters</p></li>
+<li><p>Iterative PSF Photometry</p></li>
+<li><p>Local Background Subtraction</p></li>
+</ul>
+<section id="about-this-notebook">
+<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">#</a></h2>
+<p><strong>Author</strong>: Larry Bradley, Branch Deputy, Data Analysis Tools Branch<br />
+<strong>Created</strong>: 2025-07-16</p>
+<a class="reference internal image-reference" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/NIRCam/psf_photometry_basics"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">PSF Photometry Basics with Photutils</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#point-spread-function-photometry-with-photutils">Point Spread Function Photometry with Photutils</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#psf-models">PSF Models</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-a-photutils-griddedpsfmodel">Create a Photutils <code class="docutils literal notranslate"><span class="pre">GriddedPSFModel</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-use-this-psf-model-to-create-an-image-of-simulated-stars">Let’s use this PSF model to create an image of simulated stars</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#we-ll-create-500-stars-in-a-2048-x-2048-image-nircam-f200w-nrca1">We’ll create 500 stars in a 2048 x 2048 image (NIRCam F200W NRCA1)</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-stars-in-an-image-photutils-detection">Finding Stars in an Image (photutils.detection)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#the-psfphotometry-class">The <code class="docutils literal notranslate"><span class="pre">PSFPhotometry</span></code> class</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-results">Comparing results</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#source-grouping">Source Grouping</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-a-single-source">Fitting a single source</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further Reading</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
