@@ -70,6 +70,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/MIRI/psf_photometry/miri_photutils';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -464,13 +466,13 @@ document.write(`
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-a-class-anchor-id-intro-a">1. Introduction <a class="anchor" id="intro"></a></a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-imports-a-class-anchor-id-imports-a">1.1 Python Imports <a class="anchor" id="imports"></a></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-and-set-up-required-data-for-webbpsf-and-synphot-a-class-anchor-id-setup-a">1.2 Download and Set up Required Data for WebbPSF and Synphot <a class="anchor" id="setup"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-and-set-up-required-data-for-stpsf-and-synphot-a-class-anchor-id-setup-a">1.2 Download and Set up Required Data for STPSF and Synphot <a class="anchor" id="setup"></a></a></li>
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#download-jwst-miri-data-a-class-anchor-id-data-a">2. Download JWST MIRI Data <a class="anchor" id="data"></a></a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#single-bright-star-a-class-anchor-id-bso-a">3. Single Bright Star <a class="anchor" id="bso"></a></a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-level-2-file-a-class-anchor-id-bso2-a">3.1 Single Level 2 File <a class="anchor" id="bso2"></a></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-empirical-psf-grid-for-miri-f770w-using-webbpsf-a-class-anchor-id-bso3-a">3.2 Generate empirical PSF grid for MIRI F770W using WebbPSF <a class="anchor" id="bso3"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-empirical-psf-grid-for-miri-f770w-using-stpsf-a-class-anchor-id-bso3-a">3.2 Generate empirical PSF grid for MIRI F770W using STPSF <a class="anchor" id="bso3"></a></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psf-photometry-a-class-anchor-id-bso4-a">3.3 PSF Photometry <a class="anchor" id="bso4"></a></a></li>
 </ul>
 </li>
@@ -480,7 +482,7 @@ document.write(`
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#stellar-field-lmc-a-class-anchor-id-lmc-a">5. Stellar Field (LMC) <a class="anchor" id="lmc"></a></a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-stars-single-level-2-file-a-class-anchor-id-lmc2-a">5.1 Multiple Stars, Single Level 2 File <a class="anchor" id="lmc2"></a></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-empirical-psf-grid-for-miri-f560w-using-webbpsf-a-class-anchor-id-grid2-a">5.2 Generate empirical PSF grid for MIRI F560W using WebbPSF <a class="anchor" id="grid2"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-empirical-psf-grid-for-miri-f560w-using-stpsf-a-class-anchor-id-grid2-a">5.2 Generate empirical PSF grid for MIRI F560W using STPSF <a class="anchor" id="grid2"></a></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psf-photometry-a-class-anchor-id-lmc3-a">5.3 PSF Photometry <a class="anchor" id="lmc3"></a></a></li>
 </ul>
 </li>
@@ -502,29 +504,28 @@ document.write(`
 <p><strong>Submitted</strong>: November, 2023<br>
 <strong>Updated</strong>: November, 2023<br></p>
 <p><strong>Use case</strong>: PSF Photometry using <a class="reference external" href="https://photutils.readthedocs.io/en/stable/">Photutils</a>. The purpose here is to illustrate the workflow and runtime for using Photutils in a variety of use cases.</p>
-<p>Generally, PSF photometry for data from a space telescope is most accurately performed on pre-mosaiced data. The mosaic process changes the inherent PSF, blurring it both due to resampling and mixing PSFs at different detector positions and rotations.  Additionally, accurate theoretical PSF models (e.g., from <a class="reference external" href="https://webbpsf.readthedocs.io/en/latest/">WebbPSF</a>) are not available for mosaiced data. While an empirical PSF could be constructed (e.g., using Photutils <a class="reference external" href="https://photutils.readthedocs.io/en/latest/epsf.html">ePSFBuilder</a>) for mosaiced data, the results will generally not be as accurate as performing PSF photometry on the pre-mosaiced data.</p>
+<p>Generally, PSF photometry for data from a space telescope is most accurately performed on pre-mosaiced data. The mosaic process changes the inherent PSF, blurring it both due to resampling and mixing PSFs at different detector positions and rotations.  Additionally, accurate theoretical PSF models (e.g., from <a class="reference external" href="https://stpsf.readthedocs.io/en/latest/">STPSF</a>) are not available for mosaiced data. While an empirical PSF could be constructed (e.g., using Photutils <a class="reference external" href="https://photutils.readthedocs.io/en/stable/api/photutils.psf.EPSFBuilder.html">ePSFBuilder</a>) for mosaiced data, the results will generally not be as accurate as performing PSF photometry on the pre-mosaiced data.</p>
 <p><strong>NOTE:</strong> A companion notebook exists that illustrates how to use perform PSF photometry on both Level 2 and Level 3 data using a new software program called space_phot.<br>
 <strong>Data</strong>: MIRI Data PID 1028 (Calibration Program; Single Star Visit 006 A5V dwarf 2MASSJ17430448+6655015) and MIRI Data PID 1171 (LMC; Multiple Stars).<br>
-<strong>Tools</strong>: photutils, webbpsf, jwst <br>
+<strong>Tools</strong>: photutils, stpsf, jwst <br>
 <strong>Cross-Instrument</strong>: MIRI<br>
-<strong>Documentation:</strong> This notebook is part of a STScI’s larger <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis">post-pipeline Data Analysis Tools Ecosystem</a> and can be <a class="reference external" href="https://github.com/spacetelescope/dat_pyinthesky/tree/main/jdat_notebooks/MRS_Mstar_analysis">downloaded</a> directly from the <a class="reference external" href="https://github.com/spacetelescope/jdat_notebooks">JDAT Notebook Github directory</a>.<br></p>
-<p><font color="red">This notebook currently fails to execute, use as reference only</font></p>
+<strong>Documentation:</strong> This notebook is part of a STScI’s larger <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-post-pipeline-data-analysis">post-pipeline Data Analysis Tools Ecosystem</a> and can be <a class="reference external" href="https://github.com/spacetelescope/jdat_notebooks/blob/main/notebooks/MIRI/psf_photometry/miri_photutils.ipynb">downloaded</a> directly from the <a class="reference external" href="https://github.com/spacetelescope/jdat_notebooks">JDAT Notebook Github directory</a>.<br></p>
 <section id="table-of-contents">
 <h2>Table of contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">#</a></h2>
 <ol class="arabic simple">
 <li><p><span class="xref myst">Introduction</span><br>
 1.1 <span class="xref myst">Python Imports</span><br>
-1.2 <span class="xref myst">Set up WebbPSF and Synphot</span><br></p></li>
+1.2 <span class="xref myst">Set up STPSF and Synphot</span><br></p></li>
 <li><p><span class="xref myst">Download JWST MIRI Data</span><br></p></li>
 <li><p><span class="xref myst">Single Bright Object</span><br>
 3.1 <span class="xref myst">Single Level 2 File</span><br>
-3.2 <span class="xref myst">Generate empirical PSF grid for MIRI F770W using WebbPSF</span><br>
+3.2 <span class="xref myst">Generate empirical PSF grid for MIRI F770W using STPSF</span><br>
 3.3 <span class="xref myst">PSF Photometry</span><br></p></li>
 <li><p><span class="xref myst">Faint/Upper Limit, Single Object</span><br>
 4.1 <span class="xref myst">Multiple, Level2 Files</span><br></p></li>
 <li><p><span class="xref myst">Stellar Field (LMC)</span><br>
 5.1 <span class="xref myst">Multiple Stars, Single Level 2 File</span><br>
-5.2 <span class="xref myst">Generate empirical PSF grid for MIRI F560W using WebbPSF</span><br>
+5.2 <span class="xref myst">Generate empirical PSF grid for MIRI F560W using STPSF</span><br>
 5.3 <span class="xref myst">PSF Photometry</span><br></p></li>
 </ol>
 </section>
@@ -532,10 +533,10 @@ document.write(`
 <section class="tex2jax_ignore mathjax_ignore" id="introduction-a-class-anchor-id-intro-a">
 <h1>1. Introduction <a class="anchor" id="intro"></a><a class="headerlink" href="#introduction-a-class-anchor-id-intro-a" title="Permalink to this heading">#</a></h1>
 <p><strong>GOALS</strong>:<br></p>
-<p>Perform PSF photometry on JWST MIRI images with the <a class="reference external" href="https://photutils.readthedocs.io/en/latest/psf.html">Photutils PSF Photometry tools</a> using a grid of empirical PSF models from WebbPSF.</p>
+<p>Perform PSF photometry on JWST MIRI images with the <a class="reference external" href="https://photutils.readthedocs.io/en/latest/user_guide/psf.html">Photutils PSF Photometry tools</a> using a grid of empirical PSF models from STPSF.</p>
 <p>The notebook shows how to:<br></p>
 <ul class="simple">
-<li><p>generate a <a class="reference external" href="https://webbpsf.readthedocs.io/en/latest/psf_grids.html">grid of empirical PSF models</a> from WebbPSF<br></p></li>
+<li><p>generate a <a class="reference external" href="https://stpsf.readthedocs.io/en/latest/psf_grids.html">grid of empirical PSF models</a> from STPSF<br></p></li>
 <li><p>perform PSF photometry on the image using the <a class="reference external" href="https://photutils.readthedocs.io/en/latest/api/photutils.psf.PSFPhotometry.html#photutils.psf.PSFPhotometry">PSFPhotometry class</a><br></p></li>
 </ul>
 <p><strong>Data</strong>:<br></p>
@@ -553,7 +554,7 @@ MIRI Data PID 1171 (LMC), F560W/F770W</p>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">webbpsf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">stpsf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlparse</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">astropy.units</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">u</span>
@@ -573,21 +574,21 @@ MIRI Data PID 1171 (LMC), F560W/F770W</p>
 </div>
 </div>
 </section>
-<section id="download-and-set-up-required-data-for-webbpsf-and-synphot-a-class-anchor-id-setup-a">
-<h2>1.2 Download and Set up Required Data for WebbPSF and Synphot <a class="anchor" id="setup"></a><a class="headerlink" href="#download-and-set-up-required-data-for-webbpsf-and-synphot-a-class-anchor-id-setup-a" title="Permalink to this heading">#</a></h2>
+<section id="download-and-set-up-required-data-for-stpsf-and-synphot-a-class-anchor-id-setup-a">
+<h2>1.2 Download and Set up Required Data for STPSF and Synphot <a class="anchor" id="setup"></a><a class="headerlink" href="#download-and-set-up-required-data-for-stpsf-and-synphot-a-class-anchor-id-setup-a" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set environmental variables</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;WEBBPSF_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;./webbpsf-data/webbpsf-data&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;STPSF_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;./stpsf-data/stpsf-data&quot;</span>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PYSYN_CDBS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;./grp/redcat/trds/&quot;</span>
 
-<span class="c1"># required webbpsf data</span>
-<span class="n">boxlink</span> <span class="o">=</span> <span class="s1">&#39;https://stsci.box.com/shared/static/qxpiaxsjwo15ml6m4pkhtk36c9jgj70k.gz&#39;</span>                                                          
-<span class="n">boxfile</span> <span class="o">=</span> <span class="s1">&#39;./webbpsf-data/webbpsf-data-LATEST.tar.gz&#39;</span>
+<span class="c1"># required stpsf data</span>
+<span class="n">boxlink</span> <span class="o">=</span> <span class="s1">&#39;https://stsci.box.com/shared/static/kqfolg2bfzqc4mjkgmujo06d3iaymahv.gz&#39;</span>
+<span class="n">boxfile</span> <span class="o">=</span> <span class="s1">&#39;./stpsf-data-LATEST.tar.gz&#39;</span>
 <span class="n">synphot_url</span> <span class="o">=</span> <span class="s1">&#39;http://ssb.stsci.edu/trds/tarfiles/synphot5.tar.gz&#39;</span>
 <span class="n">synphot_file</span> <span class="o">=</span> <span class="s1">&#39;./synphot5.tar.gz&#39;</span>
 
-<span class="n">webbpsf_folder</span> <span class="o">=</span> <span class="s1">&#39;./webbpsf-data&#39;</span>
+<span class="n">stpsf_folder</span> <span class="o">=</span> <span class="s1">&#39;./stpsf-data&#39;</span>
 <span class="n">synphot_folder</span> <span class="o">=</span> <span class="s1">&#39;./grp&#39;</span>
 
 
@@ -603,13 +604,13 @@ MIRI Data PID 1171 (LMC), F560W/F770W</p>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 
 
-<span class="c1"># Gather webbpsf files</span>
-<span class="n">psfExist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
+<span class="c1"># Gather stpsf files</span>
+<span class="n">psfExist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">stpsf_folder</span><span class="p">)</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">psfExist</span><span class="p">:</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">stpsf_folder</span><span class="p">)</span>
     <span class="n">download_file</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
     <span class="n">gzf</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">boxfile</span><span class="p">)</span>
-    <span class="n">gzf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+    <span class="n">gzf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">stpsf_folder</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
 
 <span class="c1"># Gather synphot files</span>
 <span class="n">synExist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">synphot_folder</span><span class="p">)</span>
@@ -662,6 +663,92 @@ MIRI Data PID 1171 (LMC), F560W/F770W</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01028-o006_20250617t142750_image2_00013_asn.json to ./mastDownload/JWST/jw01028006001_02101_00004_mirimage/jw01028-o006_20250617t142750_image2_00013_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01028-o006_20250617t142750_image2_00014_asn.json to ./mastDownload/JWST/jw01028006001_02101_00003_mirimage/jw01028-o006_20250617t142750_image2_00014_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01028-o006_20250617t142750_image2_00015_asn.json to ./mastDownload/JWST/jw01028006001_02101_00002_mirimage/jw01028-o006_20250617t142750_image2_00015_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01028-o006_20250617t142750_image2_00016_asn.json to ./mastDownload/JWST/jw01028006001_02101_00001_mirimage/jw01028-o006_20250617t142750_image2_00016_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01028-o006_20250617t142750_image3_00004_asn.json to ./mastDownload/JWST/jw01028-o006_t001_miri_f770w/jw01028-o006_20250617t142750_image3_00004_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01028-o006_t001_miri_f770w_i2d.fits to ./mastDownload/JWST/jw01028-o006_t001_miri_f770w/jw01028-o006_t001_miri_f770w_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01028006001_02101_00001_mirimage_cal.fits to ./mastDownload/JWST/jw01028006001_02101_00001_mirimage/jw01028006001_02101_00001_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01028006001_02101_00001_mirimage_i2d.fits to ./mastDownload/JWST/jw01028006001_02101_00001_mirimage/jw01028006001_02101_00001_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01028006001_02101_00002_mirimage_cal.fits to ./mastDownload/JWST/jw01028006001_02101_00002_mirimage/jw01028006001_02101_00002_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01028006001_02101_00002_mirimage_i2d.fits to ./mastDownload/JWST/jw01028006001_02101_00002_mirimage/jw01028006001_02101_00002_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01028006001_02101_00003_mirimage_cal.fits to ./mastDownload/JWST/jw01028006001_02101_00003_mirimage/jw01028006001_02101_00003_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01028006001_02101_00003_mirimage_i2d.fits to ./mastDownload/JWST/jw01028006001_02101_00003_mirimage/jw01028006001_02101_00003_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01028006001_02101_00004_mirimage_cal.fits to ./mastDownload/JWST/jw01028006001_02101_00004_mirimage/jw01028006001_02101_00004_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01028006001_02101_00004_mirimage_i2d.fits to ./mastDownload/JWST/jw01028006001_02101_00004_mirimage/jw01028006001_02101_00004_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -699,6 +786,428 @@ MIRI Data PID 1171 (LMC), F560W/F770W</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o001_20231102t191130_image2_00005_asn.json to ./mastDownload/JWST/jw01171001001_02101_00004_mirimage/jw01171-o001_20231102t191130_image2_00005_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o001_20231102t191130_image2_00006_asn.json to ./mastDownload/JWST/jw01171001001_02101_00003_mirimage/jw01171-o001_20231102t191130_image2_00006_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o001_20231102t191130_image2_00007_asn.json to ./mastDownload/JWST/jw01171001001_02101_00002_mirimage/jw01171-o001_20231102t191130_image2_00007_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o001_20231102t191130_image2_00008_asn.json to ./mastDownload/JWST/jw01171001001_02101_00001_mirimage/jw01171-o001_20231102t191130_image2_00008_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o001_20231102t191130_image3_00002_asn.json to ./mastDownload/JWST/jw01171-o001_t001_miri_f770w/jw01171-o001_20231102t191130_image3_00002_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o001_t001_miri_f770w_i2d.fits to ./mastDownload/JWST/jw01171-o001_t001_miri_f770w/jw01171-o001_t001_miri_f770w_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o002_20231102t191130_image2_00005_asn.json to ./mastDownload/JWST/jw01171002001_02101_00004_mirimage/jw01171-o002_20231102t191130_image2_00005_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o002_20231102t191130_image2_00006_asn.json to ./mastDownload/JWST/jw01171002001_02101_00003_mirimage/jw01171-o002_20231102t191130_image2_00006_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o002_20231102t191130_image2_00007_asn.json to ./mastDownload/JWST/jw01171002001_02101_00002_mirimage/jw01171-o002_20231102t191130_image2_00007_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o002_20231102t191130_image2_00008_asn.json to ./mastDownload/JWST/jw01171002001_02101_00001_mirimage/jw01171-o002_20231102t191130_image2_00008_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o002_20231102t191130_image3_00002_asn.json to ./mastDownload/JWST/jw01171-o002_t001_miri_f770w/jw01171-o002_20231102t191130_image3_00002_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o002_t001_miri_f770w_i2d.fits to ./mastDownload/JWST/jw01171-o002_t001_miri_f770w/jw01171-o002_t001_miri_f770w_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o003_20231102t191130_image2_00005_asn.json to ./mastDownload/JWST/jw01171003001_02101_00004_mirimage/jw01171-o003_20231102t191130_image2_00005_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o003_20231102t191130_image2_00006_asn.json to ./mastDownload/JWST/jw01171003001_02101_00003_mirimage/jw01171-o003_20231102t191130_image2_00006_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o003_20231102t191130_image2_00007_asn.json to ./mastDownload/JWST/jw01171003001_02101_00002_mirimage/jw01171-o003_20231102t191130_image2_00007_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o003_20231102t191130_image2_00008_asn.json to ./mastDownload/JWST/jw01171003001_02101_00001_mirimage/jw01171-o003_20231102t191130_image2_00008_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o003_20231102t191130_image3_00002_asn.json to ./mastDownload/JWST/jw01171-o003_t001_miri_f770w/jw01171-o003_20231102t191130_image3_00002_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o003_t001_miri_f770w_i2d.fits to ./mastDownload/JWST/jw01171-o003_t001_miri_f770w/jw01171-o003_t001_miri_f770w_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o004_20231102t191130_image2_00005_asn.json to ./mastDownload/JWST/jw01171004001_02101_00004_mirimage/jw01171-o004_20231102t191130_image2_00005_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o004_20231102t191130_image2_00006_asn.json to ./mastDownload/JWST/jw01171004001_02101_00003_mirimage/jw01171-o004_20231102t191130_image2_00006_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o004_20231102t191130_image2_00007_asn.json to ./mastDownload/JWST/jw01171004001_02101_00002_mirimage/jw01171-o004_20231102t191130_image2_00007_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o004_20231102t191130_image2_00008_asn.json to ./mastDownload/JWST/jw01171004001_02101_00001_mirimage/jw01171-o004_20231102t191130_image2_00008_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o004_20231102t191130_image3_00002_asn.json to ./mastDownload/JWST/jw01171-o004_t001_miri_f560w/jw01171-o004_20231102t191130_image3_00002_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o004_t001_miri_f560w_i2d.fits to ./mastDownload/JWST/jw01171-o004_t001_miri_f560w/jw01171-o004_t001_miri_f560w_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o005_20231102t191130_image2_00005_asn.json to ./mastDownload/JWST/jw01171005001_02101_00004_mirimage/jw01171-o005_20231102t191130_image2_00005_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o005_20231102t191130_image2_00006_asn.json to ./mastDownload/JWST/jw01171005001_02101_00003_mirimage/jw01171-o005_20231102t191130_image2_00006_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o005_20231102t191130_image2_00007_asn.json to ./mastDownload/JWST/jw01171005001_02101_00002_mirimage/jw01171-o005_20231102t191130_image2_00007_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o005_20231102t191130_image2_00008_asn.json to ./mastDownload/JWST/jw01171005001_02101_00001_mirimage/jw01171-o005_20231102t191130_image2_00008_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o005_20231102t191130_image3_00002_asn.json to ./mastDownload/JWST/jw01171-o005_t001_miri_f770w/jw01171-o005_20231102t191130_image3_00002_asn.json ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171-o005_t001_miri_f770w_i2d.fits to ./mastDownload/JWST/jw01171-o005_t001_miri_f770w/jw01171-o005_t001_miri_f770w_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171001001_02101_00001_mirimage_cal.fits to ./mastDownload/JWST/jw01171001001_02101_00001_mirimage/jw01171001001_02101_00001_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171001001_02101_00001_mirimage_i2d.fits to ./mastDownload/JWST/jw01171001001_02101_00001_mirimage/jw01171001001_02101_00001_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171001001_02101_00002_mirimage_cal.fits to ./mastDownload/JWST/jw01171001001_02101_00002_mirimage/jw01171001001_02101_00002_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171001001_02101_00002_mirimage_i2d.fits to ./mastDownload/JWST/jw01171001001_02101_00002_mirimage/jw01171001001_02101_00002_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171001001_02101_00003_mirimage_cal.fits to ./mastDownload/JWST/jw01171001001_02101_00003_mirimage/jw01171001001_02101_00003_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171001001_02101_00003_mirimage_i2d.fits to ./mastDownload/JWST/jw01171001001_02101_00003_mirimage/jw01171001001_02101_00003_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171001001_02101_00004_mirimage_cal.fits to ./mastDownload/JWST/jw01171001001_02101_00004_mirimage/jw01171001001_02101_00004_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171001001_02101_00004_mirimage_i2d.fits to ./mastDownload/JWST/jw01171001001_02101_00004_mirimage/jw01171001001_02101_00004_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171002001_02101_00001_mirimage_cal.fits to ./mastDownload/JWST/jw01171002001_02101_00001_mirimage/jw01171002001_02101_00001_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171002001_02101_00001_mirimage_i2d.fits to ./mastDownload/JWST/jw01171002001_02101_00001_mirimage/jw01171002001_02101_00001_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171002001_02101_00002_mirimage_cal.fits to ./mastDownload/JWST/jw01171002001_02101_00002_mirimage/jw01171002001_02101_00002_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171002001_02101_00002_mirimage_i2d.fits to ./mastDownload/JWST/jw01171002001_02101_00002_mirimage/jw01171002001_02101_00002_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171002001_02101_00003_mirimage_cal.fits to ./mastDownload/JWST/jw01171002001_02101_00003_mirimage/jw01171002001_02101_00003_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171002001_02101_00003_mirimage_i2d.fits to ./mastDownload/JWST/jw01171002001_02101_00003_mirimage/jw01171002001_02101_00003_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171002001_02101_00004_mirimage_cal.fits to ./mastDownload/JWST/jw01171002001_02101_00004_mirimage/jw01171002001_02101_00004_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171002001_02101_00004_mirimage_i2d.fits to ./mastDownload/JWST/jw01171002001_02101_00004_mirimage/jw01171002001_02101_00004_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171003001_02101_00001_mirimage_cal.fits to ./mastDownload/JWST/jw01171003001_02101_00001_mirimage/jw01171003001_02101_00001_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171003001_02101_00001_mirimage_i2d.fits to ./mastDownload/JWST/jw01171003001_02101_00001_mirimage/jw01171003001_02101_00001_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171003001_02101_00002_mirimage_cal.fits to ./mastDownload/JWST/jw01171003001_02101_00002_mirimage/jw01171003001_02101_00002_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171003001_02101_00002_mirimage_i2d.fits to ./mastDownload/JWST/jw01171003001_02101_00002_mirimage/jw01171003001_02101_00002_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171003001_02101_00003_mirimage_cal.fits to ./mastDownload/JWST/jw01171003001_02101_00003_mirimage/jw01171003001_02101_00003_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171003001_02101_00003_mirimage_i2d.fits to ./mastDownload/JWST/jw01171003001_02101_00003_mirimage/jw01171003001_02101_00003_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171003001_02101_00004_mirimage_cal.fits to ./mastDownload/JWST/jw01171003001_02101_00004_mirimage/jw01171003001_02101_00004_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171003001_02101_00004_mirimage_i2d.fits to ./mastDownload/JWST/jw01171003001_02101_00004_mirimage/jw01171003001_02101_00004_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171004001_02101_00001_mirimage_cal.fits to ./mastDownload/JWST/jw01171004001_02101_00001_mirimage/jw01171004001_02101_00001_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171004001_02101_00001_mirimage_i2d.fits to ./mastDownload/JWST/jw01171004001_02101_00001_mirimage/jw01171004001_02101_00001_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171004001_02101_00002_mirimage_cal.fits to ./mastDownload/JWST/jw01171004001_02101_00002_mirimage/jw01171004001_02101_00002_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171004001_02101_00002_mirimage_i2d.fits to ./mastDownload/JWST/jw01171004001_02101_00002_mirimage/jw01171004001_02101_00002_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171004001_02101_00003_mirimage_cal.fits to ./mastDownload/JWST/jw01171004001_02101_00003_mirimage/jw01171004001_02101_00003_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171004001_02101_00003_mirimage_i2d.fits to ./mastDownload/JWST/jw01171004001_02101_00003_mirimage/jw01171004001_02101_00003_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171004001_02101_00004_mirimage_cal.fits to ./mastDownload/JWST/jw01171004001_02101_00004_mirimage/jw01171004001_02101_00004_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171004001_02101_00004_mirimage_i2d.fits to ./mastDownload/JWST/jw01171004001_02101_00004_mirimage/jw01171004001_02101_00004_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171005001_02101_00001_mirimage_cal.fits to ./mastDownload/JWST/jw01171005001_02101_00001_mirimage/jw01171005001_02101_00001_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171005001_02101_00001_mirimage_i2d.fits to ./mastDownload/JWST/jw01171005001_02101_00001_mirimage/jw01171005001_02101_00001_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171005001_02101_00002_mirimage_cal.fits to ./mastDownload/JWST/jw01171005001_02101_00002_mirimage/jw01171005001_02101_00002_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171005001_02101_00002_mirimage_i2d.fits to ./mastDownload/JWST/jw01171005001_02101_00002_mirimage/jw01171005001_02101_00002_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171005001_02101_00003_mirimage_cal.fits to ./mastDownload/JWST/jw01171005001_02101_00003_mirimage/jw01171005001_02101_00003_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171005001_02101_00003_mirimage_i2d.fits to ./mastDownload/JWST/jw01171005001_02101_00003_mirimage/jw01171005001_02101_00003_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171005001_02101_00004_mirimage_cal.fits to ./mastDownload/JWST/jw01171005001_02101_00004_mirimage/jw01171005001_02101_00004_mirimage_cal.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/jw01171005001_02101_00004_mirimage_i2d.fits to ./mastDownload/JWST/jw01171005001_02101_00004_mirimage/jw01171005001_02101_00004_mirimage_i2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="single-bright-star-a-class-anchor-id-bso-a">
@@ -710,13 +1219,21 @@ MIRI Data PID 1171 (LMC), F560W/F770W</p>
 <p>Useful references:<br>
 HST Documentation on PSF Photometry: https://www.stsci.edu/hst/instrumentation/wfc3/data-analysis/psf<br>
 WFPC2 Stellar Photometry with HSTPHOT: https://ui.adsabs.harvard.edu/abs/2000PASP..112.1383D/abstract<br>
-Photutils PSF Fitting Photometry: https://photutils.readthedocs.io/en/stable/psf.html</p>
+Photutils PSF Fitting Photometry: https://photutils.readthedocs.io/en/stable/user_guide/psf.html</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get the level 2 filenames</span>
 <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;./mast/01028/&quot;</span>
 <span class="n">level2</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;*cal.fits&#39;</span><span class="p">)))</span>
 <span class="n">level2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;./mast/01028/jw01028006001_02101_00001_mirimage_cal.fits&#39;,
+ &#39;./mast/01028/jw01028006001_02101_00002_mirimage_cal.fits&#39;,
+ &#39;./mast/01028/jw01028006001_02101_00003_mirimage_cal.fits&#39;,
+ &#39;./mast/01028/jw01028006001_02101_00004_mirimage_cal.fits&#39;]
 </pre></div>
 </div>
 </div>
@@ -732,8 +1249,12 @@ Photutils PSF Fitting Photometry: https://photutils.readthedocs.io/en/stable/psf
 <span class="n">clb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MJy/sr&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/56f1b85051ea1d00693f320e05330e1d1acfb15835a42ec8f1b2def0704ef46b.png" src="../../../_images/56f1b85051ea1d00693f320e05330e1d1acfb15835a42ec8f1b2def0704ef46b.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -761,8 +1282,12 @@ Photutils PSF Fitting Photometry: https://photutils.readthedocs.io/en/stable/psf
 <span class="n">clb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MJy/sr&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/56f1b85051ea1d00693f320e05330e1d1acfb15835a42ec8f1b2def0704ef46b.png" src="../../../_images/56f1b85051ea1d00693f320e05330e1d1acfb15835a42ec8f1b2def0704ef46b.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -784,27 +1309,58 @@ Photutils PSF Fitting Photometry: https://photutils.readthedocs.io/en/stable/psf
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/f67b936859aa9dfcba7d877bcb984410c0f7f41c1d36ddc1071efb5e14927fc0.png" src="../../../_images/f67b936859aa9dfcba7d877bcb984410c0f7f41c1d36ddc1071efb5e14927fc0.png" />
+</div>
 </div>
 </section>
-<section id="generate-empirical-psf-grid-for-miri-f770w-using-webbpsf-a-class-anchor-id-bso3-a">
-<h2>3.2 Generate empirical PSF grid for MIRI F770W using WebbPSF <a class="anchor" id="bso3"></a><a class="headerlink" href="#generate-empirical-psf-grid-for-miri-f770w-using-webbpsf-a-class-anchor-id-bso3-a" title="Permalink to this heading">#</a></h2>
-<p>Let’s now use WebbPSF to generate an empirical grid of ePSF models for MIRI F770W.
+<section id="generate-empirical-psf-grid-for-miri-f770w-using-stpsf-a-class-anchor-id-bso3-a">
+<h2>3.2 Generate empirical PSF grid for MIRI F770W using STPSF <a class="anchor" id="bso3"></a><a class="headerlink" href="#generate-empirical-psf-grid-for-miri-f770w-using-stpsf-a-class-anchor-id-bso3-a" title="Permalink to this heading">#</a></h2>
+<p>Let’s now use STPSF to generate an empirical grid of ePSF models for MIRI F770W.
 The output will be a Photutils <a class="reference external" href="https://photutils.readthedocs.io/en/latest/api/photutils.psf.GriddedPSFModel.html#photutils.psf.GriddedPSFModel">GriddedPSFModel</a> containing a 2x2 grid of detector-position-dependent empirical PSFs, each oversampled by a factor of 4. Note that we save the PSF grid to a FITS file (via <code class="docutils literal notranslate"><span class="pre">save=True</span></code>) called <code class="docutils literal notranslate"><span class="pre">miri_mirim_f770w_fovp101_samp4_npsf4.fits</span></code>.  To save time in future runs, we load this FITS file directly into a <code class="docutils literal notranslate"><span class="pre">GriddedPSFModel</span></code> object:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psfgrid_filename</span> <span class="o">=</span> <span class="s1">&#39;miri_mirim_f770w_fovp101_samp4_npsf4.fits&#39;</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">psfgrid_filename</span><span class="p">):</span>
-    <span class="n">miri</span> <span class="o">=</span> <span class="n">webbpsf</span><span class="o">.</span><span class="n">MIRI</span><span class="p">()</span>
+    <span class="n">miri</span> <span class="o">=</span> <span class="n">stpsf</span><span class="o">.</span><span class="n">MIRI</span><span class="p">()</span>
     <span class="n">miri</span><span class="o">.</span><span class="n">filter</span> <span class="o">=</span> <span class="s1">&#39;F770W&#39;</span>
-    <span class="n">psf_model</span> <span class="o">=</span> <span class="n">miri</span><span class="o">.</span><span class="n">psf_grid</span><span class="p">(</span><span class="n">num_psfs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">all_detectors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">miri</span><span class="o">.</span><span class="n">detector</span> <span class="o">=</span> <span class="s1">&#39;MIRIM&#39;</span>
+    <span class="n">psf_model</span> <span class="o">=</span> <span class="n">miri</span><span class="o">.</span><span class="n">psf_grid</span><span class="p">(</span><span class="n">num_psfs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">all_detectors</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="n">psf_model</span> <span class="o">=</span> <span class="n">GriddedPSFModel</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">psfgrid_filename</span><span class="p">)</span>
 
 <span class="n">psf_model</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Running instrument: MIRI, filter: F770W
+  Running detector: MIRIM
+    Position 1/4: (0, 0) pixels
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    Position 1/4 centroid: (np.float64(201.4023624749013), np.float64(201.47046390597333))
+    Position 2/4: (0, 1023) pixels
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    Position 2/4 centroid: (np.float64(201.30690755776234), np.float64(201.3328394993336))
+    Position 3/4: (1023, 0) pixels
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    Position 3/4 centroid: (np.float64(201.46001999611337), np.float64(201.57406698621335))
+    Position 4/4: (1023, 1023) pixels
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    Position 4/4 centroid: (np.float64(201.71435554877664), np.float64(201.48197003471248))
+  Saving file: miri_mirim_f770w_fovp101_samp4_npsf4.fits
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;GriddedPSFModel(flux=1., x_0=0., y_0=0.)&gt;
 </pre></div>
 </div>
 </div>
@@ -816,6 +1372,10 @@ The output will be a Photutils <a class="reference external" href="https://photu
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/dfb069bcd239792acc29ae1a438fe7a7d38b623379164ac02e8351a5f1c44a03.png" src="../../../_images/dfb069bcd239792acc29ae1a438fe7a7d38b623379164ac02e8351a5f1c44a03.png" />
+<img alt="../../../_images/dfb069bcd239792acc29ae1a438fe7a7d38b623379164ac02e8351a5f1c44a03.png" src="../../../_images/dfb069bcd239792acc29ae1a438fe7a7d38b623379164ac02e8351a5f1c44a03.png" />
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -823,6 +1383,10 @@ The output will be a Photutils <a class="reference external" href="https://photu
 <span class="n">psf_model</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">(</span><span class="n">deltas</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/7e41036467798516be1d984f31715b93831bfd2c840bd01139482f3d45835961.png" src="../../../_images/7e41036467798516be1d984f31715b93831bfd2c840bd01139482f3d45835961.png" />
+<img alt="../../../_images/7e41036467798516be1d984f31715b93831bfd2c840bd01139482f3d45835961.png" src="../../../_images/7e41036467798516be1d984f31715b93831bfd2c840bd01139482f3d45835961.png" />
 </div>
 </div>
 </section>
@@ -849,6 +1413,11 @@ The output will be a Photutils <a class="reference external" href="https://photu
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(Unit(&quot;uJy&quot;), Unit(&quot;uJy&quot;))
+</pre></div>
+</div>
+</div>
 </div>
 <p>To perform photometry on a single source we can input a Table containing its (x, y) position.</p>
 <div class="cell docutils container">
@@ -860,6 +1429,13 @@ The output will be a Photutils <a class="reference external" href="https://photu
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>Table length=1</i>
+<table id="table139994675862480" class="table-striped table-bordered table-condensed">
+<thead><tr><th>x</th><th>y</th></tr></thead>
+<thead><tr><th>float64</th><th>float64</th></tr></thead>
+<tr><td>691.0126389413533</td><td>512.5838903334229</td></tr>
+</table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -873,6 +1449,14 @@ The output will be a Photutils <a class="reference external" href="https://photu
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>QTable length=1</i>
+<table id="table139994763901584" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>group_id</th><th>group_size</th><th>local_bkg</th><th>x_init</th><th>y_init</th><th>flux_init</th><th>x_fit</th><th>y_fit</th><th>flux_fit</th><th>x_err</th><th>y_err</th><th>flux_err</th><th>npixfit</th><th>qfit</th><th>cfit</th><th>flags</th></tr></thead>
+<thead><tr><th></th><th></th><th></th><th>uJy</th><th></th><th></th><th>uJy</th><th></th><th></th><th>uJy</th><th></th><th></th><th>uJy</th><th></th><th></th><th></th><th></th></tr></thead>
+<thead><tr><th>int64</th><th>int64</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>int64</th><th>float64</th><th>float64</th><th>int64</th></tr></thead>
+<tr><td>1</td><td>1</td><td>1</td><td>1.4397251162293783</td><td>691.0126389413533</td><td>512.5838903334229</td><td>475.7955370966203</td><td>691.1798603021881</td><td>512.9107570382915</td><td>465.11685232449025</td><td>0.0010116489713053985</td><td>0.001024766468371471</td><td>0.5138472957774761</td><td>25</td><td>0.7057654379338035</td><td>-0.017056128265791032</td><td>0</td></tr>
+</table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -883,6 +1467,11 @@ The output will be a Photutils <a class="reference external" href="https://photu
 <span class="n">magerr</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="p">(</span><span class="n">flux_err</span> <span class="o">/</span> <span class="n">flux</span><span class="p">))</span>
 <span class="n">magerr</span> <span class="o">=</span> <span class="n">magerr</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">ABmag</span>
 <span class="n">mag</span><span class="p">,</span> <span class="n">magerr</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;Magnitude [17.23109481] mag(AB)&gt;, &lt;Magnitude [0.00119883] mag(AB)&gt;)
 </pre></div>
 </div>
 </div>
@@ -898,20 +1487,24 @@ The output will be a Photutils <a class="reference external" href="https://photu
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Data ($\mu$Jy)&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im1</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">psfphot</span><span class="o">.</span><span class="n">make_model_image</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">psfphot</span><span class="o">.</span><span class="n">make_model_image</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">psf_shape</span><span class="o">=</span><span class="n">shape</span><span class="p">)</span>
 <span class="n">cutout2</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
 <span class="n">im2</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cutout2</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Fit PSF Model&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im2</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
 
-<span class="n">resid</span> <span class="o">=</span> <span class="n">psfphot</span><span class="o">.</span><span class="n">make_residual_image</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+<span class="n">resid</span> <span class="o">=</span> <span class="n">psfphot</span><span class="o">.</span><span class="n">make_residual_image</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">psf_shape</span><span class="o">=</span><span class="n">shape</span><span class="p">)</span>
 <span class="n">cutout3</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">resid</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
-<span class="n">norm3</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">cutout3</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
-<span class="n">im3</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cutout3</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm3</span><span class="p">)</span>
+<span class="n">norm3</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">cutout3</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+<span class="n">im3</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cutout3</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm3</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Residual&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im3</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/e806b737002fe41882b3fcfd18367b2a5a61834da0d499e6cbb518ade341e8ea.png" src="../../../_images/e806b737002fe41882b3fcfd18367b2a5a61834da0d499e6cbb518ade341e8ea.png" />
 </div>
 </div>
 </section>
@@ -949,8 +1542,12 @@ The output will be a Photutils <a class="reference external" href="https://photu
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/ec98cf79a1dd29444c256720d7733385ae386343e35c05d98a4ad49bf4a2de11.png" src="../../../_images/ec98cf79a1dd29444c256720d7733385ae386343e35c05d98a4ad49bf4a2de11.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -970,6 +1567,11 @@ The output will be a Photutils <a class="reference external" href="https://photu
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;flux&#39;: False, &#39;x_0&#39;: True, &#39;y_0&#39;: True}
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -983,6 +1585,14 @@ The output will be a Photutils <a class="reference external" href="https://photu
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>QTable length=1</i>
+<table id="table139994758456464" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>group_id</th><th>group_size</th><th>local_bkg</th><th>x_init</th><th>y_init</th><th>flux_init</th><th>x_fit</th><th>y_fit</th><th>flux_fit</th><th>x_err</th><th>y_err</th><th>flux_err</th><th>npixfit</th><th>qfit</th><th>cfit</th><th>flags</th></tr></thead>
+<thead><tr><th></th><th></th><th></th><th>uJy</th><th></th><th></th><th>uJy</th><th></th><th></th><th>uJy</th><th></th><th></th><th>uJy</th><th></th><th></th><th></th><th></th></tr></thead>
+<thead><tr><th>int64</th><th>int64</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>int64</th><th>float64</th><th>float64</th><th>int64</th></tr></thead>
+<tr><td>1</td><td>1</td><td>1</td><td>1.2926821657735057</td><td>559.0832487866767</td><td>772.8615809731978</td><td>99.69285815735192</td><td>559.0832487866767</td><td>772.8615809731978</td><td>-0.38089014331448917</td><td>nan</td><td>nan</td><td>0.06349041646685509</td><td>25</td><td>-93.32672605807173</td><td>0.4099578318266419</td><td>4</td></tr>
+</table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -992,6 +1602,10 @@ The output will be a Photutils <a class="reference external" href="https://photu
 <span class="n">limit</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">ABmag</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[[25.700426] \; \mathrm{mag}$$\mathrm{\left( \mathrm{AB} \right)}\]</div>
 </div>
 </div>
 <section id="note-you-can-go-significantly-deeper-with-the-level-3-combined-data-product">
@@ -1009,6 +1623,11 @@ The output will be a Photutils <a class="reference external" href="https://photu
 <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;./mast/01171/&#39;</span>
 <span class="n">level3</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;jw01171-o004_t001_miri_f560w_i2d.fits&#39;</span><span class="p">)</span>
 <span class="n">level3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;./mast/01171/jw01171-o004_t001_miri_f560w_i2d.fits&#39;
 </pre></div>
 </div>
 </div>
@@ -1042,6 +1661,20 @@ The output will be a Photutils <a class="reference external" href="https://photu
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> id     xcentroid          ycentroid          sharpness       roundness1      roundness2      npix     peak       flux    mag      daofind_mag     
+--- ------------------ ------------------ ------------------ ----------- -------------------- ---- ----------- ---------- --- ---------------------
+  1  546.2615248590856  5.400907067001771 0.7041937380599614  0.46773428  0.04273256330788263   25  -0.8653275 -50.092262 nan   -0.5413295965257243
+  2  789.0983970730795  6.312157835017224 0.6691237944354219 -0.17942303  -0.8079555096758687   25 -0.57612133  -34.95916 nan   -0.1035249124958943
+  3  845.9799634503643  3.675797141070524 0.6829976607805458 0.043498766 -0.42254093349077243   25  -1.1719772 -46.178497 nan    -0.179222451244508
+...                ...                ...                ...         ...                  ...  ...         ...        ... ...                   ...
+788 1005.1187213604594 1062.3368573824348 0.6862059219157299 -0.44935676  -0.8216906677208756   25 -0.69887817 -38.484135 nan -0.037972898002874234
+789  399.3766175963356 1064.9409739772366 0.3060837128458461  -0.1559235 -0.21203561885367186   25 -0.74871683 -34.341244 nan -0.024118448038772944
+790  566.9700693080139  1065.048267845045 0.5650444893283237 -0.37038124  -0.5505482861764636   25  0.51578784 -21.200844 nan   -0.5359357398718912
+Length = 790 rows
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1053,8 +1686,12 @@ The output will be a Photutils <a class="reference external" href="https://photu
 <span class="n">xypos</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">],</span> <span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">])</span>
 <span class="n">aper</span> <span class="o">=</span> <span class="n">CircularAperture</span><span class="p">(</span><span class="n">xypos</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">aper</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/c59a6b92721970b1a9fdbf1922eccd86a86d99204c54fbc6a55d8e3499215b37.png" src="../../../_images/c59a6b92721970b1a9fdbf1922eccd86a86d99204c54fbc6a55d8e3499215b37.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1084,8 +1721,12 @@ The output will be a Photutils <a class="reference external" href="https://photu
 <span class="n">rnd1</span> <span class="o">=</span> <span class="mf">0.40</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">rnd0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">rnd1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/6bcb66e8bd7af3de0a7d51294516291a741c8e22b50a1f2e462cdee3832d4f44.png" src="../../../_images/6bcb66e8bd7af3de0a7d51294516291a741c8e22b50a1f2e462cdee3832d4f44.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1102,6 +1743,12 @@ The output will be a Photutils <a class="reference external" href="https://photu
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of stars found originally: 790
+Number of stars in final selection: 63
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1113,25 +1760,56 @@ The output will be a Photutils <a class="reference external" href="https://photu
 <span class="n">xypos</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">found_stars_sel</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">],</span> <span class="n">found_stars_sel</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">])</span>
 <span class="n">aper</span> <span class="o">=</span> <span class="n">CircularAperture</span><span class="p">(</span><span class="n">xypos</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">aper</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/38921486e4c60d5cbc54007253dbc8d6834ebfabaa488c100700dcf56f9f0464.png" src="../../../_images/38921486e4c60d5cbc54007253dbc8d6834ebfabaa488c100700dcf56f9f0464.png" />
+</div>
 </div>
 </section>
-<section id="generate-empirical-psf-grid-for-miri-f560w-using-webbpsf-a-class-anchor-id-grid2-a">
-<h2>5.2 Generate empirical PSF grid for MIRI F560W using WebbPSF <a class="anchor" id="grid2"></a><a class="headerlink" href="#generate-empirical-psf-grid-for-miri-f560w-using-webbpsf-a-class-anchor-id-grid2-a" title="Permalink to this heading">#</a></h2>
+<section id="generate-empirical-psf-grid-for-miri-f560w-using-stpsf-a-class-anchor-id-grid2-a">
+<h2>5.2 Generate empirical PSF grid for MIRI F560W using STPSF <a class="anchor" id="grid2"></a><a class="headerlink" href="#generate-empirical-psf-grid-for-miri-f560w-using-stpsf-a-class-anchor-id-grid2-a" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psfgrid_filename</span> <span class="o">=</span> <span class="s1">&#39;miri_mirim_f560w_fovp101_samp4_npsf4.fits&#39;</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">psfgrid_filename</span><span class="p">):</span>
-    <span class="n">miri</span> <span class="o">=</span> <span class="n">webbpsf</span><span class="o">.</span><span class="n">MIRI</span><span class="p">()</span>
+    <span class="n">miri</span> <span class="o">=</span> <span class="n">stpsf</span><span class="o">.</span><span class="n">MIRI</span><span class="p">()</span>
     <span class="n">miri</span><span class="o">.</span><span class="n">filter</span> <span class="o">=</span> <span class="s1">&#39;F560W&#39;</span>
-    <span class="n">psf_model</span> <span class="o">=</span> <span class="n">miri</span><span class="o">.</span><span class="n">psf_grid</span><span class="p">(</span><span class="n">num_psfs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">all_detectors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">miri</span><span class="o">.</span><span class="n">detector</span> <span class="o">=</span> <span class="s1">&#39;MIRIM&#39;</span>
+    <span class="n">psf_model</span> <span class="o">=</span> <span class="n">miri</span><span class="o">.</span><span class="n">psf_grid</span><span class="p">(</span><span class="n">num_psfs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">all_detectors</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="n">psf_model</span> <span class="o">=</span> <span class="n">GriddedPSFModel</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">psfgrid_filename</span><span class="p">)</span>
 
 <span class="n">psf_model</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Running instrument: MIRI, filter: F560W
+  Running detector: MIRIM
+    Position 1/4: (0, 0) pixels
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    Position 1/4 centroid: (np.float64(201.39504365744267), np.float64(201.46837962104274))
+    Position 2/4: (0, 1023) pixels
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    Position 2/4 centroid: (np.float64(201.30209346068543), np.float64(201.31984343070144))
+    Position 3/4: (1023, 0) pixels
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    Position 3/4 centroid: (np.float64(201.42830769164874), np.float64(201.59926840411683))
+    Position 4/4: (1023, 1023) pixels
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    Position 4/4 centroid: (np.float64(201.75498594600967), np.float64(201.4970454286808))
+  Saving file: miri_mirim_f560w_fovp101_samp4_npsf4.fits
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;GriddedPSFModel(flux=1., x_0=0., y_0=0.)&gt;
 </pre></div>
 </div>
 </div>
@@ -1141,6 +1819,10 @@ The output will be a Photutils <a class="reference external" href="https://photu
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psf_model</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/bc74157d6af7253113b9830b414ebbc3fc74f89be3492710e716663969403cb1.png" src="../../../_images/bc74157d6af7253113b9830b414ebbc3fc74f89be3492710e716663969403cb1.png" />
+<img alt="../../../_images/bc74157d6af7253113b9830b414ebbc3fc74f89be3492710e716663969403cb1.png" src="../../../_images/bc74157d6af7253113b9830b414ebbc3fc74f89be3492710e716663969403cb1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1172,6 +1854,14 @@ The output will be a Photutils <a class="reference external" href="https://photu
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>./mast/01171/jw01171004001_02101_00001_mirimage_cal.fits
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(Unit(&quot;uJy&quot;), Unit(&quot;uJy&quot;))
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="psf-photometry-a-class-anchor-id-lmc3-a">
@@ -1190,7 +1880,7 @@ The output will be a Photutils <a class="reference external" href="https://photu
 
 <span class="c1"># we need to remove stars in the masked region of</span>
 <span class="c1"># the level-2 data</span>
-<span class="n">mask</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">400</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">404</span>
 <span class="n">init_params</span> <span class="o">=</span> <span class="n">init_params</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -1199,6 +1889,17 @@ The output will be a Photutils <a class="reference external" href="https://photu
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ True, False,  True,  True,  True,  True,  True,  True,  True,
+       False,  True,  True,  True,  True,  True,  True,  True, False,
+       False,  True,  True, False,  True,  True,  True, False, False,
+       False,  True, False,  True, False, False,  True,  True,  True,
+       False,  True,  True, False,  True,  True,  True,  True,  True,
+       False,  True,  True, False,  True,  True,  True,  True, False,
+        True, False,  True,  True,  True, False,  True,  True, False])
 </pre></div>
 </div>
 </div>
@@ -1213,8 +1914,12 @@ The output will be a Photutils <a class="reference external" href="https://photu
 <span class="n">xypos</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">init_params</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="n">init_params</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">])</span>
 <span class="n">aper</span> <span class="o">=</span> <span class="n">CircularAperture</span><span class="p">(</span><span class="n">xypos</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">aper</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/9b28ffe12ba3fc511b7d9fa5701510d92c7a6d5b8cae8ef03c780c892a81d250.png" src="../../../_images/9b28ffe12ba3fc511b7d9fa5701510d92c7a6d5b8cae8ef03c780c892a81d250.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1228,6 +1933,32 @@ The output will be a Photutils <a class="reference external" href="https://photu
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>QTable length=44</i>
+<table id="table139994765896976" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>group_id</th><th>group_size</th><th>local_bkg</th><th>x_init</th><th>y_init</th><th>flux_init</th><th>x_fit</th><th>y_fit</th><th>flux_fit</th><th>x_err</th><th>y_err</th><th>flux_err</th><th>npixfit</th><th>qfit</th><th>cfit</th><th>flags</th></tr></thead>
+<thead><tr><th></th><th></th><th></th><th>uJy</th><th></th><th></th><th>uJy</th><th></th><th></th><th>uJy</th><th></th><th></th><th>uJy</th><th></th><th></th><th></th><th></th></tr></thead>
+<thead><tr><th>int64</th><th>int64</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>int64</th><th>float64</th><th>float64</th><th>int64</th></tr></thead>
+<tr><td>1</td><td>1</td><td>1</td><td>0.5917736126746966</td><td>583.6953414360433</td><td>57.24687010219543</td><td>64.37585446860986</td><td>583.6271426055622</td><td>57.25527770031939</td><td>22.086381960509662</td><td>0.009881550234131384</td><td>0.009997062015888385</td><td>0.22361477408075406</td><td>25</td><td>1.592554525858295</td><td>-0.008029093203134859</td><td>0</td></tr>
+<tr><td>2</td><td>2</td><td>1</td><td>0.6100208181015989</td><td>630.1870920844856</td><td>77.50324935933168</td><td>66.95979612654335</td><td>630.1322550593235</td><td>77.35470921519108</td><td>26.07989809910072</td><td>0.009206323120281227</td><td>0.009803111243434009</td><td>0.26646535979914693</td><td>25</td><td>1.8008472979147259</td><td>0.05008110417948685</td><td>0</td></tr>
+<tr><td>3</td><td>3</td><td>1</td><td>0.5691058405479137</td><td>545.155567265627</td><td>78.01775415078902</td><td>67.61121880086363</td><td>545.1085783092715</td><td>78.00943495517794</td><td>30.20290385941652</td><td>0.007770814531898795</td><td>0.00879892521245536</td><td>0.27799187555778915</td><td>25</td><td>1.3869661801118796</td><td>0.08939326254907773</td><td>0</td></tr>
+<tr><td>4</td><td>4</td><td>1</td><td>0.593688857401901</td><td>514.4647302272357</td><td>79.17731661955338</td><td>63.13382471169785</td><td>514.3618419546613</td><td>79.23008476850025</td><td>24.294878276946108</td><td>0.009238670171341971</td><td>0.009431616434272603</td><td>0.23037622229648375</td><td>24</td><td>1.4271814366031326</td><td>0.00254400481920013</td><td>1</td></tr>
+<tr><td>5</td><td>5</td><td>1</td><td>0.6032650537579973</td><td>526.0810431249562</td><td>80.86596145105023</td><td>67.36284381417863</td><td>525.9712113828396</td><td>80.89624822108314</td><td>26.617028281645563</td><td>0.00857942095488135</td><td>0.009139997122203222</td><td>0.2580218388975531</td><td>25</td><td>1.4770514988460586</td><td>0.06073624762697728</td><td>0</td></tr>
+<tr><td>6</td><td>6</td><td>1</td><td>0.5452195879137307</td><td>453.1467736232926</td><td>84.12057244156529</td><td>61.86177209688229</td><td>453.0798262686204</td><td>84.02618794960281</td><td>24.453046575420387</td><td>0.008229781101782904</td><td>0.008808001067226913</td><td>0.2213714474830289</td><td>25</td><td>2.2921925794144675</td><td>0.17402357161377432</td><td>0</td></tr>
+<tr><td>7</td><td>7</td><td>1</td><td>0.6332202497470021</td><td>636.5067980659654</td><td>93.27692547171921</td><td>66.69100788310536</td><td>636.4583861214122</td><td>93.0805291826597</td><td>23.58011500743861</td><td>0.009731880876593928</td><td>0.009559658300160204</td><td>0.2490521394977686</td><td>25</td><td>2.0419826414367943</td><td>0.1729030083154531</td><td>0</td></tr>
+<tr><td>8</td><td>8</td><td>1</td><td>0.6027188777403019</td><td>656.1494582554864</td><td>99.97668270363584</td><td>88.83133597743618</td><td>656.2523643578978</td><td>99.95865845658875</td><td>54.48655531668756</td><td>0.00524416240204533</td><td>0.005599566381274772</td><td>0.32797720995728463</td><td>25</td><td>0.7425576584319004</td><td>0.07986712430142177</td><td>0</td></tr>
+<tr><td>9</td><td>9</td><td>1</td><td>0.547520673274994</td><td>481.54703925766387</td><td>118.92392090277184</td><td>56.459257597781644</td><td>481.48800673642165</td><td>118.92764364438601</td><td>19.1782491888176</td><td>0.010521843238961201</td><td>0.010579545425558872</td><td>0.20213058094361303</td><td>25</td><td>2.412526246075053</td><td>0.08655417856521475</td><td>0</td></tr>
+<tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+<tr><td>36</td><td>36</td><td>1</td><td>0.5620971093618923</td><td>412.2166106708058</td><td>492.0471019628243</td><td>68.8067629570188</td><td>412.2467288371631</td><td>492.0295971073806</td><td>32.60878691133045</td><td>0.006984811247766581</td><td>0.007054154009861644</td><td>0.2329917311819081</td><td>25</td><td>1.2044795601111933</td><td>0.07156229957054645</td><td>0</td></tr>
+<tr><td>37</td><td>37</td><td>1</td><td>0.5360806073094238</td><td>603.7650329383015</td><td>516.3310355219018</td><td>57.06107361620856</td><td>603.8016419674484</td><td>516.4558972595488</td><td>21.67602670755186</td><td>0.00887441082565338</td><td>0.009241322983321627</td><td>0.19719255380655115</td><td>25</td><td>1.8726410278722834</td><td>0.08225042566395441</td><td>0</td></tr>
+<tr><td>38</td><td>38</td><td>1</td><td>0.5449298500494144</td><td>438.43239918428213</td><td>517.6858561328448</td><td>63.63512050110673</td><td>438.36556392354873</td><td>517.8102994947366</td><td>28.61568130285468</td><td>0.007781994712886895</td><td>0.007872559012099491</td><td>0.23308950425313937</td><td>25</td><td>1.6292314338781626</td><td>0.0684033972255797</td><td>0</td></tr>
+<tr><td>39</td><td>39</td><td>1</td><td>0.5434614263082806</td><td>557.926455966104</td><td>531.9502486117964</td><td>61.31849260874046</td><td>558.0156371212586</td><td>531.9575790458696</td><td>20.78786146792204</td><td>0.00911902301788379</td><td>0.009514214304968042</td><td>0.20148472945846096</td><td>25</td><td>1.4269703915870038</td><td>0.03015436493065666</td><td>0</td></tr>
+<tr><td>40</td><td>40</td><td>1</td><td>0.5319761503161045</td><td>626.789868315454</td><td>541.4060866848747</td><td>55.3254156791539</td><td>626.815640367721</td><td>541.3608540990855</td><td>15.839598349366721</td><td>0.01138819331808432</td><td>0.012361404289308334</td><td>0.18182948752514208</td><td>25</td><td>2.475724919321479</td><td>0.1541262984442095</td><td>0</td></tr>
+<tr><td>41</td><td>41</td><td>1</td><td>0.5237871754813839</td><td>628.1186930495217</td><td>550.9848648146874</td><td>53.318885866652614</td><td>628.111638030972</td><td>551.0077395394245</td><td>16.06438745117986</td><td>0.011450387359860667</td><td>0.011672388512044371</td><td>0.18770635400852514</td><td>25</td><td>2.2006463348774012</td><td>0.026898928342503625</td><td>0</td></tr>
+<tr><td>42</td><td>42</td><td>1</td><td>0.561615267280857</td><td>493.2502114845369</td><td>581.8827941123477</td><td>59.53039625260884</td><td>493.2556683895723</td><td>581.9368573578724</td><td>21.736153878921936</td><td>0.009074998292551963</td><td>0.009287889534871405</td><td>0.1985728294800299</td><td>25</td><td>2.245885366275252</td><td>0.13960944851282267</td><td>0</td></tr>
+<tr><td>43</td><td>43</td><td>1</td><td>0.5316955510606156</td><td>597.327038102174</td><td>587.6829662730439</td><td>61.735091743228274</td><td>597.4619912123752</td><td>587.7448120705658</td><td>25.343537625859778</td><td>0.00836804812627431</td><td>0.008521205045241686</td><td>0.21284260819942533</td><td>25</td><td>2.016375429048198</td><td>-0.005845087229945111</td><td>0</td></tr>
+<tr><td>44</td><td>44</td><td>1</td><td>0.5456375295271254</td><td>433.97407354382995</td><td>606.001088871638</td><td>58.52389361531568</td><td>433.9640921192637</td><td>606.007780305856</td><td>19.233796064376076</td><td>0.009871826918899146</td><td>0.01019920748914034</td><td>0.191789929450615</td><td>25</td><td>1.6630678103751408</td><td>-0.016245994910779434</td><td>0</td></tr>
+</table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1238,6 +1969,30 @@ The output will be a Photutils <a class="reference external" href="https://photu
 <span class="n">magerr</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="p">(</span><span class="n">flux_err</span> <span class="o">/</span> <span class="n">flux</span><span class="p">))</span>
 <span class="n">magerr</span> <span class="o">=</span> <span class="n">magerr</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">ABmag</span>
 <span class="n">mag</span><span class="p">,</span> <span class="n">magerr</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;Magnitude [20.53968855, 20.35923527, 20.19987825, 20.43621318,
+             20.33710108, 20.42916756, 20.4686352 , 19.55927662,
+             20.69297761, 20.65126457, 19.32377519, 20.04306398,
+             20.40416966, 19.70731474, 20.11691711, 20.29396076,
+             20.44007513, 20.47336615, 20.48695953, 20.12105398,
+             20.2501405 , 21.16800096, 20.79285496, 20.02802598,
+             20.33465086, 20.34476846, 19.47693267, 20.36948414,
+             20.43489364, 20.47643891, 20.41885784, 20.39525343,
+             20.31342508, 20.14212217, 20.36406716, 20.11666339,
+             20.56005081, 20.25848977, 20.60547547, 20.90063959,
+             20.88533957, 20.55704325, 20.39033191, 20.68983748] mag(AB)&gt;,
+ &lt;Magnitude [0.01093732, 0.01103697, 0.00994756, 0.01024699, 0.01047429,
+             0.00978486, 0.01140736, 0.00651591, 0.01138331, 0.01133476,
+             0.0065102 , 0.00798444, 0.00939263, 0.00744215, 0.00802427,
+             0.00869982, 0.01027089, 0.00948007, 0.00967182, 0.00842352,
+             0.00898325, 0.01438394, 0.01198467, 0.00790335, 0.00930763,
+             0.00886982, 0.00599879, 0.0093634 , 0.00927861, 0.00958065,
+             0.00929012, 0.00903172, 0.00896606, 0.00792852, 0.00901809,
+             0.00773007, 0.00983257, 0.00880806, 0.01047274, 0.01239263,
+             0.01261288, 0.00987382, 0.00908026, 0.0107728 ] mag(AB)&gt;)
 </pre></div>
 </div>
 </div>
@@ -1307,13 +2062,13 @@ The output will be a Photutils <a class="reference external" href="https://photu
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-a-class-anchor-id-intro-a">1. Introduction <a class="anchor" id="intro"></a></a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-imports-a-class-anchor-id-imports-a">1.1 Python Imports <a class="anchor" id="imports"></a></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-and-set-up-required-data-for-webbpsf-and-synphot-a-class-anchor-id-setup-a">1.2 Download and Set up Required Data for WebbPSF and Synphot <a class="anchor" id="setup"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-and-set-up-required-data-for-stpsf-and-synphot-a-class-anchor-id-setup-a">1.2 Download and Set up Required Data for STPSF and Synphot <a class="anchor" id="setup"></a></a></li>
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#download-jwst-miri-data-a-class-anchor-id-data-a">2. Download JWST MIRI Data <a class="anchor" id="data"></a></a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#single-bright-star-a-class-anchor-id-bso-a">3. Single Bright Star <a class="anchor" id="bso"></a></a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-level-2-file-a-class-anchor-id-bso2-a">3.1 Single Level 2 File <a class="anchor" id="bso2"></a></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-empirical-psf-grid-for-miri-f770w-using-webbpsf-a-class-anchor-id-bso3-a">3.2 Generate empirical PSF grid for MIRI F770W using WebbPSF <a class="anchor" id="bso3"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-empirical-psf-grid-for-miri-f770w-using-stpsf-a-class-anchor-id-bso3-a">3.2 Generate empirical PSF grid for MIRI F770W using STPSF <a class="anchor" id="bso3"></a></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psf-photometry-a-class-anchor-id-bso4-a">3.3 PSF Photometry <a class="anchor" id="bso4"></a></a></li>
 </ul>
 </li>
@@ -1323,7 +2078,7 @@ The output will be a Photutils <a class="reference external" href="https://photu
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#stellar-field-lmc-a-class-anchor-id-lmc-a">5. Stellar Field (LMC) <a class="anchor" id="lmc"></a></a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-stars-single-level-2-file-a-class-anchor-id-lmc2-a">5.1 Multiple Stars, Single Level 2 File <a class="anchor" id="lmc2"></a></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-empirical-psf-grid-for-miri-f560w-using-webbpsf-a-class-anchor-id-grid2-a">5.2 Generate empirical PSF grid for MIRI F560W using WebbPSF <a class="anchor" id="grid2"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-empirical-psf-grid-for-miri-f560w-using-stpsf-a-class-anchor-id-grid2-a">5.2 Generate empirical PSF grid for MIRI F560W using STPSF <a class="anchor" id="grid2"></a></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psf-photometry-a-class-anchor-id-lmc3-a">5.3 PSF Photometry <a class="anchor" id="lmc3"></a></a></li>
 </ul>
 </li>
