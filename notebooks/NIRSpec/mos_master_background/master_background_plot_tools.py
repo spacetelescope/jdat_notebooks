@@ -11,7 +11,7 @@ from itables import show as show_table
 from matplotlib.ticker import MultipleLocator
 from scipy.stats import binned_statistic
 from astropy.stats import sigma_clip
-from matplotlib.patches import Patch, RegularPolygon
+from matplotlib.patches import Patch
 from matplotlib.pyplot import cm
 from jwst.datamodels.dqflags import pixel as flags
 try:
@@ -80,7 +80,7 @@ def metafile_editor(source_slitlets,
     """
 
     # ---------- New Metafile Setup ----------
-    metafile_path = metafile_og_path[:-5] + ('_mb.fits' if suffix == None else suffix)
+    metafile_path = metafile_og_path[:-5] + ('_mb.fits' if suffix is None else suffix)
     shutil.copy(metafile_og_path, metafile_path)
     metafile_hdu = fits.open(metafile_path, 'update')
 
@@ -253,7 +253,7 @@ def replace_nans_with_median(data):
 def filterout_contaminated_spectra(data,
                                    slit_names,
                                    mad_threshold=5,
-                                   method = np.nanmedian):
+                                   method=np.nanmedian):
     """
     Filters out spectra with outlier values using Median/Mean Absolute Deviation (MAD)
 
@@ -424,11 +424,11 @@ def mean_background_variations(x1d_files,
 
     # ---------- Set up the Figures ----------
 
-    fig = plt.figure(figsize=(10,8))
-    gs = grd.GridSpec(2, 3, height_ratios=[3,1], width_ratios=[4,1,1], hspace=0.1, wspace=0.05)
-    ax = plt.subplot(gs[0,:2]) # Background spectra plot
-    ax_residual = plt.subplot(gs[1,:2]) # Coefficient of variaiton plot
-    ax_hist = plt.subplot(gs[1,2:], sharey=ax_residual) # Coefficient of variaiton plot
+    fig = plt.figure(figsize=(10, 8))
+    gs = grd.GridSpec(2, 3, height_ratios=[3, 1], width_ratios=[4, 1, 1], hspace=0.1, wspace=0.05)
+    ax = plt.subplot(gs[0, :2]) # Background spectra plot
+    ax_residual = plt.subplot(gs[1, :2]) # Coefficient of variaiton plot
+    ax_hist = plt.subplot(gs[1, 2:], sharey=ax_residual) # Coefficient of variaiton plot
     color_map = cycle(cm.Greys(np.linspace(0.7, 1.0, 12)))
 
     # ---------- Find the Vetted Backgrounds ----------
@@ -483,12 +483,12 @@ def mean_background_variations(x1d_files,
     weights[np.isinf(weights)] = np.nan
 
     # Calculate the means
-    weighted_mean_cov = np.nansum(weights * cov) / np.nansum(weights)
+    #weighted_mean_cov = np.nansum(weights * cov) / np.nansum(weights)
     mean_cov = np.nanmean(cov)
 
     # Standard errors relative to mean cov
     regular_sem = np.nanstd(cov, ddof=1) / np.sqrt(len(cov))
-    weighted_sem = np.sqrt(np.nansum((weights * np.nanstd(cov, ddof=1))**2)) / np.nansum(weights)
+    #weighted_sem = np.sqrt(np.nansum((weights * np.nanstd(cov, ddof=1))**2)) / np.nansum(weights)
 
     print("Mean COV: " + str(mean_cov))
     print("Uncertainty of the Mean COV: " + str(regular_sem))
@@ -503,14 +503,14 @@ def mean_background_variations(x1d_files,
     # Update background_spectra with variation and median_variation.
     for i in range(len(background_spectra)):
         background_spectra[i] = background_spectra[i] + (median_variation[i],)
-    slit_var_from_mean = [(data[0],data[4]) for data in background_spectra]
+    #slit_var_from_mean = [(data[0], data[4]) for data in background_spectra]
 
     # ---------- Plot the Background Spectra & Mean ----------
     for i in range(clipped_data_nonan.shape[0]):
         flux = clipped_data_nonan[i, :]  # Access the i-th spectrum.
         # Bins can reduce noise for visualization purposes.
         if bin_wavelengths:
-            bin_means = binned_statistic(common_wavelengths, flux, statistic=np.nanmean,bins=bins)
+            bin_means = binned_statistic(common_wavelengths, flux, statistic=np.nanmean, bins=bins)
             ax.plot(bin_means[1][:-1], bin_means[0], label=slit_names_updated[i], color=next(color_map))
         else:
             ax.plot(common_wavelengths, flux, label=slit_names_updated[i], color=next(color_map))
@@ -523,27 +523,27 @@ def mean_background_variations(x1d_files,
         ax.plot(common_wavelengths, mean_bkg, color=mean_color, linewidth=3, label="Mean Background")
 
     mean_patch = Patch(color=mean_color, label='Mean Background')
-    ax.legend(handles=[mean_patch],loc='upper left', fontsize=16)
+    ax.legend(handles=[mean_patch], loc='upper left', fontsize=16)
     ax.tick_params(axis='both', labelsize=14)
-    #ax.grid(alpha=0.4, which='both')
+    #  ax.grid(alpha=0.4, which='both')
     ax.set_xticks([])
     fig.text(s='1.2 Min Zodi Benchmark Field Background Spectra', x=0.45, y=0.90, fontsize=18, ha='center', va='center')
     ax.set_ylabel("Surface Brightness (MJy/sr)", fontsize=16, labelpad=10)
     if y_lim:
-        ax.set_ylim(y_lim[0],y_lim[1])
+        ax.set_ylim(y_lim[0], y_lim[1])
 
-    ax_residual.errorbar(common_wavelengths, cov, yerr=cov_unc, color='black',fmt='.',markersize='0.9', elinewidth=1, ecolor=mean_color)
-    ax_residual.set_xlabel("$\u03BB [\u03BC$m]", fontsize=16,labelpad=10)
-    ax_residual.set_ylabel("Coefficient of Variation \n ($\u03C3_{backgrounds}$ / $X\u0304_{background}$)", fontsize=16,labelpad=10)
+    ax_residual.errorbar(common_wavelengths, cov, yerr=cov_unc, color='black', fmt='.', markersize='0.9', elinewidth=1, ecolor=mean_color)
+    ax_residual.set_xlabel("$\u03BB [\u03BC$m]", fontsize=16, labelpad=10)
+    ax_residual.set_ylabel("Coefficient of Variation \n ($\u03C3_{backgrounds}$ / $X\u0304_{background}$)", fontsize=16, labelpad=10)
     ax_residual.grid(color='gray', linewidth=0.5, axis='y')
     ax_residual.tick_params(axis='both', labelsize=14)
-    ax_residual.set_ylim(0,0.10)
+    ax_residual.set_ylim(0, 0.10)
     ax_residual.grid(alpha=0.4)
 
-    ax_hist.hist(cov, bins=len(cov), orientation='horizontal', ec=mean_color, fc=mean_color,alpha=0.3)
+    ax_hist.hist(cov, bins=len(cov), orientation='horizontal', ec=mean_color, fc=mean_color, alpha=0.3)
     ax_hist.tick_params(axis='y', labelleft=False)
     # ax_hist.axhline(y=weighted_mean_cov, color="darkblue",label="Weighted Mean COV", linestyle='--')
-    ax_hist.axhline(y=np.nanmean(cov),color='lightseagreen',label="Mean COV", linestyle='--')
+    ax_hist.axhline(y=np.nanmean(cov), color='lightseagreen', label="Mean COV", linestyle='--')
     ax_hist.set_xlabel("Count")
     ax_hist.legend(fontsize=6)
     ax_hist.grid(alpha=0.4)
@@ -551,7 +551,7 @@ def mean_background_variations(x1d_files,
     # Save the figure if required
     if save_figure:
         fig.savefig('./Benchmark_Field_Backgrounds.png', dpi=300, bbox_inches='tight')
-        fig2.savefig('./msa_spatial_background_variation.png')  # Adjust the filename as needed
+        #  fig2.savefig('./msa_spatial_background_variation.png')  # Adjust the filename as needed
 
     if save_mb:
         output_file = create_master_bkg(x1d_files[0], common_wavelengths, mean_bkg)
@@ -563,7 +563,7 @@ def mean_background_variations(x1d_files,
 
 def plot_spectra(s2d_files, x1d_files, slit_names, scale=5, y_lim=None,
                  extraction_region=True, ystart_ystop=None, aspect='auto',
-                 figsize=(15,8), cmap='plasma', hist=True, bins=50, title=None,
+                 figsize=(15, 8), cmap='plasma', hist=True, bins=50, title=None,
                  ecolor='mediumvioletred', ycolor='r', fill_nan=False, MB=False,
                  plot_errors=False):
     """
@@ -622,7 +622,6 @@ def plot_spectra(s2d_files, x1d_files, slit_names, scale=5, y_lim=None,
         gs = grd.GridSpec(len(slit_names)+1, 1, figure=fig, height_ratios=[2] + [1] * (len(slit_names)))
         ax_x1d = fig.add_subplot(gs[0])
 
-
     # Loop through all slits
     for indx, slit in enumerate(slit_names):
 
@@ -636,8 +635,8 @@ def plot_spectra(s2d_files, x1d_files, slit_names, scale=5, y_lim=None,
             # Plot histogram?
             if hist:
                 gs = grd.GridSpec(2, 3, figure=fig, height_ratios=[1, 2], width_ratios=[2, 0.08, 0.1])
-                ax = fig.add_subplot(gs[0,:1])
-                ax_cbar=fig.add_subplot(gs[0,1:2])
+                ax = fig.add_subplot(gs[0, :1])
+                ax_cbar = fig.add_subplot(gs[0, 1:2])
                 ax_x1d = fig.add_subplot(gs[1, :1])
                 ax_hist = plt.subplot(gs[1, 1:], sharey=ax_x1d)
                 ax_hist.tick_params(axis='y', which='both', left=False, right=False, labelleft=False)
@@ -670,14 +669,12 @@ def plot_spectra(s2d_files, x1d_files, slit_names, scale=5, y_lim=None,
                             img = ax.imshow(hdu.data, aspect=aspect, vmin=vmin, vmax=vmax, origin='lower', cmap=cmap)
                         ax.set_ylabel("Pixel Row", labelpad=15)
 
-
                         # Align the 2-D and 1-D plots based on wavelength.
                         ax.set_xticklabels([])  # Remove the tick labels.
                         a2 = ax.twiny()
                         a2.set_xlabel('Pixel Column', labelpad=15)
                         a2.set_xlim(0, hdu.data.shape[1])
                         a2.set_xticks(np.arange(0, hdu.data.shape[1], step=50))
-
 
                         if hist:
                             cbar = fig.colorbar(img, cax=ax_cbar, shrink=0.8, pad=-0.01, aspect=15)
@@ -689,10 +686,9 @@ def plot_spectra(s2d_files, x1d_files, slit_names, scale=5, y_lim=None,
                         cbar.update_ticks()  # Update the ticks to reflect the changes.
 
                         if hdu.header['SRCTYPE'] == 'POINT':
-                           cbar.set_label('MJy', labelpad=15)
+                            cbar.set_label('MJy', labelpad=15)
                         else:
-                           cbar.set_label('MJy/sr', labelpad=15)
-
+                            cbar.set_label('MJy/sr', labelpad=15)
 
             # Find the extension with the defined slit.
             with fits.open(x1d_file) as x1d_hdu:
@@ -708,24 +704,22 @@ def plot_spectra(s2d_files, x1d_files, slit_names, scale=5, y_lim=None,
                                     ystart = ystart_ystop[i][0]
                                     ystop = ystart_ystop[i+1][0]
 
-                                    ax.axhline(y=ystart, label='ystart={}'.format(ystart), c=ycolor, lw=0.8, ls='--', dashes=(10,10))
-                                    ax.axhline(y=ystop, label='ystop={}'.format(ystop), c=ycolor, lw=0.8, ls='--', dashes=(10,10))
+                                    ax.axhline(y=ystart, label='ystart={}'.format(ystart), c=ycolor, lw=0.8, ls='--', dashes=(10, 10))
+                                    ax.axhline(y=ystop, label='ystop={}'.format(ystop), c=ycolor, lw=0.8, ls='--', dashes=(10, 10))
                                     ext_region_count += 1
                                     print(f"Slit {slit} Extraction Region {ext_region_count} | Y-START = {ystart} ; Y-STOP = {ystop}")
 
-
                             else:
-                                ystart=hdu.header['EXTRYSTR']-1
-                                ystop=hdu.header['EXTRYSTP']-1
+                                ystart = hdu.header['EXTRYSTR']-1
+                                ystop = hdu.header['EXTRYSTP']-1
                                 print(f"Slit {slit}: Y-START = {ystart} ; Y-STOP = {ystop}")
 
-                                ax.axhline(y=ystart, label='ystart={}'.format(ystart), c=ycolor, lw=0.8, ls='--', dashes=(10,10))
-                                ax.axhline(y=ystop, label='ystop={}'.format(ystop), c=ycolor, lw=0.8, ls='--', dashes=(10,10))
-
+                                ax.axhline(y=ystart, label='ystart={}'.format(ystart), c=ycolor, lw=0.8, ls='--', dashes=(10, 10))
+                                ax.axhline(y=ystop, label='ystop={}'.format(ystop), c=ycolor, lw=0.8, ls='--', dashes=(10, 10))
 
                         # Define wavelength grid and ticks.
                         num_waves = len(hdu.data['WAVELENGTH'])
-                        xticks = [1,2,3,4,5]
+                        xticks = [1, 2, 3, 4, 5]
                         xtick_pos = np.interp(xticks, hdu.data['WAVELENGTH'], np.arange(num_waves))
                         xtick_labels = ['%.1f' % xtick for xtick in xticks]
 
@@ -740,10 +734,9 @@ def plot_spectra(s2d_files, x1d_files, slit_names, scale=5, y_lim=None,
 
                             ax_x1d.set_ylabel("Flux (Jy)", labelpad=20)
                             if hist:
-                                ax_hist.hist(hdu.data['FLUX'], bins=bins, ec=ecolor,fc=ecolor, alpha=0.3, orientation="horizontal")
+                                ax_hist.hist(hdu.data['FLUX'], bins=bins, ec=ecolor, fc=ecolor, alpha=0.3, orientation="horizontal")
                                 ax_hist.set_xlabel("Counts")
                                 ax_hist.grid(True, linestyle='--')
-
 
                         else:
                             ax_x1d.plot(np.arange(len(hdu.data['WAVELENGTH'])), hdu.data['SURF_BRIGHT'], color='k')
@@ -755,14 +748,12 @@ def plot_spectra(s2d_files, x1d_files, slit_names, scale=5, y_lim=None,
 
                             ax_x1d.set_ylabel("Surface Brightness (MJy/sr)", labelpad=20)
                             if hist:
-                                ax_hist.hist(hdu.data['SURF_BRIGHT'], bins=bins, ec=ecolor,fc=ecolor, alpha=0.3, orientation="horizontal")
+                                ax_hist.hist(hdu.data['SURF_BRIGHT'], bins=bins, ec=ecolor, fc=ecolor, alpha=0.3, orientation="horizontal")
                                 ax_hist.set_xlabel("Counts")
                                 ax_hist.grid(True, linestyle='--')
 
-
                         ax_x1d.set_xlabel("$\u03BB [\u03BC$m]", labelpad=15)
                         ax_x1d.grid(True, linestyle='--')
-
 
                         # Plot ticks and limits.
                         if MB:
@@ -772,7 +763,7 @@ def plot_spectra(s2d_files, x1d_files, slit_names, scale=5, y_lim=None,
                             ax.set_xticks(xtick_pos, xtick_labels)
                         else:
                             ax_x1d.set_xlim(0, num_waves)
-                            ax_x1d.set_xticks(xtick_pos,xtick_labels)
+                            ax_x1d.set_xticks(xtick_pos, xtick_labels)
                             ax.set_xlim(0, num_waves)
                             ax.set_xticks(xtick_pos)
 
@@ -785,11 +776,11 @@ def plot_spectra(s2d_files, x1d_files, slit_names, scale=5, y_lim=None,
                                 ax_x1d.set_title(os.path.basename(x1d_file), pad=20)
                             else:
                                 ax.set_title(os.path.basename(s2d_file)[:-9] + '\n Slitlet ' + str(slit), pad=20)
-                                #ax_x1d.set_title(os.path.basename(x1d_file) + '\n Slitlet ' + str(slit_name), pad=20)
+                                #  ax_x1d.set_title(os.path.basename(x1d_file) + '\n Slitlet ' + str(slit_name), pad=20)
 
                         # Set y-limits
                         if y_lim:
-                            ax_x1d.set_ylim(y_lim[0],y_lim[1])
+                            ax_x1d.set_ylim(y_lim[0], y_lim[1])
 
     plt.show()
 
@@ -885,7 +876,7 @@ def manually_define_dq_flags(rate_file_path, cal_file_path, slit_name, scale=0.2
             cal_y_min = sltstrt2
             cal_y_max = sltstrt2 + sltsize2
 
-            spectrum_data = sci_data[cal_y_min:cal_y_max,cal_x_min:cal_x_max]
+            spectrum_data = sci_data[cal_y_min:cal_y_max, cal_x_min:cal_x_max]
 
             # Calculate vmin and vmax based on the scale.
             vmin = np.nanpercentile(spectrum_data, scale)
@@ -898,15 +889,13 @@ def manually_define_dq_flags(rate_file_path, cal_file_path, slit_name, scale=0.2
             if plotly:
 
                 # Create hover text with location and intensity information.
-                #hover_text = [[f'X: {cal_x_min + x}, Y: {cal_y_min + y}<br>DN/s: {spectrum_data[y, x]}, DQ: #{dq_data[cal_y_min + y, cal_x_min + x]}' for x in x_coords] for y in y_coords]
+                #  hover_text = [[f'X: {cal_x_min + x}, Y: {cal_y_min + y}<br>DN/s: {spectrum_data[y, x]}, DQ: #{dq_data[cal_y_min + y, cal_x_min + x]}' for x in x_coords] for y in y_coords]
 
                 hover_text = [[f'X: {cal_x_min + x}, Y: {cal_y_min + y}<br>DN/s: {spectrum_data[y, x]}, DQ: {", ".join([flag for flag in flags if dq_data[cal_y_min + y, cal_x_min + x] & flags[flag]])}' for x in x_coords] for y in y_coords]
 
-
                 # Create Plotly figure for the 2D spectrum.
                 fig1 = go.Figure(data=go.Heatmap(z=spectrum_data, x=x_coords, y=y_coords, hoverinfo='text', hovertemplate='%{text}', text=hover_text,
-                                                  colorscale=cmap, zmin=vmin, zmax=vmax))
-
+                                                 colorscale=cmap, zmin=vmin, zmax=vmax))
 
                 # Add red X markers for outlier pixels.
                 if outlier_coords:
@@ -916,10 +905,10 @@ def manually_define_dq_flags(rate_file_path, cal_file_path, slit_name, scale=0.2
 
                 # Update layout for the 2D spectrum.
                 fig1.update_layout(title=f"RATE File {os.path.basename(rate_file_path)}, SLIT Name: {cal_header.get('SLTNAME', 'Unknown')}",
-                                  xaxis_title='Pixel Column',
-                                  yaxis_title='Pixel Row',
-                                  coloraxis_colorbar=dict(title='DN/s', tickvals=[vmin, vmax],
-                                                          ticktext=['Min', 'Max']))
+                                   xaxis_title='Pixel Column',
+                                   yaxis_title='Pixel Row',
+                                   coloraxis_colorbar=dict(title='DN/s', tickvals=[vmin, vmax],
+                                                           ticktext=['Min', 'Max']))
 
                 fig1.show()
             else:
