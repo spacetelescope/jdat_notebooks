@@ -483,12 +483,12 @@ def mean_background_variations(x1d_files,
     weights[np.isinf(weights)] = np.nan
 
     # Calculate the means
-    #weighted_mean_cov = np.nansum(weights * cov) / np.nansum(weights)
+    #  weighted_mean_cov = np.nansum(weights * cov) / np.nansum(weights)
     mean_cov = np.nanmean(cov)
 
     # Standard errors relative to mean cov
     regular_sem = np.nanstd(cov, ddof=1) / np.sqrt(len(cov))
-    #weighted_sem = np.sqrt(np.nansum((weights * np.nanstd(cov, ddof=1))**2)) / np.nansum(weights)
+    #  weighted_sem = np.sqrt(np.nansum((weights * np.nanstd(cov, ddof=1))**2)) / np.nansum(weights)
 
     print("Mean COV: " + str(mean_cov))
     print("Uncertainty of the Mean COV: " + str(regular_sem))
@@ -503,7 +503,7 @@ def mean_background_variations(x1d_files,
     # Update background_spectra with variation and median_variation.
     for i in range(len(background_spectra)):
         background_spectra[i] = background_spectra[i] + (median_variation[i],)
-    #slit_var_from_mean = [(data[0], data[4]) for data in background_spectra]
+    #  slit_var_from_mean = [(data[0], data[4]) for data in background_spectra]
 
     # ---------- Plot the Background Spectra & Mean ----------
     for i in range(clipped_data_nonan.shape[0]):
