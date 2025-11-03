@@ -19,14 +19,14 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
       has_notebooks: ${{ steps.set-matrix.outputs.has_notebooks }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       # Gather changed files matching notebooks or requirements.txt.
       - name: changed-files
         id: get-changed-files
-        uses: tj-actions/changed-files@v42
+        uses: tj-actions/changed-files@v47
         with:
           separator: ","
           files: |
@@ -94,10 +94,10 @@ jobs:
         notebook: ${{fromJson(needs.prepare_matrix.outputs.matrix)}}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
 
       - name: Setup Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v6
         with:
           python-version:  ${{ vars.PYTHON_VERSION }}
 
@@ -149,10 +149,10 @@ jobs:
       contents: write
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Set up Python  ${{ vars.PYTHON_VERSION }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version:  ${{ vars.PYTHON_VERSION }}
         
@@ -183,7 +183,7 @@ jobs:
         
     # Push the book's HTML to github-pages
     - name: GitHub Pages action
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./_build/html
