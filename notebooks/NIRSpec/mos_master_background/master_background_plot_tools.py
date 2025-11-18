@@ -622,7 +622,7 @@ def plot_spectra(s2d_files, x1d_files, slit_names, scale=5, y_lim=None,
         gs = grd.GridSpec(len(slit_names)+1, 1, figure=fig, height_ratios=[2] + [1] * (len(slit_names)))
         ax_x1d = fig.add_subplot(gs[0])
 
-    # Loop through all slits
+    # Loop through all slits.
     for indx, slit in enumerate(slit_names):
 
         # ---------- Setup the figures ----------
@@ -689,6 +689,16 @@ def plot_spectra(s2d_files, x1d_files, slit_names, scale=5, y_lim=None,
                             cbar.set_label('MJy', labelpad=15)
                         else:
                             cbar.set_label('MJy/sr', labelpad=15)
+
+                        # Titles.
+                        if title:
+                            ax.set_title(title, pad=20)
+                        else:
+                            if MB:
+                                ax.set_title(os.path.basename(s2d_file) + '\n Slitlet ' + str(slit), pad=20)
+                            else:
+                                ax.set_title(os.path.basename(s2d_file)[:-9] + '\n Slitlet ' + str(slit), pad=20)
+
 
             # Find the extension with the defined slit.
             with fits.open(x1d_file) as x1d_hdu:
@@ -772,11 +782,9 @@ def plot_spectra(s2d_files, x1d_files, slit_names, scale=5, y_lim=None,
                             ax.set_title(title, pad=20)
                         else:
                             if MB:
-                                ax.set_title(os.path.basename(s2d_file) + '\n Slitlet ' + str(slit), pad=20)
                                 ax_x1d.set_title(os.path.basename(x1d_file), pad=20)
                             else:
                                 ax.set_title(os.path.basename(s2d_file)[:-9] + '\n Slitlet ' + str(slit), pad=20)
-                                #  ax_x1d.set_title(os.path.basename(x1d_file) + '\n Slitlet ' + str(slit_name), pad=20)
 
                         # Set y-limits
                         if y_lim:
