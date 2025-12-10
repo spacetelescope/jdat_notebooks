@@ -699,7 +699,6 @@ def plot_spectra(s2d_files, x1d_files, slit_names, scale=5, y_lim=None,
                             else:
                                 ax.set_title(os.path.basename(s2d_file)[:-9] + '\n Slitlet ' + str(slit), pad=20)
 
-
             # Find the extension with the defined slit.
             with fits.open(x1d_file) as x1d_hdu:
                 for ext, hdu in enumerate(x1d_hdu):
