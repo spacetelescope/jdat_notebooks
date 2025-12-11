@@ -1,0 +1,38 @@
+# Notebook CI - Main Branch (Merge) Workflow  
+# Copy this file to your repository's .github/workflows/ directory
+# This workflow handles post-merge processing and documentation deployment
+
+name: Notebook CI - Main Branch
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'notebooks/**'
+      - 'requirements.txt'
+      - 'pyproject.toml'
+      - '*.yml'
+      - '*.yaml'
+      - '*.md'
+      - '*.html'
+      - '*.css'
+      - '*.js'
+
+jobs:
+  notebook-ci-and-deploy:
+    uses: spacetelescope/notebook-ci-actions/.github/workflows/notebook-ci-unified.yml@v1
+    with:
+      execution-mode: 'merge'
+      python-version: '3.11'                        # Adjust as needed
+      # conda-environment: 'stenv'                  # Uncomment and adjust for custom conda env
+      enable-validation: true
+      enable-security: true  
+      enable-execution: true
+      enable-storage: true                          # Store outputs to gh-storage
+      enable-html-build: true                       # Build and deploy HTML docs
+      post-processing-script: './placeholder.sh'  # Adjust path as needed
+    secrets:
+      CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
+      CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
+
+

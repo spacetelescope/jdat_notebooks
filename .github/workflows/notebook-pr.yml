@@ -1,0 +1,38 @@
+# Pull Request workflow for hellouniverse repository
+# Copy this file to your repository's .github/workflows/ directory
+
+name: Notebook CI - Pull Request
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'notebooks/**'
+      - 'requirements.txt'
+      - 'pyproject.toml'
+      - '*.yml'
+      - '*.yaml'
+      - '*.md'
+      - '*.html'
+      - '*.css'
+      - '*.js'
+
+jobs:
+  notebook-ci:
+    uses: spacetelescope/notebook-ci-actions/.github/workflows/notebook-ci-unified.yml@v1
+    with:
+      execution-mode: 'pr'
+      python-version: '3.11'                    # Adjust as needed
+      # conda-environment: 'hstcal'             # Uncomment and adjust for custom conda env
+      # custom-requirements: 'custom-reqs.txt'  # Uncomment for custom requirements
+      enable-validation: true
+      enable-security: true
+      enable-execution: true
+      enable-storage: true                      # Store outputs to gh-storage on PR
+      enable-html-build: false                  # Don't build HTML docs on PR
+      post-processing-script: './placeholder.sh'
+    secrets:
+      CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
+      CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
+
+
