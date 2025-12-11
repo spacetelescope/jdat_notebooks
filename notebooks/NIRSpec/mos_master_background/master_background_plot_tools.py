@@ -41,7 +41,7 @@ def read_msa_metadata_tables(msa_metafile):
     metadata_tables = {}
     for hdu_name in ['SHUTTER_INFO', 'SOURCE_INFO']:
         table_data = Table.read(msa_metafile, format='fits', hdu=hdu_name)
-        metadata_tables[hdu_name] = table_data.to_pandas().applymap(lambda x: x.decode() if isinstance(x, bytes) else x)
+        metadata_tables[hdu_name] = table_data.to_pandas().map(lambda x: x.decode() if isinstance(x, bytes) else x)
 
     return metadata_tables.get('SHUTTER_INFO'), metadata_tables.get('SOURCE_INFO')
 
