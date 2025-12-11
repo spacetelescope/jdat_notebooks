@@ -1,0 +1,233 @@
+# Notebook CI - On-Demand Actions
+# Copy this file to your repository's .github/workflows/ directory
+# This workflow provides on-demand execution options with various configurations
+
+name: Notebook CI - On-Demand Actions
+
+on:
+  workflow_dispatch:
+    inputs:
+      action_type:
+        description: 'Action to perform'
+        required: true
+        type: choice
+        options:
+          - 'validate-all'
+          - 'execute-all'
+          - 'security-scan-all'
+          - 'validate-single'
+          - 'execute-single'
+          - 'full-pipeline-all'
+          - 'full-pipeline-single'
+          - 'build-html-only'
+          - 'deprecate-notebook'
+        default: 'validate-all'
+      
+      single_notebook:
+        description: 'Single notebook path (for single-notebook actions)'
+        required: false
+        type: string
+        
+      python_version:
+        description: 'Python version'
+        required: false
+        type: string
+        default: '3.11'
+        
+      conda_environment:
+        description: 'Custom conda environment (optional)'
+        required: false
+        type: string
+        
+      deprecation_days:
+        description: 'Days until deprecation (for deprecate action)'
+        required: false
+        type: string
+        default: '60'
+        
+      enable_debug:
+        description: 'Enable debug logging'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  validate-all:
+    if: inputs.action_type == 'validate-all'
+    uses:  spacetelescope/notebook-ci-actions/.github/workflows/notebook-ci-unified.yml@v1
+    with:
+      execution-mode: 'on-demand'
+      trigger-event: 'validate'
+      python-version: ${{ inputs.python_version }}
+      conda-environment: ${{ inputs.conda_environment }}
+      enable-validation: true
+      enable-security: false
+      enable-execution: false
+      enable-storage: false
+      enable-html-build: false
+    secrets:
+      CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
+      CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
+
+  execute-all:
+    if: inputs.action_type == 'execute-all'  
+    uses: spacetelescope/notebook-ci-actions/.github/workflows/notebook-ci-unified.yml@v1
+    with:
+      execution-mode: 'on-demand'
+      trigger-event: 'execute'
+      python-version: ${{ inputs.python_version }}
+      conda-environment: ${{ inputs.conda_environment }}
+      enable-validation: false
+      enable-security: false
+      enable-execution: true
+      enable-storage: false
+      enable-html-build: false
+    secrets:
+      CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
+      CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
+
+  security-scan-all:
+    if: inputs.action_type == 'security-scan-all'
+    uses:  spacetelescope/notebook-ci-actions/.github/workflows/notebook-ci-unified.yml@v1
+    with:
+      execution-mode: 'on-demand'
+      trigger-event: 'security'
+      python-version: ${{ inputs.python_version }}
+      conda-environment: ${{ inputs.conda_environment }}
+      enable-validation: false
+      enable-security: true
+      enable-execution: false
+      enable-storage: false
+      enable-html-build: false
+    secrets:
+      CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
+      CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
+
+  validate-single:
+    if: inputs.action_type == 'validate-single'
+    uses:  spacetelescope/notebook-ci-actions/.github/workflows/notebook-ci-unified.yml@v1
+    with:
+      execution-mode: 'on-demand'
+      trigger-event: 'validate'
+      single-notebook: ${{ inputs.single_notebook }}
+      python-version: ${{ inputs.python_version }}
+      conda-environment: ${{ inputs.conda_environment }}
+      enable-validation: true
+      enable-security: false
+      enable-execution: false
+      enable-storage: false
+      enable-html-build: false
+    secrets:
+      CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
+      CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
+
+  execute-single:
+    if: inputs.action_type == 'execute-single'
+    uses:  spacetelescope/notebook-ci-actions/.github/workflows/notebook-ci-unified.yml@v1
+    with:
+      execution-mode: 'on-demand'
+      trigger-event: 'execute'
+      single-notebook: ${{ inputs.single_notebook }}
+      python-version: ${{ inputs.python_version }}
+      conda-environment: ${{ inputs.conda_environment }}
+      enable-validation: false
+      enable-security: false
+      enable-execution: true
+      enable-storage: false
+      enable-html-build: false
+    secrets:
+      CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
+      CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
+
+  full-pipeline-all:
+    if: inputs.action_type == 'full-pipeline-all'
+    uses:  spacetelescope/notebook-ci-actions/.github/workflows/notebook-ci-unified.yml@v1
+    with:
+      execution-mode: 'on-demand'
+      trigger-event: 'all'
+      python-version: ${{ inputs.python_version }}
+      conda-environment: ${{ inputs.conda_environment }}
+      enable-validation: true
+      enable-security: true
+      enable-execution: true
+      enable-storage: true
+      enable-html-build: true
+      post-processing-script: './placeholder.sh'
+    secrets:
+      CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
+      CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
+
+  full-pipeline-single:
+    if: inputs.action_type == 'full-pipeline-single'
+    uses:  spacetelescope/notebook-ci-actions/.github/workflows/notebook-ci-unified.yml@v1
+    with:
+      execution-mode: 'on-demand'
+      trigger-event: 'all'
+      single-notebook: ${{ inputs.single_notebook }}
+      python-version: ${{ inputs.python_version }}
+      conda-environment: ${{ inputs.conda_environment }}
+      enable-validation: true
+      enable-security: true
+      enable-execution: true
+      enable-storage: true
+      enable-html-build: true
+      post-processing-script: './placeholder.sh'
+    secrets:
+      CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
+      CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
+
+  build-html-only:
+    if: inputs.action_type == 'build-html-only'
+    uses:  spacetelescope/notebook-ci-actions/.github/workflows/notebook-ci-unified.yml@v1
+    with:
+      execution-mode: 'on-demand'
+      trigger-event: 'html'
+      python-version: ${{ inputs.python_version }}
+      enable-validation: false
+      enable-security: false
+      enable-execution: false
+      enable-storage: false
+      enable-html-build: true
+      post-processing-script: './placeholder.sh'
+    secrets:
+      CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
+      CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
+
+  deprecate-notebook:
+    if: inputs.action_type == 'deprecate-notebook'
+    uses: spacetelescope/notebook-ci-actions/.github/workflows/notebook-ci-unified.yml@v1
+    with:
+      execution-mode: 'on-demand'
+      trigger-event: 'deprecate'
+      single-notebook: ${{ inputs.single_notebook }}
+      python-version: ${{ inputs.python_version }}
+      deprecation-days: ${{ fromJSON(inputs.deprecation_days) }}
+      enable-validation: false
+      enable-security: false
+      enable-execution: false
+      enable-storage: false
+      enable-html-build: false
+    secrets:
+      CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
+      CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
+
+  performance-test:
+    if: inputs.action_type == 'performance-test'
+    uses:  spacetelescope/notebook-ci-actions/.github/workflows/notebook-ci-unified.yml@v1
+    with:
+      execution-mode: 'on-demand'
+      trigger-event: 'all'
+      python-version: ${{ inputs.python_version }}
+      conda-environment: ${{ inputs.conda_environment }}
+      enable-validation: true
+      enable-security: true
+      enable-execution: true
+      enable-storage: false  # Skip storage for performance testing
+      enable-html-build: false
+    secrets:
+      CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
+      CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
+
+
+
+
