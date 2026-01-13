@@ -1,0 +1,1812 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Master Background Subtraction for Multi-Object Spectroscopy (MOS) &#8212; STScI JDAT Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/main.css?v=b44a18d9" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-D46G4HKJY3"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-D46G4HKJY3');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-D46G4HKJY3');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/NIRSpec/mos_master_background/Master_Background_MOS_Demo';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="NIRSpec MOS MSA Metafile" href="../msa_metafile/NIRSpec_MOS_MSA_metafile.html" />
+    <link rel="prev" title="MOS Spectroscopy of Extragalactic Field" href="../mos_spectroscopy_advanced/MOSspec_advanced.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="STScI JDAT Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="STScI JDAT Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebook_development_workflow.html">Notebook Development Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/submitting_notebooks.html">Submitting Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/requirements.html">Requirements file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/notebooks.html">Jupyter Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/data_files.html">Data Files</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">GitHub Guidelines</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_setup.html">GitHub Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_workflow.html">GitHub Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/github_pr.html">GitHub PR</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">JDAViz Demo Notebooks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../jdaviz_demo/notebooks/Cubeviz.html">Cubeviz with NIRSpec data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jdaviz_demo/notebooks/Imviz.html">Jdaviz Imviz Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jdaviz_demo/notebooks/Specviz_Specviz2d.html">Specviz and Specviz2D Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../jdaviz_demo/notebooks/specreduce_extraction.html">Specreduce Demo</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cross-Instrument</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/asdf_example/asdf_example.html">ASDF Example</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/background_estimation_imaging/Imaging_Sky_Background_Estimation.html">Complex 2D Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/composite_model_fitting/specfit_demo_3.html">Composite Model Spectral Fitting</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/rgb_imviz/imviz_rgb_carina.html">RGB images with Imviz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/specviz_notebookGUI_interaction/specviz_notebook_gui_interaction_redshift.html">Specviz Simple Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/update_pure_parallel_wcs/NIRISS_correct_pure_parallel_WCS.html">Improving Accuracy of WCS of Pure Parallel Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/photometry_extragalactic/imviz.html">Photometry with JWST - Imviz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/photometry_extragalactic/photutils_example.html">Photometry of a JWST/NIRCam extragalactic field with Photutils</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../cross_instrument/stpsf_examples/stpsf_examples.html">JWST PSFs Using Wavefronts Measured On Orbit</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">MIRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MRS_Mstar_analysis/JWST_Mstar_dataAnalysis_analysis.html">MRS Mstar - Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MIRI_IFU_YSOs_in_the_LMC/isha_nayak_ysos_in_the_lmc.html">IFU of YSOs in LMC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/MIRI_LRS_spectral_extraction/miri_lrs_advanced_extraction_part1.html">LRS Optimal Spectral Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/psf_photometry/miri_1028.html">MIRI PSF Photometry With Space_Phot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/psf_photometry/miri_1028_photutils.html">MIRI PSF Photometry with Photutils</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/psf_photometry/miri_photutils.html">MIRI PSF Photometry with Photutils</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../MIRI/psf_photometry/miri_spacephot.html">MIRI PSF Photometry With Space_Phot</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRCam</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/aperture_photometry/NIRCam_Aperture_Photometry_Example.html">Point Source Aperture Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_photometry/NIRCam_multiband_photometry.html">Extended Aperture Photometry</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_PSF-matched_photometry/NIRCam_PSF_matched_multiband_photometry.html">Cross-Filter PSF Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/psf_photometry/NIRCam_PSF_Photometry_Example.html">PSF Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_wisp_subtraction/nircam_wisp_subtraction.html">NIRCam Wisp Removal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_claw_detection/nircam_claw_detection.html">NIRCam Claw Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_WFSS_Box_extraction/BoxExtraction_using_Grismconf_CRDS.html">WFSS Box Extraction Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/NIRCam_WFSS_simulating_spectra/Simulating_WFSS_spectra_CRDS.html">WFSS Spectra Simulation for Contamination Correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/psf_photometry_basics/psf_photometry_basics.html">PSF Photometry Basics with Photutils</a></li>
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../NIRCam/psf_photometry_with_space_phot/nircam_spacephot.html">NIRCam PSF Photometry With Space_Phot</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRISS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/00_Optimal_extraction.html">WFSS Spectra - Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/01_Combine_and_normalize_1D_spectra.html">WFSS Spectra - Combine and Normalize 1D Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/02_Cross_correlation_template.html">WFSS Spectra - Cross-Correlation Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_postpipeline/03_Spatially_resolved_emission_line_map.html">WFSS Spectra - Emission Line Map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/00_niriss_mast_query_data_setup.html">NIRISS MAST</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/01_niriss_wfss_image2_image3.html">Direct imaging for WFSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/02_niriss_wfss_spec2.html">Spec2 pipeline for WFSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../NIRISS/NIRISS_WFSS_advanced/extra_niriss_individual_steps.html">Running Individual Pipline Steps</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NIRSpec</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../IFU_cube_continuum_fit/NGC4151_FeII_ContinuumFit.html">IFU Cube Fitting</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../cube_fitting/cube_fitting.html">IFU Cube Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ifu_optimal/ifu_optimal.html">IFU Optimal Spectral Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimal_extraction/Spectral_Extraction-static.html">MOS Optimal Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mos_spectroscopy_advanced/MOSspec_advanced.html">MOS Spectroscopy of Extragalactic Field</a></li>
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Master Background Subtraction for Multi-Object Spectroscopy (MOS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../msa_metafile/NIRSpec_MOS_MSA_metafile.html">NIRSpec MOS MSA Metafile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mos_slits_to_sky/NIRSpec_MOS_slits_to_sky.html">NIRSpec MOS Slits to Sky</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../transit_spectroscopy_notebook/Exoplanet_Transmission_Spectra_JWST.html">BOTS Time Series Observations</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../galaxy_redshift/redshift_fitting.html">Redshift and Template Fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_NSClean/FS_NSClean_example.html">FS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_NSClean/IFU_NSClean_example.html">IFU Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_NSClean/MOS_NSClean_example.html">MOS Products with NSClean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NIRSpec_NSClean/BOTS_NSClean_example.html">BOTS Products with NSClean</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/jdat_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/NIRSpec/mos_master_background/Master_Background_MOS_Demo.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/NIRSpec/mos_master_background/Master_Background_MOS_Demo.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Master Background Subtraction for Multi-Object Spectroscopy (MOS)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">1. Introduction <a id="intro"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">2. Import Library <a id="imports"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#set-crds-context-and-server">Set CRDS Context and Server</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#directory-setup">3. Directory Setup <a id="dir_setup"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-data">4. Download the Data <a id="data"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vetting-the-background-spectra">5. Vetting the Background Spectra <a id="bkg_vetting"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-2-spec2pipeline-no-background-subtraction-applied">5.1 Stage 2: Spec2Pipeline – No Background Subtraction Applied <a id="stage2"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-background-variation">5.2 Check the Background Variation <a id="variation"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#source-and-slitlet-information-msa-metadata-file">6. Source and Slitlet Information: MSA Metadata File <a id="metadata"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#edit-the-msa-metadata-file-for-master-background-subtraction">6.1 Edit the MSA Metadata File for Master Background Subtraction <a id="metafile_mb"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#master-background-subtraction-pipeline-generated-master-background-spectrum">7. Master Background Subtraction: Pipeline Generated Master Background Spectrum <a id="masterbkg"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#identify-unmasked-hot-bad-pixels">7.1 Identify Unmasked Hot/Bad Pixels <a id="hotbadpx"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#master-background-subtraction-user-supplied-master-background-spectrum">8. Master Background Subtraction: User Supplied Master Background Spectrum <a id="manual"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#re-extraction-of-1-d-backgrounds-using-modified-extract1d-reference-file">8.1 Re-extraction of 1-D Backgrounds Using Modified EXTRACT1D Reference File <a id="extraction"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">9. Conclusion <a name="conclusion"></a></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <p><a id='top'></a>
+<a class="reference internal" href="https://github.com/spacetelescope/jwst-pipeline-notebooks/raw/main/_static/stsci_header.png"><img alt="stsci_logo" src="https://github.com/spacetelescope/jwst-pipeline-notebooks/raw/main/_static/stsci_header.png" style="width: 900px;" /></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="master-background-subtraction-for-multi-object-spectroscopy-mos">
+<h1>Master Background Subtraction for Multi-Object Spectroscopy (MOS)<a class="headerlink" href="#master-background-subtraction-for-multi-object-spectroscopy-mos" title="Link to this heading">#</a></h1>
+<p><strong>Authors</strong>: Kayli Glidic (kglidic&#64;stsci.edu); NIRSpec Instrument Team <br>
+<strong>Created On</strong>: June, 2024 (<a class="reference external" href="https://www.stsci.edu/jwst/science-execution/jwebbinars.html#h3-dc1c3cd6-f1aa-45c4-b73f-e93cc96ff4a7:~:text=33%20%2D%20JWST%20NIRSpec%20MOS%20Data%20Reduction">JWebbinar 33</a>)<br>
+<strong>Updated On</strong>: September, 2025. <br>
+<strong>Pipeline Version</strong>: 1.19.1 (Build 12.0, Context jwst_1413.pmap)</p>
+<p><strong>Purpose</strong>:<br>
+The primary goal of this notebook is to demonstrate the master background subtraction method offered by the <em>James Webb Space Telescope</em> (JWST) Calibration Pipeline for Near-Infrared Spectrograph (NIRSpec) MOS data.</p>
+<p><strong><a class="reference internal" href="#data"><span class="xref myst">Data</span></a></strong>:<br>
+This notebook is set up to use observations of the 1.2 Min Zodi Benchmark Field with the PRISM disperser obtained by Proposal ID (PID) 1448, Observation 11.</p>
+<p><strong><a class="reference internal" href="#Set-CRDS-Context-and-Server"><span class="xref myst">JWST pipeline version and CRDS context</span></a></strong>:<br>
+This notebook was last updated with the above-specified pipeline version and associated build context for this version of the JWST Calibration Pipeline. Information about this and other contexts can be found in the JWST Calibration Reference Data System (CRDS <a class="reference external" href="https://jwst-crds.stsci.edu/">server</a>). If you use different pipeline versions, please refer to the table <a class="reference external" href="https://jwst-crds.stsci.edu/display_build_contexts/">here</a> to determine what context to use. To learn more about the differences for the pipeline, read the relevant <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-science-calibration-pipeline/jwst-operations-pipeline-build-information#references">documentation</a>.<br></p>
+<p>Please note that pipeline software development is a continuous process, so results in some cases may be slightly different if a subsequent version is used. <strong>For optimal results, users are strongly encouraged to reprocess their data using the most recent pipeline version and <a class="reference external" href="https://jwst-crds.stsci.edu/display_build_contexts/">associated CRDS context</a>, taking advantage of bug fixes and algorithm improvements.</strong>
+Any <a class="reference external" href="https://jwst-docs.stsci.edu/known-issues-with-jwst-data/nirspec-known-issues/nirspec-mos-known-issues#NIRSpecFSKnownIssues-Resamplingof2-Dspectra&amp;amp;gsc.tab=0:~:text=MOS%20Known%20Issues-,NIRSpec%20MOS%20Known%20Issues,-Known%20issues%20specific">known issues</a> for this build related to master background subtraction are noted in the notebook.</p>
+<hr class="docutils" />
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#intro"><span class="xref myst">1. Introduction</span></a></p></li>
+<li><p><a class="reference internal" href="#imports"><span class="xref myst">2. Import Library</span></a></p></li>
+<li><p><a class="reference internal" href="#dir_setup"><span class="xref myst">3. Directory Setup</span></a></p></li>
+<li><p><a class="reference internal" href="#data"><span class="xref myst">4. Download the Data</span></a></p></li>
+<li><p><a class="reference internal" href="#bkg_vetting"><span class="xref myst">5. Vetting the Background Spectra</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#stage2"><span class="xref myst">5.1 Stage 2: Spec2Pipeline – No Background Subtraction Applied</span></a></p></li>
+<li><p><a class="reference internal" href="#variation"><span class="xref myst">5.2 Check the Background Variation</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#metadata"><span class="xref myst">6. Source and Slitlet Information: MSA Metadata File</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#metafile_mb"><span class="xref myst">6.1 Edit the MSA Metadata File for Master Background Subtraction</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#masterbkg"><span class="xref myst">7. Master Background Subtraction: Pipeline Generated Master Background Spectrum</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#hotbadpx"><span class="xref myst">7.1 Identify Unmasked Hot/Bad Pixels</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#manual"><span class="xref myst">8. Master Background Subtraction: User Supplied Master Background Spectrum</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#extraction"><span class="xref myst">8.1 Re-extraction of 1-D Backgrounds Using Modified EXTRACT1D Reference File</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#conclusion"><span class="xref myst">9. Conclusion</span></a></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="introduction">
+<h2>1. Introduction <a id='intro'></a><a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p>JWST observations detect background emission from various sources: the zodiacal cloud, Milky Way Galaxy, thermal self-emission from the observatory itself, and stray light from out-of-field sky (<a class="reference external" href="https://jwst-docs.stsci.edu/jwst-general-support/jwst-background-model">JDocs</a>). To remove this unwanted excess signal from the spectral traces of science targets, the Space Telescope Science Institute (STScI) <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/">JWST Calibration Pipeline</a> provides two standard background subtraction methods for NIRSpec MOS observations, one of which is called “master background” subtraction.</p>
+<p>Master background subtraction is a technique implemented by the <em><a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/api/jwst.master_background.MasterBackgroundMosStep.html#jwst.master_background.MasterBackgroundMosStep"><code class="docutils literal notranslate"><span class="pre">MasterBackgroundMosStep</span></code></a></em> in the <em><a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/pipeline/calwebb_spec2.html"><code class="docutils literal notranslate"><span class="pre">calwebb_spec2</span></code></a></em> pipeline for MOS mode observations. This removal strategy relies on an independent, flux-calibrated 1-D master background spectrum, which can be provided directly by the user or generated on the fly with background data from predefined sky pixels (<a class="reference external" href="https://arxiv.org/pdf/1805.06922">Alves de Oliveira et al., 2018</a>). For MOS observations, these come from designated background MSA slitlets (“blank sky” shutters assigned in the MSA configuration) within the same exposure as the science targets. The detailed list of operations performed when applying master background subtraction to MOS data during <em><a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/pipeline/calwebb_spec2.html"><code class="docutils literal notranslate"><span class="pre">calwebb_spec2</span></code></a></em> processing is as follows:</p>
+<ol class="arabic simple">
+<li><p>Process all slitlets in the MOS exposure up through the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/extract_2d/index.html"><em><code class="docutils literal notranslate"><span class="pre">extract_2d</span></code></em></a> and <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/srctype/index.html"><em><code class="docutils literal notranslate"><span class="pre">srctype</span></code></em></a> steps (includes: <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/assign_wcs/main.html"><em><code class="docutils literal notranslate"><span class="pre">assign_wcs</span></code></em></a>, <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/imprint/index.html"><em><code class="docutils literal notranslate"><span class="pre">imprint</span></code></em></a>, <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/msaflagopen/index.html"><em><code class="docutils literal notranslate"><span class="pre">msa_flagging</span></code></em></a>, and optionally <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/nsclean/index.html#nsclean-step"><em><code class="docutils literal notranslate"><span class="pre">nsclean</span></code></em></a>).</p></li>
+<li><p>The <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/api/jwst.master_background.MasterBackgroundMosStep.html#jwst.master_background.MasterBackgroundMosStep"><em><code class="docutils literal notranslate"><span class="pre">MasterBackgroundMosStep</span></code></em></a> step temporarily applies remaining calibration steps up through <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/photom/index.html"><em><code class="docutils literal notranslate"><span class="pre">photom</span></code></em></a> to all slits, treating them all as extended sources (appropriate for background signal), and saving the extended source correction arrays for each slit in an internal copy of the data model (includes: <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/flatfield/index.html#flatfield-step"><em><code class="docutils literal notranslate"><span class="pre">flat_field</span></code></em></a>, <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/barshadow/index.html"><em><code class="docutils literal notranslate"><span class="pre">barshadow</span></code></em></a>, <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/wavecorr/index.html"><em><code class="docutils literal notranslate"><span class="pre">wavecorr</span></code></em></a>, <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/pathloss/index.html"><em><code class="docutils literal notranslate"><span class="pre">pathloss</span></code></em></a>).</p></li>
+<li><p><a id='step3'></a> If a user-supplied master background spectrum is not given, the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/resample/index.html"><em><code class="docutils literal notranslate"><span class="pre">resample_spec</span></code></em></a> and <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/extract_1d/index.html"><em><code class="docutils literal notranslate"><span class="pre">extract_1d</span></code></em></a> steps are applied to the calibrated background slits, resulting in extracted 1-D background spectra.</p></li>
+<li><p>The 1-D background spectra are combined, using the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/combine_1d/index.html"><em><code class="docutils literal notranslate"><span class="pre">combine_1d</span></code></em></a> step, into a master background spectrum.</p></li>
+<li><p>If a user-supplied master background is given, steps 3 and 4 are skipped and the user-supplied spectrum is inserted into the processing flow.</p></li>
+<li><p>The master background spectrum (either user-supplied or created on-the-fly) is expanded into the 2-D space of each slit.</p></li>
+<li><p>The 2-D background “image” for each slit is processed in <strong>inverse</strong> mode through the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/photom/index.html"><em><code class="docutils literal notranslate"><span class="pre">photom</span></code></em></a>, <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/barshadow/index.html"><em><code class="docutils literal notranslate"><span class="pre">barshadow</span></code></em></a>, <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/pathloss/index.html"><em><code class="docutils literal notranslate"><span class="pre">pathloss</span></code></em></a>, and <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/flatfield/index.html#flatfield-step"><em><code class="docutils literal notranslate"><span class="pre">flat_field</span></code></em></a> steps, using the correction arrays that were computed in step 2, so that the background data now matches the partially calibrated background signal in each slit.</p></li>
+<li><p>The corrected 2-D background is subtracted from each open slitlet.</p></li>
+<li><p>The background-subtracted slits are processed through all remaining <em><code class="docutils literal notranslate"><span class="pre">calwebb_spec2</span></code></em> calibration steps, using the corrections appropriate for the source type in each slit.</p></li>
+</ol>
+<p><a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/master_background/description.html#nirspec-master-background-corrections:~:text=Fixed%2DSlit%20exposures.-,NIRSpec%20MOS%20Mode,-Master%20background%20subtraction">More Info …</a></p>
+</section>
+<hr class="docutils" />
+<section id="import-library">
+<h2>2. Import Library <a id='imports'></a><a class="headerlink" href="#import-library" title="Link to this heading">#</a></h2>
+<section id="set-crds-context-and-server">
+<h3>Set CRDS Context and Server<a class="headerlink" href="#set-crds-context-and-server" title="Link to this heading">#</a></h3>
+<p>Before importing <code class="docutils literal notranslate"><span class="pre">CRDS</span></code> and <code class="docutils literal notranslate"><span class="pre">JWST</span></code> modules, we need to configure our environment. This includes defining a CRDS cache directory in which to keep the reference files that will be used by the calibration pipeline. If the local CRDS cache directory has not been set, it will automatically be created in the home directory.<br><br>
+<a class="reference external" href="https://jwst-crds.stsci.edu/display_build_contexts/">Build Context Table</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ------------------------Set CRDS context and paths------------------------</span>
+
+<span class="c1"># Each version of the calibration pipeline is associated with a specific CRDS</span>
+<span class="c1"># context file. The pipeline will select the appropriate context file behind</span>
+<span class="c1"># the scenes while running. However, if you wish to override the default context</span>
+<span class="c1"># file and run the pipeline with a different context, you can set that using</span>
+<span class="c1"># the CRDS_CONTEXT environment variable. Here we show how this is done,</span>
+<span class="c1"># although we leave the line commented out in order to use the default context.</span>
+<span class="c1"># If you wish to specify a different context, uncomment the line below.</span>
+<span class="c1">#os.environ[&#39;CRDS_CONTEXT&#39;] = &#39;jwst_1413.pmap&#39;  # CRDS context for 1.19.1</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="c1"># Set CRDS cache directory to user home if not already set.</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">),</span> <span class="s1">&#39;crds_cache&#39;</span><span class="p">)</span>
+
+<span class="c1"># Check whether the CRDS server URL has been set. If not, set it.</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://jwst-crds.stsci.edu&#39;</span>
+
+<span class="c1"># Output the current CRDS path and server URL in use.</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;CRDS local filepath:&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_PATH&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;CRDS file server:&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS local filepath: /home/runner/crds_cache
+CRDS file server: https://jwst-crds.stsci.edu
+</pre></div>
+</div>
+</div>
+</div>
+<div class="alert alert-block alert-info">
+<p>Installation instructions for the JWST pipeline found here: <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-science-calibration-pipeline-overview">JDox</a> •
+<a class="reference external" href="https://jwst-pipeline.readthedocs.io">ReadtheDocs</a> •
+<a class="reference external" href="https://github.com/spacetelescope/jwst">Github</a></p>
+</div><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ------ General Imports ------</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.mast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Observations</span>
+
+<span class="c1"># ------ JWST Imports ------</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">crds</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jwst</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stpipe</span><span class="w"> </span><span class="kn">import</span> <span class="n">crds_client</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">crds.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jwst.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Spec2Pipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jwst.extract_1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">Extract1dStep</span>
+
+<span class="c1"># ------ Convenience Function Imports ------</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">master_background_plot_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_spectra</span><span class="p">,</span> <span class="n">metafile_editor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">master_background_plot_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">manually_define_dq_flags</span><span class="p">,</span> <span class="n">mean_background_variations</span>
+
+<span class="c1"># Hide all log and warning messages.</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">disable</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+
+<span class="c1"># Set the default font size for all plots.</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+
+<span class="c1"># Print the JWST pipeline version and the default CRDS context for that version.</span>
+<span class="n">default_context</span> <span class="o">=</span> <span class="n">crds</span><span class="o">.</span><span class="n">get_default_context</span><span class="p">(</span><span class="s1">&#39;jwst&#39;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s1">&#39;build&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;JWST Calibration Pipeline Version = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">jwst</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default CRDS Context for JWST Version </span><span class="si">{</span><span class="n">jwst</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">default_context</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using CRDS Context: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;CRDS_CONTEXT&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">default_context</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>JWST Calibration Pipeline Version = 1.20.2
+Default CRDS Context for JWST Version 1.20.2: jwst_1464.pmap
+Using CRDS Context: 
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="directory-setup">
+<h2>3. Directory Setup <a id='dir_setup'></a><a class="headerlink" href="#directory-setup" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># To rerun the notebook set runflag=True.</span>
+<span class="n">runflag</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># Define a parent output directory.</span>
+<span class="n">output_dir</span> <span class="o">=</span> <span class="s1">&#39;./masterbkg_subtraction_MOS_demo/&#39;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="download-the-data">
+<h2>4. Download the Data <a id='data'></a><a class="headerlink" href="#download-the-data" title="Link to this heading">#</a></h2>
+<p>This notebook is using commissioning data from JWST proposal <a class="reference external" href="https://www.stsci.edu/jwst/science-execution/program-information?id=1448">1448</a> Observation 11, which looked at the background in the 1.2 Min Zodi Benchmark Field, where the zodical background is 1.2 times higher than the celestial minimum. All open slitlets in this dataset’s MSA configuration observed background.</p>
+<div class="alert alert-block alert-info"> 
+<p><b>Tip:</b> The data in this notebook is public and does not require a MAST token. To download other non-public datasets from MAST, you must input your MAST authorization token. Get your MAST Token Here: https://auth.mast.stsci.edu/token. To utilize ASTROQUERY for downloading, please follow the <a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">documented installation procedures</a>.</p>
+</div> 
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Target: 1.2 Min Zodi Benchmark Field</p></th>
+<th class="head text-center"><p></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>Proposal ID</p></td>
+<td class="text-center"><p><a class="reference external" href="https://www.stsci.edu/jwst/science-execution/program-information?id=1448">1448</a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><a class="reference external" href="https://jwst-docs.stsci.edu/jwst-near-infrared-spectrograph/nirspec-instrumentation/nirspec-dispersers-and-filters">GRATING/FILTER</a></p></td>
+<td class="text-center"><p>PRISM/CLEAR</p></td>
+<td><p>λ: 0.6–5.3 μm (a low resolution, R ~ 100)</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>DURATION</p></td>
+<td class="text-center"><p>3545.1 [s]</p></td>
+<td><p>Total duration of one exposure</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>READPATT</p></td>
+<td class="text-center"><p>NRSIRS2RAPID</p></td>
+<td><p>Readout Pattern</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>NOD_TYPE</p></td>
+<td class="text-center"><p>3-SHUTTER-SLITLET</p></td>
+<td><p>Nod pattern type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>NUMDTHPT</p></td>
+<td class="text-center"><p>3</p></td>
+<td><p>Total number of points in pattern</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>SRCTYAPT</p></td>
+<td class="text-center"><p>UNKNOWN</p></td>
+<td><p>Source Type selected in APT</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<div><p><strong>Note:</strong> For MOS observations, there are gaps in spectral coverage caused by the physical distance between the two detectors, referred to as detector wavelength gaps. The range of wavelengths lost in the gap is different for different shutters in the MSA since the spectra from different shutters map to different locations on the detectors. Unlike fixed slits (FS) and integral field unit (IFU) observations, which suffer wavelength gap losses only in the R ~ 2,700 high spectral resolution mode, all grating and filter combinations for MOS observations have shutters that lose wavelengths to the gap. <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-near-infrared-spectrograph/nirspec-observing-modes/nirspec-multi-object-spectroscopy#NIRSpecMultiObjectSpectroscopy-Detectorwavelengthgaps">More</a> <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-near-infrared-spectrograph/nirspec-instrumentation/nirspec-dispersers-and-filters">Info …</a></p>
+</div></blockquote>
+<p>In this notebook, we focus on one of the nodded exposures in this dataset. The cell below downloads one pre-processed countrate (<em><code class="docutils literal notranslate"><span class="pre">_rate.fits</span></code></em>) file and the corresponding MSA metadata file (<em><code class="docutils literal notranslate"><span class="pre">_msa.fits</span></code></em>) available in MAST. MAST products will be saved to a folder named <code class="docutils literal notranslate"><span class="pre">mast_products</span></code> within the designated output parent directory defined earlier in this notebook.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a directory for the downloaded data from MAST.</span>
+<span class="n">mast_products_dir</span> <span class="o">=</span> <span class="n">output_dir</span><span class="o">+</span><span class="s1">&#39;mast_products/&#39;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mast_products_dir</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">mast_products_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download data from MAST.</span>
+
+<span class="c1"># Setup your account.</span>
+
+<span class="c1"># NOTE:</span>
+<span class="c1"># The data in this notebook is public and does not require a token.</span>
+<span class="c1"># For other data sets, uncomment the following line and enter your</span>
+<span class="c1"># token at the prompt.</span>
+
+<span class="c1"># Observations.login(token=None)</span>
+<span class="n">sessioninfo</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">session_info</span><span class="p">()</span>
+
+<span class="c1"># Define the general search criteria.</span>
+<span class="n">obs</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span>
+        <span class="n">obs_collection</span><span class="o">=</span><span class="s1">&#39;JWST&#39;</span><span class="p">,</span>
+        <span class="n">instrument_name</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;NIRSPEC/MSA&#39;</span><span class="p">],</span>
+        <span class="n">proposal_id</span><span class="o">=</span><span class="s1">&#39;1448&#39;</span><span class="p">,</span>
+        <span class="n">obs_id</span><span class="o">=</span><span class="s1">&#39;jw01448-o011_v000000001_nirspec_clear-prism&#39;</span><span class="p">)</span>  <span class="c1"># Observation 11.</span>
+
+<span class="c1"># Print the list of products returned from the general serach criteria.</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+
+<span class="c1"># Filter the list of products returned from the general search criteria.</span>
+<span class="n">filtered</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">filter_products</span><span class="p">(</span><span class="n">products</span><span class="p">,</span>
+                                        <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;RATE&quot;</span><span class="p">,</span> <span class="s2">&quot;MSA&quot;</span><span class="p">],</span>
+                                        <span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Second filter: Grab one of the nod exposures for NRS2 and the MSA metadata file.</span>
+<span class="n">secondary_filtered</span> <span class="o">=</span> <span class="p">[</span><span class="n">entry</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">filtered</span>
+                      <span class="k">if</span> <span class="s1">&#39;_00001_nrs2&#39;</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;obs_id&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;msa&#39;</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;obs_id&#39;</span><span class="p">]]</span>
+
+<span class="c1"># Print the secondary filtered products.</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">secondary_filtered</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">[</span><span class="s1">&#39;productFilename&#39;</span><span class="p">])</span>
+
+<span class="c1"># Download the filtered products.</span>
+<span class="c1"># This creates a mastDownload directory,</span>
+<span class="c1"># unless you set flat=True and set a download_dir.</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">secondary_filtered</span><span class="p">)):</span>
+    <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">secondary_filtered</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                   <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">download_dir</span><span class="o">=</span><span class="n">mast_products_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>eppn: 
+ezid: anonymous
+anon: True
+scopes: []
+session: None
+token: None
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>jw01448011001_01_msa.fits
+jw01448011001_02101_00001_nrs2_rate.fits
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download the most up-to-date barshadow correction reference file.</span>
+<span class="c1"># This data was taken before the USEAFTER date set</span>
+<span class="c1"># on the new barshadow reference file so we must manually override it.</span>
+<span class="n">refs</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">dump_references</span><span class="p">(</span><span class="n">crds_client</span><span class="o">.</span><span class="n">get_context_used</span><span class="p">(</span><span class="s1">&#39;jwst&#39;</span><span class="p">),</span>
+                           <span class="p">[</span><span class="s1">&#39;jwst_nirspec_barshadow_0006.fits&#39;</span><span class="p">])</span>
+<span class="n">barshadow_reffile</span> <span class="o">=</span> <span class="n">refs</span><span class="p">[</span><span class="s1">&#39;jwst_nirspec_barshadow_0006.fits&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The barshadow reference file was saved to : </span><span class="si">{</span><span class="n">barshadow_reffile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The barshadow reference file was saved to : /home/runner/crds_cache/references/jwst/nirspec/jwst_nirspec_barshadow_0006.fits
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="vetting-the-background-spectra">
+<h2>5. Vetting the Background Spectra <a id='bkg_vetting'></a><a class="headerlink" href="#vetting-the-background-spectra" title="Link to this heading">#</a></h2>
+<p>Should contaminated backgrounds, like those affected by stray light or unmasked hot/bad pixels, be utilized in generating the master background, they will impact both the quality of the master background and the resulting background-subtracted spectra. Notably, unmasked hot pixels introduce positive spikes in the master background spectrum, which then translate to negative spikes in the final background-subtracted spectra. These pixels should be addressed before creating a master background.</p>
+<p><strong>To achieve the best results with master background subtraction, we recommend that users first check/vet their input background spectra before any additional processing.</strong> In the following cells, we calibrate (without applying background subtraction steps), extract, and analyze each background spectrum. We identify uncontaminated background spectra to create a master background. Later in the notebook (<a class="reference internal" href="#hotbadpx"><span class="xref myst">Section 7.1</span></a>), we demonstrate a manual method for identifying unflagged hot/bad pixels and updating their corresponding DQ flags.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a directory for the calibrated products with no background subtraction applied.</span>
+<span class="n">output_dir_NObkg</span> <span class="o">=</span> <span class="n">output_dir</span><span class="o">+</span><span class="s1">&#39;nirspec_product_files_NObkg/&#39;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_dir_NObkg</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir_NObkg</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<section id="stage-2-spec2pipeline-no-background-subtraction-applied">
+<h3>5.1 Stage 2: Spec2Pipeline – No Background Subtraction Applied <a id='stage2'></a><a class="headerlink" href="#stage-2-spec2pipeline-no-background-subtraction-applied" title="Link to this heading">#</a></h3>
+<p>Initially, we process each background spectrum using the default settings and parameters employed by the <em><a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/api/jwst.master_background.MasterBackgroundMosStep.html#jwst.master_background.MasterBackgroundMosStep">MasterBackgroundMosStep</a></em> within <em><a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/pipeline/calwebb_spec2.html">calwebb_spec2</a></em>. This provides users with an insight into the appearance of the background spectra that are extracted behind the scenes in the <em><a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/api/jwst.master_background.MasterBackgroundMosStep.html#jwst.master_background.MasterBackgroundMosStep">MasterBackgroundMosStep</a></em>.</p>
+<div class="alert alert-block alert-info"> 
+<p><b>Note:</b> Prior to Build 11.2 there was a known bug in the <em><code class="docutils literal notranslate"><span class="pre">MasterBackgroundMosStep</span></code></em> that prevented users from overriding parameters or reference files for the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/resample/index.html"><em><code class="docutils literal notranslate"><span class="pre">resample_spec</span></code></em></a> and <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/stable/jwst/extract_1d/index.html"><em><code class="docutils literal notranslate"><span class="pre">extract_1d</span></code></em></a> steps called during the extraction of background slits (<a class="reference internal" href="#step3"><span class="xref myst">Step 3</span></a> in the processing). This bug has been fixed in Build 11.2. However, users working with an older version of the pipeline who wish to modify the default settings for these steps should create and provide a 1-D master background spectrum to the pipeline (demonstrated partially in <a class="reference internal" href="#manual"><span class="xref myst">Section 7</span></a>).</p>
+</div><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Stage 2 Processing -- No Background Subtraction Applied.</span>
+<span class="c1"># Estimated runtime: ~13 minutes.</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">runflag</span><span class="p">:</span>
+
+    <span class="c1"># Process each rate file seperately.</span>
+    <span class="k">for</span> <span class="n">rate_file</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">mast_products_dir</span><span class="o">+</span><span class="s1">&#39;*rate.fits&#39;</span><span class="p">)):</span>
+
+        <span class="c1"># Ensure each rate file is pointing to the original MSA metadata file.</span>
+        <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">rate_file</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ratefile_hdu</span><span class="p">:</span>
+            <span class="n">ratefile_hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;MSAMETFL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">mast_products_dir</span> <span class="o">+</span> <span class="s1">&#39;jw01448011001_01_msa.fits&#39;</span><span class="p">)</span>
+        <span class="n">ratefile_hdu</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Applying Stage 2 Calibrations &amp; Corrections to: &quot;</span> <span class="o">+</span>
+              <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">rate_file</span><span class="p">))</span>
+
+        <span class="c1"># Adjust `slit_y_low`/`slit_y_high` as needed to center slitlet in 2-D cutout.</span>
+        <span class="n">spec2_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;assign_wcs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;slit_y_low&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.55</span><span class="p">,</span> <span class="s1">&#39;slit_y_high&#39;</span><span class="p">:</span> <span class="mf">0.35</span><span class="p">},</span>
+                        <span class="s1">&#39;master_background_mos&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;skip&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="c1"># Skip master backgrond.</span>
+                        <span class="s1">&#39;bkg_subtract&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;skip&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>  <span class="c1"># Skip pixel-to-pixel backgrond.</span>
+                        <span class="c1"># Override for newest barshadow reference file - optional.</span>
+                        <span class="s1">&#39;barshadow&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;override_barshadow&#39;</span><span class="p">:</span> <span class="n">barshadow_reffile</span><span class="p">}}</span>
+
+        <span class="n">Spec2Pipeline</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">rate_file</span><span class="p">,</span> <span class="n">save_results</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir_NObkg</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="n">spec2_params</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hurray! Stage 2 Processing Complete.&quot;</span><span class="p">)</span>
+
+<span class="n">end</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run time: &quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">60.0</span><span class="p">,</span> <span class="s2">&quot; min&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Applying Stage 2 Calibrations &amp; Corrections to: jw01448011001_02101_00001_nrs2_rate.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Hurray! Stage 2 Processing Complete.
+Run time:  6.415  min
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="check-the-background-variation">
+<h3>5.2 Check the Background Variation <a id='variation'></a><a class="headerlink" href="#check-the-background-variation" title="Link to this heading">#</a></h3>
+<p>The following cell generates a plot showing individual background spectra overlaid with a sigma-clipped mean.</p>
+<p>Before computing the mean, the code filters out contaminated backgrounds based on their deviation from the median background spectrum, using a specified threshold. You can adjust this threshold and the sigma parameter for clipping to reduce the influence of outliers such as hot pixels and eliminate contaminated spectra. The plot also includes the coefficient of variation calculated between the background spectra and the sigma-clipped mean.</p>
+<p>Additionally, if <code class="docutils literal notranslate"><span class="pre">save_mb</span></code> is set to True, the code generates and returns an X1D FITS file containing the calculated mean background spectrum. This file can later be used to provide the pipeline with a user-supplied 1D master background, as described in <a class="reference internal" href="#manual"><span class="xref myst">Section 7</span></a>. Also note that this is just one example of how to create your own master background — it’s not the only method.</p>
+<p><strong>NOTE</strong>: By default, all background slits identified in the MSA metadata <code class="docutils literal notranslate"><span class="pre">SHUTTER_INFO</span></code> table are plotted. Alternatively, if a specific list of background slits is provided, only those slits are plotted.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x1d_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">output_dir_NObkg</span><span class="o">+</span><span class="s1">&#39;*nrs2_x1d.fits&#39;</span><span class="p">))</span>
+<span class="n">all_slits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">237</span><span class="p">))))</span>  <span class="c1"># All slit names for this dataset.</span>
+
+<span class="c1"># Original MSA metadata file path.</span>
+<span class="n">metafile_og</span> <span class="o">=</span> <span class="n">mast_products_dir</span> <span class="o">+</span> <span class="s1">&#39;jw01448011001_01_msa.fits&#39;</span>
+
+<span class="n">good_bkg_slits</span> <span class="o">=</span> <span class="n">mean_background_variations</span><span class="p">(</span><span class="n">x1d_files</span><span class="p">,</span> <span class="n">metafile_og</span><span class="p">,</span>
+                                            <span class="n">bin_wavelengths</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                            <span class="n">vetted_backgrounds</span><span class="o">=</span><span class="n">all_slits</span><span class="p">,</span>
+                                            <span class="n">mad_threshold</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                            <span class="n">mean_color</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span>
+                                            <span class="n">y_lim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_mb</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean COV: 0.058803575073932725
+Uncertainty of the Mean COV: 0.0006385244584094104
+</pre></div>
+</div>
+<img alt="../../../_images/65f04d9faa730b7d19965c9e99f9ea576500e2b815a39089ca1d0cf7a907d6ca.png" src="../../../_images/65f04d9faa730b7d19965c9e99f9ea576500e2b815a39089ca1d0cf7a907d6ca.png" />
+</div>
+</div>
+<p>The subset of background slits chosen below have been pre-selected for this demo to save time in processing. We intentionally include some spectra with hot pixels to illustrate their impact when incorporated into the creation of the 1D master background spectrum in the pipeline.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">good_bkg_slits</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">int</span><span class="p">))</span>
+
+<span class="c1"># Choose which background slits to use for the rest of the demo.</span>
+<span class="n">demo_background_slits</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">,</span> <span class="s1">&#39;14&#39;</span><span class="p">,</span> <span class="s1">&#39;38&#39;</span><span class="p">,</span> <span class="s1">&#39;43&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;2&#39;, &#39;3&#39;, &#39;4&#39;, &#39;5&#39;, &#39;6&#39;, &#39;7&#39;, &#39;8&#39;, &#39;9&#39;, &#39;10&#39;, &#39;11&#39;, &#39;12&#39;, &#39;13&#39;, &#39;14&#39;, &#39;15&#39;, &#39;16&#39;, &#39;17&#39;, &#39;18&#39;, &#39;19&#39;, &#39;20&#39;, &#39;21&#39;, &#39;22&#39;, &#39;23&#39;, &#39;24&#39;, &#39;25&#39;, &#39;26&#39;, &#39;27&#39;, &#39;28&#39;, &#39;29&#39;, &#39;30&#39;, &#39;31&#39;, &#39;32&#39;, &#39;33&#39;, &#39;34&#39;, &#39;35&#39;, &#39;36&#39;, &#39;37&#39;, &#39;38&#39;, &#39;39&#39;, &#39;40&#39;, &#39;41&#39;, &#39;42&#39;, &#39;43&#39;, &#39;44&#39;, &#39;45&#39;, &#39;46&#39;, &#39;47&#39;, &#39;48&#39;, &#39;49&#39;, &#39;50&#39;, &#39;51&#39;, &#39;52&#39;, &#39;53&#39;, &#39;54&#39;, &#39;55&#39;, &#39;56&#39;, &#39;57&#39;, &#39;58&#39;, &#39;59&#39;, &#39;60&#39;, &#39;61&#39;, &#39;62&#39;, &#39;63&#39;, &#39;64&#39;, &#39;65&#39;, &#39;66&#39;, &#39;67&#39;, &#39;68&#39;, &#39;69&#39;, &#39;70&#39;, &#39;71&#39;, &#39;72&#39;, &#39;73&#39;, &#39;74&#39;, &#39;75&#39;, &#39;76&#39;, &#39;77&#39;, &#39;78&#39;, &#39;79&#39;, &#39;80&#39;, &#39;81&#39;, &#39;82&#39;, &#39;83&#39;, &#39;84&#39;, &#39;85&#39;, &#39;86&#39;, &#39;87&#39;, &#39;88&#39;, &#39;89&#39;, &#39;90&#39;, &#39;91&#39;, &#39;92&#39;, &#39;93&#39;, &#39;94&#39;, &#39;95&#39;, &#39;96&#39;, &#39;97&#39;, &#39;98&#39;, &#39;99&#39;, &#39;100&#39;, &#39;101&#39;, &#39;102&#39;, &#39;103&#39;, &#39;104&#39;, &#39;105&#39;, &#39;106&#39;, &#39;107&#39;, &#39;108&#39;, &#39;109&#39;, &#39;110&#39;, &#39;111&#39;, &#39;112&#39;, &#39;113&#39;, &#39;114&#39;, &#39;115&#39;, &#39;116&#39;, &#39;117&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the master background subtracted spectra.</span>
+<span class="n">s2d_nobkg_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">output_dir_NObkg</span><span class="o">+</span><span class="s1">&#39;*nrs2_s2d.fits&#39;</span><span class="p">))</span>
+<span class="n">x1d_nobkg_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">output_dir_NObkg</span><span class="o">+</span><span class="s1">&#39;*nrs2_x1d.fits&#39;</span><span class="p">))</span>
+
+<span class="n">plot_spectra</span><span class="p">(</span><span class="n">s2d_nobkg_files</span><span class="p">,</span> <span class="n">x1d_nobkg_files</span><span class="p">,</span> <span class="n">slit_names</span><span class="o">=</span><span class="n">demo_background_slits</span><span class="p">,</span>
+             <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;RdBu&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">fill_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+             <span class="n">ycolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">ecolor</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span> <span class="n">plot_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Slit 2: Y-START = 7.0 ; Y-STOP = 12.0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Slit 9: Y-START = 7.0 ; Y-STOP = 12.0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Slit 14: Y-START = 7.0 ; Y-STOP = 12.0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Slit 38: Y-START = 7.0 ; Y-STOP = 12.0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Slit 43: Y-START = 7.0 ; Y-STOP = 12.0
+</pre></div>
+</div>
+<img alt="../../../_images/99014069ffb6b929e5b3cb82786c6e6d73d9acdd80440d53176a3b6e3b74215b.png" src="../../../_images/99014069ffb6b929e5b3cb82786c6e6d73d9acdd80440d53176a3b6e3b74215b.png" />
+<img alt="../../../_images/0d6fe38a307f623e5eb4fe78ff477b43749def4917e229b18a0761b5eacdae4b.png" src="../../../_images/0d6fe38a307f623e5eb4fe78ff477b43749def4917e229b18a0761b5eacdae4b.png" />
+<img alt="../../../_images/01985e02c500649823a84f746aebe2c7810cb58367cdaa062f2827970182ed17.png" src="../../../_images/01985e02c500649823a84f746aebe2c7810cb58367cdaa062f2827970182ed17.png" />
+<img alt="../../../_images/d2af77759c7358fa89dd30f191bfd8d8107660f5e866fe21be175774ed4ceb69.png" src="../../../_images/d2af77759c7358fa89dd30f191bfd8d8107660f5e866fe21be175774ed4ceb69.png" />
+<img alt="../../../_images/025d0a2cf6ceff8acbeaba37dbaf36b9eafd8c2797de6002996af0117db4bd61.png" src="../../../_images/025d0a2cf6ceff8acbeaba37dbaf36b9eafd8c2797de6002996af0117db4bd61.png" />
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="source-and-slitlet-information-msa-metadata-file">
+<h2>6. Source and Slitlet Information: MSA Metadata File <a id='metadata'></a><a class="headerlink" href="#source-and-slitlet-information-msa-metadata-file" title="Link to this heading">#</a></h2>
+<p>The MSA metadata file is an essential processing component for MOS data in <em><a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/pipeline/calwebb_spec2.html"><code class="docutils literal notranslate"><span class="pre">calwebb_spec2</span></code></a></em> processing. The MSA metadata file is a FITS file generated by the <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-near-infrared-spectrograph/nirspec-apt-templates/nirspec-multi-object-spectroscopy-apt-template/nirspec-msa-planning-tool-mpt">MSA Planning Tool</a>. The file contains the MSA shutter configuration image (<code class="docutils literal notranslate"><span class="pre">SHUTTER_IMAGE</span></code>) and two binary tables: <code class="docutils literal notranslate"><span class="pre">SHUTTER_INFO</span></code> and <code class="docutils literal notranslate"><span class="pre">SOURCE_INFO</span></code>.  The <code class="docutils literal notranslate"><span class="pre">SHUTTER_INFO</span></code> table specifies all the slitlets having one or more open shutters based on the MSA configuration for that observation. The <code class="docutils literal notranslate"><span class="pre">SOURCE_INFO</span></code> table contains information on each source in the plan. For a detailed walkthrough on MSA metadata files, see the <a class="reference external" href="https://github.com/spacetelescope/jdat_notebooks/tree/main">JDAT GitHub repository</a>.</p>
+<div class="alert alert-block alert-info">
+<p><b>Note:</b> In countrate FITS files (<em>_rate.fits</em>), the primary header keyword (<code class="docutils literal notranslate"><span class="pre">MSAMETFL</span></code>) specifies the name of the MSA metadata file. The pipeline will reference this keyword to determine what file to use during processing. The pipeline will also expect the file to be in the same directory as the countrate products.</p>
+</div> <hr class="docutils" />
+<section id="edit-the-msa-metadata-file-for-master-background-subtraction">
+<h3>6.1 Edit the MSA Metadata File for Master Background Subtraction <a id='metafile_mb'></a><a class="headerlink" href="#edit-the-msa-metadata-file-for-master-background-subtraction" title="Link to this heading">#</a></h3>
+<p>In the <a class="reference internal" href="#imports"><span class="xref myst">Import Library</span></a>, we introduce the <code class="docutils literal notranslate"><span class="pre">metafile_editor</span></code> function, tailored for this example dataset, which generates a modified MSA metadata file for master background subtraction. The modified MSA metadata file should exclusively contain slitlets with vetted backgrounds and science sources. In the <code class="docutils literal notranslate"><span class="pre">SHUTTER_INFO</span></code> table, background slitlets will have the background column marked as yes (‘Y’), while slitlets with science sources will have the primary_source column marked as yes (‘Y’). Additionally, each science source must be assigned a stellarity value in the <code class="docutils literal notranslate"><span class="pre">SOURCE_INFO</span></code> table. Any source with a stellarity value &gt; 0.75 is classified as a point source, while a value between 0 and 0.75 gets classified as an extended source by the pipeline. If any source passed to <code class="docutils literal notranslate"><span class="pre">metafile_editor</span></code> is designated as a point source, its stellarity value will be set to 1.0.</p>
+<p>To create a new MSA metadata file using <code class="docutils literal notranslate"><span class="pre">metafile_editor</span></code>, users must provide the following:</p>
+<ul class="simple">
+<li><p>A list of tuples with the names of slitlets containing sources along with their corresponding source types, for example: (236, ‘extended’).</p></li>
+<li><p>A list of MSA slitlet names containing the vetted backgrounds.</p></li>
+<li><p>A path to the directory containing the original MSA metadata file downloaded from MAST.</p></li>
+</ul>
+<p>Provided all the above-required parameters, the function will return the path to the newly created MSA metadata file. Users also have the option to display the new <code class="docutils literal notranslate"><span class="pre">SHUTTER_INFO</span></code> and <code class="docutils literal notranslate"><span class="pre">SOURCE_INFO</span></code> MSA metadata file tables by setting <code class="docutils literal notranslate"><span class="pre">show_tables=True</span></code>. The modified MSA metadata file for master background subtraction will have a suffix of <em><code class="docutils literal notranslate"><span class="pre">_mb.fits</span></code></em>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the source and background slitlets.</span>
+<span class="c1"># Can treat the source as a point source if desired.</span>
+<span class="n">source_slitlets</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;38&#39;</span><span class="p">,</span> <span class="s1">&#39;extended&#39;</span><span class="p">)]</span>
+<span class="n">demo_background_slits_meta</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">,</span> <span class="s1">&#39;14&#39;</span><span class="p">,</span> <span class="s1">&#39;43&#39;</span><span class="p">]</span>
+
+<span class="c1"># Generate the master background subtraction MSA metadata data file.</span>
+<span class="n">metafile_mb</span> <span class="o">=</span> <span class="n">metafile_editor</span><span class="p">(</span><span class="n">source_slitlets</span><span class="p">,</span> <span class="n">metafile_og</span><span class="p">,</span>
+                              <span class="n">bkg_slitlets</span><span class="o">=</span><span class="n">demo_background_slits_meta</span><span class="p">,</span>
+                              <span class="n">show_tables</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><!--| quarto-html-table-processing: none -->
+<table id="itables_c76fa264_f800_4f7b_b88f_662b827b1272"><tbody><tr>
+    <td style="vertical-align:middle; text-align:left">
+    <a href=https://mwouts.github.io/itables/><svg class="main-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+width="64" viewBox="0 0 500 400" style="font-family: 'Droid Sans', sans-serif;">
+    <g style="fill:#d9d7fc">
+        <path d="M100,400H500V357H100Z" />
+        <path d="M100,300H400V257H100Z" />
+        <path d="M0,200H400V157H0Z" />
+        <path d="M100,100H500V57H100Z" />
+        <path d="M100,350H500V307H100Z" />
+        <path d="M100,250H400V207H100Z" />
+        <path d="M0,150H400V107H0Z" />
+        <path d="M100,50H500V7H100Z" />
+    </g>
+    <g style="fill:#1a1366;stroke:#1a1366;">
+   <rect x="100" y="7" width="400" height="43">
+    <animate
+      attributeName="width"
+      values="0;400;0"
+      dur="5s"
+      repeatCount="indefinite" />
+      <animate
+      attributeName="x"
+      values="100;100;500"
+      dur="5s"
+      repeatCount="indefinite" />
+  </rect>
+        <rect x="0" y="107" width="400" height="43">
+    <animate
+      attributeName="width"
+      values="0;400;0"
+      dur="3.5s"
+      repeatCount="indefinite" />
+    <animate
+      attributeName="x"
+      values="0;0;400"
+      dur="3.5s"
+      repeatCount="indefinite" />
+  </rect>
+        <rect x="100" y="207" width="300" height="43">
+    <animate
+      attributeName="width"
+      values="0;300;0"
+      dur="3s"
+      repeatCount="indefinite" />
+    <animate
+      attributeName="x"
+      values="100;100;400"
+      dur="3s"
+      repeatCount="indefinite" />
+  </rect>
+        <rect x="100" y="307" width="400" height="43">
+    <animate
+      attributeName="width"
+      values="0;400;0"
+      dur="4s"
+      repeatCount="indefinite" />
+      <animate
+      attributeName="x"
+      values="100;100;500"
+      dur="4s"
+      repeatCount="indefinite" />
+  </rect>
+        <g style="fill:transparent;stroke-width:8; stroke-linejoin:round" rx="5">
+            <g transform="translate(45 50) rotate(-45)">
+                <circle r="33" cx="0" cy="0" />
+                <rect x="-8" y="32" width="16" height="30" />
+            </g>
+
+            <g transform="translate(450 152)">
+                <polyline points="-15,-20 -35,-20 -35,40 25,40 25,20" />
+                <rect x="-15" y="-40" width="60" height="60" />
+            </g>
+
+            <g transform="translate(50 352)">
+                <polygon points="-35,-5 0,-40 35,-5" />
+                <polygon points="-35,10 0,45 35,10" />
+            </g>
+
+            <g transform="translate(75 250)">
+                <polyline points="-30,30 -60,0 -30,-30" />
+                <polyline points="0,30 -30,0 0,-30" />
+            </g>
+
+            <g transform="translate(425 250) rotate(180)">
+                <polyline points="-30,30 -60,0 -30,-30" />
+                <polyline points="0,30 -30,0 0,-30" />
+            </g>
+        </g>
+    </g>
+</svg>
+</a>
+    Loading ITables v2.6.2 from the internet...
+    (need <a href=https://mwouts.github.io/itables/troubleshooting.html>help</a>?)</td>
+    </tr></tbody></table>
+<link href="https://www.unpkg.com/dt_for_itables@2.4.0/dt_bundle.css" rel="stylesheet">
+<script type="module">
+    import { ITable, jQuery as $ } from 'https://www.unpkg.com/dt_for_itables@2.4.0/dt_bundle.js';
+
+    document.querySelectorAll("#itables_c76fa264_f800_4f7b_b88f_662b827b1272:not(.dataTable)").forEach(table => {
+        if (!(table instanceof HTMLTableElement))
+            return;
+
+        let dt_args = {"layout": {"topStart": "pageLength", "topEnd": "search", "bottomStart": "info", "bottomEnd": "paging"}, "text_in_header_can_be_selected": true, "classes": ["display", "nowrap"], "order": [], "style": {"table-layout": "auto", "width": "auto", "margin": "auto", "caption-side": "bottom"}, "table_html": "<table><thead>\n    <tr style=\"text-align: right;\">\n      \n      <th>slitlet_id</th>\n      <th>msa_metadata_id</th>\n      <th>shutter_quadrant</th>\n      <th>shutter_row</th>\n      <th>shutter_column</th>\n      <th>source_id</th>\n      <th>background</th>\n      <th>shutter_state</th>\n      <th>estimated_source_in_shutter_x</th>\n      <th>estimated_source_in_shutter_y</th>\n      <th>dither_point_index</th>\n      <th>primary_source</th>\n      <th>fixed_slit</th>\n    </tr>\n  </thead></table>", "data_json": "[[2, 1, 1, 10, 117, -1, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 1, \"N\", \"NONE\"], [2, 1, 1, 10, 117, -1, \"Y\", \"OPEN\", 0.516, 0.508, 2, \"N\", \"NONE\"], [2, 1, 1, 10, 117, -1, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 3, \"N\", \"NONE\"], [2, 1, 1, 10, 118, -1, \"Y\", \"OPEN\", 0.500035, 0.500022, 1, \"N\", \"NONE\"], [2, 1, 1, 10, 118, -1, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 2, \"N\", \"NONE\"], [2, 1, 1, 10, 118, -1, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 3, \"N\", \"NONE\"], [2, 1, 1, 10, 119, -1, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 1, \"N\", \"NONE\"], [2, 1, 1, 10, 119, -1, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 2, \"N\", \"NONE\"], [2, 1, 1, 10, 119, -1, \"Y\", \"OPEN\", 0.483, 0.491, 3, \"N\", \"NONE\"], [9, 1, 1, 16, 69, -8, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 1, \"N\", \"NONE\"], [9, 1, 1, 16, 69, -8, \"Y\", \"OPEN\", 0.516, 0.513, 2, \"N\", \"NONE\"], [9, 1, 1, 16, 69, -8, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 3, \"N\", \"NONE\"], [9, 1, 1, 16, 70, -8, \"Y\", \"OPEN\", 0.50001, 0.500018, 1, \"N\", \"NONE\"], [9, 1, 1, 16, 70, -8, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 2, \"N\", \"NONE\"], [9, 1, 1, 16, 70, -8, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 3, \"N\", \"NONE\"], [9, 1, 1, 16, 71, -8, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 1, \"N\", \"NONE\"], [9, 1, 1, 16, 71, -8, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 2, \"N\", \"NONE\"], [9, 1, 1, 16, 71, -8, \"Y\", \"OPEN\", 0.484, 0.487, 3, \"N\", \"NONE\"], [14, 1, 1, 21, 95, -13, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 1, \"N\", \"NONE\"], [14, 1, 1, 21, 95, -13, \"Y\", \"OPEN\", 0.516, 0.51, 2, \"N\", \"NONE\"], [14, 1, 1, 21, 95, -13, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 3, \"N\", \"NONE\"], [14, 1, 1, 21, 96, -13, \"Y\", \"OPEN\", 0.50004, 0.500025, 1, \"N\", \"NONE\"], [14, 1, 1, 21, 96, -13, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 2, \"N\", \"NONE\"], [14, 1, 1, 21, 96, -13, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 3, \"N\", \"NONE\"], [14, 1, 1, 21, 97, -13, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 1, \"N\", \"NONE\"], [14, 1, 1, 21, 97, -13, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 2, \"N\", \"NONE\"], [14, 1, 1, 21, 97, -13, \"Y\", \"OPEN\", 0.484, 0.489, 3, \"N\", \"NONE\"], [38, 1, 1, 39, 61, -37, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 1, \"N\", \"NONE\"], [38, 1, 1, 39, 61, -37, \"N\", \"OPEN\", 0.515, 0.513, 2, \"Y\", \"NONE\"], [38, 1, 1, 39, 61, -37, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 3, \"N\", \"NONE\"], [38, 1, 1, 39, 62, -37, \"N\", \"OPEN\", 0.500036, 0.500021, 1, \"Y\", \"NONE\"], [38, 1, 1, 39, 62, -37, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 2, \"N\", \"NONE\"], [38, 1, 1, 39, 62, -37, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 3, \"N\", \"NONE\"], [38, 1, 1, 39, 63, -37, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 1, \"N\", \"NONE\"], [38, 1, 1, 39, 63, -37, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 2, \"N\", \"NONE\"], [38, 1, 1, 39, 63, -37, \"N\", \"OPEN\", 0.485, 0.487, 3, \"Y\", \"NONE\"], [43, 1, 2, 47, 140, -42, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 1, \"N\", \"NONE\"], [43, 1, 2, 47, 140, -42, \"Y\", \"OPEN\", 0.511, 0.486, 2, \"N\", \"NONE\"], [43, 1, 2, 47, 140, -42, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 3, \"N\", \"NONE\"], [43, 1, 2, 47, 141, -42, \"Y\", \"OPEN\", 0.500008, 0.499995, 1, \"N\", \"NONE\"], [43, 1, 2, 47, 141, -42, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 2, \"N\", \"NONE\"], [43, 1, 2, 47, 141, -42, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 3, \"N\", \"NONE\"], [43, 1, 2, 47, 142, -42, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 1, \"N\", \"NONE\"], [43, 1, 2, 47, 142, -42, \"Y\", \"OPEN\", \"___NaN___\", \"___NaN___\", 2, \"N\", \"NONE\"], [43, 1, 2, 47, 142, -42, \"Y\", \"OPEN\", 0.49, 0.514, 3, \"N\", \"NONE\"]]"};
+        new ITable(table, dt_args);
+    });
+</script>
+</div><div class="output text_html"><!--| quarto-html-table-processing: none -->
+<table id="itables_1b061ae5_389b_471a_a20c_265e64629637"><tbody><tr>
+    <td style="vertical-align:middle; text-align:left">
+    <a href=https://mwouts.github.io/itables/><svg class="main-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+width="64" viewBox="0 0 500 400" style="font-family: 'Droid Sans', sans-serif;">
+    <g style="fill:#d9d7fc">
+        <path d="M100,400H500V357H100Z" />
+        <path d="M100,300H400V257H100Z" />
+        <path d="M0,200H400V157H0Z" />
+        <path d="M100,100H500V57H100Z" />
+        <path d="M100,350H500V307H100Z" />
+        <path d="M100,250H400V207H100Z" />
+        <path d="M0,150H400V107H0Z" />
+        <path d="M100,50H500V7H100Z" />
+    </g>
+    <g style="fill:#1a1366;stroke:#1a1366;">
+   <rect x="100" y="7" width="400" height="43">
+    <animate
+      attributeName="width"
+      values="0;400;0"
+      dur="5s"
+      repeatCount="indefinite" />
+      <animate
+      attributeName="x"
+      values="100;100;500"
+      dur="5s"
+      repeatCount="indefinite" />
+  </rect>
+        <rect x="0" y="107" width="400" height="43">
+    <animate
+      attributeName="width"
+      values="0;400;0"
+      dur="3.5s"
+      repeatCount="indefinite" />
+    <animate
+      attributeName="x"
+      values="0;0;400"
+      dur="3.5s"
+      repeatCount="indefinite" />
+  </rect>
+        <rect x="100" y="207" width="300" height="43">
+    <animate
+      attributeName="width"
+      values="0;300;0"
+      dur="3s"
+      repeatCount="indefinite" />
+    <animate
+      attributeName="x"
+      values="100;100;400"
+      dur="3s"
+      repeatCount="indefinite" />
+  </rect>
+        <rect x="100" y="307" width="400" height="43">
+    <animate
+      attributeName="width"
+      values="0;400;0"
+      dur="4s"
+      repeatCount="indefinite" />
+      <animate
+      attributeName="x"
+      values="100;100;500"
+      dur="4s"
+      repeatCount="indefinite" />
+  </rect>
+        <g style="fill:transparent;stroke-width:8; stroke-linejoin:round" rx="5">
+            <g transform="translate(45 50) rotate(-45)">
+                <circle r="33" cx="0" cy="0" />
+                <rect x="-8" y="32" width="16" height="30" />
+            </g>
+
+            <g transform="translate(450 152)">
+                <polyline points="-15,-20 -35,-20 -35,40 25,40 25,20" />
+                <rect x="-15" y="-40" width="60" height="60" />
+            </g>
+
+            <g transform="translate(50 352)">
+                <polygon points="-35,-5 0,-40 35,-5" />
+                <polygon points="-35,10 0,45 35,10" />
+            </g>
+
+            <g transform="translate(75 250)">
+                <polyline points="-30,30 -60,0 -30,-30" />
+                <polyline points="0,30 -30,0 0,-30" />
+            </g>
+
+            <g transform="translate(425 250) rotate(180)">
+                <polyline points="-30,30 -60,0 -30,-30" />
+                <polyline points="0,30 -30,0 0,-30" />
+            </g>
+        </g>
+    </g>
+</svg>
+</a>
+    Loading ITables v2.6.2 from the internet...
+    (need <a href=https://mwouts.github.io/itables/troubleshooting.html>help</a>?)</td>
+    </tr></tbody></table>
+<link href="https://www.unpkg.com/dt_for_itables@2.4.0/dt_bundle.css" rel="stylesheet">
+<script type="module">
+    import { ITable, jQuery as $ } from 'https://www.unpkg.com/dt_for_itables@2.4.0/dt_bundle.js';
+
+    document.querySelectorAll("#itables_1b061ae5_389b_471a_a20c_265e64629637:not(.dataTable)").forEach(table => {
+        if (!(table instanceof HTMLTableElement))
+            return;
+
+        let dt_args = {"layout": {"topStart": null, "topEnd": null, "bottomStart": null, "bottomEnd": null}, "text_in_header_can_be_selected": true, "classes": ["display", "nowrap"], "order": [], "style": {"table-layout": "auto", "width": "auto", "margin": "auto", "caption-side": "bottom"}, "table_html": "<table><thead>\n    <tr style=\"text-align: right;\">\n      \n      <th>program</th>\n      <th>source_id</th>\n      <th>source_name</th>\n      <th>alias</th>\n      <th>ra</th>\n      <th>dec</th>\n      <th>preimage_id</th>\n      <th>stellarity</th>\n    </tr>\n  </thead></table>", "data_json": "[[1448, -37, \"1448_-37\", \"-06:-033:0.0000 -73:17:50.39\", 261.589009, -73.29733, \"None\", 0.0]]"};
+        new ITable(table, dt_args);
+    });
+</script>
+</div></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="master-background-subtraction-pipeline-generated-master-background-spectrum">
+<h2>7. Master Background Subtraction: Pipeline Generated Master Background Spectrum <a id='masterbkg'></a><a class="headerlink" href="#master-background-subtraction-pipeline-generated-master-background-spectrum" title="Link to this heading">#</a></h2>
+<p>Process the MOS data using the modified MSA metadata file. The MSA metadata file will instruct the pipeline on which slits to extract a 1-D background spectrum from.</p>
+<div class="alert alert-block alert-info">
+<p><b>Note:</b> Prior to pipeline build 11.2, the <em><code class="docutils literal notranslate"><span class="pre">MasterBackgroundMosStep</span></code></em> would combine all extracted 1-D background spectra using a weighted average via the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/combine_1d/description.html"><em><code class="docutils literal notranslate"><span class="pre">combine_1d</span></code></em></a> step. However, this method often produced a contaminated master background spectrum, as it did not effectively filter out outlier pixels or spectra affected by source contamination and would require users to supply the 1-D master background. Beginning with build 11.2, the pipeline introduced two important parameters — <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/master_background/arguments.html"><em><code class="docutils literal notranslate"><span class="pre">median_kernel</span></code></em> and <em><code class="docutils literal notranslate"><span class="pre">sigma_clip</span></code></em></a> — to the <em><code class="docutils literal notranslate"><span class="pre">master_background_mos</span></code></em> step to improve the quality of the resulting 1-D master background spectrum. For the purpose of this demonstration, however, we deliberately disable these parameters to illustrate the impact of using unfiltered background spectra.</p>
+</div> 
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Output directory for the master background.</span>
+<span class="n">output_dir_masterbkg</span> <span class="o">=</span> <span class="n">output_dir</span><span class="o">+</span><span class="s1">&#39;nirspec_product_files_masterbkg/&#39;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_dir_masterbkg</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir_masterbkg</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Stage 2 Processing -- Master Background Subtraction Applied.</span>
+<span class="c1"># Pipeline generated 1-D master background spectrum.</span>
+<span class="c1"># Estimated runtime: ~13 minutes.</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">runflag</span><span class="p">:</span>
+
+    <span class="c1"># Process each rate file seperately.</span>
+    <span class="k">for</span> <span class="n">rate_file</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">mast_products_dir</span><span class="o">+</span><span class="s1">&#39;*rate.fits&#39;</span><span class="p">)):</span>
+        
+        <span class="c1"># Update the MSA metadata file for master background subtraction.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Changing MSAMETFL Keyword for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">rate_file</span><span class="p">)))</span>
+        <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">rate_file</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ratefile_hdu</span><span class="p">:</span>
+            <span class="n">ratefile_hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;MSAMETFL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">metafile_mb</span><span class="p">)</span>
+        <span class="n">ratefile_hdu</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Applying Stage 2 Calibrations &amp; Corrections to: &quot;</span> <span class="o">+</span>
+              <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">rate_file</span><span class="p">))</span>
+
+        <span class="c1"># Adjust `slit_y_low`/`slit_y_high` as needed to center slitlet in 2-D cutout.</span>
+        <span class="n">spec2_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;assign_wcs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;slit_y_low&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.55</span><span class="p">,</span> <span class="s1">&#39;slit_y_high&#39;</span><span class="p">:</span> <span class="mf">0.35</span><span class="p">},</span>
+                        <span class="c1"># Save generated master background.</span>
+                        <span class="s1">&#39;master_background_mos&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;skip&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                                                  <span class="s1">&#39;save_background&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                                                  <span class="c1"># New important parameters to improve master background.</span>
+                                                  <span class="c1"># We disable them for this demo to show the impact of</span>
+                                                  <span class="c1"># using unfiltered background spectra.</span>
+                                                  <span class="s1">&#39;median_kernel&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># Defaults to 1 (which applies no median filtering).</span>
+                                                  <span class="s1">&#39;sigma_clip&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># will skip any outlier clipping.</span>
+                                                  <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;barshadow&#39;</span><span class="p">:</span>
+                                                            <span class="p">{</span><span class="s1">&#39;override_barshadow&#39;</span><span class="p">:</span> <span class="n">barshadow_reffile</span><span class="p">}}},</span>
+                        <span class="s1">&#39;bkg_subtract&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;skip&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="c1"># Skip pixel-to-pixel.</span>
+
+                        <span class="c1"># Fill non-science pixels with NaNs in the final</span>
+                        <span class="c1"># background-subtracted resampled spectra (not 0&#39;s)</span>
+                        <span class="c1"># so they don&#39;t get included in Extract1D step.</span>
+                        <span class="c1"># Use resample weight type ivm as it lets through less outliers.</span>
+                        <span class="s1">&#39;resample_spec&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;fillval&#39;</span><span class="p">:</span> <span class="s1">&#39;nan&#39;</span><span class="p">,</span> <span class="s1">&#39;weight_type&#39;</span><span class="p">:</span> <span class="s1">&#39;ivm&#39;</span><span class="p">},</span>
+                        <span class="c1"># Override to use the newest barshadow file.</span>
+                        <span class="s1">&#39;barshadow&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;override_barshadow&#39;</span><span class="p">:</span> <span class="n">barshadow_reffile</span><span class="p">}}</span>
+
+        <span class="n">Spec2Pipeline</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">rate_file</span><span class="p">,</span> <span class="n">save_results</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir_masterbkg</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="n">spec2_params</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hurray! Stage 2 Processing Complete.&quot;</span><span class="p">)</span>
+
+<span class="n">end</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run time: &quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">60.0</span><span class="p">,</span> <span class="s2">&quot; min&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Changing MSAMETFL Keyword for jw01448011001_02101_00001_nrs2_rate.fits
+Applying Stage 2 Calibrations &amp; Corrections to: jw01448011001_02101_00001_nrs2_rate.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Hurray! Stage 2 Processing Complete.
+Run time:  0.6233333333333333  min
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the 1-D and 2-D master background spectra.</span>
+<span class="n">mb_2d</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">output_dir_masterbkg</span><span class="o">+</span><span class="s1">&#39;*_masterbg2d.fits&#39;</span><span class="p">))</span>
+<span class="n">mb_1d</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">output_dir_masterbkg</span><span class="o">+</span><span class="s1">&#39;*_masterbg1d.fits&#39;</span><span class="p">))</span>
+
+<span class="n">plot_spectra</span><span class="p">(</span><span class="n">mb_2d</span><span class="p">,</span> <span class="n">mb_1d</span><span class="p">,</span> <span class="n">slit_names</span><span class="o">=</span><span class="n">demo_background_slits</span><span class="p">,</span> <span class="n">hist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+             <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;RdBu&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">MB</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/afd25d327fcf3fc0b5f48e77f3f35b4ca769c5451a64340e21418ac5d706fcb3.png" src="../../../_images/afd25d327fcf3fc0b5f48e77f3f35b4ca769c5451a64340e21418ac5d706fcb3.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the master background subtracted spectra.</span>
+<span class="n">s2d_mb_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">output_dir_masterbkg</span><span class="o">+</span><span class="s1">&#39;*_s2d.fits&#39;</span><span class="p">))</span>
+<span class="n">x1d_mb_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">output_dir_masterbkg</span><span class="o">+</span><span class="s1">&#39;*_x1d.fits&#39;</span><span class="p">))</span>
+
+<span class="n">plot_spectra</span><span class="p">(</span><span class="n">s2d_mb_files</span><span class="p">,</span> <span class="n">x1d_mb_files</span><span class="p">,</span> <span class="n">slit_names</span><span class="o">=</span><span class="n">demo_background_slits</span><span class="p">,</span>
+             <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;RdBu&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">hist</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+             <span class="n">fill_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ycolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">ecolor</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span> <span class="n">plot_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Slit 2: Y-START = 7.0 ; Y-STOP = 12.0
+Slit 9: Y-START = 7.0 ; Y-STOP = 12.0
+Slit 14: Y-START = 7.0 ; Y-STOP = 12.0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Slit 38: Y-START = 7.0 ; Y-STOP = 12.0
+Slit 43: Y-START = 7.0 ; Y-STOP = 12.0
+</pre></div>
+</div>
+<img alt="../../../_images/745a458e5382f7a412ae66bf4d2675f0f578dd83b4262cb4ece7874bc17073a1.png" src="../../../_images/745a458e5382f7a412ae66bf4d2675f0f578dd83b4262cb4ece7874bc17073a1.png" />
+<img alt="../../../_images/40eee6c182ab24120b8ae96240f5f19b165776ec0cd6dca37b5731520c5b0307.png" src="../../../_images/40eee6c182ab24120b8ae96240f5f19b165776ec0cd6dca37b5731520c5b0307.png" />
+<img alt="../../../_images/8d75f385f7f5b74a676e7d83d679adbf33b5df5ab5d0581f9291a618c6e178dc.png" src="../../../_images/8d75f385f7f5b74a676e7d83d679adbf33b5df5ab5d0581f9291a618c6e178dc.png" />
+<img alt="../../../_images/4b90321b8abdc33c2333ab3d5487d880c5d3999bef8c0a28087fb7baa1562782.png" src="../../../_images/4b90321b8abdc33c2333ab3d5487d880c5d3999bef8c0a28087fb7baa1562782.png" />
+<img alt="../../../_images/94b908ccf991dddc6859c189e6e33c5c5f15ab2bc12d6d6d6ac588fd7d8de7c6.png" src="../../../_images/94b908ccf991dddc6859c189e6e33c5c5f15ab2bc12d6d6d6ac588fd7d8de7c6.png" />
+</div>
+</div>
+<div class="alert alert-block alert-info">
+<p><b>Notes:</b></p>
+<ul class="simple">
+<li><p>The 2-D master background spectra are not resampled.</p></li>
+<li><p>In this demonstration, we are subtracting a master background from the background sources themselves. Consequently, we observe a distribution of values around zero in the final master background-subtracted spectra.</p></li>
+<li><p>Note the presence of positive spikes in both the 1D and 2D master background spectra, as well as negative spikes in the background-subtracted spectra, resulting from unflagged hot pixels that were not handled before doing master background subtraction.</p></li>
+</ul>
+</div> 
+<hr class="docutils" />
+<section id="identify-unmasked-hot-bad-pixels">
+<h3>7.1 Identify Unmasked Hot/Bad Pixels <a id='hotbadpx'></a><a class="headerlink" href="#identify-unmasked-hot-bad-pixels" title="Link to this heading">#</a></h3>
+<p>The following section demonstrates one method for identifying unmasked hot/bad pixels and modifying their corresponding DQ flag to “DO_NOT_USE” using the imported <code class="docutils literal notranslate"><span class="pre">manually_define_dq_flags</span></code> function.</p>
+<p>This function works best with the Python package Plotly for interactive plotting. Installation instructions for Plotly are <a class="reference external" href="https://github.com/plotly/plotly.py">here</a>. Plotly generates an interactive plot that allows users to easily hover over hot/bad pixels and obtain their location information (x,y). If Plotly is not installed, a static plot will be returned.</p>
+<p>By providing a list of coordinates and setting the parameter <code class="docutils literal notranslate"><span class="pre">update_dq</span></code> to True, the <code class="docutils literal notranslate"><span class="pre">manually_define_dq_flags</span></code> function will modify the DQ flags in the countrate file (<em>_rate.fits</em>) for those pixels to “DO_NOT_USE”. This flag ensures that identified hot/bad pixels are excluded when extracting 1-D spectra. To confirm the successful implementation of the modifications, rerun <em><code class="docutils literal notranslate"><span class="pre">calwebb_spec2</span></code></em> in <a class="reference internal" href="#masterbkg"><span class="xref myst">Section 7</span></a> and utilize the <code class="docutils literal notranslate"><span class="pre">plot_spectra</span></code> function to visualize the resulting spectra.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Identify the hot/bad pixels and update the DQ flags for each vetted background.</span>
+<span class="n">rate_file_path</span> <span class="o">=</span> <span class="n">mast_products_dir</span><span class="o">+</span><span class="s1">&#39;jw01448011001_02101_00001_nrs2_rate.fits&#39;</span>
+<span class="n">cal_file_path</span> <span class="o">=</span> <span class="n">output_dir_NObkg</span><span class="o">+</span><span class="s1">&#39;jw01448011001_02101_00001_nrs2_cal.fits&#39;</span>
+
+<span class="n">update_dq</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">manually_define_dq_flags</span><span class="p">(</span><span class="n">rate_file_path</span><span class="p">,</span> <span class="n">cal_file_path</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                         <span class="n">outlier_coords</span><span class="o">=</span><span class="p">[(</span><span class="mi">932</span><span class="p">,</span> <span class="mi">1453</span><span class="p">),</span> <span class="p">(</span><span class="mi">932</span><span class="p">,</span> <span class="mi">1452</span><span class="p">),</span>
+                                         <span class="p">(</span><span class="mi">931</span><span class="p">,</span> <span class="mi">1453</span><span class="p">),</span> <span class="p">(</span><span class="mi">932</span><span class="p">,</span> <span class="mi">1454</span><span class="p">),</span>
+                                         <span class="p">(</span><span class="mi">933</span><span class="p">,</span> <span class="mi">1453</span><span class="p">),</span> <span class="p">(</span><span class="mi">908</span><span class="p">,</span> <span class="mi">1453</span><span class="p">),</span>
+                                         <span class="p">(</span><span class="mi">908</span><span class="p">,</span> <span class="mi">1454</span><span class="p">)],</span> <span class="n">update_dq</span><span class="o">=</span><span class="n">update_dq</span><span class="p">)</span>
+
+<span class="n">manually_define_dq_flags</span><span class="p">(</span><span class="n">rate_file_path</span><span class="p">,</span> <span class="n">cal_file_path</span><span class="p">,</span> <span class="s2">&quot;9&quot;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                         <span class="n">outlier_coords</span><span class="o">=</span><span class="p">[(</span><span class="mi">864</span><span class="p">,</span> <span class="mi">1685</span><span class="p">),</span> <span class="p">(</span><span class="mi">854</span><span class="p">,</span> <span class="mi">1697</span><span class="p">)],</span>
+                         <span class="n">update_dq</span><span class="o">=</span><span class="n">update_dq</span><span class="p">)</span>
+
+<span class="n">manually_define_dq_flags</span><span class="p">(</span><span class="n">rate_file_path</span><span class="p">,</span> <span class="n">cal_file_path</span><span class="p">,</span> <span class="s2">&quot;14&quot;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                         <span class="n">outlier_coords</span><span class="o">=</span><span class="p">[(</span><span class="mi">844</span><span class="p">,</span> <span class="mi">1563</span><span class="p">),</span> <span class="p">(</span><span class="mi">883</span><span class="p">,</span> <span class="mi">1557</span><span class="p">),</span>
+                                         <span class="p">(</span><span class="mi">883</span><span class="p">,</span> <span class="mi">1558</span><span class="p">)],</span> <span class="n">update_dq</span><span class="o">=</span><span class="n">update_dq</span><span class="p">)</span>
+
+<span class="n">manually_define_dq_flags</span><span class="p">(</span><span class="n">rate_file_path</span><span class="p">,</span> <span class="n">cal_file_path</span><span class="p">,</span> <span class="s2">&quot;38&quot;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                         <span class="n">outlier_coords</span><span class="o">=</span><span class="p">[(</span><span class="mi">776</span><span class="p">,</span> <span class="mi">1734</span><span class="p">),</span> <span class="p">(</span><span class="mi">829</span><span class="p">,</span> <span class="mi">1729</span><span class="p">),</span>
+                                         <span class="p">(</span><span class="mi">569</span><span class="p">,</span> <span class="mi">1725</span><span class="p">)],</span> <span class="n">update_dq</span><span class="o">=</span><span class="n">update_dq</span><span class="p">)</span>
+
+<span class="n">manually_define_dq_flags</span><span class="p">(</span><span class="n">rate_file_path</span><span class="p">,</span> <span class="n">cal_file_path</span><span class="p">,</span> <span class="s2">&quot;43&quot;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                         <span class="n">outlier_coords</span><span class="o">=</span><span class="p">[(</span><span class="mi">940</span><span class="p">,</span> <span class="mi">124</span><span class="p">),</span> <span class="p">(</span><span class="mi">919</span><span class="p">,</span> <span class="mi">129</span><span class="p">),</span>
+                                         <span class="p">(</span><span class="mi">900</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span> <span class="p">(</span><span class="mi">899</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span>
+                                         <span class="p">(</span><span class="mi">900</span><span class="p">,</span> <span class="mi">121</span><span class="p">),</span> <span class="p">(</span><span class="mi">900</span><span class="p">,</span> <span class="mi">119</span><span class="p">)],</span>
+                         <span class="n">update_dq</span><span class="o">=</span><span class="n">update_dq</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DQ extension modified successfully.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DQ extension modified successfully.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DQ extension modified successfully.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DQ extension modified successfully.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DQ extension modified successfully.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="alert alert-block alert-info">
+<p><b>Note:</b> If you prefer to proceed with a 1D master background generated by the pipeline before Build 11.2, rerun the <em><code class="docutils literal notranslate"><span class="pre">calwebb_spec2</span></code></em> pipeline after manually updating the DQ flags of hot/bad pixels in the cell above. Alternatively, in the next section, we will provide the 1D master background to the pipeline and manage outlier hot/bad pixels by computing a sigma-clipped mean background.</p>
+</div> </section>
+</section>
+<hr class="docutils" />
+<section id="master-background-subtraction-user-supplied-master-background-spectrum">
+<h2>8. Master Background Subtraction: User Supplied Master Background Spectrum <a id='manual'></a><a class="headerlink" href="#master-background-subtraction-user-supplied-master-background-spectrum" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Output directories for the user supplied master background.</span>
+<span class="n">output_dir_masterbkg_manual</span> <span class="o">=</span> <span class="n">output_dir</span><span class="o">+</span><span class="s1">&#39;nirspec_product_files_masterbkg_manual/&#39;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_dir_masterbkg_manual</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir_masterbkg_manual</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<section id="re-extraction-of-1-d-backgrounds-using-modified-extract1d-reference-file">
+<h3>8.1 Re-extraction of 1-D Backgrounds Using Modified EXTRACT1D Reference File <a id='extraction'></a><a class="headerlink" href="#re-extraction-of-1-d-backgrounds-using-modified-extract1d-reference-file" title="Link to this heading">#</a></h3>
+<p>Re-extract the vetted background slitlets (without applying background subtraction) using non-default EXTRACT1D reference file.</p>
+<p>We utilize a modified EXTRACT1D reference file that extracts background from each of the shutters in the 3-shutter slitlets. The default behavior of the pipeline for extended sources is to only extract a 6-pixel wide extraction region centered in the 2-D space of the slit.</p>
+<p>In addition to modifying these parameters, we calculate a sigma-clipped mean background instead of computing a weighted average of the background inputs to create the 1-D master background spectrum. This sigma-clipped mean background is then supplied to <em><code class="docutils literal notranslate"><span class="pre">MasterBackgroundMosStep</span></code></em> in  <em><code class="docutils literal notranslate"><span class="pre">calwebb_spec2</span></code></em>. The user-supplied 1-D master background spectrum must adhere to the same format as an <em>_x1d.fits</em> file. Ensure that the <code class="docutils literal notranslate"><span class="pre">SURF_BRIGHT</span></code> and <code class="docutils literal notranslate"><span class="pre">WAVELENGTH</span></code> columns in the <em>_x1d.fits</em> are populated.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find and Modify the EXTRACT1D reference file.</span>
+
+<span class="n">refs</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">dump_references</span><span class="p">(</span><span class="n">crds_client</span><span class="o">.</span><span class="n">get_context_used</span><span class="p">(</span><span class="s1">&#39;jwst&#39;</span><span class="p">),</span>
+                           <span class="p">[</span><span class="s1">&#39;jwst_nirspec_extract1d_0009.json&#39;</span><span class="p">])</span>
+<span class="n">extract1d_reffile</span> <span class="o">=</span> <span class="n">refs</span><span class="p">[</span><span class="s1">&#39;jwst_nirspec_extract1d_0009.json&#39;</span><span class="p">]</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">extract1d_reffile</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_obj</span><span class="p">:</span>
+    <span class="n">e1dref</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f_obj</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">params</span> <span class="ow">in</span> <span class="n">e1dref</span><span class="p">[</span><span class="s1">&#39;apertures&#39;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ANY&#39;</span><span class="p">):</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;src_coeff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">2.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">17.5</span><span class="p">]]</span>
+<span class="n">new_extract1d_ref</span> <span class="o">=</span> <span class="n">output_dir</span><span class="o">+</span><span class="s1">&#39;jwst_nirspec_extract1d_modified_manual.json&#39;</span>
+<span class="n">newfile_ref</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">new_extract1d_ref</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">e1dref</span><span class="p">,</span> <span class="n">newfile_ref</span><span class="p">)</span>
+<span class="n">newfile_ref</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extract the 1D Spectra from the resampled spectra (_s2d.fits).</span>
+<span class="k">if</span> <span class="n">runflag</span><span class="p">:</span>
+
+    <span class="n">s2d_nobkg_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">output_dir_NObkg</span><span class="o">+</span><span class="s1">&#39;*s2d.fits&#39;</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">s2d_file</span> <span class="ow">in</span> <span class="n">s2d_nobkg_files</span><span class="p">:</span>
+
+        <span class="c1">#extract1d_step = Extract1dStep()</span>
+        <span class="c1">#extract1d_step.save_results = True</span>
+        <span class="c1">#extract1d_step.output_dir = os.path.abspath(os.path.dirname(s2d_file))</span>
+        <span class="c1">#extract1d_step.suffix = &#39;mod_x1d&#39;</span>
+        <span class="c1">#extract1d_step.use_source_posn = False</span>
+        <span class="c1">#extract1d_step.output_use_model = True # For file naming</span>
+        <span class="c1">#extract1d_step.override_extract1d = new_extract1d_ref</span>
+
+        <span class="n">x1d_result</span> <span class="o">=</span> <span class="n">Extract1dStep</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">s2d_file</span><span class="p">,</span> <span class="n">save_results</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">s2d_file</span><span class="p">)),</span>
+                                        <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;mod_x1d&#39;</span><span class="p">,</span> <span class="n">use_source_posn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">output_use_model</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                        <span class="n">override_extract1d</span><span class="o">=</span><span class="n">new_extract1d_ref</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x1d_files_mod</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">output_dir_NObkg</span><span class="o">+</span><span class="s1">&#39;*mod_x1d.fits&#39;</span><span class="p">))</span>
+
+<span class="c1"># Original MSA metadata file path.</span>
+<span class="n">metafile_og</span> <span class="o">=</span> <span class="n">mast_products_dir</span> <span class="o">+</span> <span class="s1">&#39;jw01448011001_01_msa.fits&#39;</span>
+
+<span class="n">mb_file</span><span class="p">,</span> <span class="n">good_bkg_slits</span> <span class="o">=</span> <span class="n">mean_background_variations</span><span class="p">(</span><span class="n">x1d_files_mod</span><span class="p">,</span> <span class="n">metafile_og</span><span class="p">,</span>
+                                                     <span class="n">bin_wavelengths</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                     <span class="n">vetted_backgrounds</span><span class="o">=</span><span class="n">demo_background_slits</span><span class="p">,</span>
+                                                     <span class="n">mad_threshold</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">2.2</span><span class="p">,</span>
+                                                     <span class="n">mean_color</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span>
+                                                     <span class="n">y_lim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_mb</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean COV: 0.02662496443945685
+Uncertainty of the Mean COV: 0.0007197178553035183
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Master Background FITS file saved to ./user_supplied_mb.fits
+</pre></div>
+</div>
+<img alt="../../../_images/fa58b71bcac16d0485fd357417e3f5b3ab46f42cf93e0f1d86f4de1bd398b31f.png" src="../../../_images/fa58b71bcac16d0485fd357417e3f5b3ab46f42cf93e0f1d86f4de1bd398b31f.png" />
+</div>
+</div>
+<hr class="docutils" />
+<p>Provide the pipeline with the user-supplied 1-D master background spectrum.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Stage 2 Processing -- Master Background Subtraction Applied.</span>
+<span class="c1"># User-supplied master background specrum.</span>
+
+<span class="k">if</span> <span class="n">runflag</span><span class="p">:</span>
+
+    <span class="c1"># Process each rate file seperately.</span>
+    <span class="k">for</span> <span class="n">rate_file</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">mast_products_dir</span><span class="o">+</span><span class="s1">&#39;*rate.fits&#39;</span><span class="p">)):</span>
+        <span class="c1"># Update the msa metadata file for master background subtraction</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Changing MSAMETFL Keyword for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">rate_file</span><span class="p">)))</span>
+        <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">rate_file</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ratefile_hdu</span><span class="p">:</span>
+            <span class="n">ratefile_hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;MSAMETFL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">metafile_mb</span><span class="p">)</span>
+        <span class="n">ratefile_hdu</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Applying Stage 2 Calibrations &amp; Corrections to: &quot;</span> <span class="o">+</span>
+              <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">rate_file</span><span class="p">))</span>
+
+        <span class="c1"># Adjust `slit_y_low`/`slit_y_high` as needed to center slitlet in 2-D cutout.</span>
+        <span class="n">spec2_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;assign_wcs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;slit_y_low&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.55</span><span class="p">,</span> <span class="s1">&#39;slit_y_high&#39;</span><span class="p">:</span> <span class="mf">0.35</span><span class="p">},</span>
+                        <span class="c1"># Save generated master background.</span>
+                        <span class="s1">&#39;master_background_mos&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;skip&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                                                  <span class="c1"># Provide user-supplied master background.</span>
+                                                  <span class="s1">&#39;user_background&#39;</span><span class="p">:</span> <span class="n">mb_file</span><span class="p">,</span>
+                                                  <span class="s1">&#39;save_background&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                                                  <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;barshadow&#39;</span><span class="p">:</span> <span class="p">{</span>
+                                                      <span class="s1">&#39;override_barshadow&#39;</span><span class="p">:</span> <span class="n">barshadow_reffile</span><span class="p">}</span>
+                                                  <span class="p">}},</span>
+                        <span class="s1">&#39;bkg_subtract&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;skip&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="c1"># Skip pixel-to-pixel.</span>
+
+                        <span class="c1"># Fill non-science pixels with NaNs in the final</span>
+                        <span class="c1"># background-subtracted resampled spectra (not 0&#39;s)</span>
+                        <span class="c1"># so they don&#39;t get included in Extract1D step.</span>
+                        <span class="c1"># Use resample weight type ivm as it lets through less outliers.</span>
+                        <span class="s1">&#39;resample_spec&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;fillval&#39;</span><span class="p">:</span> <span class="s1">&#39;nan&#39;</span><span class="p">,</span> <span class="s1">&#39;weight_type&#39;</span><span class="p">:</span> <span class="s1">&#39;ivm&#39;</span><span class="p">},</span>
+                        <span class="c1"># Override for newer barshadow correction reference file.</span>
+                        <span class="s1">&#39;barshadow&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;override_barshadow&#39;</span><span class="p">:</span> <span class="n">barshadow_reffile</span><span class="p">}}</span>
+
+        <span class="n">Spec2Pipeline</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">rate_file</span><span class="p">,</span> <span class="n">save_results</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir_masterbkg_manual</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="n">spec2_params</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Changing MSAMETFL Keyword for jw01448011001_02101_00001_nrs2_rate.fits
+Applying Stage 2 Calibrations &amp; Corrections to: jw01448011001_02101_00001_nrs2_rate.fits
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the master background spectra.</span>
+<span class="n">mb_2d_user</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">output_dir_masterbkg_manual</span><span class="o">+</span><span class="s1">&#39;*_masterbg2d.fits&#39;</span><span class="p">))</span>
+<span class="n">mb_1d_user</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">output_dir_masterbkg_manual</span><span class="o">+</span><span class="s1">&#39;*_masterbg1d.fits&#39;</span><span class="p">))</span>
+
+<span class="n">plot_spectra</span><span class="p">(</span><span class="n">mb_2d_user</span><span class="p">,</span> <span class="n">mb_1d_user</span><span class="p">,</span> <span class="n">slit_names</span><span class="o">=</span><span class="n">demo_background_slits</span><span class="p">,</span>
+             <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;RdBu&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">hist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+             <span class="n">fill_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">MB</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot_errors</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/7b775fa1d88943652d6512c9ad5deeaea8221cb36c90c8642d21ca92af6619d3.png" src="../../../_images/7b775fa1d88943652d6512c9ad5deeaea8221cb36c90c8642d21ca92af6619d3.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the master background-subtracted spectra.</span>
+<span class="n">s2d_mb_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">output_dir_masterbkg_manual</span><span class="o">+</span><span class="s1">&#39;*_s2d.fits&#39;</span><span class="p">))</span>
+<span class="n">x1d_mb_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">output_dir_masterbkg_manual</span><span class="o">+</span><span class="s1">&#39;*_x1d.fits&#39;</span><span class="p">))</span>
+
+<span class="n">plot_spectra</span><span class="p">(</span><span class="n">s2d_mb_files</span><span class="p">,</span> <span class="n">x1d_mb_files</span><span class="p">,</span> <span class="n">slit_names</span><span class="o">=</span><span class="n">demo_background_slits</span><span class="p">,</span>
+             <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;RdBu&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">hist</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+             <span class="n">fill_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ycolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">ecolor</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span> <span class="n">plot_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Slit 2: Y-START = 7.0 ; Y-STOP = 12.0
+Slit 9: Y-START = 7.0 ; Y-STOP = 12.0
+Slit 14: Y-START = 7.0 ; Y-STOP = 12.0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Slit 38: Y-START = 7.0 ; Y-STOP = 12.0
+Slit 43: Y-START = 7.0 ; Y-STOP = 12.0
+</pre></div>
+</div>
+<img alt="../../../_images/d40a82daade9181bcfbc6dadb5f3d95da6a669b3e6f1ed27205272bdad12c292.png" src="../../../_images/d40a82daade9181bcfbc6dadb5f3d95da6a669b3e6f1ed27205272bdad12c292.png" />
+<img alt="../../../_images/171813adfc54d104e27704df18a6ea60a3b6a70c4881597887149bc38fb46efc.png" src="../../../_images/171813adfc54d104e27704df18a6ea60a3b6a70c4881597887149bc38fb46efc.png" />
+<img alt="../../../_images/d671841e3217afea94b02a0116dc1efdc9403518fb509a93ec79c9e1c0b41edf.png" src="../../../_images/d671841e3217afea94b02a0116dc1efdc9403518fb509a93ec79c9e1c0b41edf.png" />
+<img alt="../../../_images/a4a8708f422c193f798e1323a1468575ca62747868bbfc7b4be4e63901e6e45e.png" src="../../../_images/a4a8708f422c193f798e1323a1468575ca62747868bbfc7b4be4e63901e6e45e.png" />
+<img alt="../../../_images/bdd3fe5d71739875cee8df36a6ba4104bdf8cd93cf55dcb6f619c53868ad54fe.png" src="../../../_images/bdd3fe5d71739875cee8df36a6ba4104bdf8cd93cf55dcb6f619c53868ad54fe.png" />
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="conclusion">
+<h2>9. Conclusion <a name="conclusion"></a><a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>The calibrated background-subtracted products (<em>_cal.fits</em>) resulting from the above <code class="docutils literal notranslate"><span class="pre">Spec2Pipeline</span></code> run are now ready for further processing. These files can serve as input for the <code class="docutils literal notranslate"><span class="pre">Spec3Pipeline</span></code> to generate final combined spectra.</p>
+<p><a class="reference internal" href="#top"><span class="xref myst">Top of Page</span></a></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/NIRSpec/mos_master_background"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../mos_spectroscopy_advanced/MOSspec_advanced.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">MOS Spectroscopy of Extragalactic Field</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../msa_metafile/NIRSpec_MOS_MSA_metafile.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">NIRSpec MOS MSA Metafile</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">1. Introduction <a id="intro"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library">2. Import Library <a id="imports"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#set-crds-context-and-server">Set CRDS Context and Server</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#directory-setup">3. Directory Setup <a id="dir_setup"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-data">4. Download the Data <a id="data"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vetting-the-background-spectra">5. Vetting the Background Spectra <a id="bkg_vetting"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stage-2-spec2pipeline-no-background-subtraction-applied">5.1 Stage 2: Spec2Pipeline – No Background Subtraction Applied <a id="stage2"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-background-variation">5.2 Check the Background Variation <a id="variation"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#source-and-slitlet-information-msa-metadata-file">6. Source and Slitlet Information: MSA Metadata File <a id="metadata"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#edit-the-msa-metadata-file-for-master-background-subtraction">6.1 Edit the MSA Metadata File for Master Background Subtraction <a id="metafile_mb"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#master-background-subtraction-pipeline-generated-master-background-spectrum">7. Master Background Subtraction: Pipeline Generated Master Background Spectrum <a id="masterbkg"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#identify-unmasked-hot-bad-pixels">7.1 Identify Unmasked Hot/Bad Pixels <a id="hotbadpx"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#master-background-subtraction-user-supplied-master-background-spectrum">8. Master Background Subtraction: User Supplied Master Background Spectrum <a id="manual"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#re-extraction-of-1-d-backgrounds-using-modified-extract1d-reference-file">8.1 Re-extraction of 1-D Backgrounds Using Modified EXTRACT1D Reference File <a id="extraction"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">9. Conclusion <a name="conclusion"></a></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
