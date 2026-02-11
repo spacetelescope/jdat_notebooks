@@ -2,7 +2,9 @@
 JWST Data Analysis Tool Notebooks
 =======================================================
 
-[![DOI](https://zenodo.org/badge/248772620.svg)](https://zenodo.org/badge/latestdoi/248772620)
+.. image:: https://zenodo.org/badge/248772620.svg
+   :target: https://zenodo.org/badge/latestdoi/248772620
+   :alt: DOI
 
 The `jdat_notebooks repository <https://github.com/spacetelescope/jdat_notebooks>`_
 contains notebooks illustrating workflows for post-pipeline analysis of JWST data.
