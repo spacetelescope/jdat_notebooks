@@ -591,11 +591,14 @@
 <section id="introduction">
 <h2>1. Introduction <a name="introduction"></a><a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
 <hr style="border:1px solid black">
-<p>The JWST NIRSpec instrument has a number of features and characteristics that observers should be aware of when planning observations and interpreting data. One notable feature seen in NIRSpec pipeline products is negative and/or surplus flux in the extracted 1-D spectrum, typically with an irregular wavelength-dependent undulation. The cause of this artifact is correlated noise, known as <a class="reference external" href="https://jwst-docs.stsci.edu/jwst-near-infrared-spectrograph/nirspec-instrument-features-and-caveats#NIRSpecInstrumentFeaturesandCaveats-1/fnoise">1/f noise</a>, from low-level detector thermal instabilities, seen as vertical banding in 2-D count rate images, particularly in exposures of the NRS2 detector. While the IRS2 readout mode reduces this effect, it is not completely eliminated.</p>
-<p>To address this issue, the JWST Science Calibration Pipeline has integrated an external package developed by Bernard Rauscher, known as <a class="reference external" href="https://webb.nasa.gov/content/forScientists/publications.html#NSClean">NSClean</a>, within the <code class="docutils literal notranslate"><span class="pre">Spec2Pipeline</span></code> under <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/nsclean/main.html">NSCleanStep</a>. This algorithm uses dark areas of the detector to fit a background model to the data in Fourier space. It requires an input mask to identify all dark areas of the detector. The more thorough and complete this mask is, the better the background fit.</p>
-<p>In this notebook, we will use the NSClean algorithm integrated into the pipeline, utilizing a mask generated on-the-fly with default parameters to remove 1/f noise. In some cases, this mask may not be complete enough/too restrictive for the best possible noise removal. To address this, we demonstrate how one can manually modify the default mask, as well as how to create an alternative mask by adjusting the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/nsclean/arguments.html">NSCleanStep parameters</a>. If needed, see the <a class="reference external" href="https://iopscience.iop.org/article/10.1088/1538-3873/ad1b36/pdf">NSClean documentation</a> for some suggestions on manually creating a custom mask.</p>
+<p>The JWST NIRSpec instrument has a number of features and characteristics that observers should be aware of when planning observations and interpreting data. One notable feature seen in NIRSpec pipeline products is negative and/or surplus flux in the extracted 1-D spectrum, typically with an irregular wavelength-dependent undulation. The cause of this artifact is correlated noise, known as <a class="reference external" href="https://jwst-docs.stsci.edu/known-issues/nirspec-known-issues#NIRSpecKnownIssues-correlatedUncorrectedcorrelatednoise-1/fnoise">1/f noise</a>, from low-level detector thermal instabilities, seen as vertical banding in 2-D count rate images, particularly in exposures of the NRS2 detector. While the IRS2 readout mode reduces this effect, it is not completely eliminated.</p>
+<p>To address this issue, the JWST Science Calibration Pipeline has integrated an external package developed by Bernard Rauscher, known as <a class="reference external" href="https://webb.nasa.gov/content/forScientists/publications.html#NSClean">NSClean</a>, within the <code class="docutils literal notranslate"><span class="pre">Spec2Pipeline</span></code> under <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/1.20.2/jwst/nsclean/index.html">NSCleanStep</a>. This algorithm uses dark areas of the detector to fit a background model to the data in Fourier space. It requires an input mask to identify all dark areas of the detector. The more thorough and complete this mask is, the better the background fit.</p>
+<p>In this notebook, we will use the NSClean algorithm integrated into the pipeline, utilizing a mask generated on-the-fly with default parameters to remove 1/f noise. In some cases, this mask may not be complete enough/too restrictive for the best possible noise removal. To address this, we demonstrate how one can manually modify the default mask, as well as how to create an alternative mask by adjusting the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/1.20.2/jwst/nsclean/arguments.html">NSCleanStep parameters</a>. If needed, see the <a class="reference external" href="https://iopscience.iop.org/article/10.1088/1538-3873/ad1b36/pdf">NSClean documentation</a> for some suggestions on manually creating a custom mask.</p>
 <p>This notebook provides examples from two GTO observations: a fixed slit observation of F dwarf GSC 03162-00665 from program <a class="reference external" href="https://www.stsci.edu/jwst/science-execution/program-information?id=2757">2757</a> and an observation of the brown dwarf J03480772-6022270 from program <a class="reference external" href="https://www.stsci.edu/jwst/science-execution/program-information?id=1189">1189</a>.</p>
-</section>
+<div class="alert alert-block alert-warning">
+<b>Warning:</b> 
+<p>The NSClean step has been removed in JWST pipeline version 2.0.0 and replaced with the <code class="docutils literal notranslate"><span class="pre">CleanFlickerNoiseStep</span></code>, which is available in both the <code class="docutils literal notranslate"><span class="pre">Detector1Pipeline</span></code> and <code class="docutils literal notranslate"><span class="pre">Spec2Pipeline</span></code>.    The latest supported version of the JWST pipeline that includes the NSClean step is version 1.20.2.  For information on how to run the <code class="docutils literal notranslate"><span class="pre">CleanFlickerNoiseStep</span></code> for Fixed Slit data, see the <a class="reference external" href="https://github.com/spacetelescope/jwst-pipeline-notebooks/blob/main/notebooks/NIRSPEC/FSlit/JWPipeNB-NIRSpec-FS.ipynb">Fixed Slit Pipeline Notebook</a>.</p>
+</div></section>
 <section id="import-library">
 <h2>2. Import Library <a name="imports"></a><a class="headerlink" href="#import-library" title="Link to this heading">#</a></h2>
 <hr style="border:1px solid black">
@@ -695,11 +698,12 @@ JWST Calibration Pipeline Version=1.20.2
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading jw02757002001_03104_00001_nrs1_rate.fits
-The file jw02757002001_03104_00001_nrs1_rate.fits already exists in the directory. Skipping download.
-Downloading jw01189001001_04101_00001_nrs1_rate.fits
-The file jw01189001001_04101_00001_nrs1_rate.fits already exists in the directory. Skipping download.
-Downloading jw01189001001_04101_00001_nrs2_rate.fits
-The file jw01189001001_04101_00001_nrs2_rate.fits already exists in the directory. Skipping download.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading jw01189001001_04101_00001_nrs1_rate.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading jw01189001001_04101_00001_nrs2_rate.fits
 </pre></div>
 </div>
 </div>
@@ -764,7 +768,7 @@ Processing jw01189001001_04101_00001_nrs2_rate.fits...
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved jw01189001001_04101_00001_nrs2_cal.fits
 Saved jw01189001001_04101_00001_nrs2_x1d.fits
-Run time:  0.65  min
+Run time:  0.9483333333333334  min
 </pre></div>
 </div>
 </div>
@@ -773,7 +777,7 @@ Run time:  0.65  min
 <section id="clean-up-1-f-noise-with-nsclean-default-pipeline-mask">
 <h2>5. Clean up 1/f Noise with NSClean (Default Pipeline Mask) <a name="nsclean_default"></a><a class="headerlink" href="#clean-up-1-f-noise-with-nsclean-default-pipeline-mask" title="Link to this heading">#</a></h2>
 <hr style="border:1px solid black">
-<p>If a user-supplied mask file is not provided to the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/latest/jwst/nsclean/index.html">NSClean step</a> in the <code class="docutils literal notranslate"><span class="pre">Spec2Pipeline</span></code>, the pipeline will generate a mask based on default parameters. This mask will identify any pixel that is unilluminated. That is, the mask must contain True and False values, where True indicates that the pixel is dark, and False indicates that the pixel is illuminated (not dark).</p>
+<p>If a user-supplied mask file is not provided to the <a class="reference external" href="https://jwst-pipeline.readthedocs.io/en/1.20.2/jwst/nsclean/index.html">NSClean step</a> in the <code class="docutils literal notranslate"><span class="pre">Spec2Pipeline</span></code>, the pipeline will generate a mask based on default parameters. This mask will identify any pixel that is unilluminated. That is, the mask must contain True and False values, where True indicates that the pixel is dark, and False indicates that the pixel is illuminated (not dark).</p>
 <p>By default, the pipeline marks the following detector areas as illuminated, non-dark areas (False):</p>
 <ul class="simple">
 <li><p>Pixels designated as science areas for FS data.</p></li>
@@ -848,7 +852,7 @@ Processing jw01189001001_04101_00001_nrs2_rate.fits...
 Saved jw01189001001_04101_00001_nrs2_nsclean.fits
 Saved jw01189001001_04101_00001_nrs2_cal.fits
 Saved jw01189001001_04101_00001_nrs2_x1d.fits
-Run time:  0.7799999999999999  min
+Run time:  0.7100000000000001  min
 </pre></div>
 </div>
 </div>
@@ -919,8 +923,8 @@ Run time:  0.7799999999999999  min
 </div>
 <div class="cell_output docutils container">
 <img alt="../../../_images/3aec843ea381c305f36b3594b96bbb7ee429ecf038cedae970b2428d654a41b7.png" src="../../../_images/3aec843ea381c305f36b3594b96bbb7ee429ecf038cedae970b2428d654a41b7.png" />
-<img alt="../../../_images/6008a59e5a065c284829365c75343772af2d489be129ad7ff9580fdc1371a879.png" src="../../../_images/6008a59e5a065c284829365c75343772af2d489be129ad7ff9580fdc1371a879.png" />
-<img alt="../../../_images/94abb789205fa045628e730f9bd6c3cbc091970a6137dd94a4181ba9fe2d2e29.png" src="../../../_images/94abb789205fa045628e730f9bd6c3cbc091970a6137dd94a4181ba9fe2d2e29.png" />
+<img alt="../../../_images/301b19cc1c58a675ce5ccfa8792cbcc7201543eae1fcd013bbf925b5dc72a6b2.png" src="../../../_images/301b19cc1c58a675ce5ccfa8792cbcc7201543eae1fcd013bbf925b5dc72a6b2.png" />
+<img alt="../../../_images/830a312a337cb3efdbea6de542a93c1f9db7577eece7c5a413a2a5defbed2063.png" src="../../../_images/830a312a337cb3efdbea6de542a93c1f9db7577eece7c5a413a2a5defbed2063.png" />
 </div>
 </div>
 <p>Compare the extracted spectrum from the cleaned data to the spectrum extracted from the original rate file. Note that the following plots for the full-frame data display all FSs, but the primary source is in FS S200A1.</p>
@@ -953,9 +957,9 @@ Run time:  0.7799999999999999  min
 </div>
 <div class="cell_output docutils container">
 <img alt="../../../_images/dfe21047c7a5fa04fce83b2a01e10ccca37739f579231f6e456f77d2b4b50b8a.png" src="../../../_images/dfe21047c7a5fa04fce83b2a01e10ccca37739f579231f6e456f77d2b4b50b8a.png" />
-<img alt="../../../_images/8aaf102bbc215d78d24af47a0c552896067d3e8fe181d7cfa09c0e9da3247c9d.png" src="../../../_images/8aaf102bbc215d78d24af47a0c552896067d3e8fe181d7cfa09c0e9da3247c9d.png" />
+<img alt="../../../_images/a3f6c822b4775f616539f664e3fd13d6921f45d7cff7cd3db46c161d36d66a37.png" src="../../../_images/a3f6c822b4775f616539f664e3fd13d6921f45d7cff7cd3db46c161d36d66a37.png" />
 <img alt="../../../_images/116d416f5a9d651cc9da5d1306e0afbe4af2acc320dc8099c17532421978533f.png" src="../../../_images/116d416f5a9d651cc9da5d1306e0afbe4af2acc320dc8099c17532421978533f.png" />
-<img alt="../../../_images/6c938aeaa084ad968bb2d7e4bf22d73a998266d30333949953721f64d619183a.png" src="../../../_images/6c938aeaa084ad968bb2d7e4bf22d73a998266d30333949953721f64d619183a.png" />
+<img alt="../../../_images/8de733be5d4a647440b934f70240f378f6b787b6132e5cca2f1794d4d37c1830.png" src="../../../_images/8de733be5d4a647440b934f70240f378f6b787b6132e5cca2f1794d4d37c1830.png" />
 <img alt="../../../_images/9d6794b22c35239aad078e02be480b94f2e0ea7d901355f7e02d0649c286fac8.png" src="../../../_images/9d6794b22c35239aad078e02be480b94f2e0ea7d901355f7e02d0649c286fac8.png" />
 </div>
 </div>
@@ -1086,7 +1090,7 @@ Processing jw01189001001_04101_00001_nrs2_rate.fits...
 Saved jw01189001001_04101_00001_nrs2_nsclean.fits
 Saved jw01189001001_04101_00001_nrs2_cal.fits
 Saved jw01189001001_04101_00001_nrs2_x1d.fits
-Run time:  0.8083333333333333  min
+Run time:  0.75  min
 </pre></div>
 </div>
 </div>
@@ -1146,8 +1150,8 @@ Run time:  0.8083333333333333  min
 </div>
 <div class="cell_output docutils container">
 <img alt="../../../_images/25addc1353c450db63ea4c8fbbc87d5874295108a8e90e502b12d92bc9da8fea.png" src="../../../_images/25addc1353c450db63ea4c8fbbc87d5874295108a8e90e502b12d92bc9da8fea.png" />
-<img alt="../../../_images/bce17af9f68e4406f4a672b1b24a27fc25bfac2dc1e429f567e3e70ba4329296.png" src="../../../_images/bce17af9f68e4406f4a672b1b24a27fc25bfac2dc1e429f567e3e70ba4329296.png" />
-<img alt="../../../_images/e1204158d7da2e61d94e9d68f3126571762a6188859365479bfd9cfa41afc92a.png" src="../../../_images/e1204158d7da2e61d94e9d68f3126571762a6188859365479bfd9cfa41afc92a.png" />
+<img alt="../../../_images/1de6455c29f5ecb17e4154ac46e0be444e18b7ce3fdc6aee3aaa98b6456c006f.png" src="../../../_images/1de6455c29f5ecb17e4154ac46e0be444e18b7ce3fdc6aee3aaa98b6456c006f.png" />
+<img alt="../../../_images/277fa6e6e7f58175d5e85f5af48197ac800772f5dfac8dad2e85200c13b3a0b3.png" src="../../../_images/277fa6e6e7f58175d5e85f5af48197ac800772f5dfac8dad2e85200c13b3a0b3.png" />
 </div>
 </div>
 <p>Compare the extracted spectrum from the cleaned data to the spectrum extracted from the original rate file. Note that the following plots for the full-frame data display all FSs, but the primary source is in FS S200A1.</p>
@@ -1173,11 +1177,11 @@ Run time:  0.8083333333333333  min
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/23b7ff205e1242cb03d739f20c5ed82ea57ec06f2ac2c2d64d5c11f8e20bec71.png" src="../../../_images/23b7ff205e1242cb03d739f20c5ed82ea57ec06f2ac2c2d64d5c11f8e20bec71.png" />
+<img alt="../../../_images/2c99ab9f079061a624f92533bc6cf95d34ca86d52e369b16fa51e5b022c82b4f.png" src="../../../_images/2c99ab9f079061a624f92533bc6cf95d34ca86d52e369b16fa51e5b022c82b4f.png" />
 <img alt="../../../_images/affb4aa8c9f4e0d347417e06f5991b1a8e3adbb9b31321230ec3984cac1b47c0.png" src="../../../_images/affb4aa8c9f4e0d347417e06f5991b1a8e3adbb9b31321230ec3984cac1b47c0.png" />
 <img alt="../../../_images/aa06bbe0db6d70cec42b143772f0a6e636e12b4edbf607b26aac33e6ce13c6b2.png" src="../../../_images/aa06bbe0db6d70cec42b143772f0a6e636e12b4edbf607b26aac33e6ce13c6b2.png" />
 <img alt="../../../_images/741064c7f660dd8ee6952c808ee3b2755fb5a6a15adbb6fe4be2e0dd7bcd0b0d.png" src="../../../_images/741064c7f660dd8ee6952c808ee3b2755fb5a6a15adbb6fe4be2e0dd7bcd0b0d.png" />
-<img alt="../../../_images/7118bb38343e7e2adbc3b170690690b7b672c04263c0f0df5e79ca0b133eee1f.png" src="../../../_images/7118bb38343e7e2adbc3b170690690b7b672c04263c0f0df5e79ca0b133eee1f.png" />
+<img alt="../../../_images/638bccd9c89f2491e4ff7ababea763f2101b26ff8b3bce37ab269cd0bd41f045.png" src="../../../_images/638bccd9c89f2491e4ff7ababea763f2101b26ff8b3bce37ab269cd0bd41f045.png" />
 </div>
 </div>
 <div class="alert alert-block alert-info">
@@ -1375,7 +1379,7 @@ Processing jw01189001001_04101_00001_nrs2_rate.fits...
 Saved jw01189001001_04101_00001_nrs2_nsclean.fits
 Saved jw01189001001_04101_00001_nrs2_cal.fits
 Saved jw01189001001_04101_00001_nrs2_x1d.fits
-Run time:  0.8016666666666666  min
+Run time:  0.745  min
 </pre></div>
 </div>
 </div>
@@ -1405,8 +1409,8 @@ Run time:  0.8016666666666666  min
 </div>
 <div class="cell_output docutils container">
 <img alt="../../../_images/15a979f87760cb661b8f42d65605438a379296be4510db47d6638239c6aac48d.png" src="../../../_images/15a979f87760cb661b8f42d65605438a379296be4510db47d6638239c6aac48d.png" />
-<img alt="../../../_images/9f141e7a9ffa04a9ed4b2cb3190c0174964e733e593605676a718481e70108fb.png" src="../../../_images/9f141e7a9ffa04a9ed4b2cb3190c0174964e733e593605676a718481e70108fb.png" />
-<img alt="../../../_images/94abb789205fa045628e730f9bd6c3cbc091970a6137dd94a4181ba9fe2d2e29.png" src="../../../_images/94abb789205fa045628e730f9bd6c3cbc091970a6137dd94a4181ba9fe2d2e29.png" />
+<img alt="../../../_images/da4c437ce66c0f550eecc32178e046682c3df681ecd27969262c7c775ba777ff.png" src="../../../_images/da4c437ce66c0f550eecc32178e046682c3df681ecd27969262c7c775ba777ff.png" />
+<img alt="../../../_images/830a312a337cb3efdbea6de542a93c1f9db7577eece7c5a413a2a5defbed2063.png" src="../../../_images/830a312a337cb3efdbea6de542a93c1f9db7577eece7c5a413a2a5defbed2063.png" />
 </div>
 </div>
 <p>Compare the extracted spectrum from the cleaned data and compare it to the spectrum extracted from the original rate file.</p>
@@ -1433,8 +1437,8 @@ Run time:  0.8016666666666666  min
 </div>
 <div class="cell_output docutils container">
 <img alt="../../../_images/2d290f78a623043a53bedda1aace979a760537ff72151aab815c94e12fddd45c.png" src="../../../_images/2d290f78a623043a53bedda1aace979a760537ff72151aab815c94e12fddd45c.png" />
-<img alt="../../../_images/e76a9ff2547b359bf74daebd3d4b47986dd3fa9f185d0e927ec36a7b832ca33d.png" src="../../../_images/e76a9ff2547b359bf74daebd3d4b47986dd3fa9f185d0e927ec36a7b832ca33d.png" />
-<img alt="../../../_images/14c0302b6c2c59f27d2f03525e0c6b875ec43ec5e1889746ee3bf4a21877b867.png" src="../../../_images/14c0302b6c2c59f27d2f03525e0c6b875ec43ec5e1889746ee3bf4a21877b867.png" />
+<img alt="../../../_images/69068fd4ac82ab7012836859d5a995de9648d8f9d8550edebe2dd270eef1fe9f.png" src="../../../_images/69068fd4ac82ab7012836859d5a995de9648d8f9d8550edebe2dd270eef1fe9f.png" />
+<img alt="../../../_images/4e58c226a4675be2075618954b5a4e299df4883a86cf8092a835ac1dda391c8b.png" src="../../../_images/4e58c226a4675be2075618954b5a4e299df4883a86cf8092a835ac1dda391c8b.png" />
 <img alt="../../../_images/938994ca652e00fede557eb298172bd8030733c94726b35b423fe646946e8ced.png" src="../../../_images/938994ca652e00fede557eb298172bd8030733c94726b35b423fe646946e8ced.png" />
 <img alt="../../../_images/9d6794b22c35239aad078e02be480b94f2e0ea7d901355f7e02d0649c286fac8.png" src="../../../_images/9d6794b22c35239aad078e02be480b94f2e0ea7d901355f7e02d0649c286fac8.png" />
 </div>
@@ -1562,11 +1566,11 @@ Run time:  0.8016666666666666  min
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_3179/3154891055.py:63: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2960/3154891055.py:63: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
   plt.tight_layout()
 </pre></div>
 </div>
-<img alt="../../../_images/84f088ac0714e2c781c3f1931b96b51fd22f11116fca88a3e51a64fc5871c5e8.png" src="../../../_images/84f088ac0714e2c781c3f1931b96b51fd22f11116fca88a3e51a64fc5871c5e8.png" />
+<img alt="../../../_images/4b539312e55783143b0709e4be3c0d1cf161ad1e067b225e97b6d5752adb35fb.png" src="../../../_images/4b539312e55783143b0709e4be3c0d1cf161ad1e067b225e97b6d5752adb35fb.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1800,11 +1804,11 @@ Run time:  0.8016666666666666  min
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/0f8491397609d5c6c1df835cfc16fb6ef60744af5977894467d2803db099b3d1.png" src="../../../_images/0f8491397609d5c6c1df835cfc16fb6ef60744af5977894467d2803db099b3d1.png" />
-<img alt="../../../_images/8bb77bae06ce0961731505021a3ca82ed555133065c7256453a8945b8a6e2a9a.png" src="../../../_images/8bb77bae06ce0961731505021a3ca82ed555133065c7256453a8945b8a6e2a9a.png" />
-<img alt="../../../_images/718e2668839d385976ec6b29450d0f9d04976f9f1feeecf35125c00496d607f5.png" src="../../../_images/718e2668839d385976ec6b29450d0f9d04976f9f1feeecf35125c00496d607f5.png" />
-<img alt="../../../_images/c5dd66209624f44e4ebe204d38b72bee73539378457e1c869863a99016b5d4c1.png" src="../../../_images/c5dd66209624f44e4ebe204d38b72bee73539378457e1c869863a99016b5d4c1.png" />
-<img alt="../../../_images/2d539fb9534a471f2cdef9bf89026884ccf768cf1b83e850701f034a4a005f86.png" src="../../../_images/2d539fb9534a471f2cdef9bf89026884ccf768cf1b83e850701f034a4a005f86.png" />
+<img alt="../../../_images/8f2e37974878d43479d87cf0043cade62b2314bad345d438ab299f67b328401c.png" src="../../../_images/8f2e37974878d43479d87cf0043cade62b2314bad345d438ab299f67b328401c.png" />
+<img alt="../../../_images/dc0fbc1ce9614d7ed39d74d1cdc409cfd89f6de507df9182971b8a3060d392dc.png" src="../../../_images/dc0fbc1ce9614d7ed39d74d1cdc409cfd89f6de507df9182971b8a3060d392dc.png" />
+<img alt="../../../_images/275fafd88e8dcdd7da6d69255027971324fbed20e762192da57e30f631447e9e.png" src="../../../_images/275fafd88e8dcdd7da6d69255027971324fbed20e762192da57e30f631447e9e.png" />
+<img alt="../../../_images/f07488dda1ff95a8e11ccbc08a69c1764796574fa5f7fdbd9375323cf0373e06.png" src="../../../_images/f07488dda1ff95a8e11ccbc08a69c1764796574fa5f7fdbd9375323cf0373e06.png" />
+<img alt="../../../_images/aebb880abdd995802252d15eed24b433c1d293d462fce52b3f1a9ad64167b2f1.png" src="../../../_images/aebb880abdd995802252d15eed24b433c1d293d462fce52b3f1a9ad64167b2f1.png" />
 </div>
 </div>
 <div class="cell docutils container">
