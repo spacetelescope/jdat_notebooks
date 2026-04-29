@@ -498,7 +498,7 @@
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of contents</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">1.<font color="white">-</font>Introduction <a class="anchor" id="intro"></a></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-webbpsf-and-synphot-directories">1.1<font color="white">-</font>Setup WebbPSF and Synphot Directories<a class="anchor" id="webbpsf"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-stpsf-and-synphot-directories">1.1<font color="white">-</font>Setup STPSF and Synphot Directories<a class="anchor" id="stpsf"></a></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-imports">1.2<font color="white">-</font>Python Imports<a class="anchor" id="py_imports"></a></a></li>
 </ul>
 </li>
@@ -544,11 +544,21 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="miri-psf-photometry-with-space-phot">
+  <div style='background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; padding: 15px; margin: 10px 0; border-left: 4px solid #dc3545;'>
+<h3 style='color: #721c24; margin-top: 0;'>🚨 DEPRECATED NOTEBOOK</h3>
+<p style='color: #721c24; margin-bottom: 5px;'><strong>This notebook is scheduled for deprecation on <strong>2026-06-26</strong>.</strong></p>
+<p style='color: #721c24; margin-bottom: 0;'>Please migrate to newer alternatives or contact maintainers before using this notebook in production.</p>
+<p style='color: #721c24; margin-bottom: 0; font-size: 0.9em;'><em>This warning was automatically generated during documentation build.</em></p>
+</div>
+<!-- DEPRECATED: This notebook is scheduled for deprecation on 2026-06-26 -->
+<section class="tex2jax_ignore mathjax_ignore" id="miri-psf-photometry-with-space-phot">
 <h1>MIRI PSF Photometry With Space_Phot<a class="headerlink" href="#miri-psf-photometry-with-space-phot" title="Link to this heading">#</a></h1>
+<div class="alert alert-block alert-warning">
+Note that this notebook is identical to the <a href="https://github.com/spacetelescope/jdat_notebooks/blob/main/notebooks/MIRI/psf_photometry/miri_spacephot.ipynb">MIRI Space_phot notebook</a> in the same directory of the JDAT Notebooks repository. That notebook will be maintained after this notebook is deprecated.
+</div>
 <p><strong>Author</strong>: Ori Fox<br></p>
 <p><strong>Submitted</strong>: August, 2023<br>
-<strong>Updated</strong>: November, 2023<br></p>
+<strong>Updated</strong>: March, 2026<br></p>
 <p><strong>Use case</strong>: PSF Photometry on Level3 data using dedicated package Space_Phot (https://github.com/jpierel14/space_phot). Space_phot is built on Astropy’s Photutils package. Unlike photutils, space_phot can be used on Level3 data. This is because has built in functionality that can generate a resampled Level3 PSF at a given detector position. Such use cases are particularly useful for faint, point source targets or deep upper limits where observers need to take advantage of the combined image stack. For a large number of bright sources, users may find space_phot to be too slow and should consider other packages, such as DOLPHOT and/or Photutils. <strong>NOTE:</strong> A companion notebook exists that illustrates how to use Photutils for the same Level2 data set.<br>
 <strong>Important Note</strong>: When not to use. Due to the sensitivity of the space_phot parameters, this tool is not meant to be used for a large sample of stars (i.e., Section 5 below). If a user would like to use space_phot on more than one source, they should carefully construct a table of parameters that are carefully refined for each source.
 <strong>Data</strong>: MIRI Data PID 1028 (Calibration Program; Single Star Visit 006 A5V dwarf 2MASSJ17430448+6655015) and MIRI Data PID 1171 (LMC; Multiple Stars).<br>
@@ -556,12 +566,11 @@
 <strong>Cross-Instrument</strong>: NIRCam, MIRI.<br>
 <strong>Documentation</strong>: This notebook is part of a STScI’s larger post-pipeline Data Analysis Tools Ecosystem and can be downloaded directly from the JDAT Notebook Github directory.<br>
 <strong>Pipeline Version</strong>: JWST Pipeline<br></p>
-<p><font color="red">This notebook currently fails to execute, use as reference only</font></p>
 <section id="table-of-contents">
 <h2>Table of contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">#</a></h2>
 <ol class="arabic simple">
 <li><p><a class="reference internal" href="#intro"><span class="xref myst">Introduction</span></a><br>
-1.1 <a class="reference internal" href="#webbpsf"><span class="xref myst">Setup</span></a><br>
+1.1 <a class="reference internal" href="#stpsf"><span class="xref myst">Setup</span></a><br>
 1.2 <a class="reference internal" href="#py_imports"><span class="xref myst">Python imports</span></a><br></p></li>
 <li><p><a class="reference internal" href="#data"><span class="xref myst">Download Data</span></a><br></p></li>
 <li><p><a class="reference internal" href="#bso"><span class="xref myst">Bright, Single Object</span></a><br>
@@ -580,20 +589,39 @@
 <p>GOALS:<br></p>
 <p>PSF Photometry can be obtained using:<br></p>
 <ul class="simple">
-<li><p>grid of PSF models from WebbPSF<br></p></li>
+<li><p>grid of PSF models from STPSF<br></p></li>
 <li><p>single effective PSF (ePSF) NOT YET AVAILABLE<br></p></li>
 <li><p>grid of effective PSF NOT YET AVAILABLE<br></p></li>
 </ul>
 <p>The notebook shows:<br></p>
 <ul class="simple">
-<li><p>how to obtain the PSF model from WebbPSF (or build an ePSF)<br></p></li>
+<li><p>how to obtain the PSF model from STPSF (or build an ePSF)<br></p></li>
 <li><p>how to perform PSF photometry on the image<br></p></li>
 </ul>
 <p><strong>Data</strong>:<br></p>
 <p>MIRI Data PID 1028 (Calibration Program), F770W <br>
-MIRI Data PID 1171 (LMC), F560W/F770W</p>
-<section id="setup-webbpsf-and-synphot-directories">
-<h3>1.1<font color='white'>-</font>Setup WebbPSF and Synphot Directories<a class="anchor" id="webbpsf"></a><a class="headerlink" href="#setup-webbpsf-and-synphot-directories" title="Link to this heading">#</a></h3>
+MIRI Data PID 2151 (B335), F560W</p>
+<section id="setup-stpsf-and-synphot-directories">
+<h3>1.1<font color='white'>-</font>Setup STPSF and Synphot Directories<a class="anchor" id="stpsf"></a><a class="headerlink" href="#setup-stpsf-and-synphot-directories" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check whether the local CRDS cache directory has been set.</span>
+<span class="c1"># If not, set it to the user home directory</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CRDS_PATH&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">),</span> <span class="s1">&#39;crds&#39;</span><span class="p">)</span>
+<span class="c1"># Check whether the CRDS server URL has been set.  If not, set it.</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://jwst-crds.stsci.edu&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">space_phot</span>
@@ -606,26 +634,25 @@ MIRI Data PID 1171 (LMC), F560W/F770W</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tarfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlparse</span>
 
 <span class="c1"># Set environmental variables</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;WEBBPSF_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;./webbpsf-data/webbpsf-data&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;STPSF_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;./data/stpsf-data/&quot;</span>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PYSYN_CDBS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;./grp/redcat/trds/&quot;</span>
 
-<span class="c1"># WEBBPSF Data</span>
-<span class="n">boxlink</span> <span class="o">=</span> <span class="s1">&#39;https://stsci.box.com/shared/static/qxpiaxsjwo15ml6m4pkhtk36c9jgj70k.gz&#39;</span>                                                           
-<span class="n">boxfile</span> <span class="o">=</span> <span class="s1">&#39;./webbpsf-data/webbpsf-data-1.0.0.tar.gz&#39;</span>
+<span class="c1"># Synphot Data</span>
 <span class="n">synphot_url</span> <span class="o">=</span> <span class="s1">&#39;http://ssb.stsci.edu/trds/tarfiles/synphot5.tar.gz&#39;</span>
 <span class="n">synphot_file</span> <span class="o">=</span> <span class="s1">&#39;./synphot5.tar.gz&#39;</span>
-
-<span class="n">webbpsf_folder</span> <span class="o">=</span> <span class="s1">&#39;./webbpsf-data&#39;</span>
 <span class="n">synphot_folder</span> <span class="o">=</span> <span class="s1">&#39;./grp&#39;</span>
 
+<span class="c1"># STPSF Data</span>
+<span class="n">stpsf_url</span> <span class="o">=</span> <span class="s1">&#39;https://stsci.box.com/shared/static/kqfolg2bfzqc4mjkgmujo06d3iaymahv.gz&#39;</span>
+<span class="n">stpsf_file</span> <span class="o">=</span> <span class="s1">&#39;./stpsf-data-LATEST.tar.gz&#39;</span>
+<span class="n">stpsf_folder</span> <span class="o">=</span> <span class="s1">&#39;./data&#39;</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">download_file</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">dest_path</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
     <span class="n">parsed_url</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
@@ -638,14 +665,14 @@ MIRI Data PID 1171 (LMC), F560W/F770W</p>
         <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">8192</span><span class="p">):</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 
-
-<span class="c1"># Gather webbpsf files</span>
-<span class="n">psfExist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">psfExist</span><span class="p">:</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">)</span>
-    <span class="n">download_file</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
-    <span class="n">gzf</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">boxfile</span><span class="p">)</span>
-    <span class="n">gzf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">webbpsf_folder</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+            
+<span class="c1"># Download STPSF data file</span>
+<span class="n">stpsfExist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">stpsf_folder</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">stpsfExist</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">stpsf_folder</span><span class="p">)</span>
+    <span class="n">download_file</span><span class="p">(</span><span class="n">stpsf_url</span><span class="p">,</span> <span class="n">stpsf_file</span><span class="p">)</span>
+    <span class="n">gzf</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">stpsf_file</span><span class="p">)</span>
+    <span class="n">gzf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">stpsf_folder</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
 
 <span class="c1"># Gather synphot files</span>
 <span class="n">synExist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">synphot_folder</span><span class="p">)</span>
@@ -668,7 +695,6 @@ MIRI Data PID 1171 (LMC), F560W/F770W</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.coordinates</span><span class="w"> </span><span class="kn">import</span> <span class="n">SkyCoord</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy</span><span class="w"> </span><span class="kn">import</span> <span class="n">wcs</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">QTable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.wcs.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">skycoord_to_pixel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy</span><span class="w"> </span><span class="kn">import</span> <span class="n">units</span> <span class="k">as</span> <span class="n">u</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
@@ -702,7 +728,7 @@ MIRI Data PID 1171 (LMC), F560W/F770W</p>
 <span class="c1"># Get a list of products associated with the located observation</span>
 <span class="n">plist</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
 
-<span class="c1"># Filter the product list to include only specific product subgroups: &#39;RATE&#39;, &#39;CAL&#39;, &#39;I2D&#39;, and &#39;ASN&#39;</span>
+<span class="c1"># Filter the product list to include only specific product subgroups: &#39;CAL&#39;, &#39;I2D&#39;, and &#39;ASN&#39;</span>
 <span class="n">fplist</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">filter_products</span><span class="p">(</span><span class="n">plist</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;CAL&#39;</span><span class="p">,</span> <span class="s1">&#39;I2D&#39;</span><span class="p">,</span> <span class="s1">&#39;ASN&#39;</span><span class="p">])</span>
 
 <span class="c1"># Download the selected products from the MAST database</span>
@@ -729,13 +755,13 @@ MIRI Data PID 1171 (LMC), F560W/F770W</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Query the MAST (Mikulski Archive for Space Telescopes) database for observations</span>
-<span class="c1"># with proposal ID 1171 and a specific filters &#39;F560W&#39; and &#39;F770W&#39;</span>
-<span class="n">obs</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">proposal_id</span><span class="o">=</span><span class="mi">1171</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;F560W&#39;</span><span class="p">,</span> <span class="s1">&#39;F770W&#39;</span><span class="p">])</span>
+<span class="c1"># with proposal ID 2151 and filter &#39;F560W&#39;</span>
+<span class="n">obs</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">proposal_id</span><span class="o">=</span><span class="mi">2151</span><span class="p">,</span> <span class="n">obs_id</span><span class="o">=</span><span class="s1">&#39;*001*&#39;</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;F560W&#39;</span><span class="p">])</span>
 
 <span class="c1"># Get a list of products associated with the located observation</span>
 <span class="n">plist</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
 
-<span class="c1"># Filter the product list to include only specific product subgroups: &#39;RATE&#39;, &#39;CAL&#39;, &#39;I2D&#39;, and &#39;ASN&#39;</span>
+<span class="c1"># Filter the product list to include only specific product subgroups: &#39;CAL&#39;, &#39;I2D&#39;, and &#39;ASN&#39;</span>
 <span class="n">fplist</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">filter_products</span><span class="p">(</span><span class="n">plist</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;CAL&#39;</span><span class="p">,</span> <span class="s1">&#39;I2D&#39;</span><span class="p">,</span> <span class="s1">&#39;ASN&#39;</span><span class="p">])</span>
 <span class="n">fplist</span>
 
@@ -744,14 +770,14 @@ MIRI Data PID 1171 (LMC), F560W/F770W</p>
 
 <span class="c1"># Define source and destination directories</span>
 <span class="n">source_dir</span> <span class="o">=</span> <span class="s1">&#39;mastDownload/JWST/&#39;</span>
-<span class="n">destination_dir</span> <span class="o">=</span> <span class="s1">&#39;mast/01171/&#39;</span>
+<span class="n">destination_dir</span> <span class="o">=</span> <span class="s1">&#39;mast/02151/&#39;</span>
 
 <span class="c1"># Create the destination directory if it doesn&#39;t exist</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">destination_dir</span><span class="p">):</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">destination_dir</span><span class="p">)</span>
 
 <span class="c1"># Use glob to find all files matching the pattern &#39;mastDownload/JWST/j*/jw01537*cal.fits&#39;</span>
-<span class="n">files_to_copy</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="s1">&#39;j*/jw01171*&#39;</span><span class="p">))</span>
+<span class="n">files_to_copy</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="s1">&#39;j*/jw02151*&#39;</span><span class="p">))</span>
 
 <span class="c1"># Copy the matching files to the destination directory</span>
 <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">files_to_copy</span><span class="p">:</span>
@@ -790,13 +816,13 @@ Space-Phot Documentation on Level2 Fitting: https://space-phot.readthedocs.io/en
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">asn</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fi</span><span class="p">:</span>
     <span class="n">lvl2</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">fi</span><span class="p">:</span>
-        <span class="c1">#print(ln)</span>
         <span class="k">if</span> <span class="n">ln</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;                    &quot;expname&quot;:&#39;</span><span class="p">):</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">ln</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
             <span class="n">lvl2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prefix</span><span class="o">+</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">lvl2</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">l2file</span> <span class="ow">in</span> <span class="n">lvl2</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">l2file</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -810,7 +836,7 @@ Space-Phot Documentation on Level2 Fitting: https://space-phot.readthedocs.io/en
 <span class="n">ref_data</span> <span class="o">=</span> <span class="n">ref_fits</span><span class="o">.</span><span class="n">data</span>
 
 <span class="c1"># The scale should highlight the background noise so it is possible to see all faint sources.</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
@@ -831,7 +857,7 @@ Space-Phot Documentation on Level2 Fitting: https://space-phot.readthedocs.io/en
 <span class="nb">print</span><span class="p">(</span><span class="n">ref_image</span><span class="p">)</span>
 <span class="n">ref_fits</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref_image</span><span class="p">)</span>
 <span class="n">ref_data</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref_image</span><span class="p">)[</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelcolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
@@ -859,23 +885,6 @@ Space-Phot Documentation on Level2 Fitting: https://space-phot.readthedocs.io/en
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Change all DQ flagged pixels to NANs</span>
-
-<span class="c1"># Reference for JWST DQ Flag Definitions: https://jwst-pipeline.readthedocs.io/en/latest/jwst/references_general/references_general.html</span>
-<span class="c1"># In this case, we choose all DQ &gt; 10, but users are encouraged to choose their own values accordingly.</span>
-<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">lvl2</span><span class="p">:</span>
-    <span class="n">hdul</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;update&#39;</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file</span><span class="p">)[</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">dq</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file</span><span class="p">)[</span><span class="s1">&#39;DQ&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">data</span><span class="p">[</span><span class="n">dq</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">hdul</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
-    <span class="n">hdul</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Examine the First Image (After DQ Flags Set)</span>
 <span class="n">ref_image</span> <span class="o">=</span> <span class="n">lvl2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ref_image</span><span class="p">)</span>
@@ -883,7 +892,7 @@ Space-Phot Documentation on Level2 Fitting: https://space-phot.readthedocs.io/en
 <span class="n">ref_data</span> <span class="o">=</span> <span class="n">ref_fits</span><span class="o">.</span><span class="n">data</span>
 
 <span class="c1"># The scale should highlight the background noise so it is possible to see all faint sources.</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
@@ -905,14 +914,14 @@ Space-Phot Documentation on Level2 Fitting: https://space-phot.readthedocs.io/en
 
 <span class="n">source_location</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="s1">&#39;17:43:04.4879&#39;</span><span class="p">,</span> <span class="s1">&#39;+66:55:01.837&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">hourangle</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">))</span>
 
-<span class="n">ref_wcs</span> <span class="o">=</span> <span class="n">ref_fits</span><span class="o">.</span><span class="n">get_fits_wcs</span><span class="p">()</span>
-<span class="c1">#ref_wcs = WCS(ref_fits[0].header)</span>
+<span class="c1"># Transform from world coordinates to detector coordinates</span>
+<span class="n">world_to_detector</span> <span class="o">=</span> <span class="n">ref_fits</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">wcs</span><span class="o">.</span><span class="n">get_transform</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;detector&#39;</span><span class="p">)</span>
+<span class="n">ref_y</span><span class="p">,</span> <span class="n">ref_x</span> <span class="o">=</span> <span class="n">world_to_detector</span><span class="p">(</span><span class="n">source_location</span><span class="o">.</span><span class="n">ra</span><span class="p">,</span> <span class="n">source_location</span><span class="o">.</span><span class="n">dec</span><span class="p">)</span>
 
-<span class="n">ref_y</span><span class="p">,</span> <span class="n">ref_x</span> <span class="o">=</span> <span class="n">skycoord_to_pixel</span><span class="p">(</span><span class="n">source_location</span><span class="p">,</span> <span class="n">ref_wcs</span><span class="p">)</span>
 <span class="n">ref_cutout</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="p">(</span><span class="n">ref_x</span><span class="p">,</span> <span class="n">ref_y</span><span class="p">))</span>
 
 <span class="c1"># The scale should highlight the background noise so it is possible to see all faint sources.</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">4.3</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">4.3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">clb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 <span class="n">clb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;MJy/Str&#39;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=-</span><span class="mi">40</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.05</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -932,7 +941,7 @@ Space-Phot Documentation on Level2 Fitting: https://space-phot.readthedocs.io/en
 <span class="nb">print</span><span class="p">(</span><span class="n">ref_image</span><span class="p">)</span>
 <span class="n">ref_fits</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref_image</span><span class="p">)</span>
 <span class="n">ref_data</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref_image</span><span class="p">)[</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelcolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
@@ -945,9 +954,9 @@ Space-Phot Documentation on Level2 Fitting: https://space-phot.readthedocs.io/en
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Zoom in to see the source</span>
 <span class="n">source_location</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="s1">&#39;17:43:04.4879&#39;</span><span class="p">,</span> <span class="s1">&#39;+66:55:01.837&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">hourangle</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">))</span>
-<span class="n">ref_y</span><span class="p">,</span> <span class="n">ref_x</span> <span class="o">=</span> <span class="n">skycoord_to_pixel</span><span class="p">(</span><span class="n">source_location</span><span class="p">,</span> <span class="n">wcs</span><span class="o">.</span><span class="n">WCS</span><span class="p">(</span><span class="n">ref_fits</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">ref_fits</span><span class="p">))</span>
+<span class="n">ref_y</span><span class="p">,</span> <span class="n">ref_x</span> <span class="o">=</span> <span class="n">world_to_detector</span><span class="p">(</span><span class="n">source_location</span><span class="o">.</span><span class="n">ra</span><span class="p">,</span> <span class="n">source_location</span><span class="o">.</span><span class="n">dec</span><span class="p">)</span>
 <span class="n">ref_cutout</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="p">(</span><span class="n">ref_x</span><span class="p">,</span> <span class="n">ref_y</span><span class="p">))</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>
            <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;PID1028,Obs006&#39;</span><span class="p">)</span>
@@ -959,7 +968,7 @@ Space-Phot Documentation on Level2 Fitting: https://space-phot.readthedocs.io/en
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the PSF from WebbPSF using defaults.</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the PSF from STPSF using defaults.</span>
 <span class="n">jwst_obs</span> <span class="o">=</span> <span class="n">space_phot</span><span class="o">.</span><span class="n">observation2</span><span class="p">(</span><span class="n">lvl2</span><span class="p">)</span>
 <span class="n">psfs</span> <span class="o">=</span> <span class="n">space_phot</span><span class="o">.</span><span class="n">get_jwst_psf</span><span class="p">(</span><span class="n">jwst_obs</span><span class="p">,</span> <span class="n">source_location</span><span class="p">)</span>
 </pre></div>
@@ -970,11 +979,11 @@ Space-Phot Documentation on Level2 Fitting: https://space-phot.readthedocs.io/en
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The scale should highlight the background noise so it is possible to see all faint sources.</span>
 <span class="n">ref_cutout</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">psfs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="mi">41</span><span class="p">,</span> <span class="mi">41</span><span class="p">),</span> <span class="p">(</span><span class="mi">122</span><span class="p">,</span> <span class="mi">122</span><span class="p">))</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">clb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 <span class="n">clb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;MJy/Str&#39;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=-</span><span class="mi">40</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.05</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;WebbPSF Model&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;STPSF Model&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
@@ -1007,14 +1016,22 @@ As noted above, improved documentation will be coming. For now, here are some im
     <span class="n">fit_bkg</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">fit_flux</span><span class="o">=</span><span class="s1">&#39;single&#39;</span>
 <span class="p">)</span>
-
-<span class="n">jwst_obs</span><span class="o">.</span><span class="n">plot_psf_fit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">jwst_obs</span><span class="o">.</span><span class="n">plot_psf_fit</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="n">jwst_obs</span><span class="o">.</span><span class="n">plot_psf_posterior</span><span class="p">(</span><span class="n">minweight</span><span class="o">=</span><span class="mf">.0005</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">jwst_obs</span><span class="o">.</span><span class="n">plot_psf_posterior</span><span class="p">(</span><span class="n">minweight</span><span class="o">=</span><span class="mf">.0005</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">jwst_obs</span><span class="o">.</span><span class="n">psf_result</span><span class="o">.</span><span class="n">phot_cal_table</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1048,7 +1065,7 @@ As noted above, improved documentation will be coming. For now, here are some im
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ref_x</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">ref_x</span><span class="p">,</span> <span class="n">ref_y</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1084,7 +1101,7 @@ Space-Phot Documentation on Level3 Fitting: https://space-phot.readthedocs.io/en
 <span class="n">ref_data</span> <span class="o">=</span> <span class="n">ref_fits</span><span class="o">.</span><span class="n">data</span>
 
 <span class="c1"># The scale should highlight the background noise so it is possible to see all faint sources.</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
@@ -1101,13 +1118,14 @@ Space-Phot Documentation on Level3 Fitting: https://space-phot.readthedocs.io/en
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">source_location</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="s1">&#39;17:43:04.4879&#39;</span><span class="p">,</span> <span class="s1">&#39;+66:55:01.837&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">hourangle</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">))</span>
+<span class="c1"># Get coordinate transofrm function</span>
+<span class="n">world_to_detector</span> <span class="o">=</span> <span class="n">ref_fits</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">wcs</span><span class="o">.</span><span class="n">get_transform</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;detector&#39;</span><span class="p">)</span>
+<span class="n">ref_y</span><span class="p">,</span> <span class="n">ref_x</span> <span class="o">=</span> <span class="n">world_to_detector</span><span class="p">(</span><span class="n">source_location</span><span class="o">.</span><span class="n">ra</span><span class="p">,</span> <span class="n">source_location</span><span class="o">.</span><span class="n">dec</span><span class="p">)</span>
 
-<span class="n">ref_wcs</span> <span class="o">=</span> <span class="n">ref_fits</span><span class="o">.</span><span class="n">get_fits_wcs</span><span class="p">()</span>
-<span class="n">ref_y</span><span class="p">,</span> <span class="n">ref_x</span> <span class="o">=</span> <span class="n">skycoord_to_pixel</span><span class="p">(</span><span class="n">source_location</span><span class="p">,</span> <span class="n">ref_wcs</span><span class="p">)</span>
 <span class="n">ref_cutout</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="p">(</span><span class="n">ref_x</span><span class="p">,</span> <span class="n">ref_y</span><span class="p">))</span>
 
 <span class="c1"># The scale should highlight the background noise so it is possible to see all faint sources.</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">clb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 <span class="n">clb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;MJy/Str&#39;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=-</span><span class="mi">40</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.05</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -1122,11 +1140,36 @@ Space-Phot Documentation on Level3 Fitting: https://space-phot.readthedocs.io/en
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lvl3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get PSF from STPSF</span>
+
+<span class="c1"># The function get_jwst_psf is a space_phot wrapper for the STPSF calc_psf function and uses a lot of the same keywords.</span>
+<span class="c1"># There are more advanced methods for generating your STPSF, but those are beyond the scope of this notebook.</span>
+<span class="c1"># The defaults used by get_jwst_psf in this notebook are:</span>
+<span class="c1"># oversample=4</span>
+<span class="c1"># normalize=&#39;last&#39;</span>
+<span class="c1"># Non-distorted PSF</span>
+<span class="c1"># Useful reference: https://stpsf.readthedocs.io/en/latest/api/stpsf.JWInstrument.html#stpsf.JWInstrument.calc_psf</span>
+
+<span class="n">jwst3_obs</span> <span class="o">=</span> <span class="n">space_phot</span><span class="o">.</span><span class="n">observation3</span><span class="p">(</span><span class="n">lvl3</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">psf3</span> <span class="o">=</span> <span class="n">space_phot</span><span class="o">.</span><span class="n">get_jwst3_psf</span><span class="p">(</span><span class="n">jwst_obs</span><span class="p">,</span> <span class="n">jwst3_obs</span><span class="p">,</span> <span class="n">source_location</span><span class="p">)</span> <span class="c1"># ,num_psfs=4)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Now do the same photometry on the Level 3 Data</span>
 <span class="n">ref_image</span> <span class="o">=</span> <span class="n">lvl3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">ref_fits</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref_image</span><span class="p">)</span>
 <span class="n">ref_data</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref_image</span><span class="p">)[</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>
            <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
@@ -1138,31 +1181,14 @@ Space-Phot Documentation on Level3 Fitting: https://space-phot.readthedocs.io/en
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get PSF from WebbPSF</span>
-
-<span class="c1"># The function get_jwst_psf is a space_phot wrapper for the WebbPSF calc_psf function and uses a lot of the same keywords.</span>
-<span class="c1"># There are more advanced methods for generating your WebbPSF, but those are beyond the scope of this notebook.</span>
-<span class="c1"># The defaults used by get_jwst_psf in this notebook are:</span>
-<span class="c1"># oversample=4</span>
-<span class="c1"># normalize=&#39;last&#39;</span>
-<span class="c1"># Non-distorted PSF</span>
-<span class="c1"># Useful reference: https://webbpsf.readthedocs.io/en/latest/api/webbpsf.JWInstrument.html#webbpsf.JWInstrument.calc_psf</span>
-
-<span class="n">jwst3_obs</span> <span class="o">=</span> <span class="n">space_phot</span><span class="o">.</span><span class="n">observation3</span><span class="p">(</span><span class="n">lvl3</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">psf3</span> <span class="o">=</span> <span class="n">space_phot</span><span class="o">.</span><span class="n">get_jwst3_psf</span><span class="p">(</span><span class="n">jwst_obs</span><span class="p">,</span> <span class="n">jwst3_obs</span><span class="p">,</span> <span class="n">source_location</span><span class="p">)</span> <span class="c1"># ,num_psfs=4)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The scale should highlight the background noise so it is possible to see all faint sources.</span>
-<span class="n">ref_cutout</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">psf3</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="mi">161</span><span class="p">,</span> <span class="mi">161</span><span class="p">),</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">ref_cutout</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">psf3</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="mi">29</span><span class="p">,</span> <span class="mi">29</span><span class="p">),</span> <span class="p">(</span><span class="mi">62</span><span class="p">,</span> <span class="mi">62</span><span class="p">))</span>
+
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">clb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 <span class="n">clb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;MJy/Str&#39;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=-</span><span class="mi">40</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.05</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;WebbPSF Model (Mosaiced)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;STPSF Model (Mosaiced)&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
@@ -1248,8 +1274,9 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
             <span class="n">x</span> <span class="o">=</span> <span class="n">ln</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
             <span class="n">lvl2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prefix</span><span class="o">+</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-            
-<span class="nb">print</span><span class="p">(</span><span class="n">lvl2</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">lvl2file</span> <span class="ow">in</span> <span class="n">lvl2</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">lvl2file</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1280,7 +1307,7 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <span class="n">ref_data</span> <span class="o">=</span> <span class="n">ref_fits</span><span class="o">.</span><span class="n">data</span>
 
 <span class="c1"># The scale should highlight the background noise so it is possible to see all faint sources.</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
@@ -1298,12 +1325,14 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pick a blank part of the sky to calculate the upper limit</span>
 <span class="n">source_location</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="s1">&#39;17:43:00.0332&#39;</span><span class="p">,</span> <span class="s1">&#39;+66:54:42.677&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">hourangle</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">))</span>
-<span class="n">ref_wcs</span> <span class="o">=</span> <span class="n">ref_fits</span><span class="o">.</span><span class="n">get_fits_wcs</span><span class="p">()</span>
-<span class="n">ref_y</span><span class="p">,</span> <span class="n">ref_x</span> <span class="o">=</span> <span class="n">skycoord_to_pixel</span><span class="p">(</span><span class="n">source_location</span><span class="p">,</span> <span class="n">ref_wcs</span><span class="p">)</span>
+<span class="c1"># Get coordinate transform function</span>
+<span class="n">world_to_detector</span> <span class="o">=</span> <span class="n">ref_fits</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">wcs</span><span class="o">.</span><span class="n">get_transform</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;detector&#39;</span><span class="p">)</span>
+<span class="n">ref_y</span><span class="p">,</span> <span class="n">ref_x</span> <span class="o">=</span> <span class="n">world_to_detector</span><span class="p">(</span><span class="n">source_location</span><span class="o">.</span><span class="n">ra</span><span class="p">,</span> <span class="n">source_location</span><span class="o">.</span><span class="n">dec</span><span class="p">)</span>
+
 <span class="n">ref_cutout</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="p">(</span><span class="n">ref_x</span><span class="p">,</span> <span class="n">ref_y</span><span class="p">))</span>
 
 <span class="c1"># The scale should highlight the background noise so it is possible to see all faint sources.</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">clb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 <span class="n">clb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;MJy/Str&#39;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=-</span><span class="mi">40</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.05</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -1323,7 +1352,7 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <span class="nb">print</span><span class="p">(</span><span class="n">ref_image</span><span class="p">)</span>
 <span class="n">ref_fits</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref_image</span><span class="p">)</span>
 <span class="n">ref_data</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref_image</span><span class="p">)[</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelcolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
@@ -1336,9 +1365,10 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pick a blank part of the sky to calculate the upper limit</span>
 <span class="n">source_location</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="s1">&#39;17:43:00.0332&#39;</span><span class="p">,</span> <span class="s1">&#39;+66:54:42.677&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">hourangle</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">))</span>
-<span class="n">ref_y</span><span class="p">,</span> <span class="n">ref_x</span> <span class="o">=</span> <span class="n">skycoord_to_pixel</span><span class="p">(</span><span class="n">source_location</span><span class="p">,</span> <span class="n">wcs</span><span class="o">.</span><span class="n">WCS</span><span class="p">(</span><span class="n">ref_fits</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">ref_fits</span><span class="p">))</span>
+<span class="n">ref_y</span><span class="p">,</span> <span class="n">ref_x</span> <span class="o">=</span> <span class="n">world_to_detector</span><span class="p">(</span><span class="n">source_location</span><span class="o">.</span><span class="n">ra</span><span class="p">,</span> <span class="n">source_location</span><span class="o">.</span><span class="n">dec</span><span class="p">)</span>
+
 <span class="n">ref_cutout</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="p">(</span><span class="n">ref_x</span><span class="p">,</span> <span class="n">ref_y</span><span class="p">))</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>
            <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;PID1028,Obs006&#39;</span><span class="p">)</span>
@@ -1350,14 +1380,14 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get PSF from WebbPSF</span>
-<span class="c1"># The function get_jwst_psf is a space_phot wrapper for the WebbPSF calc_psf function and uses a lot of the same keywords.</span>
-<span class="c1"># There are more advanced methods for generating your WebbPSF, but those are beyond the scope of this notebook.</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get PSF from STPSF</span>
+<span class="c1"># The function get_jwst_psf is a space_phot wrapper for the STPSF calc_psf function and uses a lot of the same keywords.</span>
+<span class="c1"># There are more advanced methods for generating your STPSF, but those are beyond the scope of this notebook.</span>
 <span class="c1"># The defaults used by get_jwst_psf in this notebook are:</span>
 <span class="c1"># oversample=4</span>
 <span class="c1"># normalize=&#39;last&#39;</span>
 <span class="c1"># Non-distorted PSF</span>
-<span class="c1"># Useful reference: https://webbpsf.readthedocs.io/en/latest/api/webbpsf.JWInstrument.html#webbpsf.JWInstrument.calc_psf</span>
+<span class="c1"># Useful reference: https://stpsf.readthedocs.io/en/latest/api/stpsf.JWInstrument.html#stpsf.JWInstrument.calc_psf</span>
 
 <span class="n">jwst_obs</span> <span class="o">=</span> <span class="n">space_phot</span><span class="o">.</span><span class="n">observation2</span><span class="p">(</span><span class="n">lvl2</span><span class="p">)</span>
 <span class="n">psfs</span> <span class="o">=</span> <span class="n">space_phot</span><span class="o">.</span><span class="n">get_jwst_psf</span><span class="p">(</span><span class="n">jwst_obs</span><span class="p">,</span> <span class="n">source_location</span><span class="p">)</span>
@@ -1368,12 +1398,13 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The scale should highlight the background noise so it is possible to see all faint sources.</span>
-<span class="n">ref_cutout</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">psf3</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="mi">161</span><span class="p">,</span> <span class="mi">161</span><span class="p">),</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">ref_cutout</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">psf3</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="mi">29</span><span class="p">,</span> <span class="mi">29</span><span class="p">),</span> <span class="p">(</span><span class="mi">62</span><span class="p">,</span> <span class="mi">62</span><span class="p">))</span>
+
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">clb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 <span class="n">clb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;MJy/Str&#39;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=-</span><span class="mi">40</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.05</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;WebbPSF Model&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;STPSF Model&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
@@ -1439,7 +1470,7 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <span class="n">ref_data</span> <span class="o">=</span> <span class="n">ref_fits</span><span class="o">.</span><span class="n">data</span>
 
 <span class="c1"># The scale should highlight the background noise so it is possible to see all faint sources.</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
@@ -1457,12 +1488,15 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pick a blank part of the sky to calculate the upper limit</span>
 <span class="n">source_location</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="s1">&#39;17:43:00.0332&#39;</span><span class="p">,</span> <span class="s1">&#39;+66:54:42.677&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">hourangle</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">))</span>
-<span class="n">ref_wcs</span> <span class="o">=</span> <span class="n">ref_fits</span><span class="o">.</span><span class="n">get_fits_wcs</span><span class="p">()</span>
-<span class="n">ref_y</span><span class="p">,</span> <span class="n">ref_x</span> <span class="o">=</span> <span class="n">skycoord_to_pixel</span><span class="p">(</span><span class="n">source_location</span><span class="p">,</span> <span class="n">ref_wcs</span><span class="p">)</span>
+
+<span class="c1"># Get coordinate transform function</span>
+<span class="n">world_to_detector</span> <span class="o">=</span> <span class="n">ref_fits</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">wcs</span><span class="o">.</span><span class="n">get_transform</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;detector&#39;</span><span class="p">)</span>
+<span class="n">ref_y</span><span class="p">,</span> <span class="n">ref_x</span> <span class="o">=</span> <span class="n">world_to_detector</span><span class="p">(</span><span class="n">source_location</span><span class="o">.</span><span class="n">ra</span><span class="p">,</span> <span class="n">source_location</span><span class="o">.</span><span class="n">dec</span><span class="p">)</span>
+
 <span class="n">ref_cutout</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="p">(</span><span class="n">ref_x</span><span class="p">,</span> <span class="n">ref_y</span><span class="p">))</span>
 
 <span class="c1"># The scale should highlight the background noise so it is possible to see all faint sources.</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">clb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 <span class="n">clb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;MJy/Str&#39;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=-</span><span class="mi">40</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.05</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -1481,7 +1515,7 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <span class="n">ref_image</span> <span class="o">=</span> <span class="n">lvl3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">ref_fits</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref_image</span><span class="p">)</span>
 <span class="n">ref_data</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref_image</span><span class="p">)[</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>
            <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
@@ -1495,10 +1529,10 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pick a blank part of the sky to calculate the upper limit</span>
 <span class="n">source_location</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="s1">&#39;17:43:00.0332&#39;</span><span class="p">,</span> <span class="s1">&#39;+66:54:42.677&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">hourangle</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">))</span>
+<span class="n">ref_y</span><span class="p">,</span> <span class="n">ref_x</span> <span class="o">=</span> <span class="n">world_to_detector</span><span class="p">(</span><span class="n">source_location</span><span class="o">.</span><span class="n">ra</span><span class="p">,</span> <span class="n">source_location</span><span class="o">.</span><span class="n">dec</span><span class="p">)</span>
 
-<span class="n">ref_y</span><span class="p">,</span> <span class="n">ref_x</span> <span class="o">=</span> <span class="n">skycoord_to_pixel</span><span class="p">(</span><span class="n">source_location</span><span class="p">,</span> <span class="n">wcs</span><span class="o">.</span><span class="n">WCS</span><span class="p">(</span><span class="n">ref_fits</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">ref_fits</span><span class="p">))</span>
 <span class="n">ref_cutout</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="p">(</span><span class="n">ref_x</span><span class="p">,</span> <span class="n">ref_y</span><span class="p">))</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>
            <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;PID1028,Obs006 (level 3)&#39;</span><span class="p">)</span>
@@ -1510,14 +1544,14 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get PSF from WebbPSF</span>
-<span class="c1"># The function get_jwst_psf is a space_phot wrapper for the WebbPSF calc_psf function and uses a lot of the same keywords.</span>
-<span class="c1"># There are more advanced methods for generating your WebbPSF, but those are beyond the scope of this notebook.</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get PSF from STPSF</span>
+<span class="c1"># The function get_jwst_psf is a space_phot wrapper for the STPSF calc_psf function and uses a lot of the same keywords.</span>
+<span class="c1"># There are more advanced methods for generating your STPSF, but those are beyond the scope of this notebook.</span>
 <span class="c1"># The defaults used by get_jwst_psf in this notebook are:</span>
 <span class="c1"># oversample=4</span>
 <span class="c1"># normalize=&#39;last&#39;</span>
 <span class="c1"># Non-distorted PSF</span>
-<span class="c1"># Useful reference: https://webbpsf.readthedocs.io/en/latest/api/webbpsf.JWInstrument.html#webbpsf.JWInstrument.calc_psf</span>
+<span class="c1"># Useful reference: https://stpsf.readthedocs.io/en/latest/api/stpsf.JWInstrument.html#stpsf.JWInstrument.calc_psf</span>
 
 <span class="n">jwst3_obs</span> <span class="o">=</span> <span class="n">space_phot</span><span class="o">.</span><span class="n">observation3</span><span class="p">(</span><span class="n">lvl3</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">psf3</span> <span class="o">=</span> <span class="n">space_phot</span><span class="o">.</span><span class="n">get_jwst3_psf</span><span class="p">(</span><span class="n">jwst_obs</span><span class="p">,</span> <span class="n">jwst3_obs</span><span class="p">,</span> <span class="n">source_location</span><span class="p">)</span>
@@ -1528,12 +1562,13 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The scale should highlight the background noise so it is possible to see all faint sources.</span>
-<span class="n">ref_cutout</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">psf3</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="mi">161</span><span class="p">,</span> <span class="mi">161</span><span class="p">),</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">ref_cutout</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">psf3</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="mi">29</span><span class="p">,</span> <span class="mi">29</span><span class="p">),</span> <span class="p">(</span><span class="mi">62</span><span class="p">,</span> <span class="mi">62</span><span class="p">))</span>
+
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_cutout</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">clb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 <span class="n">clb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;MJy/Str&#39;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=-</span><span class="mi">40</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.05</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;WebbPSF Model&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;STPSF Model&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Pixels&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
@@ -1593,7 +1628,7 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Level 3 Files</span>
-<span class="n">lvl3</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;./mast/01171/jw01171-o004_t001_miri_f560w_i2d.fits&quot;</span><span class="p">]</span>
+<span class="n">lvl3</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;./mast/02151/jw02151-o001_t001_miri_f560w_i2d.fits&quot;</span><span class="p">]</span>
 <span class="n">lvl3</span>
 </pre></div>
 </div>
@@ -1602,7 +1637,7 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Level 2 Files</span>
-<span class="n">lvl2</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;./mast/01171/jw01171004*cal.fits&#39;</span><span class="p">)</span>
+<span class="n">lvl2</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;./mast/02151/jw02151001*cal.fits&#39;</span><span class="p">)</span>
 <span class="n">lvl2</span>
 </pre></div>
 </div>
@@ -1616,7 +1651,7 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <span class="n">mmm_bkg</span> <span class="o">=</span> <span class="n">MMMBackground</span><span class="p">()</span>
 
 <span class="n">ref_fits</span> <span class="o">=</span> <span class="n">ImageModel</span><span class="p">(</span><span class="n">lvl3</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">w</span> <span class="o">=</span> <span class="n">ref_fits</span><span class="o">.</span><span class="n">get_fits_wcs</span><span class="p">()</span>
+<span class="n">detector_to_world</span> <span class="o">=</span> <span class="n">ref_fits</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">wcs</span><span class="o">.</span><span class="n">get_transform</span><span class="p">(</span><span class="s1">&#39;detector&#39;</span><span class="p">,</span> <span class="s1">&#39;world&#39;</span><span class="p">)</span>
 
 <span class="n">std</span> <span class="o">=</span> <span class="n">bkgrms</span><span class="p">(</span><span class="n">ref_fits</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 <span class="n">bkg</span> <span class="o">=</span> <span class="n">mmm_bkg</span><span class="p">(</span><span class="n">ref_fits</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
@@ -1649,17 +1684,17 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;mag&#39;</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;sharpness&#39;</span><span class="p">)</span>
 
-<span class="n">xlim0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;mag&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.25</span>
-<span class="n">xlim1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;mag&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.25</span>
-<span class="n">ylim0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;sharpness&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.15</span>
-<span class="n">ylim1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;sharpness&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.15</span>
+<span class="n">xlim0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;mag&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.25</span>
+<span class="n">xlim1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;mag&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.25</span>
+<span class="n">ylim0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;sharpness&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.15</span>
+<span class="n">ylim1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;sharpness&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.15</span>
 
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xlim0</span><span class="p">,</span> <span class="n">xlim1</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ylim0</span><span class="p">,</span> <span class="n">ylim1</span><span class="p">)</span>
 
 <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;mag&#39;</span><span class="p">],</span> <span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;sharpness&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
 
-<span class="n">sh_inf</span> <span class="o">=</span> <span class="mf">0.40</span>
+<span class="n">sh_inf</span> <span class="o">=</span> <span class="mf">0.60</span>
 <span class="n">sh_sup</span> <span class="o">=</span> <span class="mf">0.82</span>
 <span class="c1">#mag_lim = -5.0</span>
 <span class="n">lmag_lim</span> <span class="o">=</span> <span class="o">-</span><span class="mf">3.0</span>
@@ -1700,8 +1735,8 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="p">((</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;mag&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">lmag_lim</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;mag&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">umag_lim</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;roundness2&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">round_inf</span><span class="p">)</span>
         <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;roundness2&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">round_sup</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;sharpness&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">sh_inf</span><span class="p">)</span> 
-        <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;sharpness&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">sh_sup</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">700</span><span class="p">)</span>
-        <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">700</span><span class="p">))</span>
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;sharpness&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">sh_sup</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">200</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">600</span><span class="p">)</span>
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">200</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">found_stars</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">600</span><span class="p">))</span>
 
 <span class="n">found_stars_sel</span> <span class="o">=</span> <span class="n">found_stars</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
 
@@ -1721,7 +1756,8 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert pixel to wcs coords</span>
-<span class="n">skycoords</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">pixel_to_world</span><span class="p">(</span><span class="n">found_stars_sel</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">],</span> <span class="n">found_stars_sel</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">])</span>
+<span class="n">skycoords</span> <span class="o">=</span> <span class="n">detector_to_world</span><span class="p">(</span><span class="n">found_stars_sel</span><span class="p">[</span><span class="s1">&#39;xcentroid&#39;</span><span class="p">],</span> <span class="n">found_stars_sel</span><span class="p">[</span><span class="s1">&#39;ycentroid&#39;</span><span class="p">])</span>
+<span class="n">skycoords</span> <span class="o">=</span> <span class="p">[</span><span class="n">SkyCoord</span><span class="p">(</span><span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;deg&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">ra</span><span class="p">,</span> <span class="n">dec</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">skycoords</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">skycoords</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
 <span class="nb">len</span><span class="p">(</span><span class="n">skycoords</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1743,7 +1779,7 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a grid for fast lookup using WebbPSF. The larger the number of grid points, the better the photometric precision.</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a grid for fast lookup using STPSF. The larger the number of grid points, the better the photometric precision.</span>
 <span class="c1"># Developer note. Would be great to have a fast/approximate look up table. </span>
 <span class="n">jwst_obs</span> <span class="o">=</span> <span class="n">space_phot</span><span class="o">.</span><span class="n">observation2</span><span class="p">(</span><span class="n">lvl2</span><span class="p">)</span>
 <span class="n">grid</span> <span class="o">=</span> <span class="n">space_phot</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_jwst_psf_grid</span><span class="p">(</span><span class="n">jwst_obs</span><span class="p">,</span> <span class="n">num_psfs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
@@ -1827,7 +1863,7 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 
 <span class="n">ref_fits</span> <span class="o">=</span> <span class="n">ImageModel</span><span class="p">(</span><span class="n">ref_image</span><span class="p">)</span>
 <span class="n">ref_data</span> <span class="o">=</span> <span class="n">ref_fits</span><span class="o">.</span><span class="n">data</span>
-<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
@@ -1843,7 +1879,7 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get PSF from WebbPSF and drizzle it to the source location</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get PSF from STPSF and drizzle it to the source location</span>
 <span class="n">jwst3_obs</span> <span class="o">=</span> <span class="n">space_phot</span><span class="o">.</span><span class="n">observation3</span><span class="p">(</span><span class="n">lvl3</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -1852,13 +1888,6 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lvl3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">skycoords</span>
 </pre></div>
 </div>
 </div>
@@ -1908,7 +1937,7 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 </div>
 </div>
 </div>
-<p><strong>Important Note</strong>: When not to use. Due to the sensitivity of the space_phot parameters, this tool is not meant to be used for a large sample of stars (i.e., Section 5 below). If a user would like to use space_phot on more than one source, they should carefully construct a table of parameters that are carefully refined for each source.</p>
+<p><strong>Important Note</strong>: When not to use. Due to the sensitivity of the space_phot parameters, this tool is not meant to be used for a large sample of stars (i.e., Section 5). If a user would like to use space_phot on more than one source, they should carefully construct a table of parameters that are carefully refined for each source.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span>
@@ -1916,7 +1945,7 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
 </div>
 </div>
 </div>
-<hr style="border:1px solid gray"> </hr><a class="reference internal image-reference" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" />
+<hr style="border:1px solid gray"> </hr><a class="reference internal image-reference" href="https://github.com/spacetelescope/jwst-pipeline-notebooks/raw/main/_static/stsci_footer.png"><img alt="Space Telescope Logo" src="https://github.com/spacetelescope/jwst-pipeline-notebooks/raw/main/_static/stsci_footer.png" style="width: 200px;" />
 </a>
 </section>
 </section>
@@ -1991,7 +2020,7 @@ See detailed notes in Section 3.1 above about the fitting process and diagnostic
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of contents</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">1.<font color="white">-</font>Introduction <a class="anchor" id="intro"></a></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-webbpsf-and-synphot-directories">1.1<font color="white">-</font>Setup WebbPSF and Synphot Directories<a class="anchor" id="webbpsf"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-stpsf-and-synphot-directories">1.1<font color="white">-</font>Setup STPSF and Synphot Directories<a class="anchor" id="stpsf"></a></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-imports">1.2<font color="white">-</font>Python Imports<a class="anchor" id="py_imports"></a></a></li>
 </ul>
 </li>
