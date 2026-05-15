@@ -196,7 +196,7 @@ Star</td>
 <td><ul>
 <li>Use case: Continuum and emission-line modeling of AGN; 1.47-1.87um.</li>
 <li>Data: NIFS on Gemini; NGC 4151.</li>
-<li>Tools: specutils, cubeviz.</li>
+<li>Tools: specutils, jdaviz.</li>
 <li>Cross-instrument:</li>
 </ul>
 </td>
