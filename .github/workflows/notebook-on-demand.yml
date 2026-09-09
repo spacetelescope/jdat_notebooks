@@ -22,6 +22,7 @@ on:
           - 'build-html-only'
           - 'deprecate-notebook'
           - 'notebook-accessibility-scan-single'
+          - 'scheduled'
         default: 'validate-all'
       
       single_notebook:
@@ -88,7 +89,25 @@ jobs:
     secrets:
       CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
       CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
-
+      
+  manage-deprecation:
+    if: inputs.action_type == 'scheduled'
+    uses:  spacetelescope/notebook-ci-actions/.github/workflows/notebook-ci-unified.yml@v1
+    with:
+      execution-mode: 'on-demand'
+      trigger-event: 'security'
+      python-version: ${{ inputs.python_version }}
+      conda-environment: ${{ inputs.conda_environment }}
+      enable-validation: false
+      enable-security: false
+      enable-execution: false
+      enable-storage: false
+      enable-html-build: false
+      enable-a11y-nb-check: false
+    secrets:
+      CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
+      CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
+      
   security-scan-all:
     if: inputs.action_type == 'security-scan-all'
     uses:  spacetelescope/notebook-ci-actions/.github/workflows/notebook-ci-unified.yml@v1
