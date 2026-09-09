@@ -22,7 +22,7 @@ on:
           - 'build-html-only'
           - 'deprecate-notebook'
           - 'notebook-accessibility-scan-single'
-          - 'scheduled'
+          - 'check-deprecation'
         default: 'validate-all'
       
       single_notebook:
@@ -90,17 +90,18 @@ jobs:
       CASJOBS_USERID: ${{ secrets.CASJOBS_USERID }}
       CASJOBS_PW: ${{ secrets.CASJOBS_PW }}
       
-  manage-deprecation:
-    if: inputs.action_type == 'scheduled'
+  check-deprecation:
+    if: inputs.action_type == 'check-deprecation'
     uses:  spacetelescope/notebook-ci-actions/.github/workflows/notebook-ci-unified.yml@v1
     with:
       execution-mode: 'on-demand'
-      trigger-event: 'security'
+      trigger-event: 'check-deprecations'
+      single-notebook: ${{ inputs.single_notebook }}
       python-version: ${{ inputs.python_version }}
       conda-environment: ${{ inputs.conda_environment }}
       enable-validation: false
       enable-security: false
-      enable-execution: false
+      enable-execution: true
       enable-storage: false
       enable-html-build: false
       enable-a11y-nb-check: false
