@@ -682,22 +682,22 @@
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set environmental variables</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;STPSF_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;./data/stpsf-data&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"STPSF_PATH"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"./data/stpsf-data"</span>
 
 <span class="c1"># STPSF Data</span>
-<span class="n">stpsf_url</span> <span class="o">=</span> <span class="s1">&#39;https://stsci.box.com/shared/static/kqfolg2bfzqc4mjkgmujo06d3iaymahv.gz&#39;</span>
-<span class="n">stpsf_file</span> <span class="o">=</span> <span class="s1">&#39;./stpsf-data-LATEST.tar.gz&#39;</span>
-<span class="n">stpsf_folder</span> <span class="o">=</span> <span class="s2">&quot;./data&quot;</span>
+<span class="n">stpsf_url</span> <span class="o">=</span> <span class="s1">'https://stsci.box.com/shared/static/kqfolg2bfzqc4mjkgmujo06d3iaymahv.gz'</span>
+<span class="n">stpsf_file</span> <span class="o">=</span> <span class="s1">'./stpsf-data-LATEST.tar.gz'</span>
+<span class="n">stpsf_folder</span> <span class="o">=</span> <span class="s2">"./data"</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">download_file</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">dest_path</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
     <span class="n">parsed_url</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">parsed_url</span><span class="o">.</span><span class="n">scheme</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;http&quot;</span><span class="p">,</span> <span class="s2">&quot;https&quot;</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported URL scheme: </span><span class="si">{</span><span class="n">parsed_url</span><span class="o">.</span><span class="n">scheme</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">parsed_url</span><span class="o">.</span><span class="n">scheme</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"http"</span><span class="p">,</span> <span class="s2">"https"</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported URL scheme: </span><span class="si">{</span><span class="n">parsed_url</span><span class="o">.</span><span class="n">scheme</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dest_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dest_path</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">8192</span><span class="p">):</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 
@@ -708,7 +708,7 @@
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">stpsf_folder</span><span class="p">)</span>
     <span class="n">download_file</span><span class="p">(</span><span class="n">stpsf_url</span><span class="p">,</span> <span class="n">stpsf_file</span><span class="p">)</span>
     <span class="n">gzf</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">stpsf_file</span><span class="p">)</span>
-    <span class="n">gzf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">stpsf_folder</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+    <span class="n">gzf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">stpsf_folder</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="s1">'data'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -721,17 +721,17 @@
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># If the example dataset has already been downloaded, comment out these lines:</span>
-<span class="n">boxlink</span> <span class="o">=</span> <span class="s1">&#39;https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/optimal_extraction/optimal_extraction.zip&#39;</span>
-<span class="n">boxfile</span> <span class="o">=</span> <span class="s1">&#39;./optimal_extraction.zip&#39;</span>
+<span class="n">boxlink</span> <span class="o">=</span> <span class="s1">'https://data.science.stsci.edu/redirect/JWST/jwst-data_analysis_tools/optimal_extraction/optimal_extraction.zip'</span>
+<span class="n">boxfile</span> <span class="o">=</span> <span class="s1">'./optimal_extraction.zip'</span>
 <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">boxlink</span><span class="p">,</span> <span class="n">boxfile</span><span class="p">)</span>
-<span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">zf</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">boxfile</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
 <span class="n">list_names</span> <span class="o">=</span> <span class="n">zf</span><span class="o">.</span><span class="n">namelist</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">list_names</span><span class="p">:</span>
     <span class="n">zf</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">member</span><span class="o">=</span><span class="n">item</span><span class="p">)</span> <span class="c1"># Using extract instead of extractall because it is safer when files have absolute (/) or relative (..) paths to here</span>
 
-<span class="n">example_file</span> <span class="o">=</span> <span class="s1">&#39;F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s30263_&#39;</span>
-<span class="n">s2d_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;s2d_files&#39;</span><span class="p">,</span> <span class="n">example_file</span><span class="o">+</span><span class="s1">&#39;s2d.fits&#39;</span><span class="p">)</span>
-<span class="n">x1d_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;x1d_files&#39;</span><span class="p">,</span> <span class="n">example_file</span><span class="o">+</span><span class="s1">&#39;x1d.fits&#39;</span><span class="p">)</span>
+<span class="n">example_file</span> <span class="o">=</span> <span class="s1">'F170LP-G235M_MOS_observation-6_mod_correctedWCS_noflat_nooutlierdet_combined_s30263_'</span>
+<span class="n">s2d_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'s2d_files'</span><span class="p">,</span> <span class="n">example_file</span><span class="o">+</span><span class="s1">'s2d.fits'</span><span class="p">)</span>
+<span class="n">x1d_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'x1d_files'</span><span class="p">,</span> <span class="n">example_file</span><span class="o">+</span><span class="s1">'x1d.fits'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -756,11 +756,11 @@
 <p>When we want to view 2d spectra, we’ll generally need to stretch the pixels vertically to get a useful image. We can do this by setting the plot aspect ratio explicitly (we’ll try to retain a measure of rectangularity).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">resampled_2d_image</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;power&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">resampled_2d_image</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">'power'</span><span class="p">)</span>
 <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">image_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">image_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">fig1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span> <span class="c1"># we save these in dummy variables to avoid spurious Jupyter Notebook output</span>
-<span class="n">img1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">resampled_2d_image</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> 
-                  <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="n">img1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">resampled_2d_image</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> 
+                  <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
 <span class="n">clb1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -805,14 +805,14 @@
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="c1"># we want the largest figure that will fit in the notebook</span>
-<span class="n">img2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">resampled_2d_image</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> 
-                  <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span> <span class="c1"># reuse norm from earlier</span>
+<span class="n">img2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">resampled_2d_image</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> 
+                  <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span> <span class="c1"># reuse norm from earlier</span>
 
 <span class="c1"># create region box and slider</span>
 <span class="n">region_x</span> <span class="o">=</span> <span class="n">region_y</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">region_h</span><span class="p">,</span> <span class="n">region_w</span> <span class="o">=</span> <span class="n">image_shape</span>
 <span class="n">region_rectangle</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">((</span><span class="n">region_x</span><span class="p">,</span> <span class="n">region_y</span><span class="p">),</span> <span class="n">region_w</span><span class="p">,</span> <span class="n">region_h</span><span class="p">,</span> 
-                             <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+                             <span class="n">facecolor</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'b'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'--'</span><span class="p">)</span>
 <span class="n">current_axis</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
 <span class="n">rect_patch</span> <span class="o">=</span> <span class="n">current_axis</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">region_rectangle</span><span class="p">)</span>
 </pre></div>
@@ -835,10 +835,10 @@
 
 <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">er_nx</span> <span class="o">/</span> <span class="p">(</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">er_ny</span><span class="p">)</span>
 
-<span class="n">er_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">extraction_region</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;power&#39;</span><span class="p">)</span>
+<span class="n">er_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">extraction_region</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">'power'</span><span class="p">)</span>
 <span class="n">fig3</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">img3</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">extraction_region</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> 
-                  <span class="n">norm</span><span class="o">=</span><span class="n">er_norm</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="n">img3</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">extraction_region</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> 
+                  <span class="n">norm</span><span class="o">=</span><span class="n">er_norm</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
 <span class="n">clb3</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -858,10 +858,10 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">kernel_slice_coadd</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">column_idx</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Coadd a number of columns (= width) of the extraction region,</span>
 <span class="sd">    centered on column_idx.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="n">half_width</span> <span class="o">=</span> <span class="n">width</span> <span class="o">//</span> <span class="mi">2</span>
     <span class="n">to_coadd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">column_idx</span> <span class="o">-</span> <span class="n">half_width</span><span class="p">),</span> 
@@ -879,8 +879,8 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig4</span><span class="p">,</span> <span class="p">(</span><span class="n">iax4</span><span class="p">,</span> <span class="n">pax4</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
-<span class="n">img4</span> <span class="o">=</span> <span class="n">iax4</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">extraction_region</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> 
-                   <span class="n">norm</span><span class="o">=</span><span class="n">er_norm</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="n">img4</span> <span class="o">=</span> <span class="n">iax4</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">extraction_region</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> 
+                   <span class="n">norm</span><span class="o">=</span><span class="n">er_norm</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
 
 
 <span class="c1"># create slice box</span>
@@ -891,15 +891,15 @@
 
 
 <span class="o">*</span><span class="n">sxy</span><span class="p">,</span> <span class="n">sw</span><span class="p">,</span> <span class="n">sh</span> <span class="o">=</span> <span class="n">make_slice</span><span class="p">(</span><span class="n">slice_width</span><span class="p">,</span> <span class="n">initial_column</span><span class="p">)</span>
-<span class="n">slice_rectangle</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">(</span><span class="n">sxy</span><span class="p">,</span> <span class="n">sw</span><span class="p">,</span> <span class="n">sh</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> 
-                            <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">slice_rectangle</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">(</span><span class="n">sxy</span><span class="p">,</span> <span class="n">sw</span><span class="p">,</span> <span class="n">sh</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span> 
+                            <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'b'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'--'</span><span class="p">)</span>
 <span class="n">iax4</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">slice_rectangle</span><span class="p">)</span>
 
 <span class="c1"># plot the coadded slice</span>
 <span class="n">xd_pixels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">er_ny</span><span class="p">)</span>
-<span class="n">lin4</span><span class="p">,</span> <span class="o">=</span> <span class="n">pax4</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">slice_0</span><span class="p">,</span> <span class="s1">&#39;k-&#39;</span><span class="p">)</span>
-<span class="n">xlbl4</span> <span class="o">=</span> <span class="n">pax4</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Cross-dispersion pixel&#39;</span><span class="p">)</span>
-<span class="n">ylbl4</span> <span class="o">=</span> <span class="n">pax4</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Coadded signal&#39;</span><span class="p">)</span>
+<span class="n">lin4</span><span class="p">,</span> <span class="o">=</span> <span class="n">pax4</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">slice_0</span><span class="p">,</span> <span class="s1">'k-'</span><span class="p">)</span>
+<span class="n">xlbl4</span> <span class="o">=</span> <span class="n">pax4</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Cross-dispersion pixel'</span><span class="p">)</span>
+<span class="n">ylbl4</span> <span class="o">=</span> <span class="n">pax4</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Coadded signal'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -941,9 +941,9 @@
 <span class="n">gauss_profile</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Gaussian1D</span><span class="p">(</span><span class="n">amplitude</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="n">max_pixel</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">fwhm</span><span class="p">)</span>
 
 <span class="n">fig5</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">kern5</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">kernel_slice</span> <span class="o">/</span> <span class="n">kernel_slice</span><span class="p">[</span><span class="n">max_pixel</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Kernel Slice&#39;</span><span class="p">)</span>
-<span class="n">moff5</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">moffat_profile</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Moffat Profile&#39;</span><span class="p">)</span>
-<span class="n">gaus5</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">gauss_profile</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gaussian Profile&#39;</span><span class="p">)</span>
+<span class="n">kern5</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">kernel_slice</span> <span class="o">/</span> <span class="n">kernel_slice</span><span class="p">[</span><span class="n">max_pixel</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Kernel Slice'</span><span class="p">)</span>
+<span class="n">moff5</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">moffat_profile</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Moffat Profile'</span><span class="p">)</span>
+<span class="n">gaus5</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">gauss_profile</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Gaussian Profile'</span><span class="p">)</span>
 <span class="n">lgd5</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -965,8 +965,8 @@
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: Gaussian1D
-Inputs: (&#39;x&#39;,)
-Outputs: (&#39;y&#39;,)
+Inputs: ('x',)
+Outputs: ('y',)
 Model set size: 1
 Parameters:
         amplitude     mean stddev
@@ -990,8 +990,8 @@ Parameters:
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: Polynomial1D
-Inputs: (&#39;x&#39;,)
-Outputs: (&#39;y&#39;,)
+Inputs: ('x',)
+Outputs: ('y',)
 Model set size: 1
 Degree: 2
 Parameters:
@@ -1012,8 +1012,8 @@ Parameters:
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: CompoundModel
-Inputs: (&#39;x&#39;,)
-Outputs: (&#39;y&#39;,)
+Inputs: ('x',)
+Outputs: ('y',)
 Model set size: 1
 Expression: [0] + [1]
 Components: 
@@ -1043,20 +1043,20 @@ Parameters:
 
 <span class="n">fig6</span><span class="p">,</span> <span class="p">(</span><span class="n">fax6</span><span class="p">,</span> <span class="n">fln6</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
-<span class="n">psf6</span> <span class="o">=</span> <span class="n">fax6</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">fit_extraction_kernel</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">xd_pixels</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;PSF&quot;</span><span class="p">)</span>
-<span class="n">poly6</span> <span class="o">=</span> <span class="n">fax6</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">fit_extraction_kernel</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="n">xd_pixels</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Background&quot;</span><span class="p">)</span>
-<span class="n">sum6</span> <span class="o">=</span> <span class="n">fax6</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">fit_line</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Composite Kernel&quot;</span><span class="p">)</span>
+<span class="n">psf6</span> <span class="o">=</span> <span class="n">fax6</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">fit_extraction_kernel</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">xd_pixels</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">"PSF"</span><span class="p">)</span>
+<span class="n">poly6</span> <span class="o">=</span> <span class="n">fax6</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">fit_extraction_kernel</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="n">xd_pixels</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Background"</span><span class="p">)</span>
+<span class="n">sum6</span> <span class="o">=</span> <span class="n">fax6</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">fit_line</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Composite Kernel"</span><span class="p">)</span>
 <span class="n">lgd6a</span> <span class="o">=</span> <span class="n">fax6</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">lin6</span> <span class="o">=</span> <span class="n">fln6</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">kernel_slice</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Kernel Slice&#39;</span><span class="p">)</span>
-<span class="n">fit6</span> <span class="o">=</span> <span class="n">fln6</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">fit_line</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Extraction Kernel&#39;</span><span class="p">)</span>
+<span class="n">lin6</span> <span class="o">=</span> <span class="n">fln6</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">kernel_slice</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Kernel Slice'</span><span class="p">)</span>
+<span class="n">fit6</span> <span class="o">=</span> <span class="n">fln6</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">fit_line</span><span class="p">,</span> <span class="s1">'o'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Extraction Kernel'</span><span class="p">)</span>
 <span class="n">lgd6b</span> <span class="o">=</span> <span class="n">fln6</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: CompoundModel
-Inputs: (&#39;x&#39;,)
-Outputs: (&#39;y&#39;,)
+Inputs: ('x',)
+Outputs: ('y',)
 Model set size: 1
 Expression: [0] + [1]
 Components: 
@@ -1095,11 +1095,11 @@ Parameters:
 
 <span class="n">fig_fwhm</span><span class="p">,</span> <span class="n">ax_fwhm</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
-<span class="n">fwhm_img</span> <span class="o">=</span> <span class="n">ax_fwhm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">binned_spectrum</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">bin_ar</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
-                             <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">fwhm_img</span> <span class="o">=</span> <span class="n">ax_fwhm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">binned_spectrum</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">bin_ar</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span>
+                             <span class="n">cmap</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">)</span>
 <span class="n">fwhm_plot</span> <span class="o">=</span> <span class="n">ax_fwhm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bin_centers</span><span class="p">,</span> <span class="n">bin_fwhms</span><span class="p">)</span>
-<span class="n">xlbl_fwhm</span> <span class="o">=</span> <span class="n">ax_fwhm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Bin center (px)&quot;</span><span class="p">)</span>
-<span class="n">ylbl_fwhm</span> <span class="o">=</span> <span class="n">ax_fwhm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;FWHM (arcsec)&quot;</span><span class="p">)</span>
+<span class="n">xlbl_fwhm</span> <span class="o">=</span> <span class="n">ax_fwhm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Bin center (px)"</span><span class="p">)</span>
+<span class="n">ylbl_fwhm</span> <span class="o">=</span> <span class="n">ax_fwhm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"FWHM (arcsec)"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1135,8 +1135,8 @@ Parameters:
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model: Polynomial1D
-Inputs: (&#39;x&#39;,)
-Outputs: (&#39;y&#39;,)
+Inputs: ('x',)
+Outputs: ('y',)
 Model set size: 1
 Degree: 0
 Parameters:
@@ -1160,7 +1160,7 @@ Parameters:
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># adjust this if and when the NIRSpec PIXFRAC changes</span>
 
 <span class="c1"># We want any pixel with 0 weight to be excluded from the calculation</span>
-<span class="c1"># in the next step, so we&#39;ll use masked array operations.</span>
+<span class="c1"># in the next step, so we'll use masked array operations.</span>
 <span class="n">bad_pixels</span> <span class="o">=</span> <span class="n">weights_region</span> <span class="o">==</span> <span class="mi">0</span>
 <span class="n">masked_wht</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weights_region</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">bad_pixels</span><span class="p">)</span>
 <span class="n">variance_image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="n">weights_region</span> <span class="o">*</span> <span class="n">scale</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span>
@@ -1175,9 +1175,9 @@ Parameters:
 
 <span class="n">fig_var</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">palette</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">)</span>
-<span class="n">palette</span><span class="o">.</span><span class="n">set_bad</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
-<span class="n">var_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">variance_image</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.006</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-<span class="n">img_var</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">variance_image</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">var_norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">palette</span><span class="p">)</span>
+<span class="n">palette</span><span class="o">.</span><span class="n">set_bad</span><span class="p">(</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">var_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">variance_image</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">'log'</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.006</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">img_var</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">variance_image</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">var_norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">palette</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1218,7 +1218,7 @@ where \)</span>I<span class="math notranslate nohighlight">\( is the pixel value
     
     <span class="c1"># calculate the kernal normalization</span>
     <span class="n">g_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">kernel_values</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">variance_column</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">is_masked</span><span class="p">(</span><span class="n">g_x</span><span class="p">):</span> <span class="c1"># this column isn&#39;t valid, so we&#39;ll skip it</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">is_masked</span><span class="p">(</span><span class="n">g_x</span><span class="p">):</span> <span class="c1"># this column isn't valid, so we'll skip it</span>
         <span class="k">continue</span>
     
     <span class="c1"># and now sum the weighted column</span>
@@ -1240,8 +1240,8 @@ where \)</span>I<span class="math notranslate nohighlight">\( is the pixel value
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;WCS(output_frame=world, input_frame=detector, forward_transform=Model: CompoundModel
-Inputs: (&#39;x0&#39;, &#39;x1&#39;)
-Outputs: (&#39;alpha_C&#39;, &#39;delta_C&#39;, &#39;y&#39;)
+Inputs: ('x0', 'x1')
+Outputs: ('alpha_C', 'delta_C', 'y')
 Model set size: 1
 Expression: [0] | ([1] &amp; [2] | [3] | [4]) &amp; [5]
 Components: 
@@ -1290,14 +1290,14 @@ Parameters:
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x1d_model</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">x1d_file</span><span class="p">)</span>
 <span class="c1"># For a file with multiple spectra, the index to .spec is EXTVAR</span>
 <span class="n">tmp</span> <span class="o">=</span> <span class="n">x1d_model</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="n">x1d_wave</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">]</span>
-<span class="n">x1d_flux</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s1">&#39;FLUX&#39;</span><span class="p">]</span>
+<span class="n">x1d_wave</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s1">'WAVELENGTH'</span><span class="p">]</span>
+<span class="n">x1d_flux</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s1">'FLUX'</span><span class="p">]</span>
 
 <span class="k">if</span> <span class="n">x1d_flux</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="n">x1d_flux</span> <span class="o">=</span> <span class="o">-</span><span class="n">x1d_flux</span>
 <span class="n">fig8</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">x1d8</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1d_wave</span><span class="p">,</span> <span class="n">x1d_flux</span> <span class="o">/</span> <span class="n">x1d_flux</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Pipeline&quot;</span><span class="p">)</span>
-<span class="n">opt8</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span> <span class="o">/</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Optimal&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">x1d8</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1d_wave</span><span class="p">,</span> <span class="n">x1d_flux</span> <span class="o">/</span> <span class="n">x1d_flux</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Pipeline"</span><span class="p">)</span>
+<span class="n">opt8</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span> <span class="o">/</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Optimal"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
 <span class="n">lgd8</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1326,12 +1326,12 @@ Parameters:
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">batch_kernel_slice</span><span class="p">(</span><span class="n">extraction_region</span><span class="p">,</span> <span class="n">slice_width</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">column_idx</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a slice in the cross-dispersion direction out of the </span>
 <span class="sd">    2D array `extraction_region`, centered on `column_idx` and </span>
 <span class="sd">    `slice_width` pixels wide. If `column_idx` is not given, use</span>
 <span class="sd">    the column with the largest total signal.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="k">if</span> <span class="n">column_idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">column_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">extraction_region</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
@@ -1339,7 +1339,7 @@ Parameters:
     <span class="n">ny</span><span class="p">,</span> <span class="n">nx</span> <span class="o">=</span> <span class="n">extraction_region</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">half_width</span> <span class="o">=</span> <span class="n">slice_width</span> <span class="o">//</span> <span class="mi">2</span>
     
-    <span class="c1"># make sure we don&#39;t go past the edges of the extraction region</span>
+    <span class="c1"># make sure we don't go past the edges of the extraction region</span>
     <span class="n">to_coadd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">column_idx</span> <span class="o">-</span> <span class="n">half_width</span><span class="p">),</span> 
                          <span class="nb">min</span><span class="p">(</span><span class="n">nx</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">column_idx</span> <span class="o">+</span> <span class="n">half_width</span><span class="p">))</span>
     
@@ -1354,13 +1354,13 @@ Parameters:
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">batch_fit_extraction_kernel</span><span class="p">(</span><span class="n">xd_slice</span><span class="p">,</span> <span class="n">psf_profile</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">Gaussian1D</span><span class="p">,</span> 
-                                <span class="n">height_param_name</span><span class="o">=</span><span class="s1">&#39;amplitude&#39;</span><span class="p">,</span> <span class="n">height_param_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                <span class="n">width_param_name</span><span class="o">=</span><span class="s1">&#39;stddev&#39;</span><span class="p">,</span> <span class="n">width_param_value</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
-                                <span class="n">center_param_name</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">center_param_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">height_param_name</span><span class="o">=</span><span class="s1">'amplitude'</span><span class="p">,</span> <span class="n">height_param_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">width_param_name</span><span class="o">=</span><span class="s1">'stddev'</span><span class="p">,</span> <span class="n">width_param_value</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                                <span class="n">center_param_name</span><span class="o">=</span><span class="s1">'mean'</span><span class="p">,</span> <span class="n">center_param_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                 <span class="n">other_psf_args</span><span class="o">=</span><span class="p">[],</span> <span class="n">other_psf_kw</span><span class="o">=</span><span class="p">{},</span>
                                 <span class="n">bg_model</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">Polynomial1D</span><span class="p">,</span>
                                 <span class="n">bg_args</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">bg_kw</span><span class="o">=</span><span class="p">{}):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Initialize a composite extraction kernel, then fit it to </span>
 <span class="sd">    the 1D array `xd_slice`, which has been nominally</span>
 <span class="sd">    generated via the `kernel_slice` function defined above. </span>
@@ -1380,7 +1380,7 @@ Parameters:
 <span class="sd">    multiple PSFs for deblending. It is recommended to process</span>
 <span class="sd">    such spectra individually, using the interactive procedure</span>
 <span class="sd">    above.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">xd_pixels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">xd_slice</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
     
     <span class="k">if</span> <span class="n">center_param_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1429,7 +1429,7 @@ Parameters:
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">batch_fit_trace_centers</span><span class="p">(</span><span class="n">extraction_region</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span>
                             <span class="n">trace_model</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">Polynomial1D</span><span class="p">,</span>
                             <span class="n">trace_args</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">trace_kw</span><span class="o">=</span><span class="p">{}):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Fit the geometric distortion of the trace with</span>
 <span class="sd">    a model. Currently this is a placeholder function,</span>
 <span class="sd">    since geometric distortion is typically removed</span>
@@ -1437,7 +1437,7 @@ Parameters:
 <span class="sd">    functionality is necesary, use this function</span>
 <span class="sd">    signature to remain compatible with the rest of</span>
 <span class="sd">    this Appendix.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="n">trace_centers</span> <span class="o">=</span> <span class="n">trace_model</span><span class="p">(</span><span class="o">*</span><span class="n">trace_args</span><span class="p">,</span> <span class="o">**</span><span class="n">trace_kw</span><span class="p">)</span>
     <span class="n">trace_centers</span><span class="o">.</span><span class="n">c0</span> <span class="o">=</span> <span class="n">kernel</span><span class="o">.</span><span class="n">mean_0</span>
@@ -1453,9 +1453,9 @@ Parameters:
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">batch_extract_spectrum</span><span class="p">(</span><span class="n">extraction_region</span><span class="p">,</span> <span class="n">trace</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> 
                            <span class="n">weights_image</span><span class="p">,</span> 
-                           <span class="n">trace_center_param</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+                           <span class="n">trace_center_param</span><span class="o">=</span><span class="s1">'mean'</span><span class="p">,</span>
                            <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Optimally extract the 1D spectrum from the extraction </span>
 <span class="sd">    region.</span>
 <span class="sd">    </span>
@@ -1478,7 +1478,7 @@ Parameters:
 <span class="sd">    `scale` is the size ratio of input to output pixels when</span>
 <span class="sd">    drizzling, equivalent to PIXFRAC in the drizzle parameters</span>
 <span class="sd">    from the `resample` step.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="n">bad_pixels</span> <span class="o">=</span> <span class="n">weights_image</span> <span class="o">==</span> <span class="mf">0.</span>
     <span class="n">masked_wht</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weights_image</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">bad_pixels</span><span class="p">)</span>
@@ -1495,7 +1495,7 @@ Parameters:
     <span class="c1"># * ----------                                                     *</span>
     <span class="c1"># * Note that because of the way model sets are implemented, it is *</span>
     <span class="c1"># * not feasible to alter an existing model instance to use them.  *</span>
-    <span class="c1"># * Instead we&#39;ll create a new kernel instance, using the fitted   *</span>
+    <span class="c1"># * Instead we'll create a new kernel instance, using the fitted   *</span>
     <span class="c1"># * parameters from the original kernel.                           *</span>
     <span class="c1"># *                                                                *</span>
     <span class="c1"># * Caveat: this assumes that the PSF is the first element, and    *</span>
@@ -1544,12 +1544,12 @@ Parameters:
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">batch_wavelength_from_wcs</span><span class="p">(</span><span class="n">datamodel</span><span class="p">,</span> <span class="n">pix_x</span><span class="p">,</span> <span class="n">pix_y</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Convenience function to grab the WCS object from the</span>
-<span class="sd">    datamodel&#39;s metadata, generate world coordinates from</span>
+<span class="sd">    datamodel's metadata, generate world coordinates from</span>
 <span class="sd">    the given pixel coordinates, and return the 1D </span>
 <span class="sd">    wavelength.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="n">wcs</span> <span class="o">=</span> <span class="n">datamodel</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">wcs</span>
     <span class="n">aC</span><span class="p">,</span> <span class="n">dC</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">wcs</span><span class="p">(</span><span class="n">pix_x</span><span class="p">,</span> <span class="n">pix_y</span><span class="p">)</span>
@@ -1557,14 +1557,14 @@ Parameters:
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">batch_save_extracted_spectrum</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Quick &amp; dirty fits dump of an extracted spectrum.</span>
 <span class="sd">    Replace with your preferred output format &amp; function.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
-    <span class="n">wcol</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;wavelength&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> 
+    <span class="n">wcol</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'wavelength'</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'E'</span><span class="p">,</span> 
                        <span class="n">array</span><span class="o">=</span><span class="n">wavelength</span><span class="p">)</span>
-    <span class="n">scol</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;spectrum&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;E&#39;</span><span class="p">,</span>
+    <span class="n">scol</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'spectrum'</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'E'</span><span class="p">,</span>
                        <span class="n">array</span><span class="o">=</span><span class="n">spectrum</span><span class="p">)</span>
     <span class="n">cols</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">ColDefs</span><span class="p">([</span><span class="n">wcol</span><span class="p">,</span> <span class="n">scol</span><span class="p">])</span>
     <span class="n">hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">BinTableHDU</span><span class="o">.</span><span class="n">from_columns</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
@@ -1574,11 +1574,11 @@ Parameters:
 <span class="k">def</span><span class="w"> </span><span class="nf">batch_plot_output</span><span class="p">(</span><span class="n">resampled_image</span><span class="p">,</span> <span class="n">extraction_bbox</span><span class="p">,</span> 
                       <span class="n">kernel_slice</span><span class="p">,</span> <span class="n">kernel_model</span><span class="p">,</span>
                       <span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Convenience function for summary output figures,</span>
 <span class="sd">    allowing visual inspection of the results from </span>
 <span class="sd">    each file being processed.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> 
                                         <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
@@ -1588,25 +1588,25 @@ Parameters:
     <span class="n">aspect</span> <span class="o">=</span> <span class="n">nx</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
     
     <span class="c1"># Subplot 1: Extraction region</span>
-    <span class="n">power_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">resampled_image</span><span class="p">,</span> <span class="s1">&#39;power&#39;</span><span class="p">)</span>
-    <span class="n">_</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">resampled_image</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
-                   <span class="n">aspect</span><span class="o">=</span><span class="n">aspect</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">power_norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+    <span class="n">power_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">resampled_image</span><span class="p">,</span> <span class="s1">'power'</span><span class="p">)</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">resampled_image</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span>
+                   <span class="n">aspect</span><span class="o">=</span><span class="n">aspect</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">power_norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">)</span>
     <span class="n">rx</span><span class="p">,</span> <span class="n">ry</span><span class="p">,</span> <span class="n">rw</span><span class="p">,</span> <span class="n">rh</span> <span class="o">=</span> <span class="n">extraction_bbox</span>
-    <span class="n">region</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">((</span><span class="n">rx</span><span class="p">,</span> <span class="n">ry</span><span class="p">),</span> <span class="n">rw</span><span class="p">,</span> <span class="n">rh</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> 
-                       <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">((</span><span class="n">rx</span><span class="p">,</span> <span class="n">ry</span><span class="p">),</span> <span class="n">rw</span><span class="p">,</span> <span class="n">rh</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span> 
+                       <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'b'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'--'</span><span class="p">)</span>
     <span class="n">_</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
     
     <span class="c1"># Subplot 2: Kernel fit</span>
     <span class="n">xd_pixels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">kernel_slice</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
     <span class="n">fit_line</span> <span class="o">=</span> <span class="n">kernel_model</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">)</span>
-    <span class="n">_</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">kernel_slice</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Kernel Slice&#39;</span><span class="p">)</span>
-    <span class="n">_</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">fit_line</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Extraction Kernel&#39;</span><span class="p">)</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">kernel_slice</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Kernel Slice'</span><span class="p">)</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd_pixels</span><span class="p">,</span> <span class="n">fit_line</span><span class="p">,</span> <span class="s1">'o'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Extraction Kernel'</span><span class="p">)</span>
     <span class="n">_</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
     
     <span class="c1"># Subplot 3: Extracted spectrum</span>
     <span class="n">_</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">)</span>
     
-    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1618,7 +1618,7 @@ Parameters:
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">batch_optimal_extraction</span><span class="p">(</span><span class="n">file_list</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Iterate over a list of fits file paths, optimally extract</span>
 <span class="sd">    the SCI extension in each file, generate an output summary</span>
 <span class="sd">    image, and then save the resulting spectrum.</span>
@@ -1627,12 +1627,12 @@ Parameters:
 <span class="sd">    extension in each file. For data with multiple SCI </span>
 <span class="sd">    extensions, a second loop over those extensions is</span>
 <span class="sd">    required.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
-    <span class="c1"># For this example data, we&#39;ll just use the default values</span>
+    <span class="c1"># For this example data, we'll just use the default values</span>
     <span class="c1"># for all the functions</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">fitsfile</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">file_list</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Processing file </span><span class="si">{}</span><span class="s2"> of </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_list</span><span class="p">),</span> <span class="n">fitsfile</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Processing file </span><span class="si">{}</span><span class="s2"> of </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_list</span><span class="p">),</span> <span class="n">fitsfile</span><span class="p">))</span>
         <span class="n">dmodel</span> <span class="o">=</span> <span class="n">ImageModel</span><span class="p">(</span><span class="n">fitsfile</span><span class="p">)</span>
         <span class="n">spec2d</span> <span class="o">=</span> <span class="n">dmodel</span><span class="o">.</span><span class="n">data</span>
         <span class="n">wht2d</span> <span class="o">=</span> <span class="n">dmodel</span><span class="o">.</span><span class="n">wht</span>
@@ -1648,12 +1648,12 @@ Parameters:
         
         <span class="n">bbox</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nx</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ny</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         
-        <span class="n">outfile</span> <span class="o">=</span> <span class="n">fitsfile</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;s2d.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;x1d_optimal&#39;</span><span class="p">)</span>
+        <span class="n">outfile</span> <span class="o">=</span> <span class="n">fitsfile</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'s2d.fits'</span><span class="p">,</span> <span class="s1">'x1d_optimal'</span><span class="p">)</span>
         
         <span class="n">batch_plot_output</span><span class="p">(</span><span class="n">spec2d</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">k_slice</span><span class="p">,</span> <span class="n">k_model</span><span class="p">,</span>
                           <span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">,</span> 
-                          <span class="n">outfile</span><span class="o">+</span><span class="s1">&#39;.png&#39;</span><span class="p">)</span>
-        <span class="n">batch_save_extracted_spectrum</span><span class="p">(</span><span class="n">outfile</span><span class="o">+</span><span class="s1">&#39;.fits&#39;</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">)</span>        
+                          <span class="n">outfile</span><span class="o">+</span><span class="s1">'.png'</span><span class="p">)</span>
+        <span class="n">batch_save_extracted_spectrum</span><span class="p">(</span><span class="n">outfile</span><span class="o">+</span><span class="s1">'.fits'</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">)</span>        
 </pre></div>
 </div>
 </div>
@@ -1664,8 +1664,8 @@ Parameters:
 <p>Take particular note of any spectrum which produces a warning during fitting - these are likely to be good candidates for interactive reprocessing.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">ioff</span><span class="p">()</span> <span class="c1"># if we don&#39;t turn this off, then matplotlib tries to display an (invisible) plot for each spectrum</span>
-<span class="n">s2d_files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;s2d_files&#39;</span><span class="p">,</span> <span class="s1">&#39;*s2d.fits&#39;</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">ioff</span><span class="p">()</span> <span class="c1"># if we don't turn this off, then matplotlib tries to display an (invisible) plot for each spectrum</span>
+<span class="n">s2d_files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'s2d_files'</span><span class="p">,</span> <span class="s1">'*s2d.fits'</span><span class="p">))</span>
 <span class="n">batch_optimal_extraction</span><span class="p">(</span><span class="n">s2d_files</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span> <span class="c1"># now we turn it back on so everything else plots as it should!</span>
 </pre></div>
@@ -1938,18 +1938,18 @@ Parameters:
 <span class="nb">print</span><span class="p">(</span><span class="n">instrument</span><span class="o">.</span><span class="n">filter_list</span><span class="p">)</span>
 
 <span class="c1"># For reference:</span>
-<span class="n">allowed_masks</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;S200A1&#39;</span><span class="p">,</span> <span class="s1">&#39;S200A2&#39;</span><span class="p">,</span> <span class="s1">&#39;S400A1&#39;</span><span class="p">,</span> <span class="s1">&#39;S1600A1&#39;</span><span class="p">,</span> <span class="s1">&#39;S200B1&#39;</span><span class="p">,</span> 
-                 <span class="s1">&#39;MSA all open&#39;</span><span class="p">,</span> <span class="s1">&#39;Single MSA open shutter&#39;</span><span class="p">,</span> 
-                 <span class="s1">&#39;Three adjacent MSA open shutters&#39;</span><span class="p">)</span>
+<span class="n">allowed_masks</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'S200A1'</span><span class="p">,</span> <span class="s1">'S200A2'</span><span class="p">,</span> <span class="s1">'S400A1'</span><span class="p">,</span> <span class="s1">'S1600A1'</span><span class="p">,</span> <span class="s1">'S200B1'</span><span class="p">,</span> 
+                 <span class="s1">'MSA all open'</span><span class="p">,</span> <span class="s1">'Single MSA open shutter'</span><span class="p">,</span> 
+                 <span class="s1">'Three adjacent MSA open shutters'</span><span class="p">)</span>
 
 <span class="c1"># Edit these as necessary</span>
-<span class="n">instrument</span><span class="o">.</span><span class="n">filter</span> <span class="o">=</span> <span class="s1">&#39;F110W&#39;</span> 
-<span class="n">instrument</span><span class="o">.</span><span class="n">image_mask</span> <span class="o">=</span> <span class="s1">&#39;Three adjacent MSA open shutters&#39;</span>
+<span class="n">instrument</span><span class="o">.</span><span class="n">filter</span> <span class="o">=</span> <span class="s1">'F110W'</span> 
+<span class="n">instrument</span><span class="o">.</span><span class="n">image_mask</span> <span class="o">=</span> <span class="s1">'Three adjacent MSA open shutters'</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[np.str_(&#39;F110W&#39;), np.str_(&#39;F140X&#39;), np.str_(&#39;F070LP&#39;), np.str_(&#39;F100LP&#39;), np.str_(&#39;F170LP&#39;), np.str_(&#39;F290LP&#39;), np.str_(&#39;CLEAR&#39;)]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[np.str_('F110W'), np.str_('F140X'), np.str_('F070LP'), np.str_('F100LP'), np.str_('F170LP'), np.str_('F290LP'), np.str_('CLEAR')]
 </pre></div>
 </div>
 </div>
@@ -1987,7 +1987,7 @@ Parameters:
         <span class="n">wl</span> <span class="o">=</span> <span class="n">psf_wavelengths</span><span class="p">[</span><span class="n">w</span><span class="p">]</span>
         
         <span class="n">display_psf</span><span class="p">(</span><span class="n">cube_hdul</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">cube_slice</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
-                    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;$\lambda$ = </span><span class="si">{:.3f}</span><span class="s2"> $\mu$m&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">wl</span><span class="o">*</span><span class="mf">1e6</span><span class="p">),</span>
+                    <span class="n">title</span><span class="o">=</span><span class="s2">"$\lambda$ = </span><span class="si">{:.3f}</span><span class="s2"> $\mu$m"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">wl</span><span class="o">*</span><span class="mf">1e6</span><span class="p">),</span>
                     <span class="n">vmax</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -2006,7 +2006,7 @@ Parameters:
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reference_psf_hdul</span> <span class="o">=</span> <span class="n">instrument</span><span class="o">.</span><span class="n">calc_psf</span><span class="p">(</span><span class="n">monochromatic</span><span class="o">=</span><span class="mf">3.0e-6</span><span class="p">)</span>
 <span class="n">reference_psf</span> <span class="o">=</span> <span class="n">reference_psf_hdul</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="n">ref_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">reference_psf</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">ref_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">reference_psf</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">'log'</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2016,30 +2016,30 @@ Parameters:
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ref_pix</span> <span class="o">=</span> <span class="n">reference_psf</span> <span class="o">&gt;=</span> <span class="mf">1e-4</span>
 <span class="n">psf_x</span> <span class="o">=</span> <span class="n">psf_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span>
-<span class="n">out_x</span><span class="p">,</span> <span class="n">out_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">psf_x</span><span class="p">,</span> <span class="n">psf_y</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">&#39;ij&#39;</span><span class="p">)</span>
-<span class="n">interpolator</span> <span class="o">=</span> <span class="n">RegularGridInterpolator</span><span class="p">((</span><span class="n">psf_wavelengths</span><span class="p">,</span> <span class="n">psf_x</span><span class="p">,</span> <span class="n">psf_y</span><span class="p">),</span> <span class="n">psf_cube</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span>
+<span class="n">out_x</span><span class="p">,</span> <span class="n">out_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">psf_x</span><span class="p">,</span> <span class="n">psf_y</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">'ij'</span><span class="p">)</span>
+<span class="n">interpolator</span> <span class="o">=</span> <span class="n">RegularGridInterpolator</span><span class="p">((</span><span class="n">psf_wavelengths</span><span class="p">,</span> <span class="n">psf_x</span><span class="p">,</span> <span class="n">psf_y</span><span class="p">),</span> <span class="n">psf_cube</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">)</span>
 <span class="n">linear_psf</span> <span class="o">=</span> <span class="n">interpolator</span><span class="p">((</span><span class="mf">3.0e-6</span><span class="p">,</span> <span class="n">out_x</span><span class="p">,</span> <span class="n">out_y</span><span class="p">))</span>
 
 <span class="n">diff_lin_psf</span> <span class="o">=</span> <span class="n">reference_psf</span> <span class="o">-</span> <span class="n">linear_psf</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reference: min </span><span class="si">{:.3e}</span><span class="s2">, max </span><span class="si">{:.3e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reference_psf</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">reference_psf</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Linear: min </span><span class="si">{:.3e}</span><span class="s2">, max </span><span class="si">{:.3e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">linear_psf</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">linear_psf</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Diff: min </span><span class="si">{:.3e}</span><span class="s2">, max </span><span class="si">{:.3e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">diff_lin_psf</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">diff_lin_psf</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total error: </span><span class="si">{:.5e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">diff_lin_psf</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Reference: min </span><span class="si">{:.3e}</span><span class="s2">, max </span><span class="si">{:.3e}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reference_psf</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">reference_psf</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Linear: min </span><span class="si">{:.3e}</span><span class="s2">, max </span><span class="si">{:.3e}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">linear_psf</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">linear_psf</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Diff: min </span><span class="si">{:.3e}</span><span class="s2">, max </span><span class="si">{:.3e}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">diff_lin_psf</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">diff_lin_psf</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Total error: </span><span class="si">{:.5e}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">diff_lin_psf</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())))</span>
 
 <span class="n">figA</span><span class="p">,</span> <span class="n">axA</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
-<span class="n">axA</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">reference_psf</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">ref_norm</span><span class="p">)</span>
+<span class="n">axA</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">reference_psf</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">ref_norm</span><span class="p">)</span>
 <span class="n">axA</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">axA</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">axA</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">linear_psf</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">ref_norm</span><span class="p">)</span>
+<span class="n">axA</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">linear_psf</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">ref_norm</span><span class="p">)</span>
 <span class="n">axA</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">axA</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">axA</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">diff_lin_psf</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">5e-4</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">5e-4</span><span class="p">)</span>
+<span class="n">axA</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">diff_lin_psf</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">5e-4</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">5e-4</span><span class="p">)</span>
 <span class="n">axA</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">axA</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">axA</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">reference_psf</span><span class="p">[</span><span class="n">ref_pix</span><span class="p">],</span> <span class="n">linear_psf</span><span class="p">[</span><span class="n">ref_pix</span><span class="p">],</span> <span class="s1">&#39;k+&#39;</span><span class="p">)</span>
-<span class="n">axA</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="s1">&#39;box&#39;</span><span class="p">)</span>
+<span class="n">axA</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">reference_psf</span><span class="p">[</span><span class="n">ref_pix</span><span class="p">],</span> <span class="n">linear_psf</span><span class="p">[</span><span class="n">ref_pix</span><span class="p">],</span> <span class="s1">'k+'</span><span class="p">)</span>
+<span class="n">axA</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">'equal'</span><span class="p">,</span> <span class="s1">'box'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2059,29 +2059,29 @@ Total error: 5.11593e-05
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cubic_psf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">psf_cube</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">48</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">48</span><span class="p">):</span>
-        <span class="n">spline</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">psf_wavelengths</span><span class="p">,</span> <span class="n">psf_cube</span><span class="p">[:,</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;cubic&#39;</span><span class="p">)</span>
+        <span class="n">spline</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">psf_wavelengths</span><span class="p">,</span> <span class="n">psf_cube</span><span class="p">[:,</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'cubic'</span><span class="p">)</span>
         <span class="n">cubic_psf</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">spline</span><span class="p">(</span><span class="mf">3.0e-6</span><span class="p">)</span>
         
 <span class="n">diff_cub_psf</span> <span class="o">=</span> <span class="n">reference_psf</span> <span class="o">-</span> <span class="n">cubic_psf</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reference: min </span><span class="si">{:.3e}</span><span class="s2">, max </span><span class="si">{:.3e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reference_psf</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">reference_psf</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cubic: min </span><span class="si">{:.3e}</span><span class="s2">, max </span><span class="si">{:.3e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cubic_psf</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">cubic_psf</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Diff: min </span><span class="si">{:.3e}</span><span class="s2">, max </span><span class="si">{:.3e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">diff_cub_psf</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">diff_cub_psf</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total error: </span><span class="si">{:.5e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">diff_cub_psf</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Reference: min </span><span class="si">{:.3e}</span><span class="s2">, max </span><span class="si">{:.3e}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reference_psf</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">reference_psf</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Cubic: min </span><span class="si">{:.3e}</span><span class="s2">, max </span><span class="si">{:.3e}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cubic_psf</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">cubic_psf</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Diff: min </span><span class="si">{:.3e}</span><span class="s2">, max </span><span class="si">{:.3e}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">diff_cub_psf</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">diff_cub_psf</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Total error: </span><span class="si">{:.5e}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">diff_cub_psf</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())))</span>
 
 <span class="n">figB</span><span class="p">,</span> <span class="n">axB</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
-<span class="n">axB</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">reference_psf</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">ref_norm</span><span class="p">)</span>
+<span class="n">axB</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">reference_psf</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">ref_norm</span><span class="p">)</span>
 <span class="n">axB</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">axB</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">axB</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cubic_psf</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">ref_norm</span><span class="p">)</span>
+<span class="n">axB</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cubic_psf</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">ref_norm</span><span class="p">)</span>
 <span class="n">axB</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">axB</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">axB</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">diff_cub_psf</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">5e-4</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">5e-4</span><span class="p">)</span>
+<span class="n">axB</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">diff_cub_psf</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">5e-4</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">5e-4</span><span class="p">)</span>
 <span class="n">axB</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">axB</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">axB</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">reference_psf</span><span class="p">[</span><span class="n">ref_pix</span><span class="p">],</span> <span class="n">cubic_psf</span><span class="p">[</span><span class="n">ref_pix</span><span class="p">],</span> <span class="s1">&#39;k+&#39;</span><span class="p">)</span>
-<span class="n">axB</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="s1">&#39;box&#39;</span><span class="p">)</span>
+<span class="n">axB</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">reference_psf</span><span class="p">[</span><span class="n">ref_pix</span><span class="p">],</span> <span class="n">cubic_psf</span><span class="p">[</span><span class="n">ref_pix</span><span class="p">],</span> <span class="s1">'k+'</span><span class="p">)</span>
+<span class="n">axB</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">'equal'</span><span class="p">,</span> <span class="s1">'box'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2100,14 +2100,14 @@ Total error: 1.05253e-04
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">figC</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">linear_psf</span><span class="p">[</span><span class="n">ref_pix</span><span class="p">],</span> <span class="n">cubic_psf</span><span class="p">[</span><span class="n">ref_pix</span><span class="p">],</span> <span class="s1">&#39;k+&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Linear interpolation&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Cubic interpolation&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">linear_psf</span><span class="p">[</span><span class="n">ref_pix</span><span class="p">],</span> <span class="n">cubic_psf</span><span class="p">[</span><span class="n">ref_pix</span><span class="p">],</span> <span class="s1">'k+'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Linear interpolation'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Cubic interpolation'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;Cubic interpolation&#39;)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, 'Cubic interpolation')
 </pre></div>
 </div>
 <img alt="../../../_images/1ff1f50e9ed5090622343fa8e751fb8d4dab347b2ef0113fc7eae38db0db163e.png" src="../../../_images/1ff1f50e9ed5090622343fa8e751fb8d4dab347b2ef0113fc7eae38db0db163e.png" />
@@ -2119,7 +2119,7 @@ Total error: 1.05253e-04
 <p>Now we can generate a full PSF for the spectral trace. Note that the PSF at each wavelength is going to be a linear combination of the overlapping adjacent monochromatic PSFs. If geometric distortion is present, it may be beneficial to create this PSF <em>after</em> the trace centers have been fit.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cube_w</span><span class="p">,</span> <span class="n">cube_x</span><span class="p">,</span> <span class="n">cube_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">wavelength</span> <span class="o">*</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="n">psf_x</span><span class="p">,</span> <span class="n">psf_y</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">&#39;ij&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cube_w</span><span class="p">,</span> <span class="n">cube_x</span><span class="p">,</span> <span class="n">cube_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">wavelength</span> <span class="o">*</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="n">psf_x</span><span class="p">,</span> <span class="n">psf_y</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">'ij'</span><span class="p">)</span>
 <span class="n">full_psf_cube</span> <span class="o">=</span> <span class="n">interpolator</span><span class="p">((</span><span class="n">cube_w</span><span class="p">,</span> <span class="n">cube_x</span><span class="p">,</span> <span class="n">cube_y</span><span class="p">))</span>
 <span class="n">nw</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nx</span> <span class="o">=</span> <span class="n">full_psf_cube</span><span class="o">.</span><span class="n">shape</span>
 <span class="n">half</span> <span class="o">=</span> <span class="n">ny</span> <span class="o">//</span> <span class="mi">2</span>
@@ -2141,8 +2141,8 @@ Total error: 1.05253e-04
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wpsf_aspect</span> <span class="o">=</span> <span class="n">nw</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
 <span class="n">figD</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">trace_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">wpsf_aspect</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">trace_norm</span><span class="p">)</span>
+<span class="n">trace_norm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">'log'</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">wpsf_aspect</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">trace_norm</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -2169,16 +2169,16 @@ Total error: 1.05253e-04
 <span class="n">out_hi</span> <span class="o">=</span> <span class="n">out_lo</span> <span class="o">+</span> <span class="n">er_ny</span>
 
 <span class="n">resample_row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">out_lo</span><span class="p">,</span> <span class="n">out_hi</span><span class="p">,</span> <span class="n">er_ny</span><span class="p">)</span>
-<span class="n">resample_y</span><span class="p">,</span> <span class="n">resample_w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">resample_row</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">&#39;ij&#39;</span><span class="p">)</span>
+<span class="n">resample_y</span><span class="p">,</span> <span class="n">resample_w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">resample_row</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">'ij'</span><span class="p">)</span>
 
 <span class="n">resampled_trace</span> <span class="o">=</span> <span class="n">trace_interpolator</span><span class="p">((</span><span class="n">resample_y</span><span class="p">,</span> <span class="n">resample_w</span><span class="p">))</span>
 
 <span class="n">figE</span><span class="p">,</span> <span class="n">axE</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-<span class="n">trace_renorm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">resampled_trace</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
-<span class="n">axE</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">resampled_trace</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">trace_renorm</span><span class="p">)</span>
-<span class="n">axE</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">extraction_region</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> 
-              <span class="n">norm</span><span class="o">=</span><span class="n">er_norm</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="n">trace_renorm</span> <span class="o">=</span> <span class="n">simple_norm</span><span class="p">(</span><span class="n">resampled_trace</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s1">'log'</span><span class="p">)</span>
+<span class="n">axE</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">resampled_trace</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">trace_renorm</span><span class="p">)</span>
+<span class="n">axE</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">extraction_region</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect_ratio</span><span class="p">,</span> 
+              <span class="n">norm</span><span class="o">=</span><span class="n">er_norm</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
